@@ -1,9 +1,10 @@
 import { createRoute, z } from "@hono/zod-openapi";
 import { rateLimiter } from "hono-rate-limiter";
 import { createOpenAPIRoute } from "@nsa/server/helpers/openapi";
-import { ErrorResponseSchema } from "@nsa/server/helpers/jsonError";
+import { ErrorResponseSchema } from "@nsa/server/helpers/errors/jsonError";
 import * as HttpStatusCodes from "@nsa/server/constants/httpStatusCodes";
 import * as HttpStatusPhrases from "@nsa/server/constants/httpStatusPhrases";
+import { openApiErrorDescriptions } from "../helpers/openapi/openApiErrorDescriptions";
 
 const healthcheck = createOpenAPIRoute().openapi(
   // Open API docs
@@ -41,7 +42,7 @@ const healthcheck = createOpenAPIRoute().openapi(
             }),
           },
         },
-        description: "Success",
+        description: openApiErrorDescriptions["OK"],
       },
 
       // Status: Too Many Requests
@@ -56,7 +57,7 @@ const healthcheck = createOpenAPIRoute().openapi(
             schema: ErrorResponseSchema,
           },
         },
-        description: "Too Many Requests. You have exceeded the rate limit of 5 requests per minute.",
+        description: openApiErrorDescriptions["Too Many Requests"],
       },
 
       // Status: Internal Server Error
@@ -72,7 +73,7 @@ const healthcheck = createOpenAPIRoute().openapi(
             schema: ErrorResponseSchema,
           },
         },
-        description: "Internal Server Error. Something has gone wrong on the server.",
+        description: openApiErrorDescriptions["Internal Server Error"],
       },
     },
   }),
