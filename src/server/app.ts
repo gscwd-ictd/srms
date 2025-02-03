@@ -2,7 +2,7 @@ import { createOpenAPIRoute, configureOpenApi } from "@nsa/server/helpers/openap
 import { notFound, onError, pinoLogger } from "@nsa/server/middlewares";
 import { secureHeaders } from "hono/secure-headers";
 import healthcheck from "@nsa/server/routes/healthcheck";
-import applications from "./routes/applications/applications.index";
+import applications from "@nsa/server/routes/applications/applications.index";
 
 function createApp() {
   const app = createOpenAPIRoute().basePath("/api");

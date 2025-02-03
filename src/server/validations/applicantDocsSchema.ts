@@ -1,5 +1,5 @@
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
-import { applicantDocs } from "../db/schemas/applicantDocs";
+import { applicantDocs } from "@nsa/server/db/schemas/applicantDocs";
 import { z } from "zod";
 
 export const FileUploadSchema = z.object({

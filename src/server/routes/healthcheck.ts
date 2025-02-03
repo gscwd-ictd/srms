@@ -2,9 +2,9 @@ import { createRoute, z } from "@hono/zod-openapi";
 import { rateLimiter } from "hono-rate-limiter";
 import { createOpenAPIRoute } from "@nsa/server/helpers/openapi";
 import { ErrorResponseSchema } from "@nsa/server/helpers/errors/jsonError";
+import { openApiErrorDescriptions } from "@nsa/server/helpers/openapi/openApiErrorDescriptions";
 import * as HttpStatusCodes from "@nsa/server/constants/httpStatusCodes";
 import * as HttpStatusPhrases from "@nsa/server/constants/httpStatusPhrases";
-import { openApiErrorDescriptions } from "../helpers/openapi/openApiErrorDescriptions";
 
 const healthcheck = createOpenAPIRoute().openapi(
   // Open API docs

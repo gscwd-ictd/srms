@@ -1,7 +1,7 @@
 import { Gender } from "@nsa/server/constants/gender";
 import { generateCuid } from "@nsa/server/helpers/generateCuid";
 import { date, pgEnum, pgTable, timestamp, varchar } from "drizzle-orm/pg-core";
-import { applications } from "./applications";
+import { applications } from "@nsa/server/db/schemas/applications";
 
 export const genderEnum = pgEnum("gender", Gender);
 

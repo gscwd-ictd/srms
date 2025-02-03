@@ -1,5 +1,5 @@
 import { AppRouteHandler } from "@nsa/server/helpers/types";
-import { CreateApplicationRoute } from "./applications.routes";
+import { CreateApplicationRoute } from "@nsa/server/routes/applications/applications.routes";
 import { ApplicationService } from "@nsa/lib/applicationService";
 
 export const create: AppRouteHandler<CreateApplicationRoute> = async (c) => {

@@ -1,6 +1,6 @@
 import { generateCuid } from "@nsa/server/helpers/generateCuid";
 import { integer, pgTable, timestamp, varchar } from "drizzle-orm/pg-core";
-import { applicants } from "./applicants";
+import { applicants } from "@nsa/server/db/schemas/applicants";
 
 export const applicantHousehold = pgTable("applicant_household", {
   id: varchar("household_id")

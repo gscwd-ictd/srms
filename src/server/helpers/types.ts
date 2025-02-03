@@ -1,6 +1,6 @@
 import { OpenAPIHono, RouteConfig, RouteHandler, z } from "@hono/zod-openapi";
 import type { PinoLogger } from "hono-pino";
-import type { ErrorResponseSchema } from "./errors/jsonError";
+import type { ErrorResponseSchema } from "@nsa/server/helpers/errors/jsonError";
 
 export type AppOpenAPI = OpenAPIHono<AppBindings>;
 
