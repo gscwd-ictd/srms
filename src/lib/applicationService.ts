@@ -1,4 +1,4 @@
-import { ApplicationRepository } from "./applicationRepository";
+import { ApplicationRepository } from "@nsa/lib/applicationRepository";
 import {
   applications,
   applicants,
