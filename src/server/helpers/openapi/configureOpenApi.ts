@@ -36,6 +36,7 @@ export function configureOpenApi(app: AppOpenAPI) {
     "/v1/reference",
     apiReference({
       theme: "saturn",
+      tagsSorter: "alpha",
       defaultHttpClient: {
         targetKey: "node",
         clientKey: "axios",
