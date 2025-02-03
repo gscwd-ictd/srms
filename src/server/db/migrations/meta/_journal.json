@@ -15,6 +15,13 @@
       "when": 1738583277160,
       "tag": "0001_ancient_swordsman",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1738592944534,
+      "tag": "0002_foamy_butterfly",
+      "breakpoints": true
     }
   ]
 }

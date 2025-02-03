@@ -7,7 +7,9 @@ export const applicantAddress = pgTable("applicant_address", {
   id: varchar("applicant_address_id")
     .primaryKey()
     .$defaultFn(() => generateCuid()),
-  applicantId: varchar("applicant_id_fk").references(() => applicants.id),
+  applicantId: varchar("applicant_id_fk")
+    .notNull()
+    .references(() => applicants.id),
   lotNo: varchar("lot_no"),
   blockNo: varchar("block_no"),
   street: varchar("street"),
@@ -28,7 +30,4 @@ export const CreateApplicantAddressSchema = createInsertSchema(applicantAddress)
   id: true,
   createdAt: true,
   updatedAt: true,
-  city: true,
-  province: true,
-  zipCode: true,
 });

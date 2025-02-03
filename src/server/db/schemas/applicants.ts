@@ -1,8 +1,6 @@
 import { Gender } from "@nsa/server/constants/gender";
 import { generateCuid } from "@nsa/server/helpers/generateCuid";
 import { date, pgEnum, pgTable, timestamp, varchar } from "drizzle-orm/pg-core";
-import { createInsertSchema, createSelectSchema } from "drizzle-zod";
-import { z } from "zod";
 import { applications } from "./applications";
 
 export const genderEnum = pgEnum("gender", Gender);
@@ -11,7 +9,9 @@ export const applicants = pgTable("applicants", {
   id: varchar("applicant_id")
     .primaryKey()
     .$defaultFn(() => generateCuid()),
-  applicationId: varchar("application_id_fk").references(() => applications.id),
+  applicationId: varchar("application_id_fk")
+    .notNull()
+    .references(() => applications.id),
   firstName: varchar("first_name").notNull(),
   middleName: varchar("middle_name"),
   lastName: varchar("last_name").notNull(),
@@ -25,16 +25,3 @@ export const applicants = pgTable("applicants", {
     .defaultNow()
     .$onUpdateFn(() => new Date()),
 });
-
-export const SelectApplicantSchema = createSelectSchema(applicants);
-
-export const CreateApplicantSchema = createInsertSchema(applicants)
-  .omit({
-    id: true,
-    email: true,
-    createdAt: true,
-    updatedAt: true,
-  })
-  .extend({
-    email: z.string().email(),
-  });

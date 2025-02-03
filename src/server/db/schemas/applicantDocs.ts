@@ -2,11 +2,7 @@ import { generateCuid } from "@nsa/server/helpers/generateCuid";
 import { jsonb, pgTable, timestamp, varchar } from "drizzle-orm/pg-core";
 import { z } from "zod";
 import { applicants } from "./applicants";
-
-export const FileUploadSchema = z.object({
-  filename: z.string(),
-  url: z.string().url(),
-});
+import { FileUploadSchema } from "@nsa/server/validations/applicantDocsSchema";
 
 type FileUpload = z.infer<typeof FileUploadSchema>;
 
@@ -14,7 +10,9 @@ export const applicantDocs = pgTable("applicant_docs", {
   id: varchar("applicant_docs_id")
     .primaryKey()
     .$defaultFn(() => generateCuid()),
-  applicantId: varchar("applicant_id_fk").references(() => applicants.id),
+  applicantId: varchar("applicant_id_fk")
+    .notNull()
+    .references(() => applicants.id),
   proofOfOwnership: jsonb("proof_of_ownership").$type<FileUpload[]>(),
   proofOfBilling: jsonb("proof_of_billing").$type<FileUpload[]>(),
   barangayCertificate: jsonb("barangay_certificate").$type<FileUpload[]>(),
