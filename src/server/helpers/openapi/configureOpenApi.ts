@@ -17,6 +17,11 @@ export function configureOpenApi(app: AppOpenAPI) {
         description:
           "These are essential for monitoring, debugging, and ensuring system health, but are not part of the core business logic.",
       },
+      {
+        name: "Applications",
+        description:
+          "Handles the entire process of applying for a new water utility service connection, from initial submission to document verification.",
+      },
     ],
   });
 
