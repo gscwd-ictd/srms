@@ -1,6 +1,6 @@
 import { NOT_FOUND } from "@nsa/server/constants/httpStatusCodes";
 import { NOT_FOUND as NOT_FOUND_MESSAGE } from "@nsa/server/constants/httpStatusPhrases";
-import { jsonError } from "@nsa/server/helpers/jsonError";
+import { jsonError } from "@nsa/server/helpers/errors/jsonError";
 import type { AppBindings } from "@nsa/server/helpers/types";
 import type { NotFoundHandler } from "hono";
 
