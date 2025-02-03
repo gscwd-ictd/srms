@@ -1,1 +1,1 @@
-export const ApplicationType = [] as const;
+export const ApplicationType = ["New Service", "Something Else"] as const;
