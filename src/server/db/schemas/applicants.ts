@@ -3,6 +3,7 @@ import { generateCuid } from "@nsa/server/helpers/generateCuid";
 import { date, pgEnum, pgTable, timestamp, varchar } from "drizzle-orm/pg-core";
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 import { z } from "zod";
+import { applications } from "./applications";
 
 export const genderEnum = pgEnum("gender", Gender);
 
@@ -10,6 +11,7 @@ export const applicants = pgTable("applicants", {
   id: varchar("applicant_id")
     .primaryKey()
     .$defaultFn(() => generateCuid()),
+  applicationId: varchar("application_id_fk").references(() => applications.id),
   firstName: varchar("first_name").notNull(),
   middleName: varchar("middle_name"),
   lastName: varchar("last_name").notNull(),

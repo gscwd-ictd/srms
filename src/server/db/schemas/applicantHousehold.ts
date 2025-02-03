@@ -3,7 +3,7 @@ import { integer, pgTable, timestamp, varchar } from "drizzle-orm/pg-core";
 import { applicants } from "./applicants";
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 
-export const householdInfo = pgTable("household_info", {
+export const applicantHousehold = pgTable("applicant_household", {
   id: varchar("household_id")
     .primaryKey()
     .$defaultFn(() => generateCuid()),
@@ -16,9 +16,9 @@ export const householdInfo = pgTable("household_info", {
     .$onUpdateFn(() => new Date()),
 });
 
-export const SelectHouseholdInfoSchema = createSelectSchema(householdInfo);
+export const SelectHouseholdInfoSchema = createSelectSchema(applicantHousehold);
 
-export const CreateHouseholdInfoSchema = createInsertSchema(householdInfo).omit({
+export const CreateHouseholdInfoSchema = createInsertSchema(applicantHousehold).omit({
   id: true,
   createdAt: true,
   updatedAt: true,
