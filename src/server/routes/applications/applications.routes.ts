@@ -8,7 +8,7 @@ import {
   SelectApplicationDetailsSchema,
 } from "@nsa/server/validations/applicationSchema";
 
-export const createApplication = createRoute({
+export const create = createRoute({
   tags: ["Applications"],
   description: "Create a new application for new service connection.",
   method: "post",
@@ -73,4 +73,4 @@ export const createApplication = createRoute({
   },
 });
 
-export type CreateApplicationRoute = typeof createApplication;
+export type CreateApplicationRoute = typeof create;
