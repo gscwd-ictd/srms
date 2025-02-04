@@ -8,7 +8,6 @@ export class HTTPError extends Error {
     this.name = name; // Set name after super()
     this.status = status;
     this.message = message;
-
     Error.captureStackTrace(this, HTTPError);
   }
 
