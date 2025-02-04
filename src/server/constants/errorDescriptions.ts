@@ -1,6 +1,6 @@
 import * as HttpPhrases from "@nsa/server/constants/httpStatusPhrases";
 
-export const openApiErrorDescriptions = {
+export const errorDescriptions = {
   [HttpPhrases.OK]: "Success.",
   [HttpPhrases.NOT_FOUND]: `${HttpPhrases.NOT_FOUND}. The requested resource cannot be located.`,
   [HttpPhrases.BAD_REQUEST]: `${HttpPhrases.BAD_REQUEST}. Usually due to missing or invalid parameters.`,

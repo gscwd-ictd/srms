@@ -1,12 +1,13 @@
 import { createRoute, z } from "@hono/zod-openapi";
-import * as HttpStatusCodes from "@nsa/server/constants/httpStatusCodes";
+import { errorDescriptions } from "@nsa/server/constants/errorDescriptions";
 import { ErrorResponseSchema } from "@nsa/server/helpers/errors/jsonError";
-import { IdParamsSchema, openApiErrorDescriptions } from "@nsa/server/helpers/openapi";
+import { IdParamsSchema } from "@nsa/server/helpers/openapi";
 import { CreateApplicantsSchema } from "@nsa/server/validations/applicantSchema";
 import {
   CreateApplicationsSchema,
   SelectApplicationDetailsSchema,
 } from "@nsa/server/validations/applicationSchema";
+import * as HttpStatusCodes from "@nsa/server/constants/httpStatusCodes";
 
 export const createNewApplication = createRoute({
   tags: ["Applications"],
@@ -34,7 +35,7 @@ export const createNewApplication = createRoute({
           schema: SelectApplicationDetailsSchema,
         },
       },
-      description: openApiErrorDescriptions.OK,
+      description: errorDescriptions.OK,
     },
 
     [HttpStatusCodes.UNPROCESSABLE_ENTITY]: {
@@ -43,7 +44,7 @@ export const createNewApplication = createRoute({
           schema: ErrorResponseSchema,
         },
       },
-      description: openApiErrorDescriptions["Unprocessable Entity"],
+      description: errorDescriptions["Unprocessable Entity"],
     },
 
     [HttpStatusCodes.BAD_REQUEST]: {
@@ -52,7 +53,7 @@ export const createNewApplication = createRoute({
           schema: ErrorResponseSchema,
         },
       },
-      description: openApiErrorDescriptions["Bad Request"],
+      description: errorDescriptions["Bad Request"],
     },
 
     // Status: Internal Server Error
@@ -68,7 +69,7 @@ export const createNewApplication = createRoute({
           schema: ErrorResponseSchema,
         },
       },
-      description: openApiErrorDescriptions["Internal Server Error"],
+      description: errorDescriptions["Internal Server Error"],
     },
   },
 });
@@ -88,7 +89,7 @@ export const getApplicationDetailsById = createRoute({
           schema: SelectApplicationDetailsSchema,
         },
       },
-      description: openApiErrorDescriptions.OK,
+      description: errorDescriptions.OK,
     },
 
     [HttpStatusCodes.NOT_FOUND]: {
@@ -102,7 +103,7 @@ export const getApplicationDetailsById = createRoute({
           schema: ErrorResponseSchema,
         },
       },
-      description: openApiErrorDescriptions["Not Found"],
+      description: errorDescriptions["Not Found"],
     },
   },
 });
