@@ -17,6 +17,13 @@ import { eq } from "drizzle-orm";
 import { NotFoundError } from "./errors/notFoundError";
 
 export class ApplicationService implements ApplicationRepository {
+  /**
+   * Creates an application for new service connection.
+   *
+   * @param details Application details
+   * @param applicantDetails - address, household, documents, personal information
+   * @returns new application
+   */
   public async createApplication(
     details: z.infer<typeof CreateApplicationsSchema>,
     { address, household, documents, ...applicant }: z.infer<typeof CreateApplicantsSchema>,
@@ -81,9 +88,13 @@ export class ApplicationService implements ApplicationRepository {
     return res;
   }
 
-  async getApplicationDetailsByApplicationId(
-    id: string,
-  ): Promise<z.infer<typeof SelectApplicationDetailsSchema>> {
+  /**
+   * Accepts applicationId to retreive application details.
+   *
+   * @param id - applicationId
+   * @returns
+   */
+  async getApplicationDetailsById(id: string): Promise<z.infer<typeof SelectApplicationDetailsSchema>> {
     const res = db
       .select({
         id: applications.id,
