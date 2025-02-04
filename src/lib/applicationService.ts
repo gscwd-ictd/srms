@@ -13,6 +13,8 @@ import {
   SelectApplicationDetailsSchema,
 } from "@nsa/server/validations/applicationSchema";
 import { CreateApplicantsSchema } from "@nsa/server/validations/applicantSchema";
+import { eq } from "drizzle-orm";
+import { NotFoundError } from "./errors/notFoundError";
 
 export class ApplicationService implements ApplicationRepository {
   public async createApplication(
@@ -78,7 +80,37 @@ export class ApplicationService implements ApplicationRepository {
 
     return res;
   }
-  getApplicationDetailsById(id: string): Promise<z.infer<typeof SelectApplicationDetailsSchema>> {
-    throw new Error("Method not implemented.");
+
+  async getApplicationDetailsByApplicationId(
+    id: string,
+  ): Promise<z.infer<typeof SelectApplicationDetailsSchema>> {
+    const res = db
+      .select({
+        id: applications.id,
+        landmark: applications.landmark,
+        nearestNeighbor: applications.nearestNeighbor,
+        remarks: applications.remarks,
+        createdAt: applications.createdAt,
+        updatedAt: applications.updatedAt,
+        applicant: { ...applicants },
+        address: { ...applicantAddress },
+        household: { ...applicantHousehold },
+        documents: { ...applicantDocs },
+      })
+      .from(applicants)
+      .innerJoin(applications, eq(applications.id, applicants.applicationId))
+      .innerJoin(applicantAddress, eq(applicantAddress.applicantId, applicants.id))
+      .innerJoin(applicantHousehold, eq(applicantHousehold.applicantId, applicants.id))
+      .innerJoin(applicantDocs, eq(applicantDocs.applicantId, applicants.id))
+      .where(eq(applications.id, id))
+      .prepare("get_application_details_by_application_id");
+
+    const application = await res.execute();
+
+    if (application.length === 0) {
+      throw new NotFoundError("Application details not found!");
+    }
+
+    return application[0];
   }
 }

@@ -12,5 +12,5 @@ export interface ApplicationRepository {
     applicant: z.infer<typeof CreateApplicantsSchema>,
   ): Promise<z.infer<typeof SelectApplicationDetailsSchema>>;
 
-  getApplicationDetailsById(id: string): Promise<z.infer<typeof SelectApplicationDetailsSchema>>;
+  getApplicationDetailsByApplicationId(id: string): Promise<z.infer<typeof SelectApplicationDetailsSchema>>;
 }
