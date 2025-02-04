@@ -4,6 +4,6 @@ import * as handlers from "@nsa/server/routes/applications/applications.handlers
 
 const applications = createOpenAPIRoute()
   .openapi(routes.createNewApplication, handlers.createNewApplication)
-  .openapi(routes.getApplicationDetailsByApplicationId, handlers.getApplicationDetailsByApplicationId);
+  .openapi(routes.getApplicationDetailsById, handlers.getApplicationDetailsById);
 
 export default applications;

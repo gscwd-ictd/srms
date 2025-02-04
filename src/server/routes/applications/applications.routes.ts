@@ -73,7 +73,7 @@ export const createNewApplication = createRoute({
   },
 });
 
-export const getApplicationDetailsByApplicationId = createRoute({
+export const getApplicationDetailsById = createRoute({
   tags: ["Applications"],
   description: "Get application details by passing in application_id.",
   method: "get",
@@ -109,4 +109,4 @@ export const getApplicationDetailsByApplicationId = createRoute({
 
 export type CreateApplicationRoute = typeof createNewApplication;
 
-export type GetApplicationDetailsByApplicationIdRoute = typeof getApplicationDetailsByApplicationId;
+export type GetApplicationDetailsByIdRoute = typeof getApplicationDetailsById;
