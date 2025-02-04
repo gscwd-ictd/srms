@@ -1,14 +1,14 @@
 import { createRoute, z } from "@hono/zod-openapi";
 import * as HttpStatusCodes from "@nsa/server/constants/httpStatusCodes";
 import { ErrorResponseSchema } from "@nsa/server/helpers/errors/jsonError";
-import { openApiErrorDescriptions } from "@nsa/server/helpers/openapi/openApiErrorDescriptions";
+import { IdParamsSchema, openApiErrorDescriptions } from "@nsa/server/helpers/openapi";
 import { CreateApplicantsSchema } from "@nsa/server/validations/applicantSchema";
 import {
   CreateApplicationsSchema,
   SelectApplicationDetailsSchema,
 } from "@nsa/server/validations/applicationSchema";
 
-export const create = createRoute({
+export const createNewApplication = createRoute({
   tags: ["Applications"],
   description: "Create a new application for new service connection.",
   method: "post",
@@ -73,4 +73,40 @@ export const create = createRoute({
   },
 });
 
-export type CreateApplicationRoute = typeof create;
+export const getApplicationDetailsByApplicationId = createRoute({
+  tags: ["Applications"],
+  description: "Get application details by passing in application_id.",
+  method: "get",
+  path: "/v1/applications/{id}",
+  request: {
+    params: IdParamsSchema,
+  },
+  responses: {
+    [HttpStatusCodes.OK]: {
+      content: {
+        "application/json": {
+          schema: SelectApplicationDetailsSchema,
+        },
+      },
+      description: openApiErrorDescriptions.OK,
+    },
+
+    [HttpStatusCodes.NOT_FOUND]: {
+      content: {
+        "application/json": {
+          example: {
+            name: "NotFounError",
+            status: 404,
+            message: "Application details not found!",
+          },
+          schema: ErrorResponseSchema,
+        },
+      },
+      description: openApiErrorDescriptions["Not Found"],
+    },
+  },
+});
+
+export type CreateApplicationRoute = typeof createNewApplication;
+
+export type GetApplicationDetailsByApplicationIdRoute = typeof getApplicationDetailsByApplicationId;

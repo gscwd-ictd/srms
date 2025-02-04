@@ -1,7 +1,9 @@
 import { createOpenAPIRoute } from "@nsa/server/helpers/openapi";
-import * as applicationRoutes from "@nsa/server/routes/applications/applications.routes";
-import * as applicationHandlers from "@nsa/server/routes/applications/applications.handlers";
+import * as routes from "@nsa/server/routes/applications/applications.routes";
+import * as handlers from "@nsa/server/routes/applications/applications.handlers";
 
-const applications = createOpenAPIRoute().openapi(applicationRoutes.create, applicationHandlers.create);
+const applications = createOpenAPIRoute()
+  .openapi(routes.createNewApplication, handlers.createNewApplication)
+  .openapi(routes.getApplicationDetailsByApplicationId, handlers.getApplicationDetailsByApplicationId);
 
 export default applications;
