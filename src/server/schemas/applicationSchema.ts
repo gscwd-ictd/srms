@@ -11,11 +11,15 @@ import { z } from "zod";
 
 export const SelectApplicationsSchema = createSelectSchema(applications);
 
-export const CreateApplicationsSchema = createInsertSchema(applications).omit({
-  id: true,
-  createdAt: true,
-  updatedAt: true,
-});
+export const CreateApplicationsSchema = createInsertSchema(applications)
+  .omit({
+    id: true,
+    createdAt: true,
+    updatedAt: true,
+  })
+  .openapi({
+    description: "The application details as indicated in the SACO form.",
+  });
 
 export const SelectApplicationDetailsSchema = createSelectSchema(applications).extend({
   applicant: SelectApplicantsSchema,

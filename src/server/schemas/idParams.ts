@@ -8,6 +8,7 @@ export const IdParamsSchema = z.object({
       required: true,
     },
     required: ["id"],
+    description: "The unique identifier of an entity you intend to operate on.",
     example: "cm6p7d5og0jbx7s65qcu",
   }),
 });

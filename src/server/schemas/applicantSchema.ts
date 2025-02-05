@@ -51,4 +51,7 @@ export const CreateApplicantsSchema = createInsertSchema(applicants)
         path: ["mobileNo"],
       });
     }
+  })
+  .openapi({
+    description: "The details of an individual or entity requesting for a new water service connection",
   });
