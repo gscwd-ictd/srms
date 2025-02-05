@@ -7,7 +7,7 @@ import {
   applicantDocs,
 } from "@nsa/server/db/schemas";
 import { z } from "zod";
-import { db } from "@nsa/server/db/connection";
+import { db } from "@nsa/server/db/postgres";
 import { eq } from "drizzle-orm";
 import { SelectApplicationDetailsSchema } from "@nsa/server/schemas";
 import {
