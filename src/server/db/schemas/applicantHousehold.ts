@@ -3,7 +3,7 @@ import { integer, pgTable, timestamp, varchar } from "drizzle-orm/pg-core";
 import { applicants } from "@nsa/server/db/schemas/applicants";
 
 export const applicantHousehold = pgTable("applicant_household", {
-  id: varchar("household_id")
+  id: varchar("id")
     .primaryKey()
     .$defaultFn(() => generateCuid()),
   applicantId: varchar("applicant_id_fk")

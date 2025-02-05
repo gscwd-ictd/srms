@@ -1,10 +1,14 @@
+import { ApplicationType } from "@nsa/server/constants/applicationType";
 import { generateCuid } from "@nsa/server/helpers/generateCuid";
-import { pgTable, text, timestamp, varchar } from "drizzle-orm/pg-core";
+import { pgEnum, pgTable, text, timestamp, varchar } from "drizzle-orm/pg-core";
+
+export const applicationTypeEnum = pgEnum("application_type_num", ApplicationType);
 
 export const applications = pgTable("applications", {
-  id: varchar("application_id")
+  id: varchar("id")
     .primaryKey()
     .$defaultFn(() => generateCuid()),
+  type: applicationTypeEnum("type"),
   landmark: text("landmark"),
   nearestNeighbor: text("nearest_neighbor"),
   remarks: text("remarks"),

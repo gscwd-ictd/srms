@@ -4,7 +4,7 @@ import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 import { applicants } from "@nsa/server/db/schemas/applicants";
 
 export const applicantAddress = pgTable("applicant_address", {
-  id: varchar("applicant_address_id")
+  id: varchar("id")
     .primaryKey()
     .$defaultFn(() => generateCuid()),
   applicantId: varchar("applicant_id_fk")

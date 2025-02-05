@@ -6,7 +6,7 @@ import { applications } from "@nsa/server/db/schemas/applications";
 export const genderEnum = pgEnum("gender", Gender);
 
 export const applicants = pgTable("applicants", {
-  id: varchar("applicant_id")
+  id: varchar("id")
     .primaryKey()
     .$defaultFn(() => generateCuid()),
   applicationId: varchar("application_id_fk")
@@ -16,6 +16,7 @@ export const applicants = pgTable("applicants", {
   middleName: varchar("middle_name"),
   lastName: varchar("last_name").notNull(),
   nameExtension: varchar("name_extension"),
+  spouse: varchar("spouse"),
   gender: genderEnum("gender").notNull(),
   birthdate: date("birthdate").notNull(),
   mobileNo: varchar("mobile_no").notNull(),

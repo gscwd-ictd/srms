@@ -1,6 +1,6 @@
 {
-  "id": "ae824209-cb3a-4506-b305-f179248fe282",
-  "prevId": "f78a3db6-11ec-452b-89b8-b435cd861c9a",
+  "id": "bc1f5f3c-4d7c-46f8-a364-8f9108bf2248",
+  "prevId": "f670df52-feb0-4e5e-bf98-c0d147b49e5a",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -8,8 +8,8 @@
       "name": "applicant_address",
       "schema": "",
       "columns": {
-        "applicant_address_id": {
-          "name": "applicant_address_id",
+        "id": {
+          "name": "id",
           "type": "varchar",
           "primaryKey": true,
           "notNull": true
@@ -18,7 +18,7 @@
           "name": "applicant_id_fk",
           "type": "varchar",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
         "lot_no": {
           "name": "lot_no",
@@ -88,15 +88,98 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "applicant_address_applicant_id_fk_applicants_applicant_id_fk": {
-          "name": "applicant_address_applicant_id_fk_applicants_applicant_id_fk",
+        "applicant_address_applicant_id_fk_applicants_id_fk": {
+          "name": "applicant_address_applicant_id_fk_applicants_id_fk",
           "tableFrom": "applicant_address",
           "tableTo": "applicants",
           "columnsFrom": [
             "applicant_id_fk"
           ],
           "columnsTo": [
-            "applicant_id"
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.applicant_docs": {
+      "name": "applicant_docs",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "varchar",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "applicant_id_fk": {
+          "name": "applicant_id_fk",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "proof_of_ownership": {
+          "name": "proof_of_ownership",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "proof_of_billing": {
+          "name": "proof_of_billing",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "barangay_certificate": {
+          "name": "barangay_certificate",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "valid_id": {
+          "name": "valid_id",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "selfie_with_valid_id": {
+          "name": "selfie_with_valid_id",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "applicant_docs_applicant_id_fk_applicants_id_fk": {
+          "name": "applicant_docs_applicant_id_fk_applicants_id_fk",
+          "tableFrom": "applicant_docs",
+          "tableTo": "applicants",
+          "columnsFrom": [
+            "applicant_id_fk"
+          ],
+          "columnsTo": [
+            "id"
           ],
           "onDelete": "no action",
           "onUpdate": "no action"
@@ -112,8 +195,8 @@
       "name": "applicant_household",
       "schema": "",
       "columns": {
-        "household_id": {
-          "name": "household_id",
+        "id": {
+          "name": "id",
           "type": "varchar",
           "primaryKey": true,
           "notNull": true
@@ -122,7 +205,7 @@
           "name": "applicant_id_fk",
           "type": "varchar",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
         "no_of_persons_in_household": {
           "name": "no_of_persons_in_household",
@@ -155,15 +238,15 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "applicant_household_applicant_id_fk_applicants_applicant_id_fk": {
-          "name": "applicant_household_applicant_id_fk_applicants_applicant_id_fk",
+        "applicant_household_applicant_id_fk_applicants_id_fk": {
+          "name": "applicant_household_applicant_id_fk_applicants_id_fk",
           "tableFrom": "applicant_household",
           "tableTo": "applicants",
           "columnsFrom": [
             "applicant_id_fk"
           ],
           "columnsTo": [
-            "applicant_id"
+            "id"
           ],
           "onDelete": "no action",
           "onUpdate": "no action"
@@ -179,10 +262,16 @@
       "name": "applicants",
       "schema": "",
       "columns": {
-        "applicant_id": {
-          "name": "applicant_id",
+        "id": {
+          "name": "id",
           "type": "varchar",
           "primaryKey": true,
+          "notNull": true
+        },
+        "application_id_fk": {
+          "name": "application_id_fk",
+          "type": "varchar",
+          "primaryKey": false,
           "notNull": true
         },
         "first_name": {
@@ -205,6 +294,12 @@
         },
         "name_extension": {
           "name": "name_extension",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "spouse": {
+          "name": "spouse",
           "type": "varchar",
           "primaryKey": false,
           "notNull": false
@@ -250,7 +345,21 @@
         }
       },
       "indexes": {},
-      "foreignKeys": {},
+      "foreignKeys": {
+        "applicants_application_id_fk_applications_id_fk": {
+          "name": "applicants_application_id_fk_applications_id_fk",
+          "tableFrom": "applicants",
+          "tableTo": "applications",
+          "columnsFrom": [
+            "application_id_fk"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {},
       "policies": {},
@@ -261,11 +370,18 @@
       "name": "applications",
       "schema": "",
       "columns": {
-        "application_id": {
-          "name": "application_id",
+        "id": {
+          "name": "id",
           "type": "varchar",
           "primaryKey": true,
           "notNull": true
+        },
+        "type": {
+          "name": "type",
+          "type": "application_type_num",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false
         },
         "landmark": {
           "name": "landmark",
@@ -316,6 +432,15 @@
       "values": [
         "Male",
         "Female"
+      ]
+    },
+    "public.application_type_num": {
+      "name": "application_type_num",
+      "schema": "public",
+      "values": [
+        "New",
+        "Additional",
+        "Transfer"
       ]
     }
   },
