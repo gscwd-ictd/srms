@@ -15,6 +15,13 @@
       "when": 1738750397498,
       "tag": "0001_oval_multiple_man",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1738762215260,
+      "tag": "0002_remarkable_tusk",
+      "breakpoints": true
     }
   ]
 }
