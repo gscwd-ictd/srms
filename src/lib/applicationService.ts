@@ -8,13 +8,17 @@ import {
 } from "@nsa/server/db/schemas";
 import { z } from "zod";
 import { db } from "@nsa/server/db/connection";
-import {
-  CreateApplicationsSchema,
-  SelectApplicationDetailsSchema,
-} from "@nsa/server/validations/applicationSchema";
-import { CreateApplicantsSchema } from "@nsa/server/validations/applicantSchema";
 import { eq } from "drizzle-orm";
 import { NotFoundError } from "./errors/notFoundError";
+import {
+  ApplicationDetails,
+  CreateApplicant,
+  CreateApplication,
+  PaginatedResult,
+  QueryParams,
+} from "./types";
+import { paginateQuery } from "../server/helpers/paginateQuery";
+import { SelectApplicationDetailsSchema } from "@nsa/server/schemas";
 
 export class ApplicationService implements ApplicationRepository {
   /**
@@ -25,8 +29,8 @@ export class ApplicationService implements ApplicationRepository {
    * @returns new application
    */
   public async createApplication(
-    details: z.infer<typeof CreateApplicationsSchema>,
-    { address, household, documents, ...applicant }: z.infer<typeof CreateApplicantsSchema>,
+    details: CreateApplication,
+    { address, household, documents, ...applicant }: CreateApplicant,
   ): Promise<z.infer<typeof SelectApplicationDetailsSchema>> {
     // Implementation will handle:
     // 1. Start transaction
@@ -94,10 +98,11 @@ export class ApplicationService implements ApplicationRepository {
    * @param id - applicationId
    * @returns
    */
-  async getApplicationDetailsById(id: string): Promise<z.infer<typeof SelectApplicationDetailsSchema>> {
+  async getApplicationDetailsById(applicationId: string): Promise<ApplicationDetails> {
     const res = db
       .select({
         id: applications.id,
+        type: applications.type,
         landmark: applications.landmark,
         nearestNeighbor: applications.nearestNeighbor,
         remarks: applications.remarks,
@@ -113,7 +118,7 @@ export class ApplicationService implements ApplicationRepository {
       .innerJoin(applicantAddress, eq(applicantAddress.applicantId, applicants.id))
       .innerJoin(applicantHousehold, eq(applicantHousehold.applicantId, applicants.id))
       .innerJoin(applicantDocs, eq(applicantDocs.applicantId, applicants.id))
-      .where(eq(applications.id, id))
+      .where(eq(applications.id, applicationId))
       .prepare("get_application_details_by_application_id");
 
     const application = await res.execute();
@@ -123,5 +128,52 @@ export class ApplicationService implements ApplicationRepository {
     }
 
     return application[0];
+  }
+
+  /**
+   * Gets all application details based on the provided query parameters.
+   *
+   * @param queryParams -
+   * - `limit` - How manay rows you want to retreive on a single fetch.
+   * - `page` - Traverse the results based on this value.
+   * @returns
+   */
+  async getAllApplicationDetails<ApplicationDetails>(
+    queryParams?: QueryParams,
+  ): Promise<PaginatedResult<ApplicationDetails>> {
+    const sql = db
+      .select({
+        id: applications.id,
+        type: applications.type,
+        landmark: applications.landmark,
+        nearestNeighbor: applications.nearestNeighbor,
+        remarks: applications.remarks,
+        createdAt: applications.createdAt,
+        updatedAt: applications.updatedAt,
+        applicant: { ...applicants },
+        address: { ...applicantAddress },
+        household: { ...applicantHousehold },
+        documents: { ...applicantDocs },
+      })
+      .from(applications)
+      .innerJoin(applicants, eq(applicants.applicationId, applications.id))
+      .innerJoin(applicantAddress, eq(applicantAddress.applicantId, applicants.id))
+      .innerJoin(applicantHousehold, eq(applicantHousehold.applicantId, applicants.id))
+      .innerJoin(applicantDocs, eq(applicantDocs.applicantId, applicants.id))
+      .$dynamic();
+
+    const { sqlStatement, metadata } = await paginateQuery(applications, sql, queryParams);
+
+    const stmt = sqlStatement.prepare("get_all_application_details");
+
+    const res = await stmt.execute();
+
+    return {
+      data: res as ApplicationDetails[],
+      metadata: {
+        currentPageCount: res.length,
+        ...metadata,
+      },
+    };
   }
 }

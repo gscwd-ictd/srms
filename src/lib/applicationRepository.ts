@@ -1,16 +1,16 @@
 import {} from "@nsa/server/db/schemas";
-import { CreateApplicantsSchema } from "@nsa/server/validations/applicantSchema";
 import {
-  CreateApplicationsSchema,
-  SelectApplicationDetailsSchema,
-} from "@nsa/server/validations/applicationSchema";
-import { z } from "zod";
+  ApplicationDetails,
+  CreateApplicant,
+  CreateApplication,
+  PaginatedResult,
+  QueryParams,
+} from "./types";
 
 export interface ApplicationRepository {
-  createApplication(
-    details: z.infer<typeof CreateApplicationsSchema>,
-    applicant: z.infer<typeof CreateApplicantsSchema>,
-  ): Promise<z.infer<typeof SelectApplicationDetailsSchema>>;
+  createApplication(details: CreateApplication, applicant: CreateApplicant): Promise<ApplicationDetails>;
 
-  getApplicationDetailsById(id: string): Promise<z.infer<typeof SelectApplicationDetailsSchema>>;
+  getApplicationDetailsById(id: string): Promise<ApplicationDetails>;
+
+  getAllApplicationDetails<T>(query?: QueryParams): Promise<PaginatedResult<T[]>>;
 }
