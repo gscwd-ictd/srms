@@ -9,8 +9,7 @@ export function configureOpenApi(app: AppOpenAPI) {
     info: {
       version: packageJSON.version,
       title: "Online Application for New Service Connection",
-      description:
-        "Handles digital submission and processing of new service connection requests, including applicant details, property information, and required documentation. Features comprehensive validation, standardized data collection, and secure document upload management.",
+      description: "API Documentation.",
       contact: {
         email: "gensanwater.ictd@gmail.com",
         name: "General Santos City Water District",
