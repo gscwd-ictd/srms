@@ -11,6 +11,9 @@ const EnvSchema = z.object({
   DB_PASS: z.string(),
   DB_USER: z.string(),
   DB_NAME: z.string(),
+  REDIS_HOST: z.string(),
+  REDIS_PORT: z.coerce.number(),
+  REDIS_PASS: z.string(),
 });
 
 export type Env = z.infer<typeof EnvSchema>;
