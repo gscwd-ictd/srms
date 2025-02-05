@@ -6,6 +6,6 @@ const applications = createOpenAPIRoute()
   .openapi(routes.createNewApplication, handlers.createNewApplication)
   .openapi(routes.getApplicationDetailsById, handlers.getApplicationDetailsById)
   .openapi(routes.getAllApplicationDetails, handlers.getAllApplications)
-  .openapi(routes.updateApplicationStatus, handlers.updatedApplicationStatus);
+  .openapi(routes.updateApplicationStatus, handlers.updateApplicationStatus);
 
 export default applications;
