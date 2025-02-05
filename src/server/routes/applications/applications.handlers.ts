@@ -27,7 +27,7 @@ export const getApplicationDetailsById: AppRouteHandler<GetApplicationDetailsByI
   return c.json(applicationDetails, 200);
 };
 
-export const getAllApplications: AppRouteHandler<GetAllApplicationDetailsRoute> = async (c) => {
+export const getAllApplicationDetails: AppRouteHandler<GetAllApplicationDetailsRoute> = async (c) => {
   const appService = new ApplicationService();
 
   const queryParams = c.req.valid("query");
