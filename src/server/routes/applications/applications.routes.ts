@@ -1,4 +1,5 @@
 import { createRoute, z } from "@hono/zod-openapi";
+import { ApplicationStatus } from "@nsa/server/constants";
 import { errorDescriptions } from "@nsa/server/constants/errorDescriptions";
 import * as HttpStatusCodes from "@nsa/server/constants/httpStatusCodes";
 import {
@@ -9,6 +10,7 @@ import {
   SelectApplicationDetailsSchema,
   QueryParamsSchema,
   ResultMetaDataSchema,
+  SelectApplicationsSchema,
 } from "@nsa/server/schemas";
 
 export const createNewApplication = createRoute({
@@ -98,7 +100,7 @@ export const getApplicationDetailsById = createRoute({
       content: {
         "application/json": {
           example: {
-            name: "NotFounError",
+            name: "NotFoundError",
             status: 404,
             message: "Application details not found!",
           },
@@ -171,8 +173,55 @@ export const getAllApplicationDetails = createRoute({
   },
 });
 
+export const updateApplicationStatus = createRoute({
+  tags: ["Applications"],
+  method: "patch",
+  path: "/v1/applications/status/{id}",
+  request: {
+    params: IdParamsSchema,
+    body: {
+      content: {
+        "application/json": {
+          schema: z.object({
+            status: z.enum(ApplicationStatus).openapi({
+              description: "The updated status of an application.",
+            }),
+          }),
+        },
+      },
+      required: true,
+    },
+  },
+  responses: {
+    [HttpStatusCodes.OK]: {
+      content: {
+        "application/json": {
+          schema: SelectApplicationsSchema,
+        },
+      },
+      description: errorDescriptions.OK,
+    },
+
+    [HttpStatusCodes.NOT_FOUND]: {
+      content: {
+        "application/json": {
+          example: {
+            name: "NotFoundError",
+            status: 404,
+            message: "Update failed. Application not found!",
+          },
+          schema: ErrorResponseSchema,
+        },
+      },
+      description: errorDescriptions["Not Found"],
+    },
+  },
+});
+
 export type CreateApplicationRoute = typeof createNewApplication;
 
 export type GetApplicationDetailsByIdRoute = typeof getApplicationDetailsById;
 
 export type GetAllApplicationDetailsRoute = typeof getAllApplicationDetails;
+
+export type UpdateApplicationStatusRoute = typeof updateApplicationStatus;
