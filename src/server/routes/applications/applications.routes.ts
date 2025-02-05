@@ -1,17 +1,19 @@
 import { createRoute, z } from "@hono/zod-openapi";
 import { errorDescriptions } from "@nsa/server/constants/errorDescriptions";
 import { ErrorResponseSchema } from "@nsa/server/helpers/errors/jsonError";
-import { IdParamsSchema } from "@nsa/server/helpers/openapi";
-import { CreateApplicantsSchema } from "@nsa/server/validations/applicantSchema";
+import { IdParamsSchema } from "@nsa/server/schemas";
+import { CreateApplicantsSchema } from "@nsa/server/schemas/applicantSchema";
 import {
   CreateApplicationsSchema,
   SelectApplicationDetailsSchema,
-} from "@nsa/server/validations/applicationSchema";
+} from "@nsa/server/schemas/applicationSchema";
 import * as HttpStatusCodes from "@nsa/server/constants/httpStatusCodes";
+import { QueryParamsSchema } from "@nsa/server/schemas/queryParams";
+import { ResultMetaDataSchema } from "@nsa/server/schemas/resultMetadataSchema";
 
 export const createNewApplication = createRoute({
   tags: ["Applications"],
-  description: "Create a new application for new service connection.",
+  description: "Create an application for new service connection.",
   method: "post",
   path: "/v1/applications",
   request: {
@@ -105,9 +107,72 @@ export const getApplicationDetailsById = createRoute({
       },
       description: errorDescriptions["Not Found"],
     },
+
+    [HttpStatusCodes.INTERNAL_SERVER_ERROR]: {
+      content: {
+        "application/json": {
+          example: {
+            name: "ServerError",
+            status: 500,
+            message: "Something went wrong!",
+            stack: "...",
+          },
+          schema: ErrorResponseSchema,
+        },
+      },
+      description: errorDescriptions["Internal Server Error"],
+    },
+  },
+});
+
+export const getAllApplicationDetails = createRoute({
+  tags: ["Applications"],
+  method: "get",
+  path: "/v1/applications",
+  request: {
+    query: QueryParamsSchema,
+  },
+  responses: {
+    [HttpStatusCodes.OK]: {
+      content: {
+        "application/json": {
+          schema: z.object({
+            data: z.array(SelectApplicationDetailsSchema),
+            metadata: ResultMetaDataSchema,
+          }),
+        },
+      },
+      description: errorDescriptions.OK,
+    },
+
+    [HttpStatusCodes.UNPROCESSABLE_ENTITY]: {
+      content: {
+        "application/json": {
+          schema: ErrorResponseSchema,
+        },
+      },
+      description: errorDescriptions["Unprocessable Entity"],
+    },
+
+    [HttpStatusCodes.INTERNAL_SERVER_ERROR]: {
+      content: {
+        "application/json": {
+          example: {
+            name: "ServerError",
+            status: 500,
+            message: "Something went wrong!",
+            stack: "...",
+          },
+          schema: ErrorResponseSchema,
+        },
+      },
+      description: errorDescriptions["Internal Server Error"],
+    },
   },
 });
 
 export type CreateApplicationRoute = typeof createNewApplication;
 
 export type GetApplicationDetailsByIdRoute = typeof getApplicationDetailsById;
+
+export type GetAllApplicationDetailsRoute = typeof getAllApplicationDetails;

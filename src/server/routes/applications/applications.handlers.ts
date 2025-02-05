@@ -1,6 +1,7 @@
 import { AppRouteHandler } from "@nsa/server/helpers/types";
 import {
   CreateApplicationRoute,
+  GetAllApplicationDetailsRoute,
   GetApplicationDetailsByIdRoute,
 } from "@nsa/server/routes/applications/applications.routes";
 import { ApplicationService } from "@nsa/lib/applicationService";
@@ -23,4 +24,14 @@ export const getApplicationDetailsById: AppRouteHandler<GetApplicationDetailsByI
   const applicationDetails = await appService.getApplicationDetailsById(id);
 
   return c.json(applicationDetails, 200);
+};
+
+export const getAllApplications: AppRouteHandler<GetAllApplicationDetailsRoute> = async (c) => {
+  const appService = new ApplicationService();
+
+  const queryParams = c.req.valid("query");
+
+  const allApplicationDetails = await appService.getAllApplicationDetails(queryParams);
+
+  return c.json(allApplicationDetails, 200);
 };
