@@ -1,4 +1,4 @@
-import { ApplicationRepository } from "@nsa/server/providers/application/applicationRepository";
+import { ApplicationRepository } from "@nsa/server/providers/application";
 import {
   applications,
   applicants,
@@ -11,14 +11,16 @@ import { db } from "@nsa/server/db/connection";
 import { eq } from "drizzle-orm";
 import { SelectApplicationDetailsSchema } from "@nsa/server/schemas";
 import {
+  Application,
   ApplicationDetails,
   CreateApplicant,
   CreateApplication,
   PaginatedResult,
   QueryParams,
 } from "@nsa/server/types";
-import { paginateQuery } from "@nsa/server/helpers/paginateQuery";
+import { paginateQuery } from "@nsa/server/helpers";
 import { NotFoundError } from "@nsa/server/errors";
+import { ApplicationStatus } from "@nsa/server/constants";
 
 export class ApplicationService implements ApplicationRepository {
   /**
@@ -93,9 +95,9 @@ export class ApplicationService implements ApplicationRepository {
   }
 
   /**
-   * Accepts applicationId to retreive application details.
+   * Accepts a unique identifier ID to retreive application details.
    *
-   * @param id - applicationId
+   * @param applicationId - The unique identifier of an application details you wish to retreive.
    * @returns
    */
   async getApplicationDetailsById(applicationId: string): Promise<ApplicationDetails> {
@@ -106,6 +108,7 @@ export class ApplicationService implements ApplicationRepository {
         landmark: applications.landmark,
         nearestNeighbor: applications.nearestNeighbor,
         remarks: applications.remarks,
+        status: applications.status,
         createdAt: applications.createdAt,
         updatedAt: applications.updatedAt,
         applicant: { ...applicants },
@@ -148,6 +151,7 @@ export class ApplicationService implements ApplicationRepository {
         landmark: applications.landmark,
         nearestNeighbor: applications.nearestNeighbor,
         remarks: applications.remarks,
+        status: applications.status,
         createdAt: applications.createdAt,
         updatedAt: applications.updatedAt,
         applicant: { ...applicants },
@@ -175,5 +179,41 @@ export class ApplicationService implements ApplicationRepository {
         ...metadata,
       },
     };
+  }
+
+  /**
+   *
+   * @param applicationId - The unique identifier of an application that needs to be updated.
+   * @param status - The updated status of an application.
+   * @returns
+   */
+  async updateApplicationStatus(
+    applicationId: string,
+    status: (typeof ApplicationStatus)[number],
+  ): Promise<Application> {
+    // Before performing update, check first if the application exists.
+    const stmtSelect = db
+      .select()
+      .from(applications)
+      .where(eq(applications.id, applicationId))
+      .prepare("select_application_before_status_update");
+
+    const application = await stmtSelect.execute();
+
+    if (application.length === 0) {
+      throw new NotFoundError("Update failed. Application not found!");
+    }
+
+    // Perform update if NotFoundError was not thrown.
+    const stmtUpdate = db
+      .update(applications)
+      .set({ status })
+      .where(eq(applications.id, applicationId))
+      .returning()
+      .prepare("update_application_status");
+
+    const updatedApplication = await stmtUpdate.execute();
+
+    return updatedApplication[0];
   }
 }
