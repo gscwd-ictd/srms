@@ -1,6 +1,6 @@
 import { createRoute, z } from "@hono/zod-openapi";
 import { errorDescriptions } from "@nsa/server/constants";
-import { ErrorResponseSchema } from "@nsa/server/schemas";
+import { ErrorResponseSchema, HealthCheckResponseSchema } from "@nsa/server/schemas";
 import { rateLimiter } from "hono-rate-limiter";
 import * as HttpStatusCodes from "@nsa/server/constants/httpStatusCodes";
 import * as HttpStatusPhrases from "@nsa/server/constants/httpStatusPhrases";
@@ -30,15 +30,31 @@ export const getServerStatus = createRoute({
       content: {
         "application/json": {
           example: {
-            status: 200,
-            message: "Ok",
-            timestamp: "2025-02-05T16:02:55.925Z",
+            status: "healthy",
+            timestamp: "2025-02-05T17:01:43.287Z",
+            version: "0.1.0",
+            environment: "development",
+            database: {
+              status: "up",
+              responseTime: 23,
+              connectionCount: 1,
+              maxConnections: 100,
+            },
+            redis: {
+              status: "up",
+              responseTime: 2,
+              usedMemory: "1.12M",
+              totalMemory: "16.00G",
+              connectedClients: 1,
+            },
+            uptime: "18 seconds",
+            memory: {
+              used: 94,
+              total: 102,
+              free: 8,
+            },
           },
-          schema: z.object({
-            status: z.number(),
-            message: z.string(),
-            timestamp: z.date(),
-          }),
+          schema: HealthCheckResponseSchema,
         },
       },
       description: errorDescriptions["OK"],
