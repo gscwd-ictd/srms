@@ -4,7 +4,7 @@ import {
   CreateApplication,
   PaginatedResult,
   QueryParams,
-} from "./types";
+} from "@nsa/server/types";
 
 export interface ApplicationRepository {
   createApplication(details: CreateApplication, applicant: CreateApplicant): Promise<ApplicationDetails>;

@@ -1,6 +1,6 @@
 import { OpenAPIHono } from "@hono/zod-openapi";
-import { AppBindings } from "@nsa/server/helpers/types";
 import { defaultHook } from "@nsa/server/helpers/openapi/openApiDefaultHook";
+import { type AppBindings } from "@nsa/server/types";
 
 export function createOpenAPIRoute() {
   return new OpenAPIHono<AppBindings>({

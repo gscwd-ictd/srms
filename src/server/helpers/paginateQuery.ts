@@ -1,6 +1,6 @@
 import { PgSelect, PgTable } from "drizzle-orm/pg-core";
-import { QueryParams } from "../../lib/types";
 import { db } from "@nsa/server/db/connection";
+import { QueryParams } from "@nsa/server/types";
 
 export async function paginateQuery<T extends PgSelect>(
   table: PgTable,

@@ -10,15 +10,15 @@ import { z } from "zod";
 import { db } from "@nsa/server/db/connection";
 import { eq } from "drizzle-orm";
 import { NotFoundError } from "./errors/notFoundError";
+import { SelectApplicationDetailsSchema } from "@nsa/server/schemas";
 import {
   ApplicationDetails,
   CreateApplicant,
   CreateApplication,
   PaginatedResult,
   QueryParams,
-} from "./types";
-import { paginateQuery } from "../server/helpers/paginateQuery";
-import { SelectApplicationDetailsSchema } from "@nsa/server/schemas";
+} from "@nsa/server/types";
+import { paginateQuery } from "@nsa/server/helpers/paginateQuery";
 
 export class ApplicationService implements ApplicationRepository {
   /**

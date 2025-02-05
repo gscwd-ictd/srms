@@ -1,4 +1,4 @@
-import { AppRouteHandler } from "@nsa/server/helpers/types";
+import { AppRouteHandler } from "@nsa/server/types";
 import {
   CreateApplicationRoute,
   GetAllApplicationDetailsRoute,

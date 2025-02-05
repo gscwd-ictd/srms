@@ -1,15 +1,15 @@
 import { createRoute, z } from "@hono/zod-openapi";
 import { errorDescriptions } from "@nsa/server/constants/errorDescriptions";
-import { ErrorResponseSchema } from "@nsa/server/helpers/errors/jsonError";
-import { IdParamsSchema } from "@nsa/server/schemas";
-import { CreateApplicantsSchema } from "@nsa/server/schemas/applicantSchema";
+import * as HttpStatusCodes from "@nsa/server/constants/httpStatusCodes";
 import {
+  ErrorResponseSchema,
+  IdParamsSchema,
+  CreateApplicantsSchema,
   CreateApplicationsSchema,
   SelectApplicationDetailsSchema,
-} from "@nsa/server/schemas/applicationSchema";
-import * as HttpStatusCodes from "@nsa/server/constants/httpStatusCodes";
-import { QueryParamsSchema } from "@nsa/server/schemas/queryParams";
-import { ResultMetaDataSchema } from "@nsa/server/schemas/resultMetadataSchema";
+  QueryParamsSchema,
+  ResultMetaDataSchema,
+} from "@nsa/server/schemas";
 
 export const createNewApplication = createRoute({
   tags: ["Applications"],

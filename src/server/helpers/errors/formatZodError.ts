@@ -1,5 +1,5 @@
+import { ErrorResponseSchema } from "@nsa/server/schemas";
 import { z, ZodError } from "zod";
-import { type ErrorResponseSchema } from "@nsa/server/helpers/errors/jsonError";
 
 export function formatZodError(error: ZodError): z.infer<typeof ErrorResponseSchema> {
   const fieldErrors = error.issues.reduce(
