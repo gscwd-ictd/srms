@@ -4,7 +4,7 @@ import {
   GetAllApplicationDetailsRoute,
   GetApplicationDetailsByIdRoute,
 } from "@nsa/server/routes/applications/applications.routes";
-import { ApplicationService } from "@nsa/lib/applicationService";
+import { ApplicationService } from "@nsa/server/providers/application";
 
 export const createNewApplication: AppRouteHandler<CreateApplicationRoute> = async (c) => {
   const appService = new ApplicationService();

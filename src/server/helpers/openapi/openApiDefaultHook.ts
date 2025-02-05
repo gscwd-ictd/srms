@@ -1,7 +1,6 @@
 import type { Hook } from "@hono/zod-openapi";
 import { UNPROCESSABLE_ENTITY } from "@nsa/server/constants/httpStatusCodes";
-import { formatZodError } from "@nsa/server/helpers/errors/formatZodError";
-import { jsonError } from "@nsa/server/helpers/errors/jsonError";
+import { formatZodError, jsonError } from "@nsa/server/errors";
 import { ZodError } from "zod";
 
 // eslint-disable-next-line

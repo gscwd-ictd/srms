@@ -1,7 +1,7 @@
 import type { ErrorHandler } from "hono";
 import type { ContentfulStatusCode } from "hono/utils/http-status";
 import type { AppBindings, ErrorResponse } from "@nsa/server/types";
-import { jsonError } from "@nsa/server/helpers/errors/jsonError";
+import { jsonError } from "@nsa/server/errors/jsonError";
 import { INTERNAL_SERVER_ERROR, OK } from "@nsa/server/constants/httpStatusCodes";
 
 export const onError: ErrorHandler<AppBindings> = (err, c) => {
