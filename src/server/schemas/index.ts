@@ -6,3 +6,4 @@ export * from "./applicationSchema";
 export * from "./idParams";
 export * from "./queryParams";
 export * from "./resultMetadataSchema";
+export * from "./errorResponseSchema";
