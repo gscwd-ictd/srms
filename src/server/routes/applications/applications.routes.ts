@@ -215,6 +215,39 @@ export const updateApplicationStatus = createRoute({
       },
       description: errorDescriptions["Not Found"],
     },
+
+    [HttpStatusCodes.UNPROCESSABLE_ENTITY]: {
+      content: {
+        "application/json": {
+          schema: ErrorResponseSchema,
+        },
+      },
+      description: errorDescriptions["Unprocessable Entity"],
+    },
+
+    [HttpStatusCodes.BAD_REQUEST]: {
+      content: {
+        "application/json": {
+          schema: ErrorResponseSchema,
+        },
+      },
+      description: errorDescriptions["Bad Request"],
+    },
+
+    [HttpStatusCodes.INTERNAL_SERVER_ERROR]: {
+      content: {
+        "application/json": {
+          example: {
+            name: "ServerError",
+            status: 500,
+            message: "Something went wrong!",
+            stack: "...",
+          },
+          schema: ErrorResponseSchema,
+        },
+      },
+      description: errorDescriptions["Internal Server Error"],
+    },
   },
 });
 
