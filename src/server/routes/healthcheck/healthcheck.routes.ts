@@ -32,10 +32,12 @@ export const getServerStatus = createRoute({
           example: {
             status: 200,
             message: "Ok",
+            timestamp: "2025-02-05T16:02:55.925Z",
           },
           schema: z.object({
             status: z.number(),
             message: z.string(),
+            timestamp: z.date(),
           }),
         },
       },
