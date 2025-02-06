@@ -204,6 +204,11 @@ export class ApplicationService implements ApplicationRepository {
       throw new NotFoundError("Update failed. Application not found!");
     }
 
+    // If the provided status is the same with the original, just return the current application.
+    if (status === application[0]?.status) {
+      return application[0];
+    }
+
     // Perform update if NotFoundError was not thrown.
     const stmtUpdate = db
       .update(applications)
