@@ -19,13 +19,6 @@ export const HealthCheckResponseSchema = z.object({
     connectionCount: z.number(),
     maxConnections: z.number(),
   }),
-  redis: z.object({
-    status: z.literal("up").or(z.literal("down")),
-    responseTime: z.number(),
-    usedMemory: z.string(),
-    totalMemory: z.string(),
-    connectedClients: z.number(),
-  }),
   uptime: z.string(),
   memory: z.object({
     used: z.number(),

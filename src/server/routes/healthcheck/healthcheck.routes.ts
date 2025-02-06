@@ -40,13 +40,6 @@ export const getServerStatus = createRoute({
               connectionCount: 1,
               maxConnections: 100,
             },
-            redis: {
-              status: "up",
-              responseTime: 2,
-              usedMemory: "1.12M",
-              totalMemory: "16.00G",
-              connectedClients: 1,
-            },
             uptime: "18 seconds",
             memory: {
               used: 94,
