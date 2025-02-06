@@ -6,13 +6,13 @@ import { healthcheck, applications } from "@nsa/server/routes";
 function createApp() {
   const app = createOpenAPIRoute().basePath("/api");
 
+  configureOpenApi(app);
+
   app.notFound(notFound);
   app.onError(onError);
 
   app.use(pinoLogger());
   app.use(secureHeaders());
-
-  configureOpenApi(app);
 
   const routes = [healthcheck, applications] as const;
 
