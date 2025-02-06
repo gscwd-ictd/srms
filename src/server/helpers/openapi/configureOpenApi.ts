@@ -16,6 +16,12 @@ export function configureOpenApi(app: AppOpenAPI) {
         url: "https://gensanwater.gov.ph",
       },
     },
+    servers: [
+      {
+        url: "http://localhost:3000",
+        description: "Local server.",
+      },
+    ],
     tags: [
       {
         name: "Utilities",
