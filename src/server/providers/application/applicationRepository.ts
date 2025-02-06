@@ -1,7 +1,7 @@
-import { ApplicationStatus } from "@nsa/server/constants";
 import {
   Application,
   ApplicationDetails,
+  ApplicationStatus,
   CreateApplicant,
   CreateApplication,
   PaginatedResult,
@@ -15,8 +15,5 @@ export interface ApplicationRepository {
 
   getAllApplicationDetails<T>(query?: QueryParams): Promise<PaginatedResult<T[]>>;
 
-  updateApplicationStatus(
-    applicationId: string,
-    status: (typeof ApplicationStatus)[number],
-  ): Promise<Application>;
+  updateApplicationStatus(id: string, status: ApplicationStatus): Promise<Application>;
 }
