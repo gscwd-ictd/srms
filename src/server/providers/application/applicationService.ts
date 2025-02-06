@@ -50,7 +50,7 @@ export class ApplicationService implements ApplicationRepository {
       const newApplicant = await tx
         .insert(applicants)
         .values({
-          applicationId: newApplication[0].id,
+          applicationId: newApplication[0]!.id,
           ...applicant,
         })
         .returning();
@@ -59,7 +59,7 @@ export class ApplicationService implements ApplicationRepository {
       const newApplicantAddress = await tx
         .insert(applicantAddress)
         .values({
-          applicantId: newApplicant[0].id,
+          applicantId: newApplicant[0]!.id,
           ...address,
         })
         .returning();
@@ -68,7 +68,7 @@ export class ApplicationService implements ApplicationRepository {
       const newHousehold = await tx
         .insert(applicantHousehold)
         .values({
-          applicantId: newApplicant[0].id,
+          applicantId: newApplicant[0]!.id,
           ...household,
         })
         .returning();
@@ -77,17 +77,17 @@ export class ApplicationService implements ApplicationRepository {
       const newDocuments = await tx
         .insert(applicantDocs)
         .values({
-          applicantId: newApplicant[0].id,
+          applicantId: newApplicant[0]!.id,
           ...documents,
         })
         .returning();
 
       return {
-        ...newApplication[0],
-        applicant: { ...newApplicant[0] },
-        address: { ...newApplicantAddress[0] },
-        household: { ...newHousehold[0] },
-        documents: { ...newDocuments[0] },
+        ...newApplication[0]!,
+        applicant: { ...newApplicant[0]! },
+        address: { ...newApplicantAddress[0]! },
+        household: { ...newHousehold[0]! },
+        documents: { ...newDocuments[0]! },
       };
     });
 
@@ -126,7 +126,7 @@ export class ApplicationService implements ApplicationRepository {
 
     const application = await res.execute();
 
-    if (application.length === 0) {
+    if (application.length === 0 || !application[0]) {
       throw new NotFoundError("Application details not found!");
     }
 
@@ -214,6 +214,6 @@ export class ApplicationService implements ApplicationRepository {
 
     const updatedApplication = await stmtUpdate.execute();
 
-    return updatedApplication[0];
+    return updatedApplication[0]!;
   }
 }
