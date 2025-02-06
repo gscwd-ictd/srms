@@ -12,6 +12,7 @@ export const getServerStatus = createRoute({
     "Check for server's health status. This route is not protected, hence a rate limiter is implemented to avoid spam requests.",
   method: "get",
   path: "/v1/healthcheck",
+  operationId: "getServerStatus",
   middleware: [
     rateLimiter({
       keyGenerator: (c) => c.req.header("x-forwarded-for") ?? "",
