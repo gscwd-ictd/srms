@@ -18,6 +18,7 @@ export const createNewApplication = createRoute({
   description: "Create an application for new service connection.",
   method: "post",
   path: "/v1/applications",
+  operationId: "createNewApplication",
   request: {
     body: {
       content: {
@@ -83,6 +84,7 @@ export const getApplicationDetailsById = createRoute({
   description: "Get application details by passing in application_id.",
   method: "get",
   path: "/v1/applications/{id}",
+  operationId: "getApplicationDetailsById",
   request: {
     params: IdParamsSchema,
   },
@@ -131,6 +133,8 @@ export const getAllApplicationDetails = createRoute({
   tags: ["Applications"],
   method: "get",
   path: "/v1/applications",
+  description: "Get all application details. The retrieved result contains a paginated data.",
+  operationId: "getAllApplicationDetails",
   request: {
     query: QueryParamsSchema,
   },
@@ -177,6 +181,8 @@ export const updateApplicationStatus = createRoute({
   tags: ["Applications"],
   method: "patch",
   path: "/v1/applications/status/{id}",
+  description: "Update application status.",
+  operationId: "updateApplicationStatus",
   request: {
     params: IdParamsSchema,
     body: {

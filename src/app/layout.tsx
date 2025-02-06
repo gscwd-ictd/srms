@@ -1,6 +1,7 @@
 import { type Metadata } from "next";
 import { type PropsWithChildren } from "react";
 import { Geist, Geist_Mono } from "next/font/google";
+import { ReactQueryProvider } from "@nsa/components/providers/ReactQueryProvider";
 import "@nsa/app/globals.css";
 
 const geistSans = Geist({
@@ -21,7 +22,9 @@ export const metadata: Metadata = {
 export default async function RootLayout({ children }: Readonly<PropsWithChildren>) {
   return (
     <html lang="en">
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>{children}</body>
+      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+        <ReactQueryProvider>{children}</ReactQueryProvider>
+      </body>
     </html>
   );
 }
