@@ -1,13 +1,5 @@
 import { z } from "zod";
 
-// redis: {
-//   status: 'up' | 'down';
-//   responseTime: number;
-//   usedMemory: string;
-//   totalMemory: string;
-//   connectedClients: number;
-// };
-
 export const HealthCheckResponseSchema = z.object({
   status: z.literal("healthy").or(z.literal("unhealthy")),
   datetime: z.string(),
