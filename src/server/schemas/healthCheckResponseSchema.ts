@@ -10,7 +10,7 @@ import { z } from "zod";
 
 export const HealthCheckResponseSchema = z.object({
   status: z.literal("healthy").or(z.literal("unhealthy")),
-  timestamp: z.string(),
+  datetime: z.string(),
   version: z.string(),
   environment: z.string(),
   database: z.object({

@@ -1,6 +1,6 @@
 import { sql } from "drizzle-orm/sql";
 import { db } from "../db/postgres";
-import { formatDistanceStrict } from "date-fns";
+import { format, formatDistanceStrict } from "date-fns";
 import { HealthCheckResponse } from "../types";
 import packageJson from "@/package.json";
 
@@ -50,7 +50,7 @@ export async function checkHealth(): Promise<HealthCheckResponse> {
 
   return {
     status: dbHealth.status === "up" ? "healthy" : "unhealthy",
-    timestamp: new Date().toISOString(),
+    datetime: format(new Date(), "EEEE, MMMM do yyyy, h:mm:ss a zzz"),
     version: packageJson.version,
     environment: process.env.NODE_ENV,
     database: dbHealth,
