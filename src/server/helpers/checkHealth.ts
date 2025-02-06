@@ -25,6 +25,15 @@ async function checkPgHealth() {
 
     const endTime = performance.now();
 
+    if (!metrics.rows?.[0]) {
+      return {
+        status: "up" as const,
+        responseTime: Math.round(endTime - startTime),
+        connectionCount: 0,
+        maxConnections: 0,
+      };
+    }
+
     return {
       status: "up" as const,
       responseTime: Math.round(endTime - startTime),

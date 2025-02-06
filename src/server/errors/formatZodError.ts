@@ -4,7 +4,7 @@ import { z, ZodError } from "zod";
 export function formatZodError(error: ZodError): z.infer<typeof ErrorResponseSchema> {
   const fieldErrors = error.issues.reduce(
     (acc, issue) => {
-      const fieldName = issue.path[issue.path.length - 1].toString();
+      const fieldName = issue.path[issue.path.length - 1]?.toString() ?? "unknown";
 
       let errorMessage = "";
       switch (issue.code) {
