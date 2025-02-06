@@ -31,27 +31,20 @@ export const getServerStatus = createRoute({
         "application/json": {
           example: {
             status: "healthy",
-            timestamp: "2025-02-05T17:01:43.287Z",
+            datetime: "Thursday, February 6th 2025, 10:51:20 AM GMT+8",
             version: "0.1.0",
             environment: "development",
             database: {
               status: "up",
-              responseTime: 23,
+              responseTime: 11,
               connectionCount: 1,
               maxConnections: 100,
             },
-            redis: {
-              status: "up",
-              responseTime: 2,
-              usedMemory: "1.12M",
-              totalMemory: "16.00G",
-              connectedClients: 1,
-            },
-            uptime: "18 seconds",
+            uptime: "3 minutes",
             memory: {
-              used: 94,
-              total: 102,
-              free: 8,
+              used: 103,
+              total: 122,
+              free: 19,
             },
           },
           schema: HealthCheckResponseSchema,
