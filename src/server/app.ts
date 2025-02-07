@@ -1,4 +1,4 @@
-import { createOpenAPIRoute, configureOpenApi } from "@nsa/server/helpers/openapi";
+import { createOpenAPIRoute, configureOpenApi } from "@nsa/lib/openapi";
 import { notFound, onError, pinoLogger } from "@nsa/server/middlewares";
 import { secureHeaders } from "hono/secure-headers";
 import { healthcheck, applications } from "@nsa/server/routes";
