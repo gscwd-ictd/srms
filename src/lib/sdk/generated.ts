@@ -184,7 +184,7 @@ export class ApiClient {
         }[];
         metadata: {
           currentPageCount: number;
-          totalCount: number;
+          totalRowCount: number;
           currentPage: number;
           pageSize: number;
           totalPages: number;
