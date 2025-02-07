@@ -1,4 +1,4 @@
-import { AppRouteHandler } from "@nsa/server/types";
+import { ApplicationDetails, AppRouteHandler } from "@nsa/server/types";
 import {
   CreateApplicationRoute,
   GetAllApplicationDetailsRoute,
@@ -32,7 +32,7 @@ export const getAllApplicationDetails: AppRouteHandler<GetAllApplicationDetailsR
 
   const queryParams = c.req.valid("query");
 
-  const allApplicationDetails = await appService.getAllApplicationDetails(queryParams);
+  const allApplicationDetails = await appService.getAllApplicationDetails<ApplicationDetails>(queryParams);
 
   return c.json(allApplicationDetails, 200);
 };
