@@ -27,7 +27,9 @@ export class ApplicationService implements ApplicationRepository {
    * Creates an application for new service connection.
    *
    * @param details Application details
+   *
    * @param applicantDetails - address, household, documents, personal information
+   *
    * @returns new application
    */
   public async createApplication(
@@ -98,6 +100,7 @@ export class ApplicationService implements ApplicationRepository {
    * Accepts a unique identifier ID to retreive application details.
    *
    * @param applicationId - The unique identifier of an application details you wish to retreive.
+   *
    * @returns
    */
   async getApplicationDetailsById(applicationId: string): Promise<ApplicationDetails> {
@@ -139,6 +142,7 @@ export class ApplicationService implements ApplicationRepository {
    * @param queryParams -
    * - `limit` - How manay rows you want to retreive on a single fetch.
    * - `page` - Traverse the results based on this value.
+   *
    * @returns
    */
   async getAllApplicationDetails<ApplicationDetails>(
@@ -166,25 +170,15 @@ export class ApplicationService implements ApplicationRepository {
       .innerJoin(applicantDocs, eq(applicantDocs.applicantId, applicants.id))
       .$dynamic();
 
-    const { sqlStatement, metadata } = await paginateQuery(applications, sql, queryParams);
-
-    const stmt = sqlStatement.prepare("get_all_application_details");
-
-    const res = await stmt.execute();
-
-    return {
-      data: res as ApplicationDetails[],
-      metadata: {
-        currentPageCount: res.length,
-        ...metadata,
-      },
-    };
+    return await paginateQuery(applications, sql, queryParams);
   }
 
   /**
    *
    * @param applicationId - The unique identifier of an application that needs to be updated.
+   *
    * @param status - The updated status of an application.
+   *
    * @returns
    */
   async updateApplicationStatus(
