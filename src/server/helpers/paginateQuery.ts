@@ -15,28 +15,41 @@ import { sql } from "drizzle-orm";
  *  - `stmt`: A prepared statement to be executed.
  *  - `metadata`: Page and row count for the selected table.
  */
-export async function paginateQuery<T extends PgSelect, R>(
+export async function paginateQuery<TResult>(
+  preparedStmtName: string,
   table: PgTable,
-  baseQuery: T,
+  baseQuery: PgSelect,
   queryParams?: QueryParams,
-): Promise<PaginatedResult<R>> {
+): Promise<PaginatedResult<TResult>> {
+  /**
+   * Assign default value for `limit` if `queryParams.limit` is `undefined`
+   */
   const limit = queryParams?.limit || 10;
 
+  /**
+   * Assign default value for `page` if `queryParams.page` is `undefined`
+   */
   const page = queryParams?.page || 1;
 
+  /**
+   * Get row count for the selected table
+   */
   const rowCount = await db.$count(table);
 
+  /**
+   * Calculate the total pages based on the `rowCount` and `limit`
+   */
   const totalPages = Math.ceil(rowCount / limit);
 
   const stmt = baseQuery
     .limit(sql.placeholder("limit"))
     .offset(sql.placeholder("page"))
-    .prepare("get_all_application_details");
+    .prepare(preparedStmtName);
 
   const result = await stmt.execute({ limit: limit, page: (page - 1) * limit });
 
   return {
-    data: result as R[],
+    data: result as TResult[],
     metadata: {
       totalRowCount: rowCount,
       currentPageCount: result.length,
