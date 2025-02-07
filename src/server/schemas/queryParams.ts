@@ -3,6 +3,8 @@ import { z } from "@hono/zod-openapi";
 export const QueryParamsSchema = z.object({
   limit: z.coerce
     .number()
+    .default(10)
+    .optional()
     .openapi({
       param: {
         name: "limit",
@@ -15,6 +17,8 @@ export const QueryParamsSchema = z.object({
     .optional(),
   page: z.coerce
     .number()
+    .default(1)
+    .optional()
     .openapi({
       param: {
         name: "page",

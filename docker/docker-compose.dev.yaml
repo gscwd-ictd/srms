@@ -1,12 +1,13 @@
 services:
   db:
-    image: postgres:15
+    image: postgis/postgis:15-3.4
     container_name: nsa-pg
     restart: always
     environment:
       POSTGRES_USER: ${DB_USER}
       POSTGRES_PASSWORD: ${DB_PASS}
       POSTGRES_DB: ${DB_NAME}
+      POSTGRES_MULTIPLE_EXTENSIONS: postgis,postgis_topology
     ports:
       - "${DB_PORT}:5432"
     volumes:

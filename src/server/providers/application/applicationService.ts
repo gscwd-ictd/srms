@@ -6,34 +6,33 @@ import {
   applicantHousehold,
   applicantDocs,
 } from "@nsa/server/db/schemas";
-import { z } from "zod";
 import { db } from "@nsa/server/db/postgres";
 import { eq } from "drizzle-orm";
-import { SelectApplicationDetailsSchema } from "@nsa/server/schemas";
-import {
+import type {
   Application,
   ApplicationDetails,
+  ApplicationStatus,
   CreateApplicant,
   CreateApplication,
-  PaginatedResult,
   QueryParams,
 } from "@nsa/server/types";
 import { paginateQuery } from "@nsa/server/helpers";
 import { NotFoundError } from "@nsa/server/errors";
-import { ApplicationStatus } from "@nsa/server/constants";
 
 export class ApplicationService implements ApplicationRepository {
   /**
    * Creates an application for new service connection.
    *
    * @param details Application details
+   *
    * @param applicantDetails - address, household, documents, personal information
+   *
    * @returns new application
    */
-  public async createApplication(
-    details: CreateApplication,
-    { address, household, documents, ...applicant }: CreateApplicant,
-  ): Promise<z.infer<typeof SelectApplicationDetailsSchema>> {
+  public async createApplication(details: CreateApplication, applicant: CreateApplicant) {
+    // Deconstruct applicant
+    const { address, household, documents, ...rest } = applicant;
+
     // Implementation will handle:
     // 1. Start transaction
     // 2. Insert into applications table
@@ -51,7 +50,7 @@ export class ApplicationService implements ApplicationRepository {
         .insert(applicants)
         .values({
           applicationId: newApplication[0]!.id,
-          ...applicant,
+          ...rest,
         })
         .returning();
 
@@ -98,9 +97,10 @@ export class ApplicationService implements ApplicationRepository {
    * Accepts a unique identifier ID to retreive application details.
    *
    * @param applicationId - The unique identifier of an application details you wish to retreive.
+   *
    * @returns
    */
-  async getApplicationDetailsById(applicationId: string): Promise<ApplicationDetails> {
+  async getApplicationDetailsById(applicationId: string) {
     const res = db
       .select({
         id: applications.id,
@@ -139,11 +139,10 @@ export class ApplicationService implements ApplicationRepository {
    * @param queryParams -
    * - `limit` - How manay rows you want to retreive on a single fetch.
    * - `page` - Traverse the results based on this value.
+   *
    * @returns
    */
-  async getAllApplicationDetails<ApplicationDetails>(
-    queryParams?: QueryParams,
-  ): Promise<PaginatedResult<ApplicationDetails>> {
+  async getAllApplicationDetails(queryParams?: QueryParams) {
     const sql = db
       .select({
         id: applications.id,
@@ -166,31 +165,25 @@ export class ApplicationService implements ApplicationRepository {
       .innerJoin(applicantDocs, eq(applicantDocs.applicantId, applicants.id))
       .$dynamic();
 
-    const { sqlStatement, metadata } = await paginateQuery(applications, sql, queryParams);
+    const result = await paginateQuery<ApplicationDetails>(
+      "get_all_application_details",
+      applications,
+      sql,
+      queryParams,
+    );
 
-    const stmt = sqlStatement.prepare("get_all_application_details");
-
-    const res = await stmt.execute();
-
-    return {
-      data: res as ApplicationDetails[],
-      metadata: {
-        currentPageCount: res.length,
-        ...metadata,
-      },
-    };
+    return result;
   }
 
   /**
    *
    * @param applicationId - The unique identifier of an application that needs to be updated.
+   *
    * @param status - The updated status of an application.
+   *
    * @returns
    */
-  async updateApplicationStatus(
-    applicationId: string,
-    status: (typeof ApplicationStatus)[number],
-  ): Promise<Application> {
+  async updateApplicationStatus(applicationId: string, status: ApplicationStatus): Promise<Application> {
     // Before performing update, check first if the application exists.
     const stmtSelect = db
       .select()

@@ -1,50 +1,44 @@
-import { AppRouteHandler } from "@nsa/server/types";
+import type { AppRouteHandler } from "@nsa/server/types";
+import { ApplicationService } from "@nsa/server/providers/application";
 import {
   CreateApplicationRoute,
   GetAllApplicationDetailsRoute,
   GetApplicationDetailsByIdRoute,
   UpdateApplicationStatusRoute,
 } from "@nsa/server/routes/applications/applications.routes";
-import { ApplicationService } from "@nsa/server/providers/application";
+
+const applicationService = new ApplicationService();
 
 export const createNewApplication: AppRouteHandler<CreateApplicationRoute> = async (c) => {
-  const appService = new ApplicationService();
-
   const { details, applicant } = c.req.valid("json");
 
-  const newApplication = await appService.createApplication(details, applicant);
+  const newApplication = await applicationService.createApplication(details, applicant);
 
   return c.json(newApplication, 200);
 };
 
 export const getApplicationDetailsById: AppRouteHandler<GetApplicationDetailsByIdRoute> = async (c) => {
-  const appService = new ApplicationService();
-
   const { id } = c.req.valid("param");
 
-  const applicationDetails = await appService.getApplicationDetailsById(id);
+  const applicationDetails = await applicationService.getApplicationDetailsById(id);
 
   return c.json(applicationDetails, 200);
 };
 
 export const getAllApplicationDetails: AppRouteHandler<GetAllApplicationDetailsRoute> = async (c) => {
-  const appService = new ApplicationService();
-
   const queryParams = c.req.valid("query");
 
-  const allApplicationDetails = await appService.getAllApplicationDetails(queryParams);
+  const allApplicationDetails = await applicationService.getAllApplicationDetails(queryParams);
 
   return c.json(allApplicationDetails, 200);
 };
 
 export const updateApplicationStatus: AppRouteHandler<UpdateApplicationStatusRoute> = async (c) => {
-  const appService = new ApplicationService();
-
   const { id } = c.req.valid("param");
 
   const { status } = c.req.valid("json");
 
-  const updatedApplication = await appService.updateApplicationStatus(id, status);
+  const updatedApplication = await applicationService.updateApplicationStatus(id, status);
 
   return c.json(updatedApplication, 200);
 };
