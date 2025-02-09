@@ -2,7 +2,18 @@ import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 import { applicantAddress } from "@srms/server/db/schemas";
 import { z } from "zod";
 
-export const SelectApplicantAddressSchema = createSelectSchema(applicantAddress);
+export const SelectApplicantAddressFlatSchema = createSelectSchema(applicantAddress);
+
+export const SelectApplicantAddressSchema = createSelectSchema(applicantAddress)
+  .omit({
+    barangay: true,
+  })
+  .extend({
+    barangay: z.object({
+      id: z.string(),
+      name: z.string(),
+    }),
+  });
 
 export const CreateApplicantAddressSchema = createInsertSchema(applicantAddress)
   .omit({
