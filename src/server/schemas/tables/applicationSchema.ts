@@ -1,0 +1,38 @@
+import { createInsertSchema, createSelectSchema } from "drizzle-zod";
+import { applications } from "@srms/server/db/schemas";
+import { SelectApplicantSchema } from "@srms/server/schemas/tables/applicantSchema";
+import { SelectApplicantHouseholdSchema } from "@srms/server/schemas/tables/applicantHouseholdSchema";
+import { FileUploadSchema, SelectApplicantDocsSchema } from "@srms/server/schemas/tables/applicantDocsSchema";
+import { SelectApplicantAddressSchema } from "@srms/server/schemas/tables/applicantAddressSchema";
+import { z } from "zod";
+
+export const SelectApplicationSchema = createSelectSchema(applications);
+
+export const CreateApplicationSchema = createInsertSchema(applications)
+  .omit({
+    id: true,
+    createdAt: true,
+    updatedAt: true,
+  })
+  .openapi({
+    description: "The application details as indicated in the SACO form.",
+  });
+
+export const SelectApplicationDetailsSchema = createSelectSchema(applications).extend({
+  applicant: SelectApplicantSchema,
+  address: SelectApplicantAddressSchema,
+  household: SelectApplicantHouseholdSchema,
+  documents: SelectApplicantDocsSchema.omit({
+    proofOfOwnership: true,
+    proofOfBilling: true,
+    barangayCertificate: true,
+    selfieWithValidId: true,
+    validId: true,
+  }).extend({
+    proofOfOwnership: z.array(FileUploadSchema),
+    proofOfBilling: z.array(FileUploadSchema),
+    barangayCertificate: z.array(FileUploadSchema),
+    validId: z.array(FileUploadSchema),
+    selfieWithValidId: FileUploadSchema,
+  }),
+});
