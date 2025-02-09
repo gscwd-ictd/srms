@@ -1,7 +1,7 @@
 import { pinoLogger as logger } from "hono-pino";
 import pino from "pino";
 import pretty from "pino-pretty";
-import env from "@nsa/utils/env";
+import env from "@srms/utils/env";
 
 export function pinoLogger() {
   return logger({

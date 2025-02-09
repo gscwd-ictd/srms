@@ -1,7 +1,7 @@
-import { createOpenAPIRoute, configureOpenApi } from "@nsa/lib/openapi";
-import { notFound, onError, pinoLogger } from "@nsa/server/middlewares";
+import { createOpenAPIRoute, configureOpenApi } from "@srms/lib/openapi";
+import { notFound, onError, pinoLogger } from "@srms/server/middlewares";
 import { secureHeaders } from "hono/secure-headers";
-import { healthcheck, applications } from "@nsa/server/routes";
+import { healthcheck, applications } from "@srms/server/routes";
 
 function createApp() {
   const app = createOpenAPIRoute().basePath("/api");

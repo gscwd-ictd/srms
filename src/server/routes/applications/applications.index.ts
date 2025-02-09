@@ -1,6 +1,6 @@
-import * as routes from "@nsa/server/routes/applications/applications.routes";
-import * as handlers from "@nsa/server/routes/applications/applications.handlers";
-import { createOpenAPIRoute } from "@nsa/lib/openapi";
+import * as routes from "@srms/server/routes/applications/applications.routes";
+import * as handlers from "@srms/server/routes/applications/applications.handlers";
+import { createOpenAPIRoute } from "@srms/lib/openapi";
 
 const applications = createOpenAPIRoute()
   .openapi(routes.createNewApplication, handlers.createNewApplication)

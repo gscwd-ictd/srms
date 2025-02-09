@@ -1,12 +1,12 @@
-import { ApplicationRepository } from "@nsa/server/providers/application";
+import { ApplicationRepository } from "@srms/server/providers/application";
 import {
   applications,
   applicants,
   applicantAddress,
   applicantHousehold,
   applicantDocs,
-} from "@nsa/server/db/schemas";
-import { db } from "@nsa/server/db/postgres";
+} from "@srms/server/db/schemas";
+import { db } from "@srms/server/db/postgres";
 import { eq } from "drizzle-orm";
 import type {
   Application,
@@ -15,9 +15,9 @@ import type {
   CreateApplicant,
   CreateApplication,
   QueryParams,
-} from "@nsa/server/types";
-import { paginateQuery } from "@nsa/server/helpers";
-import { NotFoundError } from "@nsa/server/errors";
+} from "@srms/server/types";
+import { paginateQuery } from "@srms/server/helpers";
+import { NotFoundError } from "@srms/server/errors";
 
 export class ApplicationService implements ApplicationRepository {
   /**

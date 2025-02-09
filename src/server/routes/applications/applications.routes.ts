@@ -1,7 +1,7 @@
 import { createRoute, z } from "@hono/zod-openapi";
-import { ApplicationStatus } from "@nsa/server/constants";
-import { errorDescriptions } from "@nsa/server/constants/errorDescriptions";
-import * as HttpStatusCodes from "@nsa/server/constants/httpStatusCodes";
+import { ApplicationStatus } from "@srms/server/constants";
+import { OpenAPIResponses } from "@srms/server/constants/openApiResponses";
+import * as HttpStatusCodes from "@srms/server/constants/httpStatusCodes";
 import {
   ErrorResponseSchema,
   IdParamsSchema,
@@ -11,7 +11,7 @@ import {
   QueryParamsSchema,
   ResultMetaDataSchema,
   SelectApplicationsSchema,
-} from "@nsa/server/schemas";
+} from "@srms/server/schemas";
 
 export const createNewApplication = createRoute({
   tags: ["Applications"],
@@ -40,7 +40,7 @@ export const createNewApplication = createRoute({
           schema: SelectApplicationDetailsSchema,
         },
       },
-      description: errorDescriptions.OK,
+      description: OpenAPIResponses.OK,
     },
 
     [HttpStatusCodes.UNPROCESSABLE_ENTITY]: {
@@ -49,7 +49,7 @@ export const createNewApplication = createRoute({
           schema: ErrorResponseSchema,
         },
       },
-      description: errorDescriptions["Unprocessable Entity"],
+      description: OpenAPIResponses.UNPROCESSABLE_ENTITY,
     },
 
     [HttpStatusCodes.BAD_REQUEST]: {
@@ -58,7 +58,7 @@ export const createNewApplication = createRoute({
           schema: ErrorResponseSchema,
         },
       },
-      description: errorDescriptions["Bad Request"],
+      description: OpenAPIResponses.BAD_REQUEST,
     },
 
     // Status: Internal Server Error
@@ -74,7 +74,7 @@ export const createNewApplication = createRoute({
           schema: ErrorResponseSchema,
         },
       },
-      description: errorDescriptions["Internal Server Error"],
+      description: OpenAPIResponses.INTERNAL_SERVER_ERROR,
     },
   },
 });
@@ -95,7 +95,7 @@ export const getApplicationDetailsById = createRoute({
           schema: SelectApplicationDetailsSchema,
         },
       },
-      description: errorDescriptions.OK,
+      description: OpenAPIResponses.OK,
     },
 
     [HttpStatusCodes.NOT_FOUND]: {
@@ -109,7 +109,7 @@ export const getApplicationDetailsById = createRoute({
           schema: ErrorResponseSchema,
         },
       },
-      description: errorDescriptions["Not Found"],
+      description: OpenAPIResponses.NOT_FOUND,
     },
 
     [HttpStatusCodes.INTERNAL_SERVER_ERROR]: {
@@ -124,7 +124,7 @@ export const getApplicationDetailsById = createRoute({
           schema: ErrorResponseSchema,
         },
       },
-      description: errorDescriptions["Internal Server Error"],
+      description: OpenAPIResponses.INTERNAL_SERVER_ERROR,
     },
   },
 });
@@ -148,7 +148,7 @@ export const getAllApplicationDetails = createRoute({
           }),
         },
       },
-      description: errorDescriptions.OK,
+      description: OpenAPIResponses.OK,
     },
 
     [HttpStatusCodes.UNPROCESSABLE_ENTITY]: {
@@ -157,7 +157,7 @@ export const getAllApplicationDetails = createRoute({
           schema: ErrorResponseSchema,
         },
       },
-      description: errorDescriptions["Unprocessable Entity"],
+      description: OpenAPIResponses.UNPROCESSABLE_ENTITY,
     },
 
     [HttpStatusCodes.INTERNAL_SERVER_ERROR]: {
@@ -172,7 +172,7 @@ export const getAllApplicationDetails = createRoute({
           schema: ErrorResponseSchema,
         },
       },
-      description: errorDescriptions["Internal Server Error"],
+      description: OpenAPIResponses.INTERNAL_SERVER_ERROR,
     },
   },
 });
@@ -205,7 +205,7 @@ export const updateApplicationStatus = createRoute({
           schema: SelectApplicationsSchema,
         },
       },
-      description: errorDescriptions.OK,
+      description: OpenAPIResponses.OK,
     },
 
     [HttpStatusCodes.NOT_FOUND]: {
@@ -219,7 +219,7 @@ export const updateApplicationStatus = createRoute({
           schema: ErrorResponseSchema,
         },
       },
-      description: errorDescriptions["Not Found"],
+      description: OpenAPIResponses.NOT_FOUND,
     },
 
     [HttpStatusCodes.UNPROCESSABLE_ENTITY]: {
@@ -228,7 +228,7 @@ export const updateApplicationStatus = createRoute({
           schema: ErrorResponseSchema,
         },
       },
-      description: errorDescriptions["Unprocessable Entity"],
+      description: OpenAPIResponses.UNPROCESSABLE_ENTITY,
     },
 
     [HttpStatusCodes.BAD_REQUEST]: {
@@ -237,7 +237,7 @@ export const updateApplicationStatus = createRoute({
           schema: ErrorResponseSchema,
         },
       },
-      description: errorDescriptions["Bad Request"],
+      description: OpenAPIResponses.BAD_REQUEST,
     },
 
     [HttpStatusCodes.INTERNAL_SERVER_ERROR]: {
@@ -252,7 +252,7 @@ export const updateApplicationStatus = createRoute({
           schema: ErrorResponseSchema,
         },
       },
-      description: errorDescriptions["Internal Server Error"],
+      description: OpenAPIResponses.INTERNAL_SERVER_ERROR,
     },
   },
 });

@@ -1,9 +1,9 @@
 import { createRoute, z } from "@hono/zod-openapi";
-import { errorDescriptions } from "@nsa/server/constants";
-import { ErrorResponseSchema, HealthCheckResponseSchema } from "@nsa/server/schemas";
+import { OpenAPIResponses } from "@srms/server/constants";
+import { ErrorResponseSchema, HealthCheckResponseSchema } from "@srms/server/schemas";
 import { rateLimiter } from "hono-rate-limiter";
-import * as HttpStatusCodes from "@nsa/server/constants/httpStatusCodes";
-import * as HttpStatusPhrases from "@nsa/server/constants/httpStatusPhrases";
+import * as HttpStatusCodes from "@srms/server/constants/httpStatusCodes";
+import * as HttpStatusPhrases from "@srms/server/constants/httpStatusPhrases";
 
 export const getServerStatus = createRoute({
   tags: ["Utilities"],
@@ -51,7 +51,7 @@ export const getServerStatus = createRoute({
           schema: HealthCheckResponseSchema,
         },
       },
-      description: errorDescriptions["OK"],
+      description: OpenAPIResponses.OK,
     },
 
     // Status: Too Many Requests
@@ -66,7 +66,7 @@ export const getServerStatus = createRoute({
           schema: ErrorResponseSchema,
         },
       },
-      description: errorDescriptions["Too Many Requests"],
+      description: OpenAPIResponses.TOO_MANY_REQUESTS,
     },
 
     // Status: Internal Server Error
@@ -82,7 +82,7 @@ export const getServerStatus = createRoute({
           schema: ErrorResponseSchema,
         },
       },
-      description: errorDescriptions["Internal Server Error"],
+      description: OpenAPIResponses.INTERNAL_SERVER_ERROR,
     },
   },
 });

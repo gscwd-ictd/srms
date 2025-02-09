@@ -1,6 +1,6 @@
-import { ApplicationStatus, ApplicationType } from "@nsa/server/constants";
-import { generateCuid } from "@nsa/server/helpers/generateCuid";
 import { pgEnum, pgTable, text, timestamp, varchar } from "drizzle-orm/pg-core";
+import { ApplicationStatus, ApplicationType } from "@srms/server/constants";
+import { generateCuid } from "@srms/server/helpers/generateCuid";
 
 export const applicationTypeEnum = pgEnum("application_type_num", ApplicationType);
 export const applicationStatusEnum = pgEnum("application_status_enum", ApplicationStatus);

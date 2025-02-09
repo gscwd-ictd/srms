@@ -1,4 +1,4 @@
-import env from "@nsa/utils/env";
+import env from "@srms/utils/env";
 import { defineConfig } from "drizzle-kit";
 
 export default defineConfig({

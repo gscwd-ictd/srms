@@ -1,4 +1,4 @@
-import { ErrorResponseSchema } from "@nsa/server/schemas";
+import { ErrorResponseSchema } from "@srms/server/schemas";
 import { z, ZodError } from "zod";
 
 export function formatZodError(error: ZodError): z.infer<typeof ErrorResponseSchema> {

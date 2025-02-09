@@ -1,4 +1,4 @@
-import {
+import type {
   Application,
   ApplicationDetails,
   ApplicationStatus,
@@ -6,7 +6,7 @@ import {
   CreateApplication,
   PaginatedResult,
   QueryParams,
-} from "@nsa/server/types";
+} from "@srms/server/types";
 
 export interface ApplicationRepository {
   // Create new application

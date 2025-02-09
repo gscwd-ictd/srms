@@ -1,11 +1,11 @@
-import type { AppRouteHandler } from "@nsa/server/types";
-import { ApplicationService } from "@nsa/server/providers/application";
+import type { AppRouteHandler } from "@srms/server/types";
+import { ApplicationService } from "@srms/server/providers/application";
 import {
   CreateApplicationRoute,
   GetAllApplicationDetailsRoute,
   GetApplicationDetailsByIdRoute,
   UpdateApplicationStatusRoute,
-} from "@nsa/server/routes/applications/applications.routes";
+} from "@srms/server/routes/applications/applications.routes";
 
 const applicationService = new ApplicationService();
 

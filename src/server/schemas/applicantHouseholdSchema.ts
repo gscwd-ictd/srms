@@ -1,5 +1,5 @@
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
-import { applicantHousehold } from "@nsa/server/db/schemas/applicantHousehold";
+import { applicantHousehold } from "@srms/server/db/schemas";
 import { z } from "zod";
 
 export const SelectApplicantHouseholdSchema = createSelectSchema(applicantHousehold);

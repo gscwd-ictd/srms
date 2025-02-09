@@ -1,8 +1,8 @@
-import { NOT_FOUND } from "@nsa/server/constants/httpStatusCodes";
-import { NOT_FOUND as NOT_FOUND_MESSAGE } from "@nsa/server/constants/httpStatusPhrases";
-import { jsonError } from "@nsa/server/errors/jsonError";
+import { NOT_FOUND } from "@srms/server/constants/httpStatusCodes";
+import { NOT_FOUND as NOT_FOUND_MESSAGE } from "@srms/server/constants/httpStatusPhrases";
+import { jsonError } from "@srms/server/errors";
 import type { NotFoundHandler } from "hono";
-import { AppBindings } from "@nsa/server/types";
+import type { AppBindings } from "@srms/server/types";
 
 export const notFound: NotFoundHandler<AppBindings> = (c) => {
   c.var.logger.error(`${NOT_FOUND_MESSAGE} - ${c.req.path}`);

@@ -1,6 +1,6 @@
 import type { PgSelect, PgTable } from "drizzle-orm/pg-core";
-import type { PaginatedResult, QueryParams } from "@nsa/server/types";
-import { db } from "@nsa/server/db/postgres";
+import type { PaginatedResult, QueryParams } from "@srms/server/types";
+import { db } from "@srms/server/db/postgres";
 import { sql } from "drizzle-orm";
 
 /**

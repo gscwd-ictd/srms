@@ -1,8 +1,8 @@
-import { generateCuid } from "@nsa/server/helpers/generateCuid";
 import { jsonb, pgTable, timestamp, varchar } from "drizzle-orm/pg-core";
+import { generateCuid } from "@srms/server/helpers/generateCuid";
+import { applicants } from "@srms/server/db/schemas/applicants";
+import { FileUploadSchema } from "@srms/server/schemas";
 import { z } from "zod";
-import { applicants } from "@nsa/server/db/schemas/applicants";
-import { FileUploadSchema } from "@nsa/server/schemas";
 
 type FileUpload = z.infer<typeof FileUploadSchema>;
 

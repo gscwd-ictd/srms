@@ -1,5 +1,5 @@
-import { NOT_FOUND } from "@nsa/server/constants/httpStatusCodes";
-import { HTTPError } from "./httpError";
+import { NOT_FOUND } from "@srms/server/constants";
+import { HTTPError } from "@srms/server/errors";
 
 export class NotFoundError extends HTTPError {
   constructor(message: string) {

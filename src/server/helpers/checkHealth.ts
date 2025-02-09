@@ -1,7 +1,7 @@
+import type { HealthCheckResponse } from "@srms/server/types";
 import { sql } from "drizzle-orm/sql";
-import { db } from "../db/postgres";
+import { db } from "@srms/server/db/postgres";
 import { format, formatDistanceStrict } from "date-fns";
-import { HealthCheckResponse } from "../types";
 import packageJson from "@/package.json";
 
 function formatUptime(seconds: number): string {

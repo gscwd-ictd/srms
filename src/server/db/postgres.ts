@@ -1,7 +1,7 @@
-import env from "@nsa/utils/env";
 import { drizzle } from "drizzle-orm/node-postgres";
 import { Pool } from "pg";
-import * as schemas from "@nsa/server/db/schemas";
+import env from "@srms/utils/env";
+import * as schemas from "@srms/server/db/schemas";
 
 const pool = new Pool({
   connectionString: `postgres://${env.DB_USER}:${env.DB_PASS}@${env.DB_HOST}:${env.DB_PORT}/${env.DB_NAME}`,

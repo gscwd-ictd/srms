@@ -1,4 +1,4 @@
-import app from "@nsa/server/app";
+import app from "@srms/server/app";
 import { handle } from "hono/vercel";
 
 export const GET = handle(app);
