@@ -8,7 +8,7 @@ export function configureOpenApi(app: AppOpenAPI) {
     openapi: "3.0.0",
     info: {
       version: packageJSON.version,
-      title: "Online Application for New Service Connection",
+      title: "Service Request Management System",
       description: "API Documentation.",
       contact: {
         email: "gensanwater.ictd@gmail.com",
