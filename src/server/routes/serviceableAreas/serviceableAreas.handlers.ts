@@ -1,20 +1,13 @@
-import { AppRouteHandler } from "@srms/server/types";
-import { CreateNewServiceableArea } from "./serviceableAreas.routes";
-import { db } from "@srms/server/db/postgres";
-import { serviceableAreas } from "@srms/server/db/schemas";
-import { createPolygon } from "@srms/server/helpers/postGIS";
+import type { AppRouteHandler } from "@srms/server/types";
+import { type CreateNewServiceableArea } from "@srms/server/routes/serviceableAreas/serviceableAreas.routes";
+import { ServiceableAreaService } from "@srms/server/providers/serviceableAreas/serviceableAreasService";
+
+const serviceableAreaService = new ServiceableAreaService();
 
 export const createNewServiceableArea: AppRouteHandler<CreateNewServiceableArea> = async (c) => {
   const body = c.req.valid("json");
 
-  const boundariesData = createPolygon(body.boundaries);
+  const newServiceableArea = await serviceableAreaService.addServiceableArea(body);
 
-  console.log({ boundariesData });
-
-  const res = await db
-    .insert(serviceableAreas)
-    .values({ barangayName: body.barangayName, boundaries: JSON.stringify(boundariesData) })
-    .returning();
-
-  return c.json(res[0]);
+  return c.json(newServiceableArea, 200);
 };
