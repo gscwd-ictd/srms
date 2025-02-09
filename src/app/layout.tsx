@@ -23,7 +23,9 @@ export default async function RootLayout({ children }: Readonly<PropsWithChildre
   return (
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-        <ReactQueryProvider>{children}</ReactQueryProvider>
+        <ReactQueryProvider>
+          <main className="h-screen w-screen">{children}</main>
+        </ReactQueryProvider>
       </body>
     </html>
   );
