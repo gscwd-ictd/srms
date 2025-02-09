@@ -1,19 +1,34 @@
 import { z } from "zod";
+
+import { ApplicationStatus, ApplicationType, Gender } from "@srms/server/constants";
+import { CreateApplicantsSchema, SelectApplicantsSchema } from "@srms/server/schemas/tables/applicantSchema";
+
 import {
   CreateApplicantAddressSchema,
-  CreateApplicantDocsSchema,
-  CreateApplicantHouseholdSchema,
-  CreateApplicantsSchema,
-  CreateApplicationsSchema,
-  FileUploadSchema,
   SelectApplicantAddressSchema,
+} from "@srms/server/schemas/tables/applicantAddressSchema";
+
+import {
+  CreateApplicantDocsSchema,
+  FileUploadSchema,
   SelectApplicantDocsSchema,
+} from "@srms/server/schemas/tables/applicantDocsSchema";
+
+import {
+  CreateApplicantHouseholdSchema,
   SelectApplicantHouseholdSchema,
-  SelectApplicantsSchema,
+} from "@srms/server/schemas/tables/applicantHouseholdSchema";
+
+import {
+  CreateApplicationsSchema,
   SelectApplicationDetailsSchema,
   SelectApplicationsSchema,
-} from "../schemas";
-import { ApplicationStatus, ApplicationType, Gender } from "../constants";
+} from "@srms/server/schemas/tables/applicationSchema";
+
+import {
+  CreateServiceableAreasSchema,
+  SelectServiceableAreasSchema,
+} from "@srms/server/schemas/tables/serviceableAreasSchema";
 
 export type ApplicantAddress = z.infer<typeof SelectApplicantAddressSchema>;
 export type CreateApplicantAddress = z.infer<typeof CreateApplicantAddressSchema>;
@@ -34,3 +49,6 @@ export type ApplicationDetails = z.infer<typeof SelectApplicationDetailsSchema>;
 export type CreateApplication = z.infer<typeof CreateApplicationsSchema>;
 export type ApplicationType = (typeof ApplicationType)[number];
 export type ApplicationStatus = (typeof ApplicationStatus)[number];
+
+export type ServiceableArea = z.infer<typeof SelectServiceableAreasSchema>;
+export type CreateServiceableArea = z.infer<typeof CreateServiceableAreasSchema>;
