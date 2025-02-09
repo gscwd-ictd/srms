@@ -4,7 +4,6 @@ import { OpenAPIResponses } from "@srms/server/constants/openApiResponses";
 import { CreateApplicantSchema } from "@srms/server/schemas/tables/applicantSchema";
 import {
   CreateApplicationSchema,
-  SelectApplicationDetailsFlatAddressSchema,
   SelectApplicationDetailsSchema,
   SelectApplicationSchema,
 } from "@srms/server/schemas/tables/applicationSchema";
@@ -146,7 +145,7 @@ export const getAllApplicationDetails = createRoute({
       content: {
         "application/json": {
           schema: z.object({
-            data: z.array(SelectApplicationDetailsFlatAddressSchema),
+            data: z.array(SelectApplicationDetailsSchema),
             metadata: ResultMetaDataSchema,
           }),
         },
