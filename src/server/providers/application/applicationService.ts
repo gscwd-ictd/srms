@@ -2,9 +2,9 @@ import { ApplicationRepository } from "@srms/server/providers/application";
 import {
   applications,
   applicants,
-  applicantAddress,
   applicantHousehold,
   applicantDocs,
+  applicantAddress,
 } from "@srms/server/db/schemas";
 import { db } from "@srms/server/db/postgres";
 import { eq } from "drizzle-orm";
