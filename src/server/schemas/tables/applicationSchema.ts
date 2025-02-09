@@ -3,10 +3,7 @@ import { applications } from "@srms/server/db/schemas";
 import { SelectApplicantSchema } from "@srms/server/schemas/tables/applicantSchema";
 import { SelectApplicantHouseholdSchema } from "@srms/server/schemas/tables/applicantHouseholdSchema";
 import { FileUploadSchema, SelectApplicantDocsSchema } from "@srms/server/schemas/tables/applicantDocsSchema";
-import {
-  SelectApplicantAddressFlatSchema,
-  SelectApplicantAddressSchema,
-} from "@srms/server/schemas/tables/applicantAddressSchema";
+import { SelectApplicantAddressSchema } from "@srms/server/schemas/tables/applicantAddressSchema";
 import { z } from "zod";
 
 export const SelectApplicationSchema = createSelectSchema(applications);
@@ -38,10 +35,4 @@ export const SelectApplicationDetailsSchema = createSelectSchema(applications).e
     validId: z.array(FileUploadSchema),
     selfieWithValidId: FileUploadSchema,
   }),
-});
-
-export const SelectApplicationDetailsFlatAddressSchema = SelectApplicationDetailsSchema.omit({
-  address: true,
-}).extend({
-  address: SelectApplicantAddressFlatSchema,
 });
