@@ -5,7 +5,6 @@ import { CreateApplicantSchema, SelectApplicantSchema } from "@srms/server/schem
 
 import {
   CreateApplicantAddressSchema,
-  SelectApplicantAddressFlatSchema,
   SelectApplicantAddressSchema,
 } from "@srms/server/schemas/tables/applicantAddressSchema";
 
@@ -22,7 +21,6 @@ import {
 
 import {
   CreateApplicationSchema,
-  SelectApplicationDetailsFlatAddressSchema,
   SelectApplicationDetailsSchema,
   SelectApplicationSchema,
 } from "@srms/server/schemas/tables/applicationSchema";
@@ -33,7 +31,6 @@ import {
 } from "@srms/server/schemas/tables/serviceableAreaSchema";
 
 export type ApplicantAddress = z.infer<typeof SelectApplicantAddressSchema>;
-export type ApplicantAddressFlat = z.infer<typeof SelectApplicantAddressFlatSchema>;
 export type CreateApplicantAddress = z.infer<typeof CreateApplicantAddressSchema>;
 
 export type FileUpload = z.infer<typeof FileUploadSchema>;
@@ -49,7 +46,6 @@ export type Gender = (typeof Gender)[number];
 
 export type Application = z.infer<typeof SelectApplicationSchema>;
 export type ApplicationDetails = z.infer<typeof SelectApplicationDetailsSchema>;
-export type ApplicationDetailsFlatAddress = z.infer<typeof SelectApplicationDetailsFlatAddressSchema>;
 export type CreateApplication = z.infer<typeof CreateApplicationSchema>;
 export type ApplicationType = (typeof ApplicationType)[number];
 export type ApplicationStatus = (typeof ApplicationStatus)[number];
