@@ -1,17 +1,19 @@
 import { createRoute, z } from "@hono/zod-openapi";
 import { ApplicationStatus } from "@srms/server/constants";
 import { OpenAPIResponses } from "@srms/server/constants/openApiResponses";
-import * as HttpStatusCodes from "@srms/server/constants/httpStatusCodes";
+import { CreateApplicantSchema } from "@srms/server/schemas/tables/applicantSchema";
 import {
-  ErrorResponseSchema,
-  IdParamsSchema,
-  CreateApplicantsSchema,
-  CreateApplicationsSchema,
+  CreateApplicationSchema,
   SelectApplicationDetailsSchema,
+  SelectApplicationSchema,
+} from "@srms/server/schemas/tables/applicationSchema";
+import {
   QueryParamsSchema,
   ResultMetaDataSchema,
-  SelectApplicationsSchema,
+  ErrorResponseSchema,
+  IdParamsSchema,
 } from "@srms/server/schemas";
+import * as HttpStatusCodes from "@srms/server/constants/httpStatusCodes";
 
 export const createNewApplication = createRoute({
   tags: ["Applications"],
@@ -24,8 +26,8 @@ export const createNewApplication = createRoute({
       content: {
         "application/json": {
           schema: z.object({
-            details: CreateApplicationsSchema,
-            applicant: CreateApplicantsSchema,
+            details: CreateApplicationSchema,
+            applicant: CreateApplicantSchema,
           }),
         },
       },
@@ -202,7 +204,7 @@ export const updateApplicationStatus = createRoute({
     [HttpStatusCodes.OK]: {
       content: {
         "application/json": {
-          schema: SelectApplicationsSchema,
+          schema: SelectApplicationSchema,
         },
       },
       description: OpenAPIResponses.OK,
