@@ -1,8 +1,17 @@
 import { Map } from "ol";
+import { Coordinate } from "ol/coordinate";
 import Feature from "ol/Feature";
-import { Draw, Interaction, Modify, Select } from "ol/interaction";
+import { LineString, Point, Polygon } from "ol/geom";
+import { Draw, Interaction, Modify, Select, Snap } from "ol/interaction";
 import VectorLayer from "ol/layer/Vector";
 import VectorSource from "ol/source/Vector";
+
+type SnapConfig = {
+  pixel?: number; // Pixel tolerance for snapping
+  edge?: boolean; // Enable edge snapping
+  vertex?: boolean; // Enable vertex snapping
+  source?: VectorSource; // Optional specific source to snap to
+};
 
 export class InteractionManager {
   private interactions: Record<string, Interaction>;
@@ -55,7 +64,11 @@ export class InteractionManager {
     });
   }
 
-  public enableDrawing(type: "Point" | "LineString" | "Polygon") {
+  public enableDrawing(
+    type: "Point" | "LineString" | "Polygon",
+    snapConfig?: SnapConfig | boolean,
+    onComplete?: (coordinates: Coordinate[] | undefined) => void,
+  ) {
     // Disable any existing drawing interaction
     this.disableDrawing();
 
@@ -64,11 +77,70 @@ export class InteractionManager {
       type: type,
     });
 
+    // Add draw interaction first
     this.addInteraction("draw", drawInteraction);
+
+    // Then handle snapping
+    if (snapConfig) {
+      let snapOptions: Partial<SnapConfig> = {};
+
+      if (typeof snapConfig === "boolean") {
+        snapOptions = {
+          pixel: 10,
+          edge: true,
+          vertex: true,
+          source: this.drawingSource,
+        };
+      } else {
+        snapOptions = {
+          pixel: snapConfig.pixel ?? 10,
+          edge: snapConfig.edge ?? true,
+          vertex: snapConfig.vertex ?? true,
+          source: snapConfig.source ?? this.drawingSource,
+        };
+      }
+
+      const snapInteraction = new Snap({
+        source: snapOptions.source,
+        pixelTolerance: snapOptions.pixel,
+        edge: snapOptions.edge,
+        vertex: snapOptions.vertex,
+      });
+
+      // Add snap interaction after draw interaction
+      this.addInteraction("snap", snapInteraction);
+    }
+
+    if (onComplete) {
+      drawInteraction.on("drawend", (event) => {
+        const feature = event.feature;
+        const geometry = feature.getGeometry();
+
+        // Check if draw mode is Point
+        if (geometry instanceof Point) {
+          const coordinate = geometry.getCoordinates();
+          onComplete([coordinate]);
+
+          // Check if draw mode is LineString
+        } else if (geometry instanceof LineString) {
+          const coordinates = geometry.getCoordinates();
+          onComplete(coordinates);
+
+          // Check if draw mode is Polygon
+        } else if (geometry instanceof Polygon) {
+          const coordinates = geometry.getCoordinates()[0];
+          onComplete(coordinates);
+
+          // Automatically disable drawing if Polygon is complete
+          this.disableDrawing();
+        }
+      });
+    }
   }
 
   public disableDrawing() {
     this.removeInteraction("draw");
+    this.removeInteraction("snap");
   }
 
   public enableModify(layerId: string) {

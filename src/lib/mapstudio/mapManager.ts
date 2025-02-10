@@ -19,7 +19,7 @@ export class MapManager {
     this.controlManager = new ControlManager();
   }
 
-  public init(options: MapOptions) {
+  public init(options: MapOptions): this {
     this.map = new Map({
       ...options,
       target: options.target,
@@ -35,6 +35,8 @@ export class MapManager {
     this.layerManager.setMap(this.map);
     this.interactionManager.setMap(this.map);
     this.controlManager.setMap(this.map);
+
+    return this;
   }
 
   public getMap() {
