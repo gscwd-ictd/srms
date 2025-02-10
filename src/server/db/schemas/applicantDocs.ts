@@ -1,10 +1,7 @@
 import { jsonb, pgTable, timestamp, varchar } from "drizzle-orm/pg-core";
 import { generateCuid } from "@srms/server/helpers/generateCuid";
 import { applicants } from "@srms/server/db/schemas/applicants";
-import { FileUploadSchema } from "@srms/server/schemas";
-import { z } from "zod";
-
-type FileUpload = z.infer<typeof FileUploadSchema>;
+import type { FileUpload } from "@srms/server/types";
 
 export const applicantDocs = pgTable("applicant_docs", {
   id: varchar("id")

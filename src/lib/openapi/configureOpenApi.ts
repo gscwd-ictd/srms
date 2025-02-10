@@ -33,6 +33,10 @@ export function configureOpenApi(app: AppOpenAPI) {
         description:
           "Handles the entire process of applying for a new water utility service connection, from initial submission to document verification.",
       },
+      {
+        name: "Serviceable Areas",
+        description: "This is the definition for the tag, 'Serviceable Areas'.",
+      },
     ],
   });
 
