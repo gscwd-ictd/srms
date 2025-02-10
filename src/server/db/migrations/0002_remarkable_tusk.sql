@@ -1,2 +1,0 @@
-CREATE TYPE "public"."application_status_enum" AS ENUM('pending_payment', 'for_survey', 'for_installation');--> statement-breakpoint
-ALTER TABLE "applications" ADD COLUMN "status" "application_status_enum" DEFAULT 'pending_payment' NOT NULL;

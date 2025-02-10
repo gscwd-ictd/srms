@@ -1,7 +1,22 @@
-import { pgTable, timestamp, varchar } from "drizzle-orm/pg-core";
-import { createInsertSchema, createSelectSchema } from "drizzle-zod";
+import { pgTable, text, timestamp, varchar } from "drizzle-orm/pg-core";
 import { generateCuid } from "@srms/server/helpers/generateCuid";
 import { applicants } from "@srms/server/db/schemas/applicants";
+import { polygon } from "@srms/server/helpers/postGIS";
+
+export const serviceableAreas = pgTable("serviceable_areas", {
+  id: varchar("id")
+    .primaryKey()
+    .$defaultFn(() => generateCuid()),
+  barangayName: text("barangay_name").notNull(),
+  boundaries: polygon("boundaries").notNull(),
+  /**
+   * Add more details...
+   */
+  createdAt: timestamp("created_at", { mode: "date" }).notNull().defaultNow(),
+  updatedAt: timestamp("updated_at", { mode: "date" })
+    .defaultNow()
+    .$onUpdateFn(() => new Date()),
+});
 
 export const applicantAddress = pgTable("applicant_address", {
   id: varchar("id")
@@ -14,7 +29,9 @@ export const applicantAddress = pgTable("applicant_address", {
   blockNo: varchar("block_no"),
   street: varchar("street"),
   prkVillSubd: varchar("prk_vill_subd"),
-  barangay: varchar("barangay").notNull(), //TODO: this should reference the serviceable areas
+  barangay: varchar("barangay_id_fk")
+    .references(() => serviceableAreas.id)
+    .notNull(),
   city: varchar("city").default("General Santos City").notNull(),
   province: varchar("province").default("South Cotabato").notNull(),
   zipCode: varchar("zip_code", { length: 4 }).default("9500").notNull(),
@@ -22,12 +39,4 @@ export const applicantAddress = pgTable("applicant_address", {
   updatedAt: timestamp("updated_at", { mode: "date" })
     .defaultNow()
     .$onUpdateFn(() => new Date()),
-});
-
-export const SelectApplicantAddressSchema = createSelectSchema(applicantAddress);
-
-export const CreateApplicantAddressSchema = createInsertSchema(applicantAddress).omit({
-  id: true,
-  createdAt: true,
-  updatedAt: true,
 });

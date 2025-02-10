@@ -5,22 +5,8 @@
     {
       "idx": 0,
       "version": "7",
-      "when": 1738729345417,
-      "tag": "0000_blushing_masked_marvel",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "7",
-      "when": 1738750397498,
-      "tag": "0001_oval_multiple_man",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "7",
-      "when": 1738762215260,
-      "tag": "0002_remarkable_tusk",
+      "when": 1739113111453,
+      "tag": "0000_blue_boomerang",
       "breakpoints": true
     }
   ]

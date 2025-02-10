@@ -12,7 +12,9 @@
     "studio": "drizzle-kit studio",
     "db:migrate": "drizzle-kit migrate",
     "db:generate": "drizzle-kit generate",
-    "api:generate": "npx apigen-ts http://localhost:3000/api/v1/docs ./src/lib/sdk/generated.ts"
+    "migration:drop": "drizzle-kit drop",
+    "api:generate": "npx apigen-ts http://localhost:3000/api/v1/docs ./src/lib/sdk/generated.ts",
+    "test": "vitest --config ./vite.config.ts"
   },
   "dependencies": {
     "@hono/zod-openapi": "^0.18.4",
@@ -46,12 +48,14 @@
     "eslint": "^9",
     "eslint-config-next": "15.1.6",
     "install": "^0.13.0",
+    "jsdom": "^26.0.0",
     "npm": "^11.1.0",
     "postcss": "^8",
     "prettier": "^3.4.2",
     "prettier-plugin-tailwindcss": "^0.6.11",
     "tailwindcss": "^3.4.1",
     "turbo": "^2.4.0",
-    "typescript": "^5"
+    "typescript": "^5",
+    "vitest": "^3.0.5"
   }
 }
