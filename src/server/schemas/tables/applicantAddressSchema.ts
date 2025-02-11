@@ -7,7 +7,7 @@ export const SelectApplicantAddressSchema = createSelectSchema(applicantAddress)
 export const CreateApplicantAddressSchema = createInsertSchema(applicantAddress)
   .omit({
     id: true,
-    barangay: true,
+    barangayId: true,
     city: true,
     province: true,
     zipCode: true,
@@ -15,5 +15,5 @@ export const CreateApplicantAddressSchema = createInsertSchema(applicantAddress)
     updatedAt: true,
   })
   .extend({
-    barangay: z.string().min(5),
+    barangayId: z.string(),
   });
