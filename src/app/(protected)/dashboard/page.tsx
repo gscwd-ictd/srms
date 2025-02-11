@@ -1,3 +1,4 @@
+import { WebMap } from "@srms/components/features/WebMap";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -5,5 +6,5 @@ export const metadata: Metadata = {
 };
 
 export default function DashboardPage() {
-  return <div>Dasboard</div>;
+  return <WebMap />;
 }
