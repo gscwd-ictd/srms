@@ -4,7 +4,7 @@ import { type PropsWithChildren } from "react";
 
 export default function ProtectedPagesLayout({ children }: Readonly<PropsWithChildren>) {
   return (
-    <SidebarProvider>
+    <SidebarProvider open={false}>
       <AppSidebar />
       <SidebarInset>{children}</SidebarInset>
     </SidebarProvider>

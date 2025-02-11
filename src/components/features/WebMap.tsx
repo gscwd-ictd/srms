@@ -49,8 +49,8 @@ export const WebMap: FunctionComponent<WebMapProps> = ({ children }) => {
       ],
 
       view: new View({
-        center: [0, 2],
-        zoom: 2,
+        center: [125.17189194375173, 6.113035811082611],
+        zoom: 16,
       }),
 
       interactions: defaultInteractions({
@@ -61,8 +61,6 @@ export const WebMap: FunctionComponent<WebMapProps> = ({ children }) => {
     });
 
     map.getMap().renderSync();
-
-    map.getMap().on("click", (e) => console.log(e.coordinate));
 
     setMapManager(map);
 

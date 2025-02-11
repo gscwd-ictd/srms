@@ -3,6 +3,8 @@ import { getDistance } from "ol/sphere";
 import { boundingExtent, containsCoordinate, Extent } from "ol/extent";
 import { Coordinate } from "ol/coordinate";
 import { Point, Polygon } from "ol/geom";
+import wkx from "wkx";
+import { GeoJSON } from "@srms/server/types";
 
 export class GeoUtils {
   public static transformCoordinates(coords: number[], fromProj: string, toProj: string): number[] {
@@ -79,5 +81,13 @@ export class GeoUtils {
 
   public static isPointInExtent(point: number[], extent: Extent): boolean {
     return containsCoordinate(extent, point);
+  }
+
+  public static convertWkbToGeoJson(wkbHex: string) {
+    const twkbBuffer = Buffer.from(wkbHex, "hex");
+    const geometry = wkx.Geometry.parse(twkbBuffer);
+    const geoJson = geometry.toGeoJSON() as GeoJSON;
+
+    return geoJson;
   }
 }

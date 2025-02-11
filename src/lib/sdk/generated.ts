@@ -416,4 +416,47 @@ export class ApiClient {
       }>("patch", `/api/v1/applications/status/${id}`, { body });
     },
   };
+
+  serviceableAreas = {
+    getServiceableAreas: (search: { limit?: number | null; page?: number | null }) => {
+      return this.Fetch<{
+        data: {
+          id: string;
+          barangayName: string;
+          boundaries?: unknown;
+          createdAt: string;
+          updatedAt: string | null;
+        }[];
+        metadata: {
+          currentPageCount: number;
+          totalRowCount: number;
+          currentPage: number;
+          pageSize: number;
+          totalPages: number;
+          hasNextPage: boolean;
+          hasPreviousPage: boolean;
+        };
+      }>("get", "/api/v1/serviceable-areas", { search });
+    },
+
+    postServiceableAreas: (body: { barangayName: string; boundaries: number[][] }) => {
+      return this.Fetch<{
+        id: string;
+        barangayName: string;
+        boundaries?: unknown;
+        createdAt: string;
+        updatedAt: string | null;
+      }>("post", "/api/v1/serviceable-areas", { body });
+    },
+
+    getServiceableAreasId: (id: string) => {
+      return this.Fetch<{
+        id: string;
+        barangayName: string;
+        boundaries?: unknown;
+        createdAt: string;
+        updatedAt: string | null;
+      }>("get", `/api/v1/serviceable-areas/${id}`, {});
+    },
+  };
 }
