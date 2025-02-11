@@ -1,13 +1,13 @@
 import { pgTable, text, timestamp, varchar } from "drizzle-orm/pg-core";
 import { generateCuid } from "@srms/server/helpers/generateCuid";
 import { applicants } from "@srms/server/db/schemas/applicants";
-import { polygon } from "@srms/server/helpers/postGIS";
+import { polygon } from "@srms/server/helpers/geo";
 
 export const serviceableAreas = pgTable("serviceable_areas", {
   id: varchar("id")
     .primaryKey()
     .$defaultFn(() => generateCuid()),
-  barangayName: text("barangay_name").notNull(),
+  barangay: text("barangay").unique().notNull(),
   boundaries: polygon("boundaries").notNull(),
   /**
    * Add more details...
@@ -29,7 +29,7 @@ export const applicantAddress = pgTable("applicant_address", {
   blockNo: varchar("block_no"),
   street: varchar("street"),
   prkVillSubd: varchar("prk_vill_subd"),
-  barangay: varchar("barangay_id_fk")
+  barangayId: varchar("barangay_id_fk")
     .references(() => serviceableAreas.id)
     .notNull(),
   city: varchar("city").default("General Santos City").notNull(),
