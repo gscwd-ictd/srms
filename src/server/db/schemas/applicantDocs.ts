@@ -10,7 +10,7 @@ export const applicantDocs = pgTable("applicant_docs", {
   applicantId: varchar("applicant_id_fk")
     .notNull()
     .references(() => applicants.id),
-  proofOfOwnership: jsonb("proof_of_ownership").$type<FileUpload[]>().notNull(),
+  proofOfLotOwnership: jsonb("proof_of_lot_ownership").$type<FileUpload[]>().notNull(),
   proofOfBilling: jsonb("proof_of_billing").$type<FileUpload[]>().notNull(),
   barangayCertificate: jsonb("barangay_certificate").$type<FileUpload[]>().notNull(),
   validId: jsonb("valid_id").$type<FileUpload[]>().notNull(),

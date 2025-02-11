@@ -8,6 +8,13 @@
       "when": 1739113111453,
       "tag": "0000_blue_boomerang",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1739272580640,
+      "tag": "0001_happy_secret_warriors",
+      "breakpoints": true
     }
   ]
 }

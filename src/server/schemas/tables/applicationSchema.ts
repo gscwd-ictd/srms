@@ -23,13 +23,13 @@ export const SelectApplicationDetailsSchema = createSelectSchema(applications).e
   address: SelectApplicantAddressSchema,
   household: SelectApplicantHouseholdSchema,
   documents: SelectApplicantDocsSchema.omit({
-    proofOfOwnership: true,
+    proofOfLotOwnership: true,
     proofOfBilling: true,
     barangayCertificate: true,
     selfieWithValidId: true,
     validId: true,
   }).extend({
-    proofOfOwnership: z.array(FileUploadSchema),
+    proofOfLotOwnership: z.array(FileUploadSchema),
     proofOfBilling: z.array(FileUploadSchema),
     barangayCertificate: z.array(FileUploadSchema),
     validId: z.array(FileUploadSchema),
