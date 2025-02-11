@@ -13,15 +13,24 @@ import {
   useState,
   createContext,
 } from "react";
-
-type WebMapProps = PropsWithChildren & {};
+import { useGeographic } from "ol/proj";
 
 export const WebMapContext = createContext<MapManager | undefined>(undefined);
+
+type WebMapProps = PropsWithChildren & {};
 
 export const WebMap: FunctionComponent<WebMapProps> = ({ children }) => {
   const [mapManager, setMapManager] = useState<MapManager>();
 
   const mapRef = useRef<HTMLDivElement>(null);
+
+  /**
+   * Calling the useGeographic function makes it so the map view uses
+   * geographic coordinates (even if the view projection is not geographic).
+   *
+   * See more at: https://openlayers.org/en/latest/apidoc/module-ol_proj.html#.useGeographic
+   */
+  useGeographic();
 
   useEffect(() => {
     if (!mapRef.current) return;
@@ -40,7 +49,7 @@ export const WebMap: FunctionComponent<WebMapProps> = ({ children }) => {
       ],
 
       view: new View({
-        center: [0, 0],
+        center: [0, 2],
         zoom: 2,
       }),
 
@@ -52,6 +61,8 @@ export const WebMap: FunctionComponent<WebMapProps> = ({ children }) => {
     });
 
     map.getMap().renderSync();
+
+    map.getMap().on("click", (e) => console.log(e.coordinate));
 
     setMapManager(map);
 

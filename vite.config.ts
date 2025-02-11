@@ -1,3 +1,4 @@
+import path from "path";
 import { defineConfig } from "vite";
 
 export default defineConfig({
@@ -13,7 +14,7 @@ export default defineConfig({
   },
   resolve: {
     alias: {
-      "@srms/*": `${__dirname}/src`,
+      "@srms": path.resolve(__dirname, "./src"),
     },
   },
 });
