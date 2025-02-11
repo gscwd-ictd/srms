@@ -1,4 +1,5 @@
-import { WebMap } from "@srms/components/features/WebMap";
+import { ServiceableAreaMap } from "@srms/components/blocks/serviceableAreas/ServiceableAreaMap";
+import { ServiceableAreas } from "@srms/components/blocks/serviceableAreas/ServiceableAreas";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -6,5 +7,9 @@ export const metadata: Metadata = {
 };
 
 export default function DashboardPage() {
-  return <WebMap />;
+  return (
+    <ServiceableAreaMap>
+      <ServiceableAreas />
+    </ServiceableAreaMap>
+  );
 }
