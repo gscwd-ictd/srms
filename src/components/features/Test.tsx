@@ -32,7 +32,7 @@ export const Test: FunctionComponent = () => {
   const { data: serviceableAreas } = useQuery({
     queryKey: ["get_all_serviceable_areas"],
     queryFn: async () => {
-      const res = await $api.serviceableAreas.getServiceableAreasId("cm708ot480kdqpe8kwg3");
+      const res = await $api.serviceableAreas.getServiceableAreasId("cm704mbkm0k95turmxkj");
       return res;
     },
   });
@@ -65,11 +65,13 @@ export const Test: FunctionComponent = () => {
     // };
 
     // Create vector source and layer for GeoJSON
-    const vectorSource = new VectorSource();
+    const vectorSource = new VectorSource({
+      features: new GeoJSON().readFeatures(serviceableAreas.boundaries),
+    });
 
-    console.log(serviceableAreas.boundaries.coordinates);
+    // console.log(serviceableAreas.boundaries.coordinates);
 
-    vectorSource.addFeature(new Feature(new Polygon(serviceableAreas.boundaries.coordinates)));
+    // vectorSource.addFeature(new Feature(new Polygon(serviceableAreas.boundaries.coordinates)));
 
     // vectorSource.addFeature(
     //   new Feature(
