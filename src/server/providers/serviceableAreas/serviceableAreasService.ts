@@ -5,7 +5,7 @@ import {
   ServiceableAreaGeoJSON,
 } from "@srms/server/types";
 import { ServiceableAreasRepository } from "./serviceableAreasRepository";
-import { createPolygon } from "@srms/server/helpers/postGIS";
+import { createPolygon } from "@srms/server/helpers/geo";
 import { db } from "@srms/server/db/postgres";
 import { serviceableAreas } from "@srms/server/db/schemas";
 import { eq, sql } from "drizzle-orm";
