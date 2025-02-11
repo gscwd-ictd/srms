@@ -16,14 +16,14 @@ export const CreateApplicantDocsSchema = createInsertSchema(applicantDocs)
     updatedAt: true,
   })
   .omit({
-    proofOfOwnership: true,
+    proofOfLotOwnership: true,
     proofOfBilling: true,
     barangayCertificate: true,
     selfieWithValidId: true,
     validId: true,
   })
   .extend({
-    proofOfOwnership: z.array(FileUploadSchema),
+    proofOfLotOwnership: z.array(FileUploadSchema),
     proofOfBilling: z.array(FileUploadSchema),
     barangayCertificate: z.array(FileUploadSchema),
     validId: z.array(FileUploadSchema),

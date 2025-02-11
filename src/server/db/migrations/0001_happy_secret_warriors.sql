@@ -1,0 +1,1 @@
+ALTER TABLE "applicant_docs" RENAME COLUMN "proof_of_ownership" TO "proof_of_lot_ownership";
