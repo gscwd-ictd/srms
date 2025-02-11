@@ -1,0 +1,2 @@
+ALTER TABLE "serviceable_areas" RENAME COLUMN "barangay_name" TO "barangay";--> statement-breakpoint
+ALTER TABLE "serviceable_areas" ADD CONSTRAINT "serviceable_areas_barangay_unique" UNIQUE("barangay");

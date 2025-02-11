@@ -15,6 +15,13 @@
       "when": 1739272580640,
       "tag": "0001_happy_secret_warriors",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1739277907477,
+      "tag": "0002_petite_silverclaw",
+      "breakpoints": true
     }
   ]
 }
