@@ -3,12 +3,12 @@
 import * as React from "react";
 import {
   AudioWaveform,
+  CircleHelp,
   Command,
   Droplets,
   Frame,
   GalleryVerticalEnd,
   LayoutDashboard,
-  LifeBuoy,
   Map,
   MessageSquareDot,
   PieChart,
@@ -83,9 +83,9 @@ const data = {
   ],
   navSecondary: [
     {
-      title: "Support",
+      title: "Help",
       url: "#",
-      icon: LifeBuoy,
+      icon: CircleHelp,
     },
     {
       title: "Feedback",
