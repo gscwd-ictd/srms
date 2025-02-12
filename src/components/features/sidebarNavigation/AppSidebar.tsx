@@ -3,6 +3,7 @@
 import * as React from "react";
 import {
   AudioWaveform,
+  BookOpen,
   CircleHelp,
   Command,
   Droplets,
@@ -83,14 +84,19 @@ const data = {
   ],
   navSecondary: [
     {
-      title: "Help",
+      title: "Documentation",
       url: "#",
-      icon: CircleHelp,
+      icon: BookOpen,
     },
     {
       title: "Feedback",
       url: "#",
       icon: Send,
+    },
+    {
+      title: "Help",
+      url: "#",
+      icon: CircleHelp,
     },
   ],
   projects: [
