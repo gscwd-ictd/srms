@@ -25,7 +25,7 @@ export default async function RootLayout({ children }: Readonly<PropsWithChildre
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <ReactQueryProvider>
           <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
-            <main className="h-screen w-screen">{children}</main>
+            <main className="h-screen w-screen overflow-x-hidden">{children}</main>
           </ThemeProvider>
         </ReactQueryProvider>
       </body>
