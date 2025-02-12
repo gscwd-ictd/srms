@@ -15,6 +15,12 @@ import { Position2D } from "@srms/server/types";
 import { Select } from "ol/interaction";
 import { pointerMove } from "ol/events/condition";
 import { useGeo } from "@srms/components/hooks/useGeo";
+import { AddBarangaySheet } from "./AddBarangaySheet";
+import { AddServiceableAreaSheetContainer } from "@srms/components/features/addServiceableArea/AddServiceableAreaSheetContainer";
+
+import { Pencil } from "lucide-react";
+import { SheetDescription, SheetHeader, SheetTitle } from "@srms/components/ui/Sheet";
+import PolygonDrawingTool from "@srms/components/features/addServiceableArea/DrawingTool";
 
 export const ServiceableAreas: FunctionComponent = () => {
   const [boundaries, setBoundaries] = useState<Coordinate[] | undefined>(undefined);
@@ -100,6 +106,10 @@ export const ServiceableAreas: FunctionComponent = () => {
         stroke: new Stroke({
           color: "blue",
           width: 2,
+          lineJoin: "round",
+          lineCap: "round",
+          lineDash: [5, 10],
+          lineDashOffset: 40,
         }),
         fill: new Fill({
           color: "rgba(0, 0, 255, 0.1)",
@@ -146,7 +156,7 @@ export const ServiceableAreas: FunctionComponent = () => {
   }, [createMultiPolygon, data, mapManager]);
 
   return (
-    <div className="absolute top-10 right-10 z-10 space-x-5">
+    <div className="absolute top-10 right-10 z-10">
       {/* <Button
         variant="secondary"
         onClick={() => {
@@ -160,6 +170,8 @@ export const ServiceableAreas: FunctionComponent = () => {
       <Button variant="secondary" onClick={() => mutate()}>
         Add Barangay
       </Button> */}
+      <AddServiceableAreaSheetContainer />
+      {/* <PolygonDrawingTool /> */}
     </div>
   );
 };
