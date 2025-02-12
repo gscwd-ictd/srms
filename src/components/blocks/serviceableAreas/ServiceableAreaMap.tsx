@@ -70,7 +70,7 @@ export const ServiceableAreaMap: FunctionComponent<PropsWithChildren> = ({ child
   }, []);
 
   return (
-    <div ref={mapRef} className="h-full w-full">
+    <div ref={mapRef} className="z-20 h-full w-full">
       <WebMapContext.Provider value={mapManager}>{children}</WebMapContext.Provider>
     </div>
   );

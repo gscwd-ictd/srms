@@ -3,7 +3,7 @@
 import { Button } from "@srms/components/ui/Button";
 import { useContext, useEffect, useState, type FunctionComponent } from "react";
 import { WebMapContext } from "./ServiceableAreaMap";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import $api from "@srms/lib/sdk/apiClient";
 import VectorSource from "ol/source/Vector";
 import VectorLayer from "ol/layer/Vector";
@@ -11,16 +11,16 @@ import { Fill, Stroke, Style } from "ol/style";
 import { FeatureManager } from "@srms/lib/mapstudio/featureManager";
 import Polygon from "ol/geom/Polygon";
 import { Coordinate } from "ol/coordinate";
-import { GeoUtils } from "@srms/lib/mapstudio/geoUtils";
 import { Position2D } from "@srms/server/types";
-import { useCreateMultiPolygon } from "./useCreateMultiPolygon";
-import { MultiPolygon } from "ol/geom";
 import { Select } from "ol/interaction";
-import { click, pointerMove } from "ol/events/condition";
+import { pointerMove } from "ol/events/condition";
+import { useGeo } from "@srms/components/hooks/useGeo";
 
 export const ServiceableAreas: FunctionComponent = () => {
   const [boundaries, setBoundaries] = useState<Coordinate[] | undefined>(undefined);
   const mapManager = useContext(WebMapContext);
+
+  const queryClient = useQueryClient();
 
   const { data } = useQuery({
     queryKey: ["get-all-serviceable-areas"],
@@ -33,13 +33,20 @@ export const ServiceableAreas: FunctionComponent = () => {
     mutationKey: ["add-brgy"],
     mutationFn: async () => {
       const res = await $api.serviceableAreas.postServiceableAreas({
-        barangay: "Tambler",
+        barangay: crypto.randomUUID(),
         boundaries: boundaries as number[][],
       });
 
       return res;
     },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["get-all-serviceable-areas"],
+      });
+    },
   });
+
+  const { createMultiPolygon } = useGeo();
 
   useEffect(() => {
     if (!data || !mapManager) return;
@@ -51,18 +58,21 @@ export const ServiceableAreas: FunctionComponent = () => {
     mapManager.getMap().on("click", (e) => {
       // const polygon = new Polygon(data[0]?.boundaries.coordinates!);
 
+      //  const polygon = new Polygon(data[0]?.boundaries.coordinates as Coordinate[][]);
+
+      //const isInsidePolygon = polygon.containsXY(e.coordinate[0]!, e.coordinate[1]!);
+
       const polygonCoordinates = data.map((area) => area.boundaries.coordinates[0]);
 
-      const multiPolygon = useCreateMultiPolygon(polygonCoordinates as Position2D[][]);
+      const multiPolygon = createMultiPolygon(polygonCoordinates as Position2D[][]);
 
-      const myMultiPolygon = new MultiPolygon(multiPolygon.coordinates);
-
-      const isInside = myMultiPolygon.containsXY(e.coordinate[0]!, e.coordinate[1]!);
+      const isInsideMultiPolygon = multiPolygon.containsXY(e.coordinate[0]!, e.coordinate[1]!);
 
       console.log({
         point: e.coordinate,
         bounds: data[0]?.boundaries.coordinates,
-        isInside,
+        isInsideMultiPolygon,
+        //  isInsidePolygon,
       });
     });
 
@@ -133,11 +143,11 @@ export const ServiceableAreas: FunctionComponent = () => {
     return () => {
       mapManager.getLayerManager().removeLayer("serviceableAreas");
     };
-  }, [data, mapManager]);
+  }, [createMultiPolygon, data, mapManager]);
 
   return (
     <div className="absolute top-10 right-10 z-10 space-x-5">
-      <Button
+      {/* <Button
         variant="secondary"
         onClick={() => {
           mapManager?.getInteractionManager().enableDrawing("Polygon", true, (coords) => {
@@ -149,7 +159,7 @@ export const ServiceableAreas: FunctionComponent = () => {
       </Button>
       <Button variant="secondary" onClick={() => mutate()}>
         Add Barangay
-      </Button>
+      </Button> */}
     </div>
   );
 };
