@@ -1,9 +1,8 @@
-import { transform, get as getProjection, fromLonLat } from "ol/proj";
+import { transform, get as getProjection } from "ol/proj";
 import { getDistance } from "ol/sphere";
 import { boundingExtent, containsCoordinate, Extent } from "ol/extent";
 import { Coordinate } from "ol/coordinate";
-import { Point, Polygon } from "ol/geom";
-import { GeoJSONPolygon, Position2D } from "@srms/server/types";
+import { Polygon } from "ol/geom";
 
 export class GeoUtils {
   public static transformCoordinates(coords: number[], fromProj: string, toProj: string): number[] {
