@@ -27,6 +27,7 @@ import {
   SidebarFooter,
   SidebarHeader,
   SidebarRail,
+  SidebarSeparator,
 } from "@srms/components/ui/Sidebar";
 import { NavSecondary } from "./NavSecondary";
 
@@ -124,6 +125,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       <SidebarHeader>
         <TeamSwitcher teams={data.teams} />
       </SidebarHeader>
+      <SidebarSeparator className="mx-0" />
       <SidebarContent className="flex flex-col justify-between">
         <NavMain items={data.navMain} />
         <NavSecondary items={data.navSecondary} />
