@@ -8,9 +8,11 @@ import {
   Frame,
   GalleryVerticalEnd,
   LayoutDashboard,
+  LifeBuoy,
   Map,
   MessageSquareDot,
   PieChart,
+  Send,
   Settings,
   SquareDashedMousePointer,
 } from "lucide-react";
@@ -25,6 +27,7 @@ import {
   SidebarHeader,
   SidebarRail,
 } from "@srms/components/ui/Sidebar";
+import { NavSecondary } from "./NavSecondary";
 
 // This is sample data.
 const data = {
@@ -35,9 +38,9 @@ const data = {
   },
   teams: [
     {
-      name: "Acme Inc",
+      name: "Flowscape",
       logo: GalleryVerticalEnd,
-      plan: "Enterprise",
+      plan: "Smart water solutions",
     },
     {
       name: "Acme Corp.",
@@ -60,6 +63,7 @@ const data = {
       title: "Notifications",
       url: "/notifications",
       icon: MessageSquareDot,
+      count: 4,
     },
     {
       title: "Service Areas",
@@ -75,6 +79,18 @@ const data = {
       title: "Settings",
       url: "/settings",
       icon: Settings,
+    },
+  ],
+  navSecondary: [
+    {
+      title: "Support",
+      url: "#",
+      icon: LifeBuoy,
+    },
+    {
+      title: "Feedback",
+      url: "#",
+      icon: Send,
     },
   ],
   projects: [
@@ -102,8 +118,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       <SidebarHeader>
         <TeamSwitcher teams={data.teams} />
       </SidebarHeader>
-      <SidebarContent>
+      <SidebarContent className="flex flex-col justify-between">
         <NavMain items={data.navMain} />
+        <NavSecondary items={data.navSecondary} />
       </SidebarContent>
       <SidebarFooter>
         <NavUser user={data.user} />
