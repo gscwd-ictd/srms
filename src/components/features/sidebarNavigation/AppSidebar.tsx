@@ -4,6 +4,7 @@ import * as React from "react";
 import {
   AudioWaveform,
   Command,
+  Droplets,
   Frame,
   GalleryVerticalEnd,
   LayoutDashboard,
@@ -12,7 +13,6 @@ import {
   PieChart,
   Settings,
   SquareDashedMousePointer,
-  Wrench,
 } from "lucide-react";
 
 import { NavMain } from "./NavMain";
@@ -69,7 +69,7 @@ const data = {
     {
       title: "Operations",
       url: "/operations",
-      icon: Wrench,
+      icon: Droplets,
     },
     {
       title: "Settings",
