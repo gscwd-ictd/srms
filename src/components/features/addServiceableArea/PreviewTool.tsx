@@ -1,14 +1,14 @@
 "use client";
 
-import { useContext, type FunctionComponent } from "react";
+import { type FunctionComponent } from "react";
+import { useServiceableAreaMap } from "./contexts/useServiceableMapContext";
 import Image from "next/image";
-import { ServiceableAreaMapContenxt } from "./ServiceableAreaMap";
 
 export const PreviewTool: FunctionComponent = () => {
-  const mapConfig = useContext(ServiceableAreaMapContenxt);
+  const serviceableAreaMap = useServiceableAreaMap();
 
   return (
-    <div className="relative flex h-24 items-center justify-center overflow-clip rounded-md select-none">
+    <div className="relative flex h-32 items-center justify-center overflow-clip rounded-md select-none">
       <Image
         src="/preview.png"
         alt="preview"
@@ -19,12 +19,12 @@ export const PreviewTool: FunctionComponent = () => {
       />
 
       <div
-        className="absolute h-10 w-10 border-[4px]"
+        className="absolute h-12 w-12 border-[4px]"
         style={{
-          borderColor: mapConfig?.properties.strokeColor,
-          background: mapConfig?.properties.fillColor,
-          borderWidth: mapConfig?.properties.strokeWidth[0],
-          borderStyle: mapConfig?.properties.outlineStyle,
+          borderColor: serviceableAreaMap.properties.strokeColor,
+          background: serviceableAreaMap.properties.fillColor,
+          borderWidth: serviceableAreaMap.properties.strokeWidth[0],
+          borderStyle: serviceableAreaMap.properties.outlineStyle,
         }}
       />
     </div>

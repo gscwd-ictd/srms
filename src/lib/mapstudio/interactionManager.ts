@@ -7,7 +7,7 @@ import VectorLayer from "ol/layer/Vector";
 import VectorSource from "ol/source/Vector";
 import { Style } from "ol/style";
 
-type SnapConfig = {
+export type SnapConfig = {
   pixel?: number; // Pixel tolerance for snapping
   edge?: boolean; // Enable edge snapping
   vertex?: boolean; // Enable vertex snapping

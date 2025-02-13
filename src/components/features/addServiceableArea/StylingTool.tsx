@@ -1,5 +1,6 @@
 "use client";
 
+import { type FunctionComponent } from "react";
 import { Label } from "@srms/components/ui/Label";
 import {
   Select,
@@ -12,12 +13,11 @@ import {
 } from "@srms/components/ui/Select";
 import { Slider } from "@srms/components/ui/Slider";
 import { Highlighter, PaintBucket, PaintRoller, PenLine, Square, SquareDashed } from "lucide-react";
-import { useContext, type FunctionComponent } from "react";
 import { ColorPickerPopover } from "./ColorPickerPopover";
-import { ServiceableAreaMapContenxt } from "./ServiceableAreaMap";
+import { useServiceableAreaMap } from "./contexts/useServiceableMapContext";
 
 export const StylingTool: FunctionComponent = () => {
-  const mapConfig = useContext(ServiceableAreaMapContenxt);
+  const serviceableAreaMap = useServiceableAreaMap();
 
   return (
     <>
@@ -27,9 +27,9 @@ export const StylingTool: FunctionComponent = () => {
           <span>Fill Color</span>
         </Label>
         <ColorPickerPopover
-          defaultColor={mapConfig?.properties.fillColor}
+          defaultColor={serviceableAreaMap.properties.fillColor}
           onUpdateColor={(color) => {
-            mapConfig?.setProperties?.({ ...mapConfig.properties, fillColor: color });
+            serviceableAreaMap.setProperties?.({ ...serviceableAreaMap.properties, fillColor: color });
           }}
         />
       </section>
@@ -40,9 +40,9 @@ export const StylingTool: FunctionComponent = () => {
           <span>Stroke Color</span>
         </Label>
         <ColorPickerPopover
-          defaultColor={mapConfig?.properties.strokeColor}
+          defaultColor={serviceableAreaMap.properties.strokeColor}
           onUpdateColor={(color) => {
-            mapConfig?.setProperties?.({ ...mapConfig.properties, strokeColor: color });
+            serviceableAreaMap.setProperties?.({ ...serviceableAreaMap.properties, strokeColor: color });
           }}
         />
       </section>
@@ -54,12 +54,15 @@ export const StylingTool: FunctionComponent = () => {
             <span>Stroke Width</span>
           </Label>
           <code className="text-muted-foreground text-sm font-semibold">
-            {mapConfig?.properties.strokeWidth}px
+            {serviceableAreaMap.properties.strokeWidth}px
           </code>
         </div>
         <Slider
-          defaultValue={mapConfig?.properties.strokeWidth}
-          onValueChange={(e) => mapConfig?.setProperties?.({ ...mapConfig.properties, strokeWidth: e })}
+          defaultValue={serviceableAreaMap.properties.strokeWidth}
+          onValueChange={(e) =>
+            serviceableAreaMap.setProperties?.({ ...serviceableAreaMap.properties, strokeWidth: e })
+          }
+          min={1}
           max={10}
           step={1}
         />
@@ -68,32 +71,36 @@ export const StylingTool: FunctionComponent = () => {
       <section className="flex flex-col gap-4">
         <div className="flex items-center justify-between">
           <Label className="flex items-center gap-2 text-xs">
-            <Highlighter className="h-4 w-4" />
+            <Highlighter className="h-4 w-4 shrink-0" />
             <span>Outline Style</span>
           </Label>
-          {mapConfig?.properties.outlineStyle === "solid" ? (
-            <Square className="h-5 w-5" />
-          ) : (
-            <SquareDashed className="h-5 w-5" />
-          )}
+
+          <Select
+            defaultValue={serviceableAreaMap.properties.outlineStyle}
+            onValueChange={(val: "solid" | "dashed") =>
+              serviceableAreaMap.setProperties?.({ ...serviceableAreaMap.properties, outlineStyle: val })
+            }
+          >
+            <SelectTrigger className="w-[110px] text-xs">
+              {serviceableAreaMap.properties.outlineStyle === "solid" ? (
+                <Square className="h-5 w-5" />
+              ) : (
+                <SquareDashed className="h-5 w-5" />
+              )}
+              <SelectValue placeholder="Select a style" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectGroup>
+                <SelectItem value="solid" className="text-xs">
+                  Solid
+                </SelectItem>
+                <SelectItem value="dashed" className="text-xs">
+                  Dashed
+                </SelectItem>
+              </SelectGroup>
+            </SelectContent>
+          </Select>
         </div>
-        <Select
-          defaultValue={mapConfig?.properties.outlineStyle}
-          onValueChange={(val: "solid" | "dashed") =>
-            mapConfig?.setProperties?.({ ...mapConfig.properties, outlineStyle: val })
-          }
-        >
-          <SelectTrigger>
-            <SelectValue placeholder="Select a style" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectGroup>
-              <SelectLabel>Styles</SelectLabel>
-              <SelectItem value="solid">Solid</SelectItem>
-              <SelectItem value="dashed">Dashed</SelectItem>
-            </SelectGroup>
-          </SelectContent>
-        </Select>
       </section>
     </>
   );
