@@ -5,6 +5,7 @@ import { LineString, Point, Polygon } from "ol/geom";
 import { Draw, Interaction, Modify, Select, Snap } from "ol/interaction";
 import VectorLayer from "ol/layer/Vector";
 import VectorSource from "ol/source/Vector";
+import { Style } from "ol/style";
 
 type SnapConfig = {
   pixel?: number; // Pixel tolerance for snapping
@@ -66,6 +67,8 @@ export class InteractionManager {
 
   public enableDrawing(
     type: "Point" | "LineString" | "Polygon",
+    freehand?: boolean,
+    drawStyle?: Style,
     snapConfig?: SnapConfig | boolean,
     onComplete?: (coordinates: Coordinate[] | undefined) => void,
   ) {
@@ -75,10 +78,16 @@ export class InteractionManager {
     const drawInteraction = new Draw({
       source: this.drawingSource,
       type: type,
+      style: drawStyle,
+      freehand: freehand,
     });
 
     // Add draw interaction first
     this.addInteraction("draw", drawInteraction);
+
+    drawInteraction.on("drawstart", () => {
+      document.body.classList.add("cursor-crosshair");
+    });
 
     // Then handle snapping
     if (snapConfig) {
@@ -111,9 +120,16 @@ export class InteractionManager {
       this.addInteraction("snap", snapInteraction);
     }
 
+    drawInteraction.on("drawend", (e) => {
+      const feature = e.feature;
+      feature.setStyle(drawStyle);
+      document.body.classList.add("cursor-default");
+    });
+
     if (onComplete) {
       drawInteraction.on("drawend", (event) => {
         const feature = event.feature;
+
         const geometry = feature.getGeometry();
 
         // Check if draw mode is Point

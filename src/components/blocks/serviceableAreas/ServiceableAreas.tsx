@@ -1,8 +1,6 @@
 "use client";
 
-import { Button } from "@srms/components/ui/Button";
 import { useContext, useEffect, useState, type FunctionComponent } from "react";
-import { WebMapContext } from "./ServiceableAreaMap";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import $api from "@srms/lib/sdk/apiClient";
 import VectorSource from "ol/source/Vector";
@@ -15,16 +13,14 @@ import { Position2D } from "@srms/server/types";
 import { Select } from "ol/interaction";
 import { pointerMove } from "ol/events/condition";
 import { useGeo } from "@srms/components/hooks/useGeo";
-import { AddBarangaySheet } from "./AddBarangaySheet";
 import { AddServiceableAreaSheetContainer } from "@srms/components/features/addServiceableArea/AddServiceableAreaSheetContainer";
-
-import { Pencil } from "lucide-react";
-import { SheetDescription, SheetHeader, SheetTitle } from "@srms/components/ui/Sheet";
-import PolygonDrawingTool from "@srms/components/features/addServiceableArea/DrawingTool";
+import { Button } from "@srms/components/ui/Button";
+import { ServiceableAreaMapContenxt } from "@srms/components/features/addServiceableArea/ServiceableAreaMap";
+import { useCreateFeatureProperties } from "@srms/components/hooks/useCreateFeatureProperties";
 
 export const ServiceableAreas: FunctionComponent = () => {
   const [boundaries, setBoundaries] = useState<Coordinate[] | undefined>(undefined);
-  const mapManager = useContext(WebMapContext);
+  const mapConfig = useContext(ServiceableAreaMapContenxt);
 
   const queryClient = useQueryClient();
 
@@ -35,7 +31,7 @@ export const ServiceableAreas: FunctionComponent = () => {
     },
   });
 
-  const { mutate } = useMutation({
+  const {} = useMutation({
     mutationKey: ["add-brgy"],
     mutationFn: async () => {
       const res = await $api.serviceableAreas.postServiceableAreas({
@@ -55,13 +51,13 @@ export const ServiceableAreas: FunctionComponent = () => {
   const { createMultiPolygon } = useGeo();
 
   useEffect(() => {
-    if (!data || !mapManager) return;
+    if (!data || !mapConfig?.mapManager) return;
 
     /**
      * * For checking if pointer coordinates is within the bounds of multipolygon
      * TODO: create a helper function for this - add polygon and linstring
      */
-    mapManager.getMap().on("click", (e) => {
+    mapConfig.mapManager.getMap().on("click", (e) => {
       // const polygon = new Polygon(data[0]?.boundaries.coordinates!);
 
       //  const polygon = new Polygon(data[0]?.boundaries.coordinates as Coordinate[][]);
@@ -117,7 +113,7 @@ export const ServiceableAreas: FunctionComponent = () => {
       }),
     });
 
-    mapManager.getLayerManager().addLayer("serviceableAreas", vectorLayer);
+    mapConfig.mapManager.getLayerManager().addLayer("serviceableAreas", vectorLayer);
 
     /**
      * * For listening to select events on features
@@ -128,7 +124,7 @@ export const ServiceableAreas: FunctionComponent = () => {
       layers: [vectorLayer], // only select from this layer
     });
 
-    mapManager.getMap().addInteraction(select);
+    mapConfig.mapManager.getMap().addInteraction(select);
 
     select.on("select", (event) => {
       const selectedFeatures = event.selected;
@@ -151,26 +147,41 @@ export const ServiceableAreas: FunctionComponent = () => {
 
     // Cleanup
     return () => {
-      mapManager.getLayerManager().removeLayer("serviceableAreas");
+      mapConfig.mapManager?.getLayerManager().removeLayer("serviceableAreas");
+      //  mapConfig?.mapManager.getLayerManager().removeLayer("serviceableAreas");
     };
-  }, [createMultiPolygon, data, mapManager]);
+  }, [createMultiPolygon, data, mapConfig?.mapManager]);
+
+  const [open, setOpen] = useState(true);
+
+  //const mapConfig = useContext(ServiceableAreaMapContenxt);
+
+  const properties = useCreateFeatureProperties(mapConfig?.properties);
 
   return (
     <div className="absolute top-10 right-10 z-10">
-      {/* <Button
+      <Button
         variant="secondary"
         onClick={() => {
-          mapManager?.getInteractionManager().enableDrawing("Polygon", true, (coords) => {
-            setBoundaries(coords);
-          });
+          setOpen(true);
+
+          mapConfig?.mapManager
+            ?.getInteractionManager()
+            .enableDrawing("Polygon", false, properties?.style, true, (coords) => {
+              setBoundaries(coords);
+            });
+
+          document.body.classList.add("cursor-crosshair");
         }}
       >
         Draw Barangay
       </Button>
-      <Button variant="secondary" onClick={() => mutate()}>
+
+      {/* <Button variant="secondary" onClick={() => mutate()}>
         Add Barangay
       </Button> */}
-      <AddServiceableAreaSheetContainer />
+
+      <AddServiceableAreaSheetContainer open={open} setOpen={setOpen} />
       {/* <PolygonDrawingTool /> */}
     </div>
   );

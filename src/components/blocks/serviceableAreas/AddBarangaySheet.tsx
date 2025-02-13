@@ -1,7 +1,5 @@
-import { FunctionComponent, useState } from "react";
+import { FunctionComponent } from "react";
 import { Button } from "@srms/components/ui/Button";
-import { Input } from "@srms/components/ui/Input";
-import { Label } from "@srms/components/ui/Label";
 import {
   Sheet,
   SheetClose,
@@ -22,7 +20,9 @@ export const AddBarangaySheet: FunctionComponent = () => {
       <SheetContent className="test w-72" onInteractOutside={(e) => e.preventDefault()}>
         <SheetHeader>
           <SheetTitle>Edit profile</SheetTitle>
-          <SheetDescription>Make changes to your profile here. Click save when you're done.</SheetDescription>
+          <SheetDescription>
+            Make changes to your profile here. Click save when you&apos;re done.
+          </SheetDescription>
         </SheetHeader>
         <div className="grid gap-4 py-4">
           <p>This is the content</p>

@@ -15,10 +15,38 @@ import {
   createContext,
 } from "react";
 
-export const WebMapContext = createContext<MapManager | undefined>(undefined);
+export type FeatureProperties = {
+  fillColor: string;
+  strokeColor: string;
+  strokeWidth: number[];
+  outlineStyle: "solid" | "dashed";
+  enableSnapping: boolean;
+  snapTolerance: [number];
+  snapToEdge: boolean;
+  snapTpVertex: boolean;
+};
+
+export type ServiceableAreaMapState = {
+  mapManager: MapManager | undefined;
+  properties: FeatureProperties;
+  setProperties?: (val: FeatureProperties) => void;
+};
+
+export const ServiceableAreaMapContenxt = createContext<ServiceableAreaMapState | undefined>(undefined);
 
 export const ServiceableAreaMap: FunctionComponent<PropsWithChildren> = ({ children }) => {
   const [mapManager, setMapManager] = useState<MapManager>();
+
+  const [properties, setProperties] = useState<FeatureProperties>({
+    fillColor: "rgb(197, 202, 233, 0.4)",
+    strokeColor: "rgb(79, 70, 229, 1.0)",
+    strokeWidth: [3],
+    outlineStyle: "solid",
+    enableSnapping: true,
+    snapTolerance: [1],
+    snapToEdge: true,
+    snapTpVertex: true,
+  });
 
   const mapRef = useRef<HTMLDivElement>(null);
 
@@ -71,7 +99,9 @@ export const ServiceableAreaMap: FunctionComponent<PropsWithChildren> = ({ child
 
   return (
     <div ref={mapRef} className="relative z-20 h-full w-full">
-      <WebMapContext.Provider value={mapManager}>{children}</WebMapContext.Provider>
+      <ServiceableAreaMapContenxt.Provider value={{ mapManager, properties, setProperties }}>
+        {children}
+      </ServiceableAreaMapContenxt.Provider>
     </div>
   );
 };

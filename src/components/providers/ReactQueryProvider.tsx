@@ -24,7 +24,7 @@ export const ReactQueryProvider: FunctionComponent<PropsWithChildren> = ({ child
   return (
     <ReactQueryClientProvider client={queryClient}>
       {children}
-      <ReactQueryDevtools initialIsOpen={false} />
+      <ReactQueryDevtools initialIsOpen={false} buttonPosition="top-left" />
 
       {show && (
         <Suspense fallback={null}>
