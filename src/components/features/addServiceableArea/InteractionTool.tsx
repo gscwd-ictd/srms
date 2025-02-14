@@ -4,7 +4,7 @@ import { Label } from "@srms/components/ui/Label";
 import { Slider } from "@srms/components/ui/Slider";
 import { Switch } from "@srms/components/ui/Switch";
 import { CircleDot, CornerRightUp, Hand, Link2, Unlink } from "lucide-react";
-import { useState, type FunctionComponent } from "react";
+import { type FunctionComponent } from "react";
 import { useServiceableAreaMap } from "./contexts/useServiceableMapContext";
 
 export const InteractionTool: FunctionComponent = () => {
@@ -38,30 +38,6 @@ export const InteractionTool: FunctionComponent = () => {
         />
       </section>
 
-      <section className="flex flex-col gap-4">
-        <div className="flex items-center justify-between">
-          <Label
-            className={`${!serviceableAreaMap.properties.enableSnapping ? "text-muted-foreground" : ""} flex items-center gap-2 text-xs`}
-          >
-            <Unlink className="h-4 w-4" />
-            <span>Snap Tolerance</span>
-          </Label>
-          <code className="text-muted-foreground text-sm font-semibold">
-            {serviceableAreaMap.properties.snapTolerance}px
-          </code>
-        </div>
-        <Slider
-          defaultValue={serviceableAreaMap.properties.snapTolerance}
-          onValueChange={(e) =>
-            serviceableAreaMap.setProperties?.({ ...serviceableAreaMap.properties, snapTolerance: e })
-          }
-          disabled={!serviceableAreaMap.properties.enableSnapping}
-          min={1}
-          max={10}
-          step={1}
-        />
-      </section>
-
       <section className="flex items-center justify-between">
         <Label
           className={`${!serviceableAreaMap.properties.enableSnapping ? "text-muted-foreground" : ""} flex items-center gap-2 text-xs`}
@@ -91,6 +67,30 @@ export const InteractionTool: FunctionComponent = () => {
             serviceableAreaMap.setProperties?.({ ...serviceableAreaMap.properties, snapToVertex: val })
           }
           disabled={!serviceableAreaMap.properties.enableSnapping}
+        />
+      </section>
+
+      <section className="flex flex-col gap-4">
+        <div className="flex items-center justify-between">
+          <Label
+            className={`${!serviceableAreaMap.properties.enableSnapping ? "text-muted-foreground" : ""} flex items-center gap-2 text-xs`}
+          >
+            <Unlink className="h-4 w-4" />
+            <span>Snap Tolerance</span>
+          </Label>
+          <code className="text-muted-foreground text-sm font-semibold">
+            {serviceableAreaMap.properties.snapTolerance}px
+          </code>
+        </div>
+        <Slider
+          defaultValue={serviceableAreaMap.properties.snapTolerance}
+          onValueChange={(e) =>
+            serviceableAreaMap.setProperties?.({ ...serviceableAreaMap.properties, snapTolerance: e })
+          }
+          disabled={!serviceableAreaMap.properties.enableSnapping}
+          min={1}
+          max={20}
+          step={1}
         />
       </section>
     </>

@@ -1,14 +1,12 @@
 "use client";
 
 import { MapManager } from "@srms/lib/mapstudio/mapManager";
-import { defaults as defaultInteractions } from "ol/interaction";
 import { useGeographic } from "ol/proj";
-import { OSM } from "ol/source";
 import { type PropsWithChildren, type FunctionComponent, useState, useRef, useEffect } from "react";
 import { ServiceableAreaMapContext } from "./contexts/useServiceableMapContext";
-import TileLayer from "ol/layer/Tile";
 import View from "ol/View";
 import { MapToolbar } from "./MapToolbar";
+// import { LayersSidebar } from "./LayersSidebar";
 
 export type FeatureStyles = {
   fillColor: string;
@@ -50,44 +48,30 @@ export const ServiceableAreaMap: FunctionComponent<PropsWithChildren> = ({ child
   useEffect(() => {
     if (!mapRef.current) return;
 
-    const map = mapManager.init({
-      target: mapRef.current,
+    setMapManager(
+      mapManager.init({
+        target: mapRef.current,
 
-      controls: [],
-
-      layers: [
-        new TileLayer({
-          source: new OSM(),
+        view: new View({
+          projection: "EPSG:4326",
+          center: [125.17189194375173, 6.113035811082611],
+          zoom: 16,
         }),
-      ],
-
-      view: new View({
-        projection: "EPSG:4326",
-        center: [125.17189194375173, 6.113035811082611],
-        zoom: 16,
       }),
-
-      interactions: defaultInteractions({
-        doubleClickZoom: true,
-        dragPan: true,
-        mouseWheelZoom: true,
-      }),
-    });
-
-    map.getMap().renderSync();
-
-    setMapManager(map);
+    );
 
     return () => {
-      map.destroy();
+      mapManager.destroy();
       mapRef.current = null;
     };
-  }, []);
+  }, [mapManager]);
 
   return (
     <div ref={mapRef} className="relative z-20 h-full w-full">
       <ServiceableAreaMapContext.Provider value={{ mapManager, properties, setProperties }}>
         <MapToolbar />
+        {/* <LayersSidebar /> */}
+
         {children}
       </ServiceableAreaMapContext.Provider>
     </div>

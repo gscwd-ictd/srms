@@ -7,7 +7,6 @@ import {
   SelectContent,
   SelectGroup,
   SelectItem,
-  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from "@srms/components/ui/Select";
@@ -50,6 +49,41 @@ export const StylingTool: FunctionComponent = () => {
       <section className="flex flex-col gap-4">
         <div className="flex items-center justify-between">
           <Label className="flex items-center gap-2 text-xs">
+            <Highlighter className="h-4 w-4 shrink-0" />
+            <span>Outline Style</span>
+          </Label>
+
+          <Select
+            defaultValue={serviceableAreaMap.properties.outlineStyle}
+            onValueChange={(val: "solid" | "dashed") =>
+              serviceableAreaMap.setProperties?.({ ...serviceableAreaMap.properties, outlineStyle: val })
+            }
+          >
+            <SelectTrigger className="w-[110px] text-xs">
+              {serviceableAreaMap.properties.outlineStyle === "solid" ? (
+                <Square className="text-primary h-5 w-5" />
+              ) : (
+                <SquareDashed className="text-primary h-5 w-5" />
+              )}
+              <SelectValue placeholder="Select a style" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectGroup>
+                <SelectItem value="solid" className="text-xs">
+                  Solid
+                </SelectItem>
+                <SelectItem value="dashed" className="text-xs">
+                  Dashed
+                </SelectItem>
+              </SelectGroup>
+            </SelectContent>
+          </Select>
+        </div>
+      </section>
+
+      <section className="flex flex-col gap-4">
+        <div className="flex items-center justify-between">
+          <Label className="flex items-center gap-2 text-xs">
             <PenLine className="h-4 w-4" />
             <span>Stroke Width</span>
           </Label>
@@ -66,41 +100,6 @@ export const StylingTool: FunctionComponent = () => {
           max={10}
           step={1}
         />
-      </section>
-
-      <section className="flex flex-col gap-4">
-        <div className="flex items-center justify-between">
-          <Label className="flex items-center gap-2 text-xs">
-            <Highlighter className="h-4 w-4 shrink-0" />
-            <span>Outline Style</span>
-          </Label>
-
-          <Select
-            defaultValue={serviceableAreaMap.properties.outlineStyle}
-            onValueChange={(val: "solid" | "dashed") =>
-              serviceableAreaMap.setProperties?.({ ...serviceableAreaMap.properties, outlineStyle: val })
-            }
-          >
-            <SelectTrigger className="w-[110px] text-xs">
-              {serviceableAreaMap.properties.outlineStyle === "solid" ? (
-                <Square className="h-5 w-5" />
-              ) : (
-                <SquareDashed className="h-5 w-5" />
-              )}
-              <SelectValue placeholder="Select a style" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectGroup>
-                <SelectItem value="solid" className="text-xs">
-                  Solid
-                </SelectItem>
-                <SelectItem value="dashed" className="text-xs">
-                  Dashed
-                </SelectItem>
-              </SelectGroup>
-            </SelectContent>
-          </Select>
-        </div>
       </section>
     </>
   );

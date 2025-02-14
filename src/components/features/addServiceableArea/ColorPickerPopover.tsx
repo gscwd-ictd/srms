@@ -19,7 +19,7 @@ export const ColorPickerPopover: FunctionComponent<ColorPickerPopoverProps> = ({
 
   return (
     <Popover>
-      <PopoverTrigger className="h-5 w-5" style={{ background: color }} />
+      <PopoverTrigger className="h-5 w-5 rounded" style={{ background: color }} />
       <PopoverContent
         align="end"
         onInteractOutside={() => onComplete?.(color)}

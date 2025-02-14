@@ -21,6 +21,10 @@ export function configureOpenApi(app: AppOpenAPI) {
         url: "http://localhost:3000",
         description: "Local server.",
       },
+      {
+        url: "http://172.20.10.55:3000",
+        description: "Remote office server.",
+      },
     ],
     tags: [
       {

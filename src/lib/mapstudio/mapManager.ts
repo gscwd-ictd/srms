@@ -1,10 +1,13 @@
 import Map, { MapOptions } from "ol/Map";
+import { defaults as defaultInteractions } from "ol/interaction";
 import { LayerManager } from "./layerManager";
 import { InteractionManager } from "./interactionManager";
 import { ControlManager } from "./controlManager";
 import { Coordinate } from "ol/coordinate";
 import { View } from "ol";
 import { Extent } from "ol/extent";
+import TileLayer from "ol/layer/Tile";
+import { OSM } from "ol/source";
 
 export class MapManager {
   private map: Map | undefined;
@@ -19,22 +22,43 @@ export class MapManager {
     this.controlManager = new ControlManager();
   }
 
-  public init(options: MapOptions): this {
+  public init(options?: MapOptions): this {
+    if (!options?.target) {
+      throw new Error("The map has no container!");
+    }
+
     this.map = new Map({
       ...options,
       target: options.target,
+
+      controls: [],
+
+      layers: [
+        new TileLayer({
+          source: new OSM(),
+        }),
+      ],
+
       view:
         options.view ||
         new View({
           center: [0, 0],
           zoom: 2,
         }),
+
+      interactions: defaultInteractions({
+        doubleClickZoom: true,
+        dragPan: true,
+        mouseWheelZoom: true,
+      }),
     });
 
     // Initialize all managers with the map instance
     this.layerManager.setMap(this.map);
     this.interactionManager.setMap(this.map);
     this.controlManager.setMap(this.map);
+
+    this.map.renderSync();
 
     return this;
   }

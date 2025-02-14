@@ -14,6 +14,13 @@ export type SnapConfig = {
   source?: VectorSource; // Optional specific source to snap to
 };
 
+export type DrawConfig = {
+  type: "Point" | "LineString" | "Polygon";
+  freehand?: boolean;
+  drawStyle?: Style;
+  snapConfig?: SnapConfig | boolean;
+};
+
 export class InteractionManager {
   private interactions: Record<string, Interaction>;
   private map: Map | null;
@@ -65,13 +72,10 @@ export class InteractionManager {
     });
   }
 
-  public enableDrawing(
-    type: "Point" | "LineString" | "Polygon",
-    freehand?: boolean,
-    drawStyle?: Style,
-    snapConfig?: SnapConfig | boolean,
-    onComplete?: (coordinates: Coordinate[] | undefined) => void,
-  ) {
+  public enableDrawing(drawConfig: DrawConfig, onComplete?: (coordinates: Coordinate[] | undefined) => void) {
+    // Deconstruct
+    const { type, drawStyle, snapConfig, freehand } = drawConfig;
+
     // Disable any existing drawing interaction
     this.disableDrawing();
 
