@@ -423,6 +423,7 @@ export class ApiClient {
         {
           id: string;
           barangay: string;
+          details: string | null;
           createdAt: string;
           updatedAt: string | null;
           boundaries: {
@@ -433,11 +434,12 @@ export class ApiClient {
       >("get", "/api/v1/serviceable-areas", {});
     },
 
-    postServiceableAreas: (body: { barangay: string; boundaries: number[][] }) => {
+    postServiceableAreas: (body: { details?: string | null; barangay: string; boundaries: number[][] }) => {
       return this.Fetch<{
         id: string;
         barangay: string;
         boundaries?: unknown;
+        details: string | null;
         createdAt: string;
         updatedAt: string | null;
       }>("post", "/api/v1/serviceable-areas", { body });
@@ -447,6 +449,7 @@ export class ApiClient {
       return this.Fetch<{
         id: string;
         barangay: string;
+        details: string | null;
         createdAt: string;
         updatedAt: string | null;
         boundaries: {
