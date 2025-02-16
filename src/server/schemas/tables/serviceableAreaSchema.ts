@@ -22,6 +22,11 @@ export const CreateServiceableAreaSchema = createInsertSchema(serviceableAreas)
     updatedAt: true,
   })
   .extend({
-    barangay: z.string().min(4),
-    boundaries: z.array(z.tuple([z.number(), z.number()])),
+    barangay: z
+      .string()
+      .min(4)
+      .openapi({ description: "The name of barangay that will be covered by the new serviceable area." }),
+    boundaries: z.array(z.tuple([z.number(), z.number()])).openapi({
+      description: "Stored as coordinates that represent the boundaries of the area covered.",
+    }),
   });
