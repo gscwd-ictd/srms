@@ -1,12 +1,10 @@
 "use client";
 
-import { MapManager } from "@srms/lib/mapstudio/mapManager";
+import { type PropsWithChildren, type FunctionComponent, useRef, useEffect, useState } from "react";
 import { useGeographic } from "ol/proj";
-import { type PropsWithChildren, type FunctionComponent, useState, useRef, useEffect } from "react";
-import { ServiceableAreaMapContext } from "./contexts/useServiceableMapContext";
-import View from "ol/View";
+import { useServiceableAreaMap } from "./contexts/useServiceableMapContext";
 import { MapToolbar } from "./MapToolbar";
-// import { LayersSidebar } from "./LayersSidebar";
+import View from "ol/View";
 
 export type FeatureStyles = {
   fillColor: string;
@@ -29,51 +27,33 @@ export const ServiceableAreaMap: FunctionComponent<PropsWithChildren> = ({ child
    */
   useGeographic();
 
-  const [mapManager, setMapManager] = useState<MapManager>(new MapManager());
+  const serviceableAreaMap = useServiceableAreaMap();
 
   const mapRef = useRef<HTMLDivElement>(null);
-
-  const [properties, setProperties] = useState<FeatureStyles>({
-    fillColor: "rgb(197, 202, 233, 0.4)",
-    strokeColor: "rgb(79, 70, 229, 1.0)",
-    strokeWidth: [3],
-    outlineStyle: "solid",
-    freehand: false,
-    enableSnapping: true,
-    snapTolerance: [7],
-    snapToEdge: true,
-    snapToVertex: true,
-  });
 
   useEffect(() => {
     if (!mapRef.current) return;
 
-    setMapManager(
-      mapManager.init({
-        target: mapRef.current,
+    serviceableAreaMap.mapManager.init({
+      target: mapRef.current,
 
-        view: new View({
-          projection: "EPSG:4326",
-          center: [125.17189194375173, 6.113035811082611],
-          zoom: 16,
-        }),
+      view: new View({
+        projection: "EPSG:4326",
+        center: [125.17189194375173, 6.113035811082611],
+        zoom: 16,
       }),
-    );
+    });
 
     return () => {
-      mapManager.destroy();
+      serviceableAreaMap.mapManager.destroy();
       mapRef.current = null;
     };
-  }, [mapManager]);
+  }, [serviceableAreaMap.mapManager]);
 
   return (
     <div ref={mapRef} className="relative z-20 h-full w-full">
-      <ServiceableAreaMapContext.Provider value={{ mapManager, properties, setProperties }}>
-        <MapToolbar />
-        {/* <LayersSidebar /> */}
-
-        {children}
-      </ServiceableAreaMapContext.Provider>
+      <MapToolbar />
+      {children}
     </div>
   );
 };

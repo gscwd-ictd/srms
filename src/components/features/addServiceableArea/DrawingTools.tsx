@@ -21,7 +21,7 @@ export const DrawingTools: FunctionComponent = () => {
   return (
     <Sheet modal={false}>
       <SheetTrigger asChild>
-        <Button variant="ghost" className="rounded-lg">
+        <Button variant="ghost" className="h-7 w-7">
           <SlidersHorizontal className="h-5 w-5" />
         </Button>
       </SheetTrigger>

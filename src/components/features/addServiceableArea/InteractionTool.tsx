@@ -1,10 +1,10 @@
 "use client";
 
+import { type FunctionComponent } from "react";
 import { Label } from "@srms/components/ui/Label";
 import { Slider } from "@srms/components/ui/Slider";
 import { Switch } from "@srms/components/ui/Switch";
 import { CircleDot, CornerRightUp, Hand, Link2, Unlink } from "lucide-react";
-import { type FunctionComponent } from "react";
 import { useServiceableAreaMap } from "./contexts/useServiceableMapContext";
 
 export const InteractionTool: FunctionComponent = () => {
