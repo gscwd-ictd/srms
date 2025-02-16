@@ -41,6 +41,7 @@ export class ServiceableAreaService implements ServiceableAreasRepository {
         id: serviceableAreas.id,
         barangay: serviceableAreas.barangay,
         boundaries: sql<GeoJSONPolygon>`ST_AsGeoJSON(boundaries)::jsonb`,
+        details: serviceableAreas.details,
         createdAt: serviceableAreas.createdAt,
         updatedAt: serviceableAreas.updatedAt,
       })
@@ -56,6 +57,7 @@ export class ServiceableAreaService implements ServiceableAreasRepository {
         id: serviceableAreas.id,
         barangay: serviceableAreas.barangay,
         boundaries: sql<GeoJSONPolygon>`ST_AsGeoJSON(boundaries)::jsonb`,
+        details: serviceableAreas.details,
         createdAt: serviceableAreas.createdAt,
         updatedAt: serviceableAreas.updatedAt,
       })
