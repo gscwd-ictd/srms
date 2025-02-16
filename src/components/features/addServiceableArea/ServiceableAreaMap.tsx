@@ -1,6 +1,6 @@
 "use client";
 
-import { type PropsWithChildren, type FunctionComponent, useRef, useEffect, useState } from "react";
+import { type PropsWithChildren, type FunctionComponent, useRef, useEffect } from "react";
 import { useGeographic } from "ol/proj";
 import { useServiceableAreaMap } from "./contexts/useServiceableMapContext";
 import { MapToolbar } from "./MapToolbar";

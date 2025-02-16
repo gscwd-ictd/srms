@@ -1,27 +1,25 @@
 "use client";
 
-import { useContext, useEffect, useState, type FunctionComponent } from "react";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import $api from "@srms/lib/sdk/apiClient";
-import VectorSource from "ol/source/Vector";
-import VectorLayer from "ol/layer/Vector";
-import { Circle, Fill, Stroke, Style } from "ol/style";
+import { useEffect, type FunctionComponent } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { Fill, Stroke, Style } from "ol/style";
 import { FeatureManager } from "@srms/lib/mapstudio/featureManager";
-import Polygon from "ol/geom/Polygon";
-import { Coordinate } from "ol/coordinate";
+// import { Coordinate } from "ol/coordinate";
 import { Position2D } from "@srms/server/types";
 import { Select } from "ol/interaction";
 import { pointerMove } from "ol/events/condition";
 import { useGeo } from "@srms/components/hooks/useGeo";
-import { DrawingTools } from "@srms/components/features/addServiceableArea/DrawingTools";
-import { Button } from "@srms/components/ui/Button";
 import { createFeatureStyles } from "@srms/components/features/addServiceableArea/utils/createFeatureStyles";
 import { useServiceableAreaMap } from "@srms/components/features/addServiceableArea/contexts/useServiceableMapContext";
+import Polygon from "ol/geom/Polygon";
+import VectorSource from "ol/source/Vector";
+import VectorLayer from "ol/layer/Vector";
+import $api from "@srms/lib/sdk/apiClient";
 
 export const ServiceableAreas: FunctionComponent = () => {
-  const [boundaries, setBoundaries] = useState<Coordinate[] | undefined>(undefined);
+  //  const [boundaries, setBoundaries] = useState<Coordinate[] | undefined>(undefined);
 
-  const queryClient = useQueryClient();
+  // const queryClient = useQueryClient();
 
   const { data } = useQuery({
     queryKey: ["get-all-serviceable-areas"],
@@ -30,22 +28,22 @@ export const ServiceableAreas: FunctionComponent = () => {
     },
   });
 
-  const {} = useMutation({
-    mutationKey: ["add-brgy"],
-    mutationFn: async () => {
-      const res = await $api.serviceableAreas.postServiceableAreas({
-        barangay: crypto.randomUUID(),
-        boundaries: boundaries as number[][],
-      });
+  // const {} = useMutation({
+  //   mutationKey: ["add-brgy"],
+  //   mutationFn: async () => {
+  //     const res = await $api.serviceableAreas.postServiceableAreas({
+  //       barangay: crypto.randomUUID(),
+  //       boundaries: boundaries as number[][],
+  //     });
 
-      return res;
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: ["get-all-serviceable-areas"],
-      });
-    },
-  });
+  //     return res;
+  //   },
+  //   onSuccess: () => {
+  //     queryClient.invalidateQueries({
+  //       queryKey: ["get-all-serviceable-areas"],
+  //     });
+  //   },
+  // });
 
   const { createMultiPolygon } = useGeo();
 
@@ -156,6 +154,8 @@ export const ServiceableAreas: FunctionComponent = () => {
   //const mapConfig = useContext(ServiceableAreaMapContext);
 
   const properties = createFeatureStyles(serviceableAreaMap.properties);
+
+  console.log(properties);
 
   return (
     <div className="absolute top-10 right-10 z-10 space-x-4">
