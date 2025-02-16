@@ -1,20 +1,21 @@
 import { createRoute, z } from "@hono/zod-openapi";
 import { OpenAPIResponses } from "@srms/server/constants";
-import * as HttpStatusCodes from "@srms/server/constants/httpStatusCodes";
-import { IdParamsSchema } from "@srms/server/schemas";
+import { ErrorResponseSchema, IdParamsSchema } from "@srms/server/schemas";
 import {
   CreateServiceableAreaSchema,
   SelectServiceableAreaGeoJSONSchema,
   SelectServiceableAreaSchema,
 } from "@srms/server/schemas/tables/serviceableAreaSchema";
+import * as HttpStatusCodes from "@srms/server/constants/httpStatusCodes";
 
 const TAGS = ["Serviceable Areas"];
 
 export const addServiceableArea = createRoute({
   tags: TAGS,
-  description: "This is the description for serviceable areas post route.",
+  description: "Add new serviceable area.",
   method: "post",
   path: "v1/serviceable-areas",
+  operationId: "addServiceableArea",
   request: {
     body: {
       content: {
@@ -33,6 +34,40 @@ export const addServiceableArea = createRoute({
       },
       description: OpenAPIResponses.OK,
     },
+
+    [HttpStatusCodes.UNPROCESSABLE_ENTITY]: {
+      content: {
+        "application/json": {
+          schema: ErrorResponseSchema,
+        },
+      },
+      description: OpenAPIResponses.UNPROCESSABLE_ENTITY,
+    },
+
+    [HttpStatusCodes.BAD_REQUEST]: {
+      content: {
+        "application/json": {
+          schema: ErrorResponseSchema,
+        },
+      },
+      description: OpenAPIResponses.BAD_REQUEST,
+    },
+
+    // Status: Internal Server Error
+    [HttpStatusCodes.INTERNAL_SERVER_ERROR]: {
+      content: {
+        "application/json": {
+          example: {
+            name: "ServerError",
+            status: 500,
+            message: "Something went wrong!",
+            stack: "...",
+          },
+          schema: ErrorResponseSchema,
+        },
+      },
+      description: OpenAPIResponses.INTERNAL_SERVER_ERROR,
+    },
   },
 });
 
@@ -41,6 +76,7 @@ export const getAllServiceableAreas = createRoute({
   description: "Get all serviceable areas.",
   method: "get",
   path: "v1/serviceable-areas",
+  operationId: "getAllServiceableAreas",
   responses: {
     [HttpStatusCodes.OK]: {
       content: {
@@ -50,6 +86,21 @@ export const getAllServiceableAreas = createRoute({
       },
       description: OpenAPIResponses.OK,
     },
+
+    [HttpStatusCodes.INTERNAL_SERVER_ERROR]: {
+      content: {
+        "application/json": {
+          example: {
+            name: "ServerError",
+            status: 500,
+            message: "Something went wrong!",
+            stack: "...",
+          },
+          schema: ErrorResponseSchema,
+        },
+      },
+      description: OpenAPIResponses.INTERNAL_SERVER_ERROR,
+    },
   },
 });
 
@@ -58,6 +109,7 @@ export const getServiceableAreaById = createRoute({
   description: "Get serviceable area by ID.",
   method: "get",
   path: "v1/serviceable-areas/{id}",
+  operationId: "getServiceableAreaById",
   request: {
     params: IdParamsSchema,
   },
@@ -70,11 +122,38 @@ export const getServiceableAreaById = createRoute({
       },
       description: OpenAPIResponses.OK,
     },
+
+    [HttpStatusCodes.NOT_FOUND]: {
+      content: {
+        "application/json": {
+          example: {
+            name: "NotFoundError",
+            status: 404,
+            message: "Application details not found!",
+          },
+          schema: ErrorResponseSchema,
+        },
+      },
+      description: OpenAPIResponses.NOT_FOUND,
+    },
+
+    [HttpStatusCodes.INTERNAL_SERVER_ERROR]: {
+      content: {
+        "application/json": {
+          example: {
+            name: "ServerError",
+            status: 500,
+            message: "Something went wrong!",
+            stack: "...",
+          },
+          schema: ErrorResponseSchema,
+        },
+      },
+      description: OpenAPIResponses.INTERNAL_SERVER_ERROR,
+    },
   },
 });
 
 export type AddServiceableAreaRoute = typeof addServiceableArea;
-
 export type GetAllServiceableAreasRoute = typeof getAllServiceableAreas;
-
 export type GetServiceableAreaByIdRoute = typeof getServiceableAreaById;
