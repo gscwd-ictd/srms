@@ -9,6 +9,7 @@ export const serviceableAreas = pgTable("serviceable_areas", {
     .$defaultFn(() => generateCuid()),
   barangay: text("barangay").unique().notNull(),
   boundaries: polygon("boundaries").notNull(),
+  details: text("details"),
   /**
    * Add more details...
    */

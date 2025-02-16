@@ -1,0 +1,1 @@
+ALTER TABLE "serviceable_areas" ADD COLUMN "details" text;

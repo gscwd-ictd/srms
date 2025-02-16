@@ -22,6 +22,13 @@
       "when": 1739277907477,
       "tag": "0002_petite_silverclaw",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1739622168736,
+      "tag": "0003_nervous_fixer",
+      "breakpoints": true
     }
   ]
 }
