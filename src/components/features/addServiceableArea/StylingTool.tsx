@@ -1,6 +1,6 @@
 "use client";
 
-import { type FunctionComponent } from "react";
+import { useEffect, type FunctionComponent } from "react";
 import { Label } from "@srms/components/ui/Label";
 import {
   Select,
@@ -28,6 +28,7 @@ export const StylingTool: FunctionComponent = () => {
         <ColorPickerPopover
           defaultColor={serviceableAreaMap.properties.fillColor}
           onUpdateColor={(color) => {
+            serviceableAreaMap.mapManager.getInteractionManager().disableDrawing();
             serviceableAreaMap.setProperties?.({ ...serviceableAreaMap.properties, fillColor: color });
           }}
         />
@@ -41,6 +42,7 @@ export const StylingTool: FunctionComponent = () => {
         <ColorPickerPopover
           defaultColor={serviceableAreaMap.properties.strokeColor}
           onUpdateColor={(color) => {
+            serviceableAreaMap.mapManager.getInteractionManager().disableDrawing();
             serviceableAreaMap.setProperties?.({ ...serviceableAreaMap.properties, strokeColor: color });
           }}
         />
@@ -54,10 +56,11 @@ export const StylingTool: FunctionComponent = () => {
           </Label>
 
           <Select
-            defaultValue={serviceableAreaMap.properties.outlineStyle}
-            onValueChange={(val: "solid" | "dashed") =>
-              serviceableAreaMap.setProperties?.({ ...serviceableAreaMap.properties, outlineStyle: val })
-            }
+            value={serviceableAreaMap.properties.outlineStyle}
+            onValueChange={(val: "solid" | "dashed") => {
+              serviceableAreaMap.mapManager.getInteractionManager().disableDrawing();
+              serviceableAreaMap.setProperties?.({ ...serviceableAreaMap.properties, outlineStyle: val });
+            }}
           >
             <SelectTrigger className="w-[110px] text-xs">
               {serviceableAreaMap.properties.outlineStyle === "solid" ? (
@@ -92,10 +95,11 @@ export const StylingTool: FunctionComponent = () => {
           </code>
         </div>
         <Slider
-          defaultValue={serviceableAreaMap.properties.strokeWidth}
-          onValueChange={(e) =>
-            serviceableAreaMap.setProperties?.({ ...serviceableAreaMap.properties, strokeWidth: e })
-          }
+          value={serviceableAreaMap.properties.strokeWidth}
+          onValueChange={(e) => {
+            serviceableAreaMap.mapManager.getInteractionManager().disableDrawing();
+            serviceableAreaMap.setProperties?.({ ...serviceableAreaMap.properties, strokeWidth: e });
+          }}
           min={1}
           max={10}
           step={1}

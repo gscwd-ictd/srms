@@ -19,12 +19,13 @@ import { Textarea } from "@srms/components/ui/Textarea";
 import { Coordinate } from "ol/coordinate";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import $api from "@srms/lib/sdk/apiClient";
+import { useServiceableAreaMap } from "./contexts/useServiceableMapContext";
 
 type AddBarangayDialogProps = {
   disabled: boolean;
   setDisabled: (state: boolean) => void;
   onClickAction: (e: MouseEvent) => void;
-  boundaries: Coordinate[] | undefined;
+  boundaries: Coordinate[][][] | undefined;
 };
 
 export const AddBarangayDialog: FunctionComponent<AddBarangayDialogProps> = ({
@@ -37,6 +38,8 @@ export const AddBarangayDialog: FunctionComponent<AddBarangayDialogProps> = ({
   const [barangay, setBarangay] = useState("");
   const [details, setDetails] = useState<string | undefined>();
 
+  const serviceableArea = useServiceableAreaMap();
+
   const queryClient = useQueryClient();
 
   const { mutate } = useMutation({
@@ -45,7 +48,8 @@ export const AddBarangayDialog: FunctionComponent<AddBarangayDialogProps> = ({
       return await $api.serviceableAreas.addServiceableArea({
         barangay: barangay,
         details: details,
-        boundaries: boundaries as number[][],
+        boundaries: boundaries as number[][][][],
+        featureStyles: serviceableArea.properties,
       });
     },
     onSuccess: () => {

@@ -5,6 +5,7 @@ import {
   Sheet,
   SheetContent,
   SheetDescription,
+  SheetFooter,
   SheetHeader,
   SheetTitle,
   SheetTrigger,
@@ -12,28 +13,30 @@ import {
 import { ScrollArea } from "@srms/components/ui/ScrollArea";
 import { Button } from "@srms/components/ui/Button";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@srms/components/ui/Collapsible";
-import { ChevronRight, SlidersHorizontal } from "lucide-react";
+import { ChevronRight, RefreshCcw, Settings2, SlidersHorizontal } from "lucide-react";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@srms/components/ui/Tooltip";
+import { useServiceableAreaMap } from "./contexts/useServiceableMapContext";
+import { isDeepEqual } from "@srms/utils/isDeepEqual";
 import { PreviewTool } from "./PreviewTool";
 import { StylingTool } from "./StylingTool";
 import { InteractionTool } from "./InteractionTool";
-import { ToggleGroupItem } from "@srms/components/ui/ToggleGroup";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@srms/components/ui/Tooltip";
+import { featureStylesDefault } from "@srms/server/constants/featureStylesDefault";
 
 export const DrawingTools: FunctionComponent = () => {
+  const serviceableArea = useServiceableAreaMap();
+
   return (
     <Sheet modal={false}>
-      <ToggleGroupItem value="tools" asChild>
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <SheetTrigger asChild>
-              <Button variant="ghost" className="h-7 w-7 rounded-md">
-                <SlidersHorizontal />
-              </Button>
-            </SheetTrigger>
-          </TooltipTrigger>
-          <TooltipContent>Customize Style</TooltipContent>
-        </Tooltip>
-      </ToggleGroupItem>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <SheetTrigger asChild>
+            <Button variant="ghost" className="h-7 w-7 rounded-md">
+              <Settings2 />
+            </Button>
+          </SheetTrigger>
+        </TooltipTrigger>
+        <TooltipContent>Customize Style</TooltipContent>
+      </Tooltip>
 
       <SheetContent className="bg-sidebar w-80" onInteractOutside={(e) => e.preventDefault()}>
         <SheetHeader className="px-6">
@@ -66,6 +69,20 @@ export const DrawingTools: FunctionComponent = () => {
             </Collapsible>
           </div>
         </ScrollArea>
+
+        <SheetFooter>
+          <Button
+            variant="secondary"
+            onClick={() => {
+              serviceableArea.setProperties?.(featureStylesDefault);
+              serviceableArea.mapManager.getInteractionManager().disableDrawing();
+            }}
+            disabled={isDeepEqual(serviceableArea.properties, featureStylesDefault)}
+          >
+            <RefreshCcw />
+            <span>Reset</span>
+          </Button>
+        </SheetFooter>
       </SheetContent>
     </Sheet>
   );

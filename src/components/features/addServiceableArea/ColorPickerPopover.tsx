@@ -1,8 +1,9 @@
 "use client";
 
-import { useState, type FunctionComponent } from "react";
+import { useEffect, useState, type FunctionComponent } from "react";
 import { Popover, PopoverContent, PopoverTrigger } from "@srms/components/ui/Popover";
 import { RgbaStringColorPicker } from "react-colorful";
+import { useServiceableAreaMap } from "./contexts/useServiceableMapContext";
 
 type ColorPickerPopoverProps = {
   defaultColor?: string;
@@ -15,7 +16,13 @@ export const ColorPickerPopover: FunctionComponent<ColorPickerPopoverProps> = ({
   onUpdateColor,
   onComplete,
 }) => {
+  const serviceableArea = useServiceableAreaMap();
+
   const [color, setColor] = useState(defaultColor);
+
+  useEffect(() => {
+    setColor(defaultColor);
+  }, [serviceableArea.properties]);
 
   return (
     <Popover>

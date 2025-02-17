@@ -9,6 +9,7 @@ import { Extent } from "ol/extent";
 import TileLayer from "ol/layer/Tile";
 import { OSM } from "ol/source";
 import { MapEvents } from "./utils/mapEvents";
+import { FitOptions } from "ol/View";
 
 export class MapManager {
   private map: Map | undefined;
@@ -100,12 +101,14 @@ export class MapManager {
     this.map.getView().setZoom(level);
   }
 
-  public fitToExtent(extent: Extent, options?: { padding?: number[]; maxZoom?: number }): void {
+  public fitToExtent(extent?: Extent, options?: FitOptions): void {
     if (!this.map) {
       throw new Error("Map not initialized. Call init() first.");
     }
 
-    this.map.getView().fit(extent, options);
+    if (extent) {
+      this.map.getView().fit(extent, options);
+    }
   }
 
   public getCenter(): Coordinate {
@@ -128,6 +131,7 @@ export class MapManager {
     }
     return this.map.getView().calculateExtent(this.map.getSize());
   }
+
   // (event: MapBrowserEvent<any>) => unknown
   public addMapEvent(
     eventType: (typeof MapEvents)[number],

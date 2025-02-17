@@ -41,12 +41,12 @@ export type GeoJSONPolygon = {
 
 export type GeoJSONMultiPolygon = {
   type: "MultiPolygon";
-  coordinates: Position2D[][][];
+  coordinates: number[][][][];
 };
 
 export type GeoJSONMultiPoint = {
   type: "MultiPoint";
-  coordinates: Position2D[];
+  coordinates: number[][];
 };
 
 export type GeoJSONLineString = {

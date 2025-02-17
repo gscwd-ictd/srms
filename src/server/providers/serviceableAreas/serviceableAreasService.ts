@@ -1,11 +1,12 @@
 import {
   CreateServiceableArea,
+  GeoJSONMultiPolygon,
   GeoJSONPolygon,
   ServiceableArea,
   ServiceableAreaGeoJSON,
 } from "@srms/server/types";
 import { ServiceableAreasRepository } from "./serviceableAreasRepository";
-import { createPolygon } from "@srms/server/helpers/geo";
+import { createMultiPolygon, createPolygon } from "@srms/server/helpers/geo";
 import { db } from "@srms/server/db/postgres";
 import { serviceableAreas } from "@srms/server/db/schemas";
 import { eq, sql } from "drizzle-orm";
@@ -19,13 +20,14 @@ export class ServiceableAreaService implements ServiceableAreasRepository {
    * @returns
    */
   async addServiceableArea(data: CreateServiceableArea): Promise<ServiceableArea> {
-    const boundaries = createPolygon(data.boundaries);
+    const boundaries = createMultiPolygon(data.boundaries);
 
     const stmt = db
       .insert(serviceableAreas)
       .values({
         barangay: data.barangay,
         boundaries: JSON.stringify(boundaries),
+        featureStyles: data.featureStyles,
       })
       .returning()
       .prepare("add_serviceable_area");
@@ -40,8 +42,9 @@ export class ServiceableAreaService implements ServiceableAreasRepository {
       .select({
         id: serviceableAreas.id,
         barangay: serviceableAreas.barangay,
-        boundaries: sql<GeoJSONPolygon>`ST_AsGeoJSON(boundaries)::jsonb`,
+        boundaries: sql<GeoJSONMultiPolygon>`ST_AsGeoJSON(boundaries)::jsonb`,
         details: serviceableAreas.details,
+        featureStyles: serviceableAreas.featureStyles,
         createdAt: serviceableAreas.createdAt,
         updatedAt: serviceableAreas.updatedAt,
       })
@@ -56,8 +59,9 @@ export class ServiceableAreaService implements ServiceableAreasRepository {
       .select({
         id: serviceableAreas.id,
         barangay: serviceableAreas.barangay,
-        boundaries: sql<GeoJSONPolygon>`ST_AsGeoJSON(boundaries)::jsonb`,
+        boundaries: sql<GeoJSONMultiPolygon>`ST_AsGeoJSON(boundaries)::jsonb`,
         details: serviceableAreas.details,
+        featureStyles: serviceableAreas.featureStyles,
         createdAt: serviceableAreas.createdAt,
         updatedAt: serviceableAreas.updatedAt,
       })

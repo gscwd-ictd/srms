@@ -18,10 +18,11 @@ export const InteractionTool: FunctionComponent = () => {
           <span>Freehand</span>
         </Label>
         <Switch
-          defaultChecked={serviceableAreaMap.properties.freehand}
-          onCheckedChange={(val) =>
-            serviceableAreaMap.setProperties?.({ ...serviceableAreaMap.properties, freehand: val })
-          }
+          checked={serviceableAreaMap.properties.freehand}
+          onCheckedChange={(val) => {
+            serviceableAreaMap.mapManager.getInteractionManager().disableDrawing();
+            serviceableAreaMap.setProperties?.({ ...serviceableAreaMap.properties, freehand: val });
+          }}
         />
       </section>
 
@@ -31,10 +32,11 @@ export const InteractionTool: FunctionComponent = () => {
           <span>Enable Snapping</span>
         </Label>
         <Switch
-          defaultChecked={serviceableAreaMap.properties.enableSnapping}
-          onCheckedChange={(val) =>
-            serviceableAreaMap.setProperties?.({ ...serviceableAreaMap.properties, enableSnapping: val })
-          }
+          checked={serviceableAreaMap.properties.enableSnapping}
+          onCheckedChange={(val) => {
+            serviceableAreaMap.mapManager.getInteractionManager().disableDrawing();
+            serviceableAreaMap.setProperties?.({ ...serviceableAreaMap.properties, enableSnapping: val });
+          }}
         />
       </section>
 
@@ -46,10 +48,11 @@ export const InteractionTool: FunctionComponent = () => {
           <span>Snap to Edge</span>
         </Label>
         <Switch
-          defaultChecked={serviceableAreaMap.properties.snapToEdge}
-          onCheckedChange={(val) =>
-            serviceableAreaMap.setProperties?.({ ...serviceableAreaMap.properties, snapToEdge: val })
-          }
+          checked={serviceableAreaMap.properties.snapToEdge}
+          onCheckedChange={(val) => {
+            serviceableAreaMap.mapManager.getInteractionManager().disableDrawing();
+            serviceableAreaMap.setProperties?.({ ...serviceableAreaMap.properties, snapToEdge: val });
+          }}
           disabled={!serviceableAreaMap.properties.enableSnapping}
         />
       </section>
@@ -62,7 +65,7 @@ export const InteractionTool: FunctionComponent = () => {
           <span>Snap to Vertex</span>
         </Label>
         <Switch
-          defaultChecked={serviceableAreaMap.properties.snapToVertex}
+          checked={serviceableAreaMap.properties.snapToVertex}
           onCheckedChange={(val) =>
             serviceableAreaMap.setProperties?.({ ...serviceableAreaMap.properties, snapToVertex: val })
           }
@@ -83,10 +86,11 @@ export const InteractionTool: FunctionComponent = () => {
           </code>
         </div>
         <Slider
-          defaultValue={serviceableAreaMap.properties.snapTolerance}
-          onValueChange={(e) =>
-            serviceableAreaMap.setProperties?.({ ...serviceableAreaMap.properties, snapTolerance: e })
-          }
+          value={serviceableAreaMap.properties.snapTolerance}
+          onValueChange={(e) => {
+            serviceableAreaMap.mapManager.getInteractionManager().disableDrawing();
+            serviceableAreaMap.setProperties?.({ ...serviceableAreaMap.properties, snapTolerance: e });
+          }}
           disabled={!serviceableAreaMap.properties.enableSnapping}
           min={1}
           max={20}

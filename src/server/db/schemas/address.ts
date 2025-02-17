@@ -1,15 +1,18 @@
-import { pgTable, text, timestamp, varchar } from "drizzle-orm/pg-core";
+import { jsonb, pgTable, text, timestamp, varchar } from "drizzle-orm/pg-core";
 import { generateCuid } from "@srms/server/helpers/generateCuid";
 import { applicants } from "@srms/server/db/schemas/applicants";
-import { polygon } from "@srms/server/helpers/geo";
+import { multiPolygon, polygon } from "@srms/server/helpers/geo";
+import { FeatureStyles } from "@srms/server/types";
+import { featureStylesDefault } from "@srms/server/constants/featureStylesDefault";
 
 export const serviceableAreas = pgTable("serviceable_areas", {
   id: varchar("id")
     .primaryKey()
     .$defaultFn(() => generateCuid()),
   barangay: text("barangay").unique().notNull(),
-  boundaries: polygon("boundaries").notNull(),
+  boundaries: multiPolygon("boundaries").notNull(),
   details: text("details"),
+  featureStyles: jsonb("feature_styles").$type<FeatureStyles>().default(featureStylesDefault).notNull(),
   /**
    * Add more details...
    */

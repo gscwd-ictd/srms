@@ -1,6 +1,6 @@
-import { FeatureStyles } from "../ServiceableAreaMap";
 import { Circle, Fill, Stroke, Style } from "ol/style";
 import { type SnapConfig } from "@srms/lib/mapstudio/interactionManager";
+import { FeatureStyles } from "@srms/server/types";
 
 export const createFeatureStyles = (styles: FeatureStyles) => {
   const drawStyle = new Style({

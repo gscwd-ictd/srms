@@ -38,6 +38,16 @@ export class InteractionManager {
     });
   }
 
+  public setMap(map: Map) {
+    this.map = map;
+    this.map.addLayer(this.drawingLayer);
+
+    // Add all existing interactions to the new map
+    Object.values(this.interactions).forEach((interaction) => {
+      this.map?.addInteraction(interaction);
+    });
+  }
+
   private addInteraction(id: string, interaction: Interaction): void {
     if (this.interactions[id]) {
       throw new Error(`Interaction with id ${id} already exists`);
@@ -60,16 +70,6 @@ export class InteractionManager {
     }
 
     delete this.interactions[id];
-  }
-
-  public setMap(map: Map) {
-    this.map = map;
-    this.map.addLayer(this.drawingLayer);
-
-    // Add all existing interactions to the new map
-    Object.values(this.interactions).forEach((interaction) => {
-      this.map?.addInteraction(interaction);
-    });
   }
 
   public enableDrawing(drawConfig: DrawConfig, onComplete?: (coordinates: Coordinate[] | undefined) => void) {
@@ -120,16 +120,11 @@ export class InteractionManager {
       this.addInteraction("snap", snapInteraction);
     }
 
-    drawInteraction.on("drawend", (e) => {
-      const feature = e.feature;
+    drawInteraction.on("drawend", (event) => {
+      const feature = event.feature;
       feature.setStyle(drawStyle);
-      document.body.classList.add("cursor-default");
-    });
 
-    if (onComplete) {
-      drawInteraction.on("drawend", (event) => {
-        const feature = event.feature;
-
+      if (onComplete) {
         const geometry = feature.getGeometry();
 
         // Check if draw mode is Point
@@ -146,12 +141,9 @@ export class InteractionManager {
         } else if (geometry instanceof Polygon) {
           const coordinates = geometry.getCoordinates()[0];
           onComplete(coordinates);
-
-          // Automatically disable drawing if Polygon is complete
-          // this.disableDrawing();
         }
-      });
-    }
+      }
+    });
   }
 
   public disableDrawing() {
@@ -224,6 +216,10 @@ export class InteractionManager {
 
   public hasInteraction(id: string): boolean {
     return id in this.interactions;
+  }
+
+  public getInteractionById(id: string): Interaction | undefined {
+    return this.interactions[id];
   }
 
   public getInteractionIds(): string[] {

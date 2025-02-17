@@ -12,7 +12,7 @@ import {
 } from "@srms/components/ui/Sheet";
 import { Button } from "@srms/components/ui/Button";
 import { useSidebar } from "@srms/components/ui/Sidebar";
-import { Calendar, Clock, Ellipsis, House, Layers3, Paperclip, Save, Search } from "lucide-react";
+import { Calendar, Clock, Ellipsis, House, Layers, Paperclip, Save, Search } from "lucide-react";
 import { format } from "date-fns";
 import { Card, CardDescription, CardHeader, CardTitle } from "@srms/components/ui/Card";
 import { Separator } from "@srms/components/ui/Separator";
@@ -20,11 +20,15 @@ import { useIsMobile } from "@srms/components/hooks/useMobile";
 import { cn } from "@srms/utils/shadcn";
 import { Input } from "@srms/components/ui/Input";
 import Image from "next/image";
-import { ToggleGroupItem } from "@srms/components/ui/ToggleGroup";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@srms/components/ui/Tooltip";
 import { useServiceableAreaMap } from "./contexts/useServiceableMapContext";
+import { FeatureManager } from "@srms/lib/mapstudio/featureManager";
+import MultiPolygon from "ol/geom/MultiPolygon";
+import { ServiceableAreaGeoJSON } from "@srms/server/types";
 
-export const LayersSheet: FunctionComponent = () => {
+const featureManager = new FeatureManager();
+
+export const SerivceableAreaLayers: FunctionComponent = () => {
   const [isSheetOpen, setIsSheetOpen] = useState(false);
 
   const { open } = useSidebar();
@@ -37,24 +41,39 @@ export const LayersSheet: FunctionComponent = () => {
     if (isMobile) setIsSheetOpen(false);
   }, [isMobile]);
 
+  const handleFocusToFeature = (area: ServiceableAreaGeoJSON) => {
+    const feature = featureManager.createFeature(new MultiPolygon(area.boundaries.coordinates), {
+      id: area.id,
+      name: area.barangay,
+      description: area.barangay,
+      featureStyles: area.featureStyles,
+    });
+
+    const layerExtent = feature.getGeometry()?.getExtent();
+
+    serviceableAreaMap.mapManager.fitToExtent(layerExtent, {
+      duration: 1000,
+      padding: [50, 50, 50, 50],
+      maxZoom: 16,
+    });
+  };
+
   return (
     <Sheet modal={false} open={isSheetOpen} onOpenChange={setIsSheetOpen} defaultOpen={isSheetOpen}>
-      <ToggleGroupItem asChild value="layers">
-        <SheetTrigger asChild>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button
-                variant="ghost"
-                className="h-7 w-7 rounded-md"
-                onClick={() => setIsSheetOpen(!isSheetOpen)}
-              >
-                <Layers3 />
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent>Layers</TooltipContent>
-          </Tooltip>
-        </SheetTrigger>
-      </ToggleGroupItem>
+      <SheetTrigger asChild>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              variant="ghost"
+              className="h-7 w-7 rounded-md"
+              onClick={() => setIsSheetOpen(!isSheetOpen)}
+            >
+              <Layers />
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>Layers</TooltipContent>
+        </Tooltip>
+      </SheetTrigger>
       <SheetContent
         onInteractOutside={(e) => e.preventDefault()}
         side="left"
@@ -79,7 +98,12 @@ export const LayersSheet: FunctionComponent = () => {
           <div className="space-y-3 px-4">
             {serviceableAreaMap.serviceableAreas.map((area, index) => {
               return (
-                <Card key={index} className="bg-secondary/40 rounded-xlshadow-none relative overflow-clip">
+                <Card
+                  key={index}
+                  className="bg-secondary/40 rounded-xlshadow-none hover:bg-secondary relative overflow-clip"
+                  role="button"
+                  onClick={() => handleFocusToFeature(area)}
+                >
                   <CardHeader className="p-2">
                     <div className="flex items-center gap-2">
                       <Image

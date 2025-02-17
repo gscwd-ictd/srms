@@ -25,7 +25,6 @@ export class ApiClient {
     try {
       return await rep.json();
     } catch (e) {
-      console.error(e);
       throw rep;
     }
   }
@@ -78,7 +77,6 @@ export class ApiClient {
     try {
       return JSON.parse(rs) as T;
     } catch (e) {
-      console.error(e);
       return rs as unknown as T;
     }
   }
@@ -424,22 +422,39 @@ export class ApiClient {
           id: string;
           barangay: string;
           details: string | null;
+          featureStyles: string | number | boolean | unknown | Record<string, unknown> | unknown[] | unknown;
           createdAt: string;
           updatedAt: string | null;
           boundaries: {
-            type: "Polygon";
-            coordinates: (number[] | number[])[][];
+            type: "MultiPolygon";
+            coordinates: number[][][][];
           };
         }[]
       >("get", "/api/v1/serviceable-areas", {});
     },
 
-    addServiceableArea: (body: { details?: string | null; barangay: string; boundaries: number[][] }) => {
+    addServiceableArea: (body: {
+      details?: string | null;
+      featureStyles: {
+        fillColor?: string;
+        strokeColor?: string;
+        strokeWidth?: number[];
+        outlineStyle?: "solid" | "dashed";
+        freehand?: boolean;
+        enableSnapping?: boolean;
+        snapTolerance?: number[];
+        snapToEdge?: boolean;
+        snapToVertex?: boolean;
+      };
+      barangay: string;
+      boundaries: number[][][][];
+    }) => {
       return this.Fetch<{
         id: string;
         barangay: string;
         boundaries?: unknown;
         details: string | null;
+        featureStyles: string | number | boolean | unknown | Record<string, unknown> | unknown[] | unknown;
         createdAt: string;
         updatedAt: string | null;
       }>("post", "/api/v1/serviceable-areas", { body });
@@ -450,11 +465,12 @@ export class ApiClient {
         id: string;
         barangay: string;
         details: string | null;
+        featureStyles: string | number | boolean | unknown | Record<string, unknown> | unknown[] | unknown;
         createdAt: string;
         updatedAt: string | null;
         boundaries: {
-          type: "Polygon";
-          coordinates: (number[] | number[])[][];
+          type: "MultiPolygon";
+          coordinates: number[][][][];
         };
       }>("get", `/api/v1/serviceable-areas/${id}`, {});
     },

@@ -6,18 +6,6 @@ import { useServiceableAreaMap } from "./contexts/useServiceableMapContext";
 import { MapToolbar } from "./MapToolbar";
 import View from "ol/View";
 
-export type FeatureStyles = {
-  fillColor: string;
-  strokeColor: string;
-  strokeWidth: number[];
-  outlineStyle: "solid" | "dashed";
-  freehand: boolean;
-  enableSnapping: boolean;
-  snapTolerance: number[];
-  snapToEdge: boolean;
-  snapToVertex: boolean;
-};
-
 export const ServiceableAreaMap: FunctionComponent<PropsWithChildren> = ({ children }) => {
   /**
    * Calling the useGeographic function makes it so the map view uses
@@ -42,9 +30,6 @@ export const ServiceableAreaMap: FunctionComponent<PropsWithChildren> = ({ child
         zoom: 16,
       }),
     });
-
-    // serviceableAreaMap.mapManager.getMap().on("click", (e) => console.log(e.coordinate));
-    // serviceableAreaMap.mapManager.addMapEvent("click", () => console.log("clicked!!"));
 
     return () => {
       serviceableAreaMap.mapManager.destroy();
