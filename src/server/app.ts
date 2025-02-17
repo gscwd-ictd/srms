@@ -3,6 +3,7 @@ import { notFound, onError, pinoLogger } from "@srms/server/middlewares";
 import { secureHeaders } from "hono/secure-headers";
 import { cors } from "hono/cors";
 import { healthcheck, applications, serviceableAreas } from "@srms/server/routes";
+import env from "@srms/utils/env";
 
 function createApp() {
   const app = createOpenAPIRoute().basePath("/api");
@@ -18,7 +19,7 @@ function createApp() {
   // TODO: create separate file for this and handle dynamic origins
   app.use(
     cors({
-      origin: ["http://172.20.10.57:3000"],
+      origin: [env.NEXT_PUBLIC_APP_URL, "http://localhost:3000", "http://172.20.10.57:3000"],
       allowHeaders: ["Content-Type", "Authorization", "User-Agent", "X-Response-Time", "Content-Length"],
       allowMethods: ["POST", "GET", "PATCH", "PUT", "DELETE", "OPTIONS"],
       credentials: true,

@@ -1,3 +1,4 @@
+import { ServiceableAreaFeatures } from "@srms/components/features/addServiceableArea/ServiceableAreaFeatures";
 import { ServiceableAreaMap } from "@srms/components/features/addServiceableArea/ServiceableAreaMap";
 import { ServiceableAreaMapProvider } from "@srms/components/providers/ServiceableAreaMapProvider";
 import { Metadata } from "next";
@@ -8,8 +9,12 @@ export const metadata: Metadata = {
 
 export default function ServiceAreasPage() {
   return (
-    <ServiceableAreaMapProvider>
-      <ServiceableAreaMap></ServiceableAreaMap>
-    </ServiceableAreaMapProvider>
+    <>
+      <ServiceableAreaMapProvider>
+        <ServiceableAreaMap></ServiceableAreaMap>
+
+        <ServiceableAreaFeatures />
+      </ServiceableAreaMapProvider>
+    </>
   );
 }

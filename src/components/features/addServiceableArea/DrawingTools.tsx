@@ -16,15 +16,24 @@ import { ChevronRight, SlidersHorizontal } from "lucide-react";
 import { PreviewTool } from "./PreviewTool";
 import { StylingTool } from "./StylingTool";
 import { InteractionTool } from "./InteractionTool";
+import { ToggleGroupItem } from "@srms/components/ui/ToggleGroup";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@srms/components/ui/Tooltip";
 
 export const DrawingTools: FunctionComponent = () => {
   return (
     <Sheet modal={false}>
-      <SheetTrigger asChild>
-        <Button variant="ghost" className="h-7 w-7">
-          <SlidersHorizontal className="h-5 w-5" />
-        </Button>
-      </SheetTrigger>
+      <ToggleGroupItem value="tools" asChild>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <SheetTrigger asChild>
+              <Button variant="ghost" className="h-7 w-7 rounded-md">
+                <SlidersHorizontal />
+              </Button>
+            </SheetTrigger>
+          </TooltipTrigger>
+          <TooltipContent>Customize Style</TooltipContent>
+        </Tooltip>
+      </ToggleGroupItem>
 
       <SheetContent className="bg-sidebar w-80" onInteractOutside={(e) => e.preventDefault()}>
         <SheetHeader className="px-6">

@@ -89,10 +89,6 @@ export class InteractionManager {
     // Add draw interaction first
     this.addInteraction("draw", drawInteraction);
 
-    drawInteraction.on("drawstart", () => {
-      document.body.classList.add("cursor-crosshair");
-    });
-
     // Then handle snapping
     if (snapConfig) {
       let snapOptions: Partial<SnapConfig> = {};
@@ -152,7 +148,7 @@ export class InteractionManager {
           onComplete(coordinates);
 
           // Automatically disable drawing if Polygon is complete
-          this.disableDrawing();
+          // this.disableDrawing();
         }
       });
     }

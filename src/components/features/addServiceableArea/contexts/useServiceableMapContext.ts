@@ -1,10 +1,12 @@
 import { MapManager } from "@srms/lib/mapstudio/mapManager";
 import { FeatureStyles } from "../ServiceableAreaMap";
 import { createContext, useContext } from "react";
+import { ServiceableAreaGeoJSON } from "@srms/server/types";
 
 export type ServiceableAreaMapState = {
   mapManager: MapManager;
   properties: FeatureStyles;
+  serviceableAreas: ServiceableAreaGeoJSON[];
   setProperties?: (styles: FeatureStyles) => void;
 };
 

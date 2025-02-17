@@ -36,13 +36,15 @@ export const ServiceableAreaMap: FunctionComponent<PropsWithChildren> = ({ child
 
     serviceableAreaMap.mapManager.init({
       target: mapRef.current,
-
       view: new View({
         projection: "EPSG:4326",
         center: [125.17189194375173, 6.113035811082611],
         zoom: 16,
       }),
     });
+
+    // serviceableAreaMap.mapManager.getMap().on("click", (e) => console.log(e.coordinate));
+    // serviceableAreaMap.mapManager.addMapEvent("click", () => console.log("clicked!!"));
 
     return () => {
       serviceableAreaMap.mapManager.destroy();

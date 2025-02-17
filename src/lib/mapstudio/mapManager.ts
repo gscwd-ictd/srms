@@ -4,10 +4,11 @@ import { LayerManager } from "./layerManager";
 import { InteractionManager } from "./interactionManager";
 import { ControlManager } from "./controlManager";
 import { Coordinate } from "ol/coordinate";
-import { View } from "ol";
+import { MapBrowserEvent, View } from "ol";
 import { Extent } from "ol/extent";
 import TileLayer from "ol/layer/Tile";
 import { OSM } from "ol/source";
+import { MapEvents } from "./utils/mapEvents";
 
 export class MapManager {
   private map: Map | undefined;
@@ -126,6 +127,18 @@ export class MapManager {
       throw new Error("Map not initialized. Call init() first.");
     }
     return this.map.getView().calculateExtent(this.map.getSize());
+  }
+  // (event: MapBrowserEvent<any>) => unknown
+  public addMapEvent(
+    eventType: (typeof MapEvents)[number],
+    callback: (event: MapBrowserEvent<UIEvent>) => void,
+  ): void {
+    if (!this.map) {
+      throw new Error("Map not initialized. Call init() first.");
+    }
+
+    //@ts-expect-error type mismatch only
+    this.map.on([eventType], callback);
   }
 
   public destroy(): void {

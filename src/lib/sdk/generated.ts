@@ -418,7 +418,7 @@ export class ApiClient {
   };
 
   serviceableAreas = {
-    getServiceableAreas: () => {
+    getAllServiceableAreas: () => {
       return this.Fetch<
         {
           id: string;
@@ -434,7 +434,7 @@ export class ApiClient {
       >("get", "/api/v1/serviceable-areas", {});
     },
 
-    postServiceableAreas: (body: { details?: string | null; barangay: string; boundaries: number[][] }) => {
+    addServiceableArea: (body: { details?: string | null; barangay: string; boundaries: number[][] }) => {
       return this.Fetch<{
         id: string;
         barangay: string;
@@ -445,7 +445,7 @@ export class ApiClient {
       }>("post", "/api/v1/serviceable-areas", { body });
     },
 
-    getServiceableAreasId: (id: string) => {
+    getServiceableAreaById: (id: string) => {
       return this.Fetch<{
         id: string;
         barangay: string;
