@@ -95,10 +95,10 @@ export function createPolygon(coordinates: Position2D[]): GeoJSONPolygon {
 }
 
 // Helper function to create a GeoJSON multipolygon
-export function createMultiPolygon(polygons: Position2D[][]): GeoJSONMultiPolygon {
+export function createMultiPolygon(polygons: number[][][][]): GeoJSONMultiPolygon {
   return {
     type: "MultiPolygon",
-    coordinates: polygons.map((polygon) => [polygon]),
+    coordinates: polygons,
   };
 }
 

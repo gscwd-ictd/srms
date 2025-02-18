@@ -5,12 +5,20 @@ import { LineString, Point, Polygon } from "ol/geom";
 import { Draw, Interaction, Modify, Select, Snap } from "ol/interaction";
 import VectorLayer from "ol/layer/Vector";
 import VectorSource from "ol/source/Vector";
+import { Style } from "ol/style";
 
-type SnapConfig = {
+export type SnapConfig = {
   pixel?: number; // Pixel tolerance for snapping
   edge?: boolean; // Enable edge snapping
   vertex?: boolean; // Enable vertex snapping
   source?: VectorSource; // Optional specific source to snap to
+};
+
+export type DrawConfig = {
+  type: "Point" | "LineString" | "Polygon";
+  freehand?: boolean;
+  drawStyle?: Style;
+  snapConfig?: SnapConfig | boolean;
 };
 
 export class InteractionManager {
@@ -27,6 +35,16 @@ export class InteractionManager {
     this.drawingSource = new VectorSource();
     this.drawingLayer = new VectorLayer({
       source: this.drawingSource,
+    });
+  }
+
+  public setMap(map: Map) {
+    this.map = map;
+    this.map.addLayer(this.drawingLayer);
+
+    // Add all existing interactions to the new map
+    Object.values(this.interactions).forEach((interaction) => {
+      this.map?.addInteraction(interaction);
     });
   }
 
@@ -54,27 +72,20 @@ export class InteractionManager {
     delete this.interactions[id];
   }
 
-  public setMap(map: Map) {
-    this.map = map;
-    this.map.addLayer(this.drawingLayer);
+  public enableDrawing(drawConfig: DrawConfig, onComplete?: (coordinates: Coordinate[] | undefined) => void) {
+    // Deconstruct
+    const { type, drawStyle, snapConfig, freehand } = drawConfig;
 
-    // Add all existing interactions to the new map
-    Object.values(this.interactions).forEach((interaction) => {
-      this.map?.addInteraction(interaction);
-    });
-  }
+    this.clear();
 
-  public enableDrawing(
-    type: "Point" | "LineString" | "Polygon",
-    snapConfig?: SnapConfig | boolean,
-    onComplete?: (coordinates: Coordinate[] | undefined) => void,
-  ) {
     // Disable any existing drawing interaction
     this.disableDrawing();
 
     const drawInteraction = new Draw({
       source: this.drawingSource,
       type: type,
+      style: drawStyle,
+      freehand: freehand,
     });
 
     // Add draw interaction first
@@ -111,9 +122,11 @@ export class InteractionManager {
       this.addInteraction("snap", snapInteraction);
     }
 
-    if (onComplete) {
-      drawInteraction.on("drawend", (event) => {
-        const feature = event.feature;
+    drawInteraction.on("drawend", (event) => {
+      const feature = event.feature;
+      feature.setStyle(drawStyle);
+
+      if (onComplete) {
         const geometry = feature.getGeometry();
 
         // Check if draw mode is Point
@@ -130,12 +143,9 @@ export class InteractionManager {
         } else if (geometry instanceof Polygon) {
           const coordinates = geometry.getCoordinates()[0];
           onComplete(coordinates);
-
-          // Automatically disable drawing if Polygon is complete
-          this.disableDrawing();
         }
-      });
-    }
+      }
+    });
   }
 
   public disableDrawing() {
@@ -194,7 +204,7 @@ export class InteractionManager {
     return this.drawingLayer;
   }
 
-  clear(): void {
+  public clear(): void {
     if (this.map) {
       Object.values(this.interactions).forEach((interaction) => {
         this.map?.removeInteraction(interaction);
@@ -208,6 +218,10 @@ export class InteractionManager {
 
   public hasInteraction(id: string): boolean {
     return id in this.interactions;
+  }
+
+  public getInteractionById(id: string): Interaction | undefined {
+    return this.interactions[id];
   }
 
   public getInteractionIds(): string[] {

@@ -4,14 +4,18 @@ import * as React from "react";
 import {
   AudioWaveform,
   BookOpen,
-  Bot,
+  CircleHelp,
   Command,
+  Droplets,
   Frame,
   GalleryVerticalEnd,
+  LayoutDashboard,
   Map,
+  MessageSquareDot,
   PieChart,
-  Settings2,
-  SquareTerminal,
+  Send,
+  Settings,
+  // SquareDashedMousePointer,
 } from "lucide-react";
 
 import { NavMain } from "./NavMain";
@@ -23,20 +27,22 @@ import {
   SidebarFooter,
   SidebarHeader,
   SidebarRail,
+  SidebarSeparator,
 } from "@srms/components/ui/Sidebar";
+import { NavSecondary } from "./NavSecondary";
 
 // This is sample data.
 const data = {
   user: {
     name: "shadcn",
     email: "m@example.com",
-    avatar: "/avatars/shadcn.jpg",
+    avatar: "https://github.com/shadcn.png",
   },
   teams: [
     {
-      name: "Acme Inc",
+      name: "Flowscape",
       logo: GalleryVerticalEnd,
-      plan: "Enterprise",
+      plan: "Smart water solutions",
     },
     {
       name: "Acme Corp.",
@@ -51,89 +57,51 @@ const data = {
   ],
   navMain: [
     {
-      title: "Playground",
-      url: "#",
-      icon: SquareTerminal,
-      isActive: true,
-      items: [
-        {
-          title: "History",
-          url: "#",
-        },
-        {
-          title: "Starred",
-          url: "#",
-        },
-        {
-          title: "Settings",
-          url: "#",
-        },
-      ],
+      title: "Dashboard",
+      url: "/dashboard",
+      icon: LayoutDashboard,
     },
     {
-      title: "Models",
-      url: "#",
-      icon: Bot,
-      items: [
-        {
-          title: "Genesis",
-          url: "#",
-        },
-        {
-          title: "Explorer",
-          url: "#",
-        },
-        {
-          title: "Quantum",
-          url: "#",
-        },
-      ],
+      title: "Notifications",
+      url: "/notifications",
+      icon: MessageSquareDot,
+      count: 4,
     },
+    /**
+     * This part has been moved to legacy routes
+     *
+     *  {
+     *    title: "Service Areas",
+     *    url: "/service-areas",
+     *    icon: SquareDashedMousePointer,
+     *  },
+     */
+    {
+      title: "Operations",
+      url: "/operations",
+      icon: Droplets,
+    },
+    {
+      title: "Settings",
+      url: "/settings",
+      icon: Settings,
+    },
+  ],
+  navSecondary: [
     {
       title: "Documentation",
       url: "#",
       icon: BookOpen,
-      items: [
-        {
-          title: "Introduction",
-          url: "#",
-        },
-        {
-          title: "Get Started",
-          url: "#",
-        },
-        {
-          title: "Tutorials",
-          url: "#",
-        },
-        {
-          title: "Changelog",
-          url: "#",
-        },
-      ],
     },
     {
-      title: "Settings",
+      title: "Feedback",
       url: "#",
-      icon: Settings2,
-      items: [
-        {
-          title: "General",
-          url: "#",
-        },
-        {
-          title: "Team",
-          url: "#",
-        },
-        {
-          title: "Billing",
-          url: "#",
-        },
-        {
-          title: "Limits",
-          url: "#",
-        },
-      ],
+      icon: Send,
+    },
+    {
+      title: "Help",
+      url: "#",
+      icon: CircleHelp,
     },
   ],
   projects: [
@@ -158,11 +126,13 @@ const data = {
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar collapsible="icon" {...props}>
-      <SidebarHeader>
+      <SidebarHeader className="flex h-16 w-full items-center justify-center">
         <TeamSwitcher teams={data.teams} />
       </SidebarHeader>
-      <SidebarContent>
+      <SidebarSeparator className="mx-0" />
+      <SidebarContent className="flex flex-col justify-between">
         <NavMain items={data.navMain} />
+        <NavSecondary items={data.navSecondary} />
       </SidebarContent>
       <SidebarFooter>
         <NavUser user={data.user} />

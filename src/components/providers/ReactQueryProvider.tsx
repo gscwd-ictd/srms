@@ -1,6 +1,6 @@
 "use client";
 
-import { type FunctionComponent, type PropsWithChildren, Suspense, lazy, useEffect, useState } from "react";
+import { type FunctionComponent, type PropsWithChildren, Suspense, lazy, useEffect } from "react";
 import { QueryClient, QueryClientProvider as ReactQueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { useRQDevtoolsInProd } from "../stores/useRQDevtoolsInProd";
@@ -11,8 +11,10 @@ const ReactQueryDevtoolsProduction = lazy(() =>
   })),
 );
 
+const queryClient = new QueryClient();
+
 export const ReactQueryProvider: FunctionComponent<PropsWithChildren> = ({ children }) => {
-  const [queryClient] = useState(new QueryClient());
+  // const [queryClient] = useState(new QueryClient());
 
   const { show, toggleDevtools } = useRQDevtoolsInProd();
 

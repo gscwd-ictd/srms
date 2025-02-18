@@ -1,4 +1,5 @@
 @import "../../node_modules/ol/ol.css" layer(base);
+
 /*
   ---break---
 */
@@ -149,6 +150,8 @@
   --color-sidebar: var(--sidebar);
   --animate-accordion-down: accordion-down 0.2s ease-out;
   --animate-accordion-up: accordion-up 0.2s ease-out;
+  --animate-collapsible-down: collapsible-down 100ms ease-out;
+  --animate-collapsible-up: collapsible-up 100ms ease-out;
   /*
   ---break---
 */
@@ -171,6 +174,24 @@
       height: 0;
     }
   }
+
+  @keyframes collapsible-down {
+    from {
+      height: 0;
+    }
+    to {
+      height: var(--radix-collapsible-content-height);
+    }
+  }
+
+  @keyframes collapsible-up {
+    from {
+      height: var(--radix-collapsible-content-height);
+    }
+    to {
+      height: 0;
+    }
+  }
 }
 /*
   ---break---
@@ -186,4 +207,15 @@
   [role="button"]:not(:disabled) {
     cursor: pointer;
   }
+}
+
+/*
+  -- Cutom pointers for color picker component --
+  See: https://www.npmjs.com/package/react-colorful#customization for more details
+*/
+.custom-pointers .react-colorful__saturation-pointer,
+.custom-pointers .react-colorful__hue-pointer,
+.custom-pointers .react-colorful__alpha-pointer {
+  width: 22px;
+  height: 22px;
 }

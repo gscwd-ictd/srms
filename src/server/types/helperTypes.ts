@@ -5,6 +5,7 @@ import {
   ResultMetaDataSchema,
   ErrorResponseSchema,
   HealthCheckResponseSchema,
+  FeatureStylesSchema,
 } from "../schemas";
 
 export type PaginatedResult<T> = {
@@ -17,3 +18,5 @@ export type QueryParams = z.infer<typeof QueryParamsSchema>;
 export type ResultMetada = z.infer<typeof ResultMetaDataSchema>;
 export type ErrorResponse = z.infer<typeof ErrorResponseSchema>;
 export type HealthCheckResponse = z.infer<typeof HealthCheckResponseSchema>;
+
+export type FeatureStyles = z.infer<typeof FeatureStylesSchema>;

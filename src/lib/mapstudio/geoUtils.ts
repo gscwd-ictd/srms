@@ -1,8 +1,8 @@
-import { transform, get as getProjection, fromLonLat } from "ol/proj";
+import { transform, get as getProjection } from "ol/proj";
 import { getDistance } from "ol/sphere";
 import { boundingExtent, containsCoordinate, Extent } from "ol/extent";
 import { Coordinate } from "ol/coordinate";
-import { Point, Polygon } from "ol/geom";
+import { Polygon } from "ol/geom";
 
 export class GeoUtils {
   public static transformCoordinates(coords: number[], fromProj: string, toProj: string): number[] {
@@ -66,15 +66,12 @@ export class GeoUtils {
     );
   }
 
-  public static isPointInBoundary(location: Coordinate, boundaries: number[][]): boolean {
+  public static isPointInPolygonBoundary(location: Coordinate, boundaries: number[][][]): boolean {
     // Create a polygon from the coordinates
-    const polygon = new Polygon([boundaries]);
-
-    // Create a point from the coordinate
-    const point = new Point(fromLonLat(location));
+    const polygon = new Polygon(boundaries);
 
     // Check if the point is inside the polygon
-    return polygon.intersectsCoordinate(point.getCoordinates());
+    return polygon.containsXY(location[0]!, location[1]!);
   }
 
   public static isPointInExtent(point: number[], extent: Extent): boolean {
