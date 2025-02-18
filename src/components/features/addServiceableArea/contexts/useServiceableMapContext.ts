@@ -1,4 +1,4 @@
-import { MapManager } from "@srms/lib/mapstudio/mapManager";
+import { type MapManager } from "@srms/lib/mapstudio/mapManager";
 import { createContext, useContext } from "react";
 import { FeatureStyles, ServiceableAreaGeoJSON } from "@srms/server/types";
 

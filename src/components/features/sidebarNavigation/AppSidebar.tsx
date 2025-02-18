@@ -11,6 +11,7 @@ import {
   GalleryVerticalEnd,
   LayoutDashboard,
   Map,
+  MapPinned,
   MessageSquareDot,
   PieChart,
   Send,
@@ -66,6 +67,11 @@ const data = {
       url: "/notifications",
       icon: MessageSquareDot,
       count: 4,
+    },
+    {
+      title: "Map",
+      url: "/map",
+      icon: MapPinned,
     },
     /**
      * This part has been moved to legacy routes
