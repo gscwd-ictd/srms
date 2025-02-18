@@ -140,7 +140,7 @@ export class ApiClient {
             blockNo: string | null;
             street: string | null;
             prkVillSubd: string | null;
-            barangay: string;
+            barangayId: string;
             city: string;
             province: string;
             zipCode: string;
@@ -160,7 +160,7 @@ export class ApiClient {
             applicantId: string;
             createdAt: string;
             updatedAt: string | null;
-            proofOfOwnership: {
+            proofOfLotOwnership: {
               filename: string;
               url: string;
             }[];
@@ -217,14 +217,14 @@ export class ApiClient {
           blockNo?: string | null;
           street?: string | null;
           prkVillSubd?: string | null;
-          barangay: string;
+          barangayId: string;
         };
         household: {
           noOfPersonsInHousehold: number;
           noOfHousesInLot: number;
         };
         documents: {
-          proofOfOwnership: {
+          proofOfLotOwnership: {
             filename: string;
             url: string;
           }[];
@@ -278,7 +278,7 @@ export class ApiClient {
           blockNo: string | null;
           street: string | null;
           prkVillSubd: string | null;
-          barangay: string;
+          barangayId: string;
           city: string;
           province: string;
           zipCode: string;
@@ -298,7 +298,7 @@ export class ApiClient {
           applicantId: string;
           createdAt: string;
           updatedAt: string | null;
-          proofOfOwnership: {
+          proofOfLotOwnership: {
             filename: string;
             url: string;
           }[];
@@ -354,7 +354,7 @@ export class ApiClient {
           blockNo: string | null;
           street: string | null;
           prkVillSubd: string | null;
-          barangay: string;
+          barangayId: string;
           city: string;
           province: string;
           zipCode: string;
@@ -374,7 +374,7 @@ export class ApiClient {
           applicantId: string;
           createdAt: string;
           updatedAt: string | null;
-          proofOfOwnership: {
+          proofOfLotOwnership: {
             filename: string;
             url: string;
           }[];
@@ -414,6 +414,67 @@ export class ApiClient {
         createdAt: string;
         updatedAt: string | null;
       }>("patch", `/api/v1/applications/status/${id}`, { body });
+    },
+  };
+
+  serviceableAreas = {
+    getAllServiceableAreas: () => {
+      return this.Fetch<
+        {
+          id: string;
+          barangay: string;
+          details: string | null;
+          featureStyles: string | number | boolean | unknown | Record<string, unknown> | unknown[] | unknown;
+          createdAt: string;
+          updatedAt: string | null;
+          boundaries: {
+            type: "MultiPolygon";
+            coordinates: number[][][][];
+          };
+        }[]
+      >("get", "/api/v1/serviceable-areas", {});
+    },
+
+    addServiceableArea: (body: {
+      details?: string | null;
+      featureStyles: {
+        fillColor?: string;
+        strokeColor?: string;
+        strokeWidth?: number[];
+        outlineStyle?: "solid" | "dashed";
+        freehand?: boolean;
+        enableSnapping?: boolean;
+        snapTolerance?: number[];
+        snapToEdge?: boolean;
+        snapToVertex?: boolean;
+      };
+      barangay: string;
+      boundaries: number[][][][];
+    }) => {
+      return this.Fetch<{
+        id: string;
+        barangay: string;
+        boundaries?: unknown;
+        details: string | null;
+        featureStyles: string | number | boolean | unknown | Record<string, unknown> | unknown[] | unknown;
+        createdAt: string;
+        updatedAt: string | null;
+      }>("post", "/api/v1/serviceable-areas", { body });
+    },
+
+    getServiceableAreaById: (id: string) => {
+      return this.Fetch<{
+        id: string;
+        barangay: string;
+        details: string | null;
+        featureStyles: string | number | boolean | unknown | Record<string, unknown> | unknown[] | unknown;
+        createdAt: string;
+        updatedAt: string | null;
+        boundaries: {
+          type: "MultiPolygon";
+          coordinates: number[][][][];
+        };
+      }>("get", `/api/v1/serviceable-areas/${id}`, {});
     },
   };
 }

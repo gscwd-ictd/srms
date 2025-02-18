@@ -8,6 +8,41 @@
       "when": 1739113111453,
       "tag": "0000_blue_boomerang",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1739272580640,
+      "tag": "0001_happy_secret_warriors",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1739277907477,
+      "tag": "0002_petite_silverclaw",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1739622168736,
+      "tag": "0003_nervous_fixer",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1739801701886,
+      "tag": "0004_lyrical_ultimo",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1739803918707,
+      "tag": "0005_faulty_falcon",
+      "breakpoints": true
     }
   ]
 }

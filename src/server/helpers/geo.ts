@@ -6,6 +6,14 @@
  */
 
 import { customType } from "drizzle-orm/pg-core";
+import {
+  GeoJSONLineString,
+  GeoJSONMultiPoint,
+  GeoJSONMultiPolygon,
+  GeoJSONPoint,
+  GeoJSONPolygon,
+  Position2D,
+} from "@srms/server/types";
 
 // MultiPolygon type for complex boundaries (e.g., regions with islands)
 export const multiPolygon = customType<{
@@ -40,22 +48,6 @@ export const multiPoint = customType<{
   },
 });
 
-// Helper type for GeoJSON structures
-export type GeoJSONPolygon = {
-  type: "Polygon";
-  coordinates: number[][][];
-};
-
-export type GeoJSONMultiPolygon = {
-  type: "MultiPolygon";
-  coordinates: number[][][][];
-};
-
-export type GeoJSONMultiPoint = {
-  type: "MultiPoint";
-  coordinates: number[][];
-};
-
 /**
  * Usage Example:
  *
@@ -80,8 +72,22 @@ export type GeoJSONMultiPoint = {
  * PostGIS will automatically parse the GeoJSON string into its internal geometry format.
  */
 
+export function createLineString(points: Position2D[]): GeoJSONLineString {
+  return {
+    type: "LineString",
+    coordinates: points,
+  };
+}
+
+export function createPoint(point: Position2D): GeoJSONPoint {
+  return {
+    type: "Point",
+    coordinates: point,
+  };
+}
+
 // Helper function to create a GeoJSON polygon
-export function createPolygon(coordinates: number[][]): GeoJSONPolygon {
+export function createPolygon(coordinates: Position2D[]): GeoJSONPolygon {
   return {
     type: "Polygon",
     coordinates: [coordinates],
@@ -89,17 +95,17 @@ export function createPolygon(coordinates: number[][]): GeoJSONPolygon {
 }
 
 // Helper function to create a GeoJSON multipolygon
-export function createMultiPolygon(coordinates: number[][][][]): GeoJSONMultiPolygon {
+export function createMultiPolygon(polygons: number[][][][]): GeoJSONMultiPolygon {
   return {
     type: "MultiPolygon",
-    coordinates,
+    coordinates: polygons,
   };
 }
 
 // Helper function to create a GeoJSON multipoint
-export function createMultiPoint(coordinates: number[][]): GeoJSONMultiPoint {
+export function createMultiPoint(points: Position2D[]): GeoJSONMultiPoint {
   return {
     type: "MultiPoint",
-    coordinates,
+    coordinates: points,
   };
 }

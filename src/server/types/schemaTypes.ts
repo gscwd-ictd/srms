@@ -27,6 +27,7 @@ import {
 
 import {
   CreateServiceableAreaSchema,
+  SelectServiceableAreaGeoJSONSchema,
   SelectServiceableAreaSchema,
 } from "@srms/server/schemas/tables/serviceableAreaSchema";
 
@@ -51,4 +52,5 @@ export type ApplicationType = (typeof ApplicationType)[number];
 export type ApplicationStatus = (typeof ApplicationStatus)[number];
 
 export type ServiceableArea = z.infer<typeof SelectServiceableAreaSchema>;
+export type ServiceableAreaGeoJSON = z.infer<typeof SelectServiceableAreaGeoJSONSchema>;
 export type CreateServiceableArea = z.infer<typeof CreateServiceableAreaSchema>;
