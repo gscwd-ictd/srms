@@ -4,17 +4,15 @@
 import { useEffect, type FunctionComponent } from "react";
 import { useServiceableAreaMap } from "./contexts/useServiceableMapContext";
 import { FeatureManager } from "@srms/lib/mapstudio/featureManager";
-import VectorSource from "ol/source/Vector";
-import VectorLayer from "ol/layer/Vector";
 import { createFeatureStyles } from "./utils/createFeatureStyles";
 import { FeatureStyles } from "@srms/server/types";
 import { MultiPolygon } from "ol/geom";
-import Select from "ol/interaction/Select";
-import { click } from "ol/events/condition";
+import VectorSource from "ol/source/Vector";
+import VectorLayer from "ol/layer/Vector";
 
 const featureManager = new FeatureManager();
 
-export const ServiceableAreaFeatures: FunctionComponent = () => {
+export const ServiceableAreaRenderFeatures: FunctionComponent = () => {
   const serviceableAreaMap = useServiceableAreaMap();
 
   useEffect(() => {
@@ -24,13 +22,20 @@ export const ServiceableAreaFeatures: FunctionComponent = () => {
 
     const vectorLayer = new VectorLayer();
 
+    serviceableAreaMap.mapManager.getMap().on("click", (e) => {
+      const polygonCoordinates = serviceableAreaMap.serviceableAreas.flatMap(
+        (area) => area.boundaries.coordinates,
+      );
+
+      const multipolygon = new MultiPolygon(polygonCoordinates);
+
+      const isInside = multipolygon.containsXY(e.coordinate[0]!, e.coordinate[1]!);
+
+      console.log({ isInside });
+    });
+
     serviceableAreaMap.serviceableAreas.forEach((area) => {
-      const feature = featureManager.createFeature(new MultiPolygon(area.boundaries.coordinates), {
-        id: area.id,
-        name: area.barangay,
-        description: area.barangay,
-        featureStyles: area.featureStyles,
-      });
+      const feature = featureManager.createFeature(new MultiPolygon(area.boundaries.coordinates), area);
 
       vectorSource.addFeature(feature);
 
@@ -41,28 +46,9 @@ export const ServiceableAreaFeatures: FunctionComponent = () => {
 
     vectorLayer.setSource(vectorSource);
 
+    vectorLayer.setProperties({ id: "serviceableAreas" });
+
     serviceableAreaMap.mapManager.getLayerManager().addLayer("serviceableAreas", vectorLayer);
-
-    const select = new Select({
-      condition: click, // hovering event on a feature - use `click` if you want click event
-      layers: [vectorLayer], // only select from this layer
-    });
-
-    serviceableAreaMap.mapManager.getMap().addInteraction(select);
-
-    select.on("select", (event) => {
-      const selectedFeatures = event.selected;
-
-      if (selectedFeatures.length > 0) {
-        // Get the first selected feature
-        const feature = selectedFeatures[0];
-
-        // Get the properties
-        const properties = feature?.getProperties();
-
-        console.log(properties);
-      }
-    });
 
     return () => {
       serviceableAreaMap.mapManager.getLayerManager().removeLayer("serviceableAreas");

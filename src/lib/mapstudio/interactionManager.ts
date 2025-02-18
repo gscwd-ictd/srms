@@ -76,6 +76,8 @@ export class InteractionManager {
     // Deconstruct
     const { type, drawStyle, snapConfig, freehand } = drawConfig;
 
+    this.clear();
+
     // Disable any existing drawing interaction
     this.disableDrawing();
 
@@ -202,7 +204,7 @@ export class InteractionManager {
     return this.drawingLayer;
   }
 
-  clear(): void {
+  public clear(): void {
     if (this.map) {
       Object.values(this.interactions).forEach((interaction) => {
         this.map?.removeInteraction(interaction);

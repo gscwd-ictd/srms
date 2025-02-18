@@ -3,7 +3,6 @@
 import { type PropsWithChildren, type FunctionComponent, useRef, useEffect } from "react";
 import { useGeographic } from "ol/proj";
 import { useServiceableAreaMap } from "./contexts/useServiceableMapContext";
-import { MapToolbar } from "./MapToolbar";
 import View from "ol/View";
 
 export const ServiceableAreaMap: FunctionComponent<PropsWithChildren> = ({ children }) => {
@@ -39,7 +38,6 @@ export const ServiceableAreaMap: FunctionComponent<PropsWithChildren> = ({ child
 
   return (
     <div ref={mapRef} className="relative z-20 h-full w-full">
-      <MapToolbar />
       {children}
     </div>
   );

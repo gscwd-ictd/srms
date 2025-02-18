@@ -1,6 +1,9 @@
-import { ServiceableAreaFeatures } from "@srms/components/features/addServiceableArea/ServiceableAreaFeatures";
+import { ServiceableAreaRenderFeatures } from "@srms/components/features/addServiceableArea/ServiceableAreaRenderFeatures";
 import { ServiceableAreaMap } from "@srms/components/features/addServiceableArea/ServiceableAreaMap";
 import { ServiceableAreaMapProvider } from "@srms/components/providers/ServiceableAreaMapProvider";
+import { MapToolbar } from "@srms/components/features/addServiceableArea/MapToolbar";
+import { ServiceableAreaSelectFeatures } from "@srms/components/features/addServiceableArea/ServiceableAreaSelectFeatures";
+import { ServiceableAreaModifyFeatures } from "@srms/components/features/addServiceableArea/ServiceableAreaModifyFeatures";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -9,12 +12,14 @@ export const metadata: Metadata = {
 
 export default function ServiceAreasPage() {
   return (
-    <>
-      <ServiceableAreaMapProvider>
-        <ServiceableAreaMap></ServiceableAreaMap>
+    <ServiceableAreaMapProvider>
+      <ServiceableAreaMap>
+        <MapToolbar />
+      </ServiceableAreaMap>
 
-        <ServiceableAreaFeatures />
-      </ServiceableAreaMapProvider>
-    </>
+      <ServiceableAreaRenderFeatures />
+      <ServiceableAreaSelectFeatures />
+      <ServiceableAreaModifyFeatures />
+    </ServiceableAreaMapProvider>
   );
 }

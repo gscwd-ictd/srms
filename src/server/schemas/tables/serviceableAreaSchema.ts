@@ -1,6 +1,6 @@
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 import { serviceableAreas } from "@srms/server/db/schemas";
-import { FeatureStylesSchema, MultiPolygonSchema, PolygonSchema } from "@srms/server/schemas";
+import { FeatureStylesSchema, MultiPolygonSchema } from "@srms/server/schemas";
 import { z } from "zod";
 
 export const SelectServiceableAreaSchema = createSelectSchema(serviceableAreas);
@@ -8,9 +8,11 @@ export const SelectServiceableAreaSchema = createSelectSchema(serviceableAreas);
 export const SelectServiceableAreaGeoJSONSchema = createSelectSchema(serviceableAreas)
   .omit({
     boundaries: true,
+    featureStyles: true,
   })
   .extend({
     boundaries: MultiPolygonSchema,
+    featureStyles: FeatureStylesSchema,
   });
 
 export const CreateServiceableAreaSchema = createInsertSchema(serviceableAreas)

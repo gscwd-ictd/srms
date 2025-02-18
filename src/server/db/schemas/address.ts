@@ -1,7 +1,7 @@
 import { jsonb, pgTable, text, timestamp, varchar } from "drizzle-orm/pg-core";
 import { generateCuid } from "@srms/server/helpers/generateCuid";
 import { applicants } from "@srms/server/db/schemas/applicants";
-import { multiPolygon, polygon } from "@srms/server/helpers/geo";
+import { multiPolygon } from "@srms/server/helpers/geo";
 import { FeatureStyles } from "@srms/server/types";
 import { featureStylesDefault } from "@srms/server/constants/featureStylesDefault";
 

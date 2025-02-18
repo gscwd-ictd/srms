@@ -9,7 +9,6 @@ import { createFeatureStyles } from "./utils/createFeatureStyles";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@srms/components/ui/Tooltip";
 import { AddBarangayDialog } from "./AddBarangayDialog";
 import { Coordinate } from "ol/coordinate";
-import { MultiPolygon } from "ol/geom";
 
 type DrawingOptionsProps = {
   open: boolean;
@@ -53,6 +52,7 @@ export const DrawingOptions: FunctionComponent<DrawingOptionsProps> = ({ open, o
 
   const handleClearDrawing = () => {
     serviceableArea.mapManager.getInteractionManager().clear();
+    setBoundaries([]);
     setDisabled(true);
   };
 
