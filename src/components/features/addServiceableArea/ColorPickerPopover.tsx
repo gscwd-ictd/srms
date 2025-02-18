@@ -22,7 +22,7 @@ export const ColorPickerPopover: FunctionComponent<ColorPickerPopoverProps> = ({
 
   useEffect(() => {
     setColor(defaultColor);
-  }, [serviceableArea.properties]);
+  }, [defaultColor, serviceableArea.properties]);
 
   return (
     <Popover>

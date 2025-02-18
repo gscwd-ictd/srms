@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, type FunctionComponent } from "react";
+import { type FunctionComponent } from "react";
 import { Label } from "@srms/components/ui/Label";
 import {
   Select,

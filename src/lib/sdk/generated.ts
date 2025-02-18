@@ -25,6 +25,7 @@ export class ApiClient {
     try {
       return await rep.json();
     } catch (e) {
+      console.error(e);
       throw rep;
     }
   }
@@ -77,6 +78,7 @@ export class ApiClient {
     try {
       return JSON.parse(rs) as T;
     } catch (e) {
+      console.error(e);
       return rs as unknown as T;
     }
   }

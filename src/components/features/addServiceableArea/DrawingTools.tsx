@@ -13,7 +13,7 @@ import {
 import { ScrollArea } from "@srms/components/ui/ScrollArea";
 import { Button } from "@srms/components/ui/Button";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@srms/components/ui/Collapsible";
-import { ChevronRight, RefreshCcw, Settings2, SlidersHorizontal } from "lucide-react";
+import { ChevronRight, RefreshCcw, Settings2 } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@srms/components/ui/Tooltip";
 import { useServiceableAreaMap } from "./contexts/useServiceableMapContext";
 import { isDeepEqual } from "@srms/utils/isDeepEqual";
