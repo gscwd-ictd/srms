@@ -15,7 +15,7 @@ import {
   PieChart,
   Send,
   Settings,
-  SquareDashedMousePointer,
+  // SquareDashedMousePointer,
 } from "lucide-react";
 
 import { NavMain } from "./NavMain";
@@ -67,11 +67,15 @@ const data = {
       icon: MessageSquareDot,
       count: 4,
     },
-    {
-      title: "Service Areas",
-      url: "/service-areas",
-      icon: SquareDashedMousePointer,
-    },
+    /**
+     * This part has been moved to legacy routes
+     *
+     *  {
+     *    title: "Service Areas",
+     *    url: "/service-areas",
+     *    icon: SquareDashedMousePointer,
+     *  },
+     */
     {
       title: "Operations",
       url: "/operations",

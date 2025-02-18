@@ -16,6 +16,7 @@ export const addServiceableArea = createRoute({
   method: "post",
   path: "v1/serviceable-areas",
   operationId: "addServiceableArea",
+  deprecated: true,
   request: {
     body: {
       content: {
@@ -77,6 +78,7 @@ export const getAllServiceableAreas = createRoute({
   method: "get",
   path: "v1/serviceable-areas",
   operationId: "getAllServiceableAreas",
+  deprecated: true,
   responses: {
     [HttpStatusCodes.OK]: {
       content: {
@@ -110,6 +112,7 @@ export const getServiceableAreaById = createRoute({
   method: "get",
   path: "v1/serviceable-areas/{id}",
   operationId: "getServiceableAreaById",
+  deprecated: true,
   request: {
     params: IdParamsSchema,
   },
