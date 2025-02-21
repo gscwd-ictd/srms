@@ -65,7 +65,7 @@ export class MinioManager {
             const result = await this.minioClient.fPutObject(this.bucket, destinationObject, sourceFile);
             return result;
         }
-        catch (error) {
+        catch {
             throw new HTTPError(500, 'Unable to upload file', 'Minio Upload Error');
         }
     }
@@ -76,7 +76,7 @@ export class MinioManager {
                 return await this.uploadFile(file.source, file.name);
             }));
             return result;
-        } catch (error) {
+        } catch {
             throw new HTTPError(500, 'Unable to upload files', 'Minio Upload Error');
         }
     }
@@ -88,7 +88,7 @@ export class MinioManager {
             folderName = typeof folderName === 'undefined' || folderName === '' ? '' : !folderName.endsWith("/") ? folderName + "/" : folderName;
             const url = await this.minioClient.presignedUrl("GET", this.bucket, folderName + fileName);
             return url.split('?')[0];
-        } catch (error) {
+        } catch {
             throw new HTTPError(404, 'Unable to get files', 'Minio Upload Error');
         }
     }
@@ -106,7 +106,7 @@ export class MinioManager {
             }
             return files;
         }
-        catch (error) {
+        catch {
             throw new HTTPError(404, 'Unable to get files', 'Minio Upload Error');
         }
     }
@@ -130,7 +130,7 @@ export class MinioManager {
             await this.minioClient.removeObjects(this.bucket, files);
             return files;
         }
-        catch (error) {
+        catch {
             throw new HTTPError(500, 'Unable to delete files', 'Minio Delete Error');
         }
     }
