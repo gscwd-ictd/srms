@@ -18,6 +18,7 @@ import type {
 } from "@srms/server/types";
 import { paginateQuery } from "@srms/server/helpers";
 import { NotFoundError } from "@srms/server/errors";
+import { minioManager } from "../../../lib/minio";
 
 export class ApplicationService implements ApplicationRepository {
   /**
@@ -32,7 +33,6 @@ export class ApplicationService implements ApplicationRepository {
   public async createApplication(details: CreateApplication, applicant: CreateApplicant) {
     // Deconstruct applicant
     const { address, household, documents, ...rest } = applicant;
-
     // Implementation will handle:
     // 1. Start transaction
     // 2. Insert into applications table
@@ -71,6 +71,9 @@ export class ApplicationService implements ApplicationRepository {
           ...household,
         })
         .returning();
+
+
+
 
       // Insert applicant document data
       const newDocuments = await tx
