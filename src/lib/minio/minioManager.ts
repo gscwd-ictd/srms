@@ -2,17 +2,18 @@ import * as Minio from 'minio';
 import { HTTPError } from '@srms/server/errors';
 import { NOT_FOUND } from '@srms/server/constants/httpStatusCodes';
 import { UploadedFile } from './types';
+import env from '@srms/utils/env';
 
 export class MinioManager {
     //#region properties 
     private bucket = process.env.MINIO_BUCKET as string;
 
     private minioClient = new Minio.Client({
-        endPoint: process.env.MINIO_ENDPOINT as string,
-        port: parseInt(process.env.MINIO_PORT as string),
-        useSSL: false,
-        accessKey: process.env.MINIO_ACCESS_KEY,
-        secretKey: process.env.MINIO_SECRET,
+        endPoint: env.MINIO_ENDPOINT,
+        port: env.MINIO_PORT,
+        useSSL: env.MINIO_USE_SSL,
+        accessKey: env.MINIO_ACCESS_KEY,
+        secretKey: env.MINIO_SECRET,
     });
     //#endregion properties
 

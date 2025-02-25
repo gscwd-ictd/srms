@@ -17,36 +17,19 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
-
-  geoserver:
-    image: kartoza/geoserver:2.24.1
-    container_name: srms-geoserver
-    depends_on:
-      - db
-    ports:
-      - "${GEOSERVER_PORT:-8080}:8080"
-    environment:
-      - GEOSERVER_DATA_DIR=/opt/geoserver/data_dir
-      - GEOSERVER_ADMIN_PASSWORD=${GEOSERVER_ADMIN_PASS:-geoserver}
-      - GEOSERVER_ADMIN_USER=${GEOSERVER_ADMIN_USER:-admin}
-      - INITIAL_MEMORY=2G
-      - MAXIMUM_MEMORY=4G
-      # Database connection parameters
-      - POSTGIS_HOST=db
-      - POSTGIS_PORT=5432
-      - POSTGIS_DB=${DB_NAME}
-      - POSTGIS_USER=${DB_USER}
-      - POSTGIS_PASS=${DB_PASS}
-    volumes:
-      - geoserver-data:/opt/geoserver/data_dir
-      - geoserver-extensions:/opt/geoserver/extensions
-    restart: unless-stopped
-    healthcheck:
-      test: curl --fail -s http://localhost:8080/geoserver/web/ || exit 1
-      interval: 30s
-      timeout: 10s
-      retries: 3
-
+  
+  minio:
+        ports:
+            - 9000:9000
+            - 9001:9001
+        container_name: minio
+        volumes:
+            - ~/minio/data:/data
+        environment:
+            - MINIO_ROOT_USER=${MINIO_USER}
+            - MINIO_ROOT_PASSWORD=${MINIO_PASS}
+        image: quay.io/minio/minio
+        command: server /data --console-address ":9001"
 volumes:
   data:
   geoserver-data:
