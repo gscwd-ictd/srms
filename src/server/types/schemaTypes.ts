@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import { ApplicationStatus, ApplicationType, Gender } from "@srms/server/constants";
+import { ApplicationStatus, ApplicationType, Gender } from "@srms/constants";
 import { CreateApplicantSchema, SelectApplicantSchema } from "@srms/server/schemas/tables/applicantSchema";
 
 import {

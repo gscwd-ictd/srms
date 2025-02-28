@@ -6,7 +6,7 @@ import { ServiceableAreaMapContext } from "../features/addServiceableArea/contex
 import { useQuery } from "@tanstack/react-query";
 import $api from "@srms/lib/sdk/apiClient";
 import { FeatureStyles, ServiceableAreaGeoJSON } from "@srms/server/types";
-import { featureStylesDefault } from "@srms/server/constants/featureStylesDefault";
+import { featureStylesDefault } from "@srms/constants/featureStylesDefault";
 
 const mapManager = new MapManager();
 

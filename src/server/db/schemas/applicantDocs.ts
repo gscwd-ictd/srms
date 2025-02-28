@@ -2,6 +2,7 @@ import { jsonb, pgTable, timestamp, varchar } from "drizzle-orm/pg-core";
 import { generateCuid } from "@srms/server/helpers/generateCuid";
 import { applicants } from "@srms/server/db/schemas/applicants";
 import type { FileUpload } from "@srms/server/types";
+import { createSelectSchema } from "drizzle-zod";
 
 export const applicantDocs = pgTable("applicant_docs", {
   id: varchar("id")
@@ -20,3 +21,5 @@ export const applicantDocs = pgTable("applicant_docs", {
     .defaultNow()
     .$onUpdateFn(() => new Date()),
 });
+
+export const SelectApplicantDocsSchema = createSelectSchema(applicantDocs);

@@ -1,5 +1,5 @@
-import { NOT_FOUND } from "@srms/server/constants/httpStatusCodes";
-import { NOT_FOUND as NOT_FOUND_MESSAGE } from "@srms/server/constants/httpStatusPhrases";
+import { NOT_FOUND } from "@srms/utils/httpStatusCodes";
+import { NOT_FOUND as NOT_FOUND_MESSAGE } from "@srms/utils/httpStatusPhrases";
 import { jsonError } from "@srms/server/errors";
 import type { NotFoundHandler } from "hono";
 import type { AppBindings } from "@srms/server/types";

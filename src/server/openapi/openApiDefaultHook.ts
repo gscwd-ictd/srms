@@ -1,5 +1,5 @@
 import type { Hook } from "@hono/zod-openapi";
-import { UNPROCESSABLE_ENTITY } from "@srms/server/constants/httpStatusCodes";
+import { UNPROCESSABLE_ENTITY } from "@srms/utils/httpStatusCodes";
 import { formatZodError, jsonError } from "@srms/server/errors";
 import { ZodError } from "zod";
 

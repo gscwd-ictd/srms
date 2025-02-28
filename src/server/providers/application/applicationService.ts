@@ -17,7 +17,6 @@ import type {
   QueryParams,
 } from "@srms/server/types";
 import { paginateQuery } from "@srms/server/helpers";
-import { NotFoundError } from "@srms/server/errors";
 
 export class ApplicationService implements ApplicationRepository {
   /**
@@ -127,7 +126,7 @@ export class ApplicationService implements ApplicationRepository {
     const application = await res.execute();
 
     if (application.length === 0 || !application[0]) {
-      throw new NotFoundError("Application details not found!");
+      throw new Error("Application details not found!");
     }
 
     return application[0];
@@ -194,7 +193,7 @@ export class ApplicationService implements ApplicationRepository {
     const application = await stmtSelect.execute();
 
     if (application.length === 0) {
-      throw new NotFoundError("Update failed. Application not found!");
+      throw new Error("Update failed. Application not found!");
     }
 
     // If the provided status is the same with the original, just return the current application.

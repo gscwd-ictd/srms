@@ -1,6 +1,6 @@
 import * as routes from "@srms/server/routes/applications/applications.routes";
 import * as handlers from "@srms/server/routes/applications/applications.handlers";
-import { createOpenAPIRoute } from "@srms/lib/openapi";
+import { createOpenAPIRoute } from "@srms/server/openapi";
 
 const applications = createOpenAPIRoute()
   .openapi(routes.createNewApplication, handlers.createNewApplication)

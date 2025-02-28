@@ -37,7 +37,7 @@ export class MyCustomError extends Error {
     }
 
     // create a utility method to serialize error response into a structured JSON response
-    toJSON(): MyCustomErrorCode {
+    toJSON(): MyCustomErrorResponse {
         const errorResponse: MyCustomErrorResponse = {
             // you can automatically target code and status, since they are required fields,
             // which means, it is guaranteed that they are not undefined or null - whichever is the case

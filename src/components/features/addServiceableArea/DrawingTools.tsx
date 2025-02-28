@@ -20,7 +20,7 @@ import { isDeepEqual } from "@srms/utils/isDeepEqual";
 import { PreviewTool } from "./PreviewTool";
 import { StylingTool } from "./StylingTool";
 import { InteractionTool } from "./InteractionTool";
-import { featureStylesDefault } from "@srms/server/constants/featureStylesDefault";
+import { featureStylesDefault } from "@srms/utils/constants";
 
 export const DrawingTools: FunctionComponent = () => {
   const serviceableArea = useServiceableAreaMap();
