@@ -154,7 +154,7 @@ export type MyCustomErrorResponse = {
 };
 ```
 
-Then, create the base class for your custom error that extends `Error`
+### Then, create the base class for your custom error that extends `Error`
 
 ```typescript
 /* lib/myLib/errors/MyCustomError */
@@ -196,7 +196,7 @@ export class MyCustomError extends Error {
 
 ```
 
-Then we can create the specific errors that extend from our base class custom error.
+### Then we can create the specific errors that extend from our base class custom error.
 
 ```typescript
 /* /lib/myLib/errors/InvalidRequestError */
@@ -213,7 +213,7 @@ export class InvalidRequestError extends MyCustomError {
 }
 ```
 
-Then let's use the `InvalidRequestError`
+### Then let's use the `InvalidRequestError`
 
 ```typescript
 try {
@@ -226,5 +226,16 @@ try {
   if (error instanceof MyCustomError) {
     console.log(error.toJSON());
   }
+}
+```
+
+### Ouput:
+
+```typescript
+{
+    name: "InvalidRequestError",
+    code: "invalid_request",
+    description: "The request is malformed."
+    status: 400,
 }
 ```
