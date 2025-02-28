@@ -5,8 +5,9 @@ import { MapManager } from "@srms/lib/mapstudio/mapManager";
 import { ServiceableAreaMapContext } from "../features/addServiceableArea/contexts/useServiceableMapContext";
 import { useQuery } from "@tanstack/react-query";
 import $api from "@srms/lib/sdk/apiClient";
+// @ts-expect-error ServiceableAreaGeoJSON has already been removed
 import { FeatureStyles, ServiceableAreaGeoJSON } from "@srms/server/types";
-import { featureStylesDefault } from "@srms/constants/featureStylesDefault";
+import { featureStylesDefault } from "@srms/utils/constants";
 
 const mapManager = new MapManager();
 

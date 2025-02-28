@@ -1,9 +1,9 @@
-import { createOpenAPIRoute, configureOpenApi } from "@srms/server/openapi";
 import { notFound, onError, pinoLogger } from "@srms/server/middlewares";
 import { secureHeaders } from "hono/secure-headers";
-import { cors } from "hono/cors";
 import { healthcheck, applications } from "@srms/server/routes";
-import env from "@srms/utils/env";
+import { createOpenAPIRoute } from "./openapi/createOpenApiRoute";
+import { configureOpenApi } from "./openapi/configureOpenApi";
+import { crossOrigin } from "./middlewares/cors";
 
 function createApp() {
   const app = createOpenAPIRoute().basePath("/api");
@@ -15,16 +15,7 @@ function createApp() {
 
   app.use(pinoLogger());
   app.use(secureHeaders());
-
-  // TODO: create separate file for this and handle dynamic origins
-  app.use(
-    cors({
-      origin: [env.NEXT_PUBLIC_APP_URL, "http://localhost:3000", "http://172.20.10.57:3000"],
-      allowHeaders: ["Content-Type", "Authorization", "User-Agent", "X-Response-Time", "Content-Length"],
-      allowMethods: ["POST", "GET", "PATCH", "PUT", "DELETE", "OPTIONS"],
-      credentials: true,
-    }),
-  );
+  app.use(crossOrigin);
 
   const routes = [healthcheck, applications] as const;
 

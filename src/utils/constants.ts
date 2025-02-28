@@ -1,4 +1,4 @@
-import { FeatureStyles } from "@srms/server/types";
+import { FeatureStyles } from "@srms/server/types/helperTypes";
 
 export const featureStylesDefault: FeatureStyles = {
   fillColor: "rgb(197, 202, 233, 0.4)",

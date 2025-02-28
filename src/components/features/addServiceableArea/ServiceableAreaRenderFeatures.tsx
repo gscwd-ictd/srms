@@ -5,7 +5,7 @@ import { useEffect, type FunctionComponent } from "react";
 import { useServiceableAreaMap } from "./contexts/useServiceableMapContext";
 import { FeatureManager } from "@srms/lib/mapstudio/featureManager";
 import { createFeatureStyles } from "./utils/createFeatureStyles";
-import { FeatureStyles } from "@srms/server/types";
+import { FeatureStyles } from "@srms/server/types/helperTypes";
 import { MultiPolygon } from "ol/geom";
 import VectorSource from "ol/source/Vector";
 import VectorLayer from "ol/layer/Vector";
