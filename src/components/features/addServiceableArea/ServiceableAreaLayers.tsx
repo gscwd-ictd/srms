@@ -24,7 +24,6 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "@srms/components/ui/Too
 import { useServiceableAreaMap } from "./contexts/useServiceableMapContext";
 import { FeatureManager } from "@srms/lib/mapstudio/featureManager";
 import MultiPolygon from "ol/geom/MultiPolygon";
-import { ServiceableAreaGeoJSON } from "@srms/server/types";
 
 const featureManager = new FeatureManager();
 
@@ -41,6 +40,7 @@ export const SerivceableAreaLayers: FunctionComponent = () => {
     if (isMobile) setIsSheetOpen(false);
   }, [isMobile]);
 
+  // @ts-expect-error ServiceableAreaGeoJSON has already been removed
   const handleFocusToFeature = (area: ServiceableAreaGeoJSON) => {
     const feature = featureManager.createFeature(new MultiPolygon(area.boundaries.coordinates), {
       id: area.id,

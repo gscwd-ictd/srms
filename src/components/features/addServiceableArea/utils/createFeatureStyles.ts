@@ -1,6 +1,6 @@
 import { Circle, Fill, Stroke, Style } from "ol/style";
 import { type SnapConfig } from "@srms/lib/mapstudio/interactionManager";
-import { FeatureStyles } from "@srms/server/types";
+import { FeatureStyles } from "@srms/server/types/helperTypes";
 
 export const createFeatureStyles = (styles: FeatureStyles) => {
   const drawStyle = new Style({

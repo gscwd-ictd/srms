@@ -1,6 +1,6 @@
 "use client";
 
-import type { Position2D } from "@srms/server/types";
+import type { Position2D } from "@srms/server/types/geoTypes";
 import { MultiPoint, MultiPolygon } from "ol/geom";
 import { useCallback } from "react";
 
