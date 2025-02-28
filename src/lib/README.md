@@ -2,7 +2,7 @@
 
 First, create a directory inside `/lib` for your custom library.
 
-### `lib/myblib`
+### `lib/myLib`
 
 Then add the neccessary folders for your library. It would normally contain these folders: `/interfaces`, `/services`, `/repositories`, `/errors`. (But still subject for implementation)
 
@@ -12,11 +12,17 @@ Then add the neccessary folders for your library. It would normally contain thes
 - Ensures that implementations follow a consistent structure.
 
 ```typescript
+/* lib/myLib/interfaces/IUserRepository */
+
 export interface I_UserRepository {
   findUserById(userId: string): Promise<User>;
   findAllUsers(): Promise<User[]>;
   addNew(user: User): Promise<User>;
 }
+```
+
+```typescript
+/* lib/myLib/interfaces/IUserService */
 
 export interface I_UserService {
   createSchedule(userId: string): Promise<UserSchedule>;
@@ -29,6 +35,8 @@ export interface I_UserService {
 - Interacts directly with the database.
 
 ```typescript
+/* lib/myLib/repositories/UserRepository */
+
 export class UserRepository implements I_UserRepository {
   async findUserById(userId: string) {
     const res = await db.select().from(users).where(eq(users.id, userId));
@@ -53,6 +61,8 @@ export class UserRepository implements I_UserRepository {
 - Typically, services would fetch, process, and return the data.
 
 ```typescript
+/* lib/myLib/services/UserService */
+
 export class UserService implements I_UserService {
   // Notice that the type of userRepository is I_UserRepository (interface), and not the UserRepository (concrete implementation)
   // This is the advantage of this particular architecture, since you don't need to have a concrete implementation of classes
@@ -69,8 +79,8 @@ export class UserService implements I_UserService {
     }
   }
 
-  private async createUserScheduleForSomeUser(user: User) {
-    // Implementation details
+  private async createScheduleForSomeUser(user: User) {
+    // Implementation details...
   }
 }
 ```
@@ -78,9 +88,10 @@ export class UserService implements I_UserService {
 ## Create a Singleton class
 
 Then to tie them all together, you can just simply create a singleton class.
-`/lib/myLib/MyLibManager`
 
 ```typescript
+/* lib/myLib/MyLibManager */
+
 class MyLibManager {
   private static instance: MyLibManager;
   private static _userService: UserService;
@@ -130,9 +141,9 @@ const honoApp.post("/users/schedules", async (c) => {
 
 First, create your custom error codes (add more codes as you discover more possible errors along the way)
 
-### `/lib/myLib/errors/codes`
-
 ```typescript
+/* lib/myLib/errors/codes */
+
 export type MyCustomErrorCode = "invalid_request" | "unauthorized";
 
 // then let's create a custom type for out ErrorResponse
@@ -145,9 +156,9 @@ export type MyCustomErrorResponse = {
 
 Then, create the base class for your custom error that extends `Error`
 
-### `/lib/myLib/errors/MyCustomError`
-
 ```typescript
+/* lib/myLib/errors/MyCustomError */
+
 export class MyCustomError extends Error {
     // Set the constructor of your custom error class to match `MyCustomErrorReponse` type
     constructor(
@@ -187,9 +198,9 @@ export class MyCustomError extends Error {
 
 Then we can create the specific errors that extend from our base class custom error.
 
-### `/lib/myLib/errors/InvalidRequestError`
-
 ```typescript
+/* /lib/myLib/errors/InvalidRequestError */
+
 export class InvalidRequestError extends MyCustomError {
   // pass in the desription field
   constructor(description?: string) {
