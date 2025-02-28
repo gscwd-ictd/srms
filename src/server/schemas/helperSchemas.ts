@@ -55,8 +55,7 @@ export const QueryParamsSchema = z.object({
       },
       default: 10,
       description: "The number of rows to retreive in a single fetch.",
-    })
-    .optional(),
+    }),
   page: z.coerce
     .number()
     .default(1)
@@ -69,8 +68,7 @@ export const QueryParamsSchema = z.object({
       },
       default: 1,
       description: "Page number of results to return.",
-    })
-    .optional(),
+    }),
 });
 
 export const ResultMetaDataSchema = z.object({
