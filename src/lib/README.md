@@ -60,18 +60,17 @@ export class UserService implements I_UserService {
   constructor(private readonly userRepository: I_UserRepository) {}
 
   async createSchedule(userId: string) {
+    const now = new Date();
+
     const user = await this.userRepository.findUserById(userId);
 
-    if (
-      !user.hasSchedule({
-        dateFrom: "2025-01-01",
-        dateTo: "2025-01-15",
-        timeFrom: "08:00AM",
-        timeTo: "05:00PM",
-      })
-    ) {
-      return await createUserScheduleForSomeUser(user);
+    if (!user.hasSchedule(now)) {
+      return await this.createUserScheduleForSomeUser(user);
     }
+  }
+
+  private async createUserScheduleForSomeUser(user: User) {
+    // Implementation details
   }
 }
 ```
@@ -115,7 +114,7 @@ class MyLibManager {
 Initialize the main entry point of your library. Note that by now, you should have a concrete implementation of your interfaces.
 
 ```typescript
-export const myLibManager = MyLibrManager.getInstance();
+export const myLibManager = MyLibManager.getInstance();
 ```
 
 Then in your `controller` or `handler`:
