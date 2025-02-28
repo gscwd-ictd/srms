@@ -2,7 +2,7 @@ import { NOT_FOUND } from "@srms/utils/httpStatusCodes";
 import { NOT_FOUND as NOT_FOUND_MESSAGE } from "@srms/utils/httpStatusPhrases";
 import type { NotFoundHandler } from "hono";
 import type { AppBindings } from "@srms/server/types/appTypes";
-import { jsonError } from "../errors/jsonError";
+import { jsonError } from "../helpers/jsonError";
 
 export const notFound: NotFoundHandler<AppBindings> = (c) => {
   c.var.logger.error(`${NOT_FOUND_MESSAGE} - ${c.req.path}`);
