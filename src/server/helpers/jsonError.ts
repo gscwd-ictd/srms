@@ -4,10 +4,10 @@ import type { ContentfulStatusCode } from "hono/utils/http-status";
 import { ErrorResponse } from "../types/helperTypes";
 
 // Create a type-safe wrapper for c.json specifically for error responses
-export function jsonError(
+export const jsonError = (
   c: Context<AppBindings>,
   data: ErrorResponse,
   status: ContentfulStatusCode,
-): Response {
+): Response => {
   return c.json(data, status);
-}
+};

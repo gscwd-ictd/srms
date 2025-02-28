@@ -2,7 +2,7 @@ import type { ErrorHandler } from "hono";
 import type { ContentfulStatusCode } from "hono/utils/http-status";
 import type { AppBindings } from "@srms/server/types/appTypes";
 import { INTERNAL_SERVER_ERROR, OK } from "@srms/utils/httpStatusCodes";
-import { jsonError } from "../errors/jsonError";
+import { jsonError } from "../helpers/jsonError";
 import { ErrorResponse } from "../types/helperTypes";
 
 export const onError: ErrorHandler<AppBindings> = (err, c) => {
