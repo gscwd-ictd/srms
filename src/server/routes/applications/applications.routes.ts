@@ -1,6 +1,6 @@
 import { createRoute, z } from "@hono/zod-openapi";
+import { ErrorResponseSchema, IdParamsSchema, QueryParamsSchema } from "@srms/server/schemas/helperSchemas";
 
-import { QueryParamsSchema, ErrorResponseSchema, IdParamsSchema } from "@srms/server/schemas";
 import * as HttpStatusCodes from "@srms/utils/httpStatusCodes";
 
 export const createNewApplication = createRoute({

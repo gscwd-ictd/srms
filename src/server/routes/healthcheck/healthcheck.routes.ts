@@ -1,8 +1,8 @@
 import { createRoute, z } from "@hono/zod-openapi";
-import { ErrorResponseSchema, HealthCheckResponseSchema } from "@srms/server/schemas";
 import { rateLimiter } from "hono-rate-limiter";
 import * as HttpStatusCodes from "@srms/utils/httpStatusCodes";
 import * as HttpStatusPhrases from "@srms/utils/httpStatusPhrases";
+import { ErrorResponseSchema, HealthCheckResponseSchema } from "@srms/server/schemas/helperSchemas";
 
 export const getServerStatus = createRoute({
   tags: ["Utilities"],
