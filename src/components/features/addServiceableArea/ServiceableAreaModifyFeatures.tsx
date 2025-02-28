@@ -5,6 +5,7 @@ import { useServiceableAreaMap } from "./contexts/useServiceableMapContext";
 import Modify from "ol/interaction/Modify";
 import MultiPolygon from "ol/geom/MultiPolygon";
 import Polygon from "ol/geom/Polygon";
+// @ts-expect-error ServiceableAreaGeoJSON has already been removed
 import { ServiceableAreaGeoJSON } from "@srms/server/types";
 
 export const ServiceableAreaModifyFeatures: FunctionComponent = () => {

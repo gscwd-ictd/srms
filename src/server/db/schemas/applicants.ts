@@ -1,7 +1,8 @@
 import { date, pgEnum, pgTable, timestamp, varchar } from "drizzle-orm/pg-core";
-import { Gender } from "@srms/server/constants/gender";
 import { generateCuid } from "@srms/server/helpers/generateCuid";
 import { applications } from "@srms/server/db/schemas/applications";
+import { createSelectSchema } from "drizzle-zod";
+import { Gender } from "@srms/utils/constants";
 
 export const genderEnum = pgEnum("gender", Gender);
 
@@ -26,3 +27,5 @@ export const applicants = pgTable("applicants", {
     .defaultNow()
     .$onUpdateFn(() => new Date()),
 });
+
+export const SelectApplicantSchema = createSelectSchema(applicants);

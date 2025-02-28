@@ -13,7 +13,7 @@ import {
   GeoJSONPoint,
   GeoJSONPolygon,
   Position2D,
-} from "@srms/server/types";
+} from "@srms/server/types/geoTypes";
 
 // MultiPolygon type for complex boundaries (e.g., regions with islands)
 export const multiPolygon = customType<{
