@@ -1,1 +1,1 @@
-export const FixtureCategory = ["general", "sinks", "urinals"] as const;
+export const FixtureCategory = ["General", "Sinks", "Urinals"] as const;

@@ -1,4 +1,4 @@
-import { FixtureCategory } from "@srms/server/constants/fixtureCategory";
+import { FixtureCategory } from "@srms/server/constants";
 import { generateCuid } from "@srms/server/helpers";
 import { pgEnum, pgTable, text, timestamp, varchar } from "drizzle-orm/pg-core";
 
@@ -8,10 +8,10 @@ export const plumbingFixtures = pgTable("plumbing_fixtures", {
   id: varchar("id")
     .primaryKey()
     .$defaultFn(() => generateCuid()),
-  name: text().unique().notNull(),
-  description: text().notNull(),
-  category: fixtureCategoryEnum().notNull(),
-  imageUrl: text().notNull(),
+  name: text("name").unique().notNull(),
+  description: text("description").notNull(),
+  category: fixtureCategoryEnum("category").notNull(),
+  file: text("image_url").notNull(),
   createdAt: timestamp("created_at", { mode: "date" }).notNull().defaultNow(),
   updatedAt: timestamp("updated_at", { mode: "date" })
     .defaultNow()
