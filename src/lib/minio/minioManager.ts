@@ -6,7 +6,7 @@ import env from '@srms/utils/env';
 
 export class MinioManager {
     //#region properties 
-    private bucket = process.env.MINIO_BUCKET as string;
+    private bucket = env.MINIO_BUCKET;
 
     private minioClient = new Minio.Client({
         endPoint: env.MINIO_ENDPOINT,
@@ -90,7 +90,7 @@ export class MinioManager {
             const url = await this.minioClient.presignedUrl("GET", this.bucket, folderName + fileName);
             return url.split('?')[0];
         } catch {
-            throw new HTTPError(404, 'Unable to get files', 'Minio Upload Error');
+            throw new HTTPError(404, 'Unable to get files', 'Minio Get Error');
         }
     }
 
@@ -111,6 +111,18 @@ export class MinioManager {
             throw new HTTPError(404, 'Unable to get files', 'Minio Upload Error');
         }
     }
+
+
+    async getFileMimeType(fileName: string) {
+        try {
+            const stat = await this.minioClient.statObject(this.bucket, fileName);
+            console.log("MIME Type:", stat.metaData["content-type"] || "Unknown");
+            return stat.metaData["content-type"];
+        } catch (err) {
+            console.error("Error getting MIME type:", err);
+        }
+    }
+
     //#endregion Get File/s
 
     //#region Delete File/s
