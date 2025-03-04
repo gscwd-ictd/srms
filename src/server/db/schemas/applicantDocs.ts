@@ -1,7 +1,10 @@
-import { jsonb, pgTable, timestamp, varchar } from "drizzle-orm/pg-core";
+import { jsonb, pgEnum, pgTable, timestamp, varchar } from "drizzle-orm/pg-core";
 import { generateCuid } from "@srms/server/helpers/generateCuid";
 import { applicants } from "@srms/server/db/schemas/applicants";
-import type { FileUpload } from "@srms/server/types";
+import { DocumentUpload, type FileUpload } from "@srms/server/types";
+import { DocumentType } from "@srms/server/constants/documentType";
+
+export const documentTypeEnum = pgEnum("document_type", DocumentType);
 
 export const applicantDocs = pgTable("applicant_docs", {
   id: varchar("id")
@@ -15,6 +18,21 @@ export const applicantDocs = pgTable("applicant_docs", {
   barangayCertificate: jsonb("barangay_certificate").$type<FileUpload[]>().notNull(),
   validId: jsonb("valid_id").$type<FileUpload[]>().notNull(),
   selfieWithValidId: jsonb("selfie_with_valid_id").$type<FileUpload>().notNull(),
+  createdAt: timestamp("created_at", { mode: "date" }).notNull().defaultNow(),
+  updatedAt: timestamp("updated_at", { mode: "date" })
+    .defaultNow()
+    .$onUpdateFn(() => new Date()),
+});
+
+export const applicantDocuments = pgTable("applicant_documents", {
+  id: varchar("id")
+    .primaryKey()
+    .$defaultFn(() => generateCuid()),
+  applicantId: varchar("applicant_id_fk")
+    .notNull()
+    .references(() => applicants.id, { onDelete: "cascade" }),
+  type: documentTypeEnum().notNull(),
+  documentPaths: jsonb().$type<Array<DocumentUpload>>().notNull(),
   createdAt: timestamp("created_at", { mode: "date" }).notNull().defaultNow(),
   updatedAt: timestamp("updated_at", { mode: "date" })
     .defaultNow()

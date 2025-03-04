@@ -29,9 +29,10 @@ export class ApplicationService implements ApplicationRepository {
    *
    * @returns new application
    */
-  public async createApplication(details: CreateApplication, applicant: CreateApplicant) {
+
+  async createApplication(details: CreateApplication, applicant: CreateApplicant) {
     // Deconstruct applicant
-    const { address, household, documents, ...rest } = applicant;
+    const { address, household, ...rest } = applicant;
 
     // Implementation will handle:
     // 1. Start transaction
@@ -73,20 +74,20 @@ export class ApplicationService implements ApplicationRepository {
         .returning();
 
       // Insert applicant document data
-      const newDocuments = await tx
+      /*  const newDocuments = await tx
         .insert(applicantDocs)
         .values({
           applicantId: newApplicant[0]!.id,
           ...documents,
         })
-        .returning();
+        .returning(); */
 
       return {
         ...newApplication[0]!,
         applicant: { ...newApplicant[0]! },
         address: { ...newApplicantAddress[0]! },
         household: { ...newHousehold[0]! },
-        documents: { ...newDocuments[0]! },
+        //documents: { ...newDocuments[0]! },
       };
     });
 

@@ -10,6 +10,7 @@ import {
 
 import {
   CreateApplicantDocsSchema,
+  FileSchema,
   FileUploadSchema,
   SelectApplicantDocsSchema,
 } from "@srms/server/schemas/tables/applicantDocsSchema";
@@ -38,6 +39,9 @@ import {
 
 export type ApplicantAddress = z.infer<typeof SelectApplicantAddressSchema>;
 export type CreateApplicantAddress = z.infer<typeof CreateApplicantAddressSchema>;
+
+/* new */
+export type DocumentUpload = z.infer<typeof FileSchema>;
 
 export type FileUpload = z.infer<typeof FileUploadSchema>;
 export type ApplicantDocs = z.infer<typeof SelectApplicantDocsSchema>;

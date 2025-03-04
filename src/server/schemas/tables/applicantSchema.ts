@@ -2,8 +2,9 @@ import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 import { applicants } from "@srms/server/db/schemas";
 import { CreateApplicantAddressSchema } from "@srms/server/schemas/tables/applicantAddressSchema";
 import { CreateApplicantHouseholdSchema } from "@srms/server/schemas/tables/applicantHouseholdSchema";
-import { CreateApplicantDocsSchema } from "@srms/server/schemas/tables/applicantDocsSchema";
+import { CreateApplicantDocumentSchema } from "@srms/server/schemas/tables/applicantDocsSchema";
 import { z } from "zod";
+import { CreateApplicantPlumbingFixtureSchema } from "./applicantFixtureSchema";
 
 export const SelectApplicantSchema = createSelectSchema(applicants);
 
@@ -19,7 +20,8 @@ export const CreateApplicantSchema = createInsertSchema(applicants)
     email: z.string().email().optional(),
     address: CreateApplicantAddressSchema.omit({ applicantId: true }),
     household: CreateApplicantHouseholdSchema.omit({ applicantId: true }),
-    documents: CreateApplicantDocsSchema.omit({ applicantId: true }),
+    fixtures: z.array(CreateApplicantPlumbingFixtureSchema.omit({ applicantId: true })),
+    documents: z.array(CreateApplicantDocumentSchema.omit({ applicantId: true })),
   })
   .superRefine((data, ctx) => {
     if (data.firstName.length < 3) {
