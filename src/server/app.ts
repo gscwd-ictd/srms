@@ -1,10 +1,11 @@
 import { notFound, onError, pinoLogger } from "@srms/server/middlewares";
 import { secureHeaders } from "hono/secure-headers";
-import { healthcheck, applications, sessions } from "@srms/server/routes";
+import { healthcheck, applications, sessions, callback } from "@srms/server/routes";
 import { createOpenAPIRoute } from "./openapi/createOpenApiRoute";
 import { configureOpenApi } from "./openapi/configureOpenApi";
 import { crossOrigin } from "./middlewares/cors";
 import { OIDCClientProvider } from "@srms/lib/oidc/services/OOIDCClientProvider";
+import { requestId } from "hono/request-id";
 import env from "@srms/utils/env";
 
 function createApp() {
@@ -15,11 +16,12 @@ function createApp() {
   app.notFound(notFound);
   app.onError(onError);
 
-  app.use(pinoLogger());
   app.use(secureHeaders());
   app.use(crossOrigin);
+  app.use(requestId());
+  app.use(pinoLogger());
 
-  const routes = [healthcheck, applications, sessions] as const;
+  const routes = [healthcheck, applications, sessions, callback] as const;
 
   routes.forEach((route) => app.route("/", route));
 

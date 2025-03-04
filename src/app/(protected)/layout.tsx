@@ -5,6 +5,9 @@ import { redirect } from "next/navigation";
 import axios from "axios";
 import env from "@srms/utils/env";
 
+export const dynamic = "force-dynamic";
+export const fetchCache = "force-no-store";
+
 const getSession = async () => {
   const res = await axios.get(`${env.AUTHORIZATION_SERVER_URL}/sessions`);
   return res.data;
