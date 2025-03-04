@@ -1,5 +1,5 @@
-import { ErrorResponseSchema } from "@srms/server/schemas";
 import { z, ZodError } from "zod";
+import { ErrorResponseSchema } from "../schemas/helperSchemas";
 
 export function formatZodError(error: ZodError): z.infer<typeof ErrorResponseSchema> {
   const fieldErrors = error.issues.reduce(

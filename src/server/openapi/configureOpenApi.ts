@@ -1,5 +1,5 @@
 import { apiReference } from "@scalar/hono-api-reference";
-import { type AppOpenAPI } from "@srms/server/types";
+import { type AppOpenAPI } from "@srms/server/types/appTypes";
 import packageJSON from "@/package.json";
 
 export function configureOpenApi(app: AppOpenAPI) {

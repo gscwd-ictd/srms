@@ -1,8 +1,9 @@
 import type { ErrorHandler } from "hono";
 import type { ContentfulStatusCode } from "hono/utils/http-status";
-import type { AppBindings, ErrorResponse } from "@srms/server/types";
-import { jsonError } from "@srms/server/errors";
-import { INTERNAL_SERVER_ERROR, OK } from "@srms/server/constants";
+import type { AppBindings } from "@srms/server/types/appTypes";
+import { INTERNAL_SERVER_ERROR, OK } from "@srms/utils/httpStatusCodes";
+import { jsonError } from "../helpers/jsonError";
+import { ErrorResponse } from "../types/helperTypes";
 
 export const onError: ErrorHandler<AppBindings> = (err, c) => {
   const currentStatus = "status" in err ? err.status : c.newResponse(null).status;
@@ -17,6 +18,7 @@ export const onError: ErrorHandler<AppBindings> = (err, c) => {
   };
 
   // Add other instances of error here...
+
   if (err.message === "Malformed JSON in request body") {
     return jsonError(c, { ...errorResponse, name: "InvalidJSONError" }, statusCode);
   }

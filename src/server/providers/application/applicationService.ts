@@ -8,17 +8,9 @@ import {
 } from "@srms/server/db/schemas";
 import { db } from "@srms/server/db/postgres";
 import { eq } from "drizzle-orm";
-import type {
-  Application,
-  ApplicationDetails,
-  ApplicationStatus,
-  CreateApplicant,
-  CreateApplication,
-  QueryParams,
-} from "@srms/server/types";
-import { paginateQuery } from "@srms/server/helpers";
-import { NotFoundError } from "@srms/server/errors";
-import { minioManager } from "../../../lib/minio";
+import { paginateQuery } from "@srms/server/helpers/paginateQuery";
+import { QueryParams } from "@srms/server/types/helperTypes";
+
 
 export class ApplicationService implements ApplicationRepository {
   /**

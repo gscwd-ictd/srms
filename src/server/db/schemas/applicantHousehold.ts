@@ -1,6 +1,7 @@
 import { integer, pgTable, timestamp, varchar } from "drizzle-orm/pg-core";
 import { generateCuid } from "@srms/server/helpers/generateCuid";
 import { applicants } from "@srms/server/db/schemas/applicants";
+import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 
 export const applicantHousehold = pgTable("applicant_household", {
   id: varchar("id")
@@ -15,4 +16,12 @@ export const applicantHousehold = pgTable("applicant_household", {
   updatedAt: timestamp("updated_at", { mode: "date" })
     .defaultNow()
     .$onUpdateFn(() => new Date()),
+});
+
+export const SelectApplicantHouseholdSchema = createSelectSchema(applicantHousehold);
+
+export const CreateApplicantHouseholdSchema = createInsertSchema(applicantHousehold).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
 });

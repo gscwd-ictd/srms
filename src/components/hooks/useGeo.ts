@@ -1,11 +1,10 @@
 "use client";
 
-import type { Position2D } from "@srms/server/types";
 import { MultiPoint, MultiPolygon } from "ol/geom";
 import { useCallback } from "react";
 
 export const useGeo = () => {
-  const createMultiPolygonCallback = useCallback((polygons: Position2D[][]): MultiPolygon => {
+  const createMultiPolygonCallback = useCallback((polygons: number[][][]): MultiPolygon => {
     const multipolygon = {
       type: "MultiPolygon",
       coordinates: polygons.map((polygon) => [polygon]),
@@ -14,7 +13,7 @@ export const useGeo = () => {
     return new MultiPolygon(multipolygon.coordinates);
   }, []);
 
-  const createMultipointCallback = useCallback((points: Position2D[]): MultiPoint => {
+  const createMultipointCallback = useCallback((points: number[]): MultiPoint => {
     const multiPoint = {
       type: "MultiPoint",
       coordinates: points,
