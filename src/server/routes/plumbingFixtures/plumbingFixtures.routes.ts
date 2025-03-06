@@ -1,11 +1,9 @@
 import { createRoute, z } from "@hono/zod-openapi";
-import { OpenAPIResponses, TAGS } from "@srms/server/constants";
-import { ErrorResponseSchema, IdParamsSchema } from "@srms/server/schemas";
-import {
-  CreatePlumbingFixtureSchema,
-  SelectPlumbingFixtureSchema,
-} from "@srms/server/schemas/tables/plumbingFixtureSchema";
-import * as HttpStatusCodes from "@srms/server/constants/httpStatusCodes";
+import { CreatePlumbingFixtureSchema, SelectPlumbingFixtureSchema } from "@srms/server/db/schemas";
+import { ErrorResponseSchema, IdParamsSchema } from "@srms/server/schemas/helperSchemas";
+import { TAGS } from "@srms/utils/constants";
+
+import * as HttpStatusCodes from "@srms/utils/httpStatusCodes";
 
 export const getAllPlumbingFixtures = createRoute({
   tags: TAGS.PLUMBING_FIXTURES,
@@ -20,7 +18,7 @@ export const getAllPlumbingFixtures = createRoute({
           schema: z.array(SelectPlumbingFixtureSchema),
         },
       },
-      description: OpenAPIResponses.OK,
+      description: "",
     },
 
     [HttpStatusCodes.INTERNAL_SERVER_ERROR]: {
@@ -35,7 +33,7 @@ export const getAllPlumbingFixtures = createRoute({
           schema: ErrorResponseSchema,
         },
       },
-      description: OpenAPIResponses.INTERNAL_SERVER_ERROR,
+      description: "",
     },
   },
 });
@@ -62,7 +60,7 @@ export const addPlumbingFixture = createRoute({
           schema: SelectPlumbingFixtureSchema,
         },
       },
-      description: OpenAPIResponses.OK,
+      description: "",
     },
 
     [HttpStatusCodes.UNPROCESSABLE_ENTITY]: {
@@ -71,7 +69,7 @@ export const addPlumbingFixture = createRoute({
           schema: ErrorResponseSchema,
         },
       },
-      description: OpenAPIResponses.UNPROCESSABLE_ENTITY,
+      description: "",
     },
 
     [HttpStatusCodes.BAD_REQUEST]: {
@@ -80,7 +78,7 @@ export const addPlumbingFixture = createRoute({
           schema: ErrorResponseSchema,
         },
       },
-      description: OpenAPIResponses.BAD_REQUEST,
+      description: "",
     },
 
     [HttpStatusCodes.INTERNAL_SERVER_ERROR]: {
@@ -95,7 +93,7 @@ export const addPlumbingFixture = createRoute({
           schema: ErrorResponseSchema,
         },
       },
-      description: OpenAPIResponses.INTERNAL_SERVER_ERROR,
+      description: "",
     },
   },
 });
@@ -116,7 +114,7 @@ export const getPlumbingFixtureById = createRoute({
           schema: SelectPlumbingFixtureSchema,
         },
       },
-      description: OpenAPIResponses.OK,
+      description: "",
     },
 
     [HttpStatusCodes.NOT_FOUND]: {
@@ -131,7 +129,7 @@ export const getPlumbingFixtureById = createRoute({
           schema: ErrorResponseSchema,
         },
       },
-      description: OpenAPIResponses.NOT_FOUND,
+      description: "",
     },
 
     [HttpStatusCodes.INTERNAL_SERVER_ERROR]: {
@@ -146,7 +144,7 @@ export const getPlumbingFixtureById = createRoute({
           schema: ErrorResponseSchema,
         },
       },
-      description: OpenAPIResponses.INTERNAL_SERVER_ERROR,
+      description: "",
     },
   },
 });
@@ -175,7 +173,7 @@ export const updatePlumbingFixtureById = createRoute({
           schema: SelectPlumbingFixtureSchema,
         },
       },
-      description: OpenAPIResponses.OK,
+      description: "",
     },
 
     [HttpStatusCodes.NOT_FOUND]: {
@@ -189,7 +187,7 @@ export const updatePlumbingFixtureById = createRoute({
           schema: ErrorResponseSchema,
         },
       },
-      description: OpenAPIResponses.NOT_FOUND,
+      description: "",
     },
 
     [HttpStatusCodes.UNPROCESSABLE_ENTITY]: {
@@ -198,7 +196,7 @@ export const updatePlumbingFixtureById = createRoute({
           schema: ErrorResponseSchema,
         },
       },
-      description: OpenAPIResponses.UNPROCESSABLE_ENTITY,
+      description: "",
     },
 
     [HttpStatusCodes.BAD_REQUEST]: {
@@ -207,7 +205,7 @@ export const updatePlumbingFixtureById = createRoute({
           schema: ErrorResponseSchema,
         },
       },
-      description: OpenAPIResponses.BAD_REQUEST,
+      description: "",
     },
 
     [HttpStatusCodes.INTERNAL_SERVER_ERROR]: {
@@ -222,7 +220,7 @@ export const updatePlumbingFixtureById = createRoute({
           schema: ErrorResponseSchema,
         },
       },
-      description: OpenAPIResponses.INTERNAL_SERVER_ERROR,
+      description: "",
     },
   },
 });
@@ -243,7 +241,7 @@ export const deletePlumbingFixtureById = createRoute({
           schema: SelectPlumbingFixtureSchema,
         },
       },
-      description: OpenAPIResponses.OK,
+      description: "",
     },
 
     [HttpStatusCodes.NOT_FOUND]: {
@@ -258,7 +256,7 @@ export const deletePlumbingFixtureById = createRoute({
           schema: ErrorResponseSchema,
         },
       },
-      description: OpenAPIResponses.NOT_FOUND,
+      description: "",
     },
 
     [HttpStatusCodes.INTERNAL_SERVER_ERROR]: {
@@ -273,7 +271,7 @@ export const deletePlumbingFixtureById = createRoute({
           schema: ErrorResponseSchema,
         },
       },
-      description: OpenAPIResponses.INTERNAL_SERVER_ERROR,
+      description: "",
     },
   },
 });

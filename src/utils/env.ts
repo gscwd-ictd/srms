@@ -12,6 +12,14 @@ const EnvSchema = z.object({
   DB_PASS: z.string(),
   DB_USER: z.string(),
   DB_NAME: z.string(),
+  MINIO_ENDPOINT: z.string().ip(),
+  MINIO_PORT: z.coerce.number(),
+  MINIO_ACCESS_KEY: z.string(),
+  MINIO_SECRET: z.string(),
+  MINIO_USE_SSL: z.coerce.boolean(),
+  MINIO_BUCKET: z.string(),
+  MINIO_USER: z.string(),
+  MINIO_PASS: z.string(),
 });
 
 export type Env = z.infer<typeof EnvSchema>;

@@ -1,9 +1,12 @@
-import { createOpenAPIRoute, configureOpenApi } from "@srms/lib/openapi";
 import { notFound, onError, pinoLogger } from "@srms/server/middlewares";
 import { secureHeaders } from "hono/secure-headers";
-import { cors } from "hono/cors";
-import { healthcheck, applications, serviceableAreas, plumbingFixtures } from "@srms/server/routes";
+import { healthcheck, applications, plumbingFixtures } from "@srms/server/routes";
+import { createOpenAPIRoute } from "./openapi/createOpenApiRoute";
+import { configureOpenApi } from "./openapi/configureOpenApi";
+import { crossOrigin } from "./middlewares/cors";
+import { MinioManager } from "@srms/lib/minio";
 import env from "@srms/utils/env";
+import { PlumbingFixtureManager } from "@srms/lib/nsa/PlumbingFixtureManager";
 
 function createApp() {
   const app = createOpenAPIRoute().basePath("/api");
@@ -15,23 +18,9 @@ function createApp() {
 
   app.use(pinoLogger());
   app.use(secureHeaders());
+  app.use(crossOrigin);
 
-  // TODO: create separate file for this and handle dynamic origins
-  app.use(
-    cors({
-      origin: [
-        env.NEXT_PUBLIC_APP_URL,
-        "http://localhost:3000",
-        "http://172.20.10.57:3000",
-        "http://172.20.10.63:3000",
-      ],
-      allowHeaders: ["Content-Type", "Authorization", "User-Agent", "X-Response-Time", "Content-Length"],
-      allowMethods: ["POST", "GET", "PATCH", "PUT", "DELETE", "OPTIONS"],
-      credentials: true,
-    }),
-  );
-
-  const routes = [healthcheck, applications, serviceableAreas, plumbingFixtures] as const;
+  const routes = [healthcheck, applications, plumbingFixtures] as const;
 
   routes.forEach((route) => app.route("/", route));
 
@@ -41,3 +30,13 @@ function createApp() {
 const app = createApp();
 
 export default app;
+
+export const minioManager = MinioManager.getInstance({
+  endPoint: env.MINIO_ENDPOINT,
+  port: env.MINIO_PORT,
+  useSSL: false,
+  accessKey: env.MINIO_ACCESS_KEY,
+  secretKey: env.MINIO_SECRET,
+});
+
+export const plumbingFixtureManager = PlumbingFixtureManager.getInstance();

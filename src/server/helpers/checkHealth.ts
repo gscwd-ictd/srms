@@ -1,4 +1,4 @@
-import type { HealthCheckResponse } from "@srms/server/types";
+import type { HealthCheckResponse } from "@srms/server/types/helperTypes";
 import { sql } from "drizzle-orm/sql";
 import { db } from "@srms/server/db/postgres";
 import { format, formatDistanceStrict } from "date-fns";

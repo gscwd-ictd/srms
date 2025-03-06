@@ -1,6 +1,6 @@
-import { createOpenAPIRoute } from "@srms/lib/openapi";
 import * as routes from "./plumbingFixtures.routes";
 import * as handlers from "./plumbingFixtures.handlers";
+import { createOpenAPIRoute } from "@srms/server/openapi/createOpenApiRoute";
 
 const plumbingFixtures = createOpenAPIRoute()
   .openapi(routes.getAllPlumbingFixtures, handlers.getAllPlumbingFixtures)

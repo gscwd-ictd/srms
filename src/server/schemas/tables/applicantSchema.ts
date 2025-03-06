@@ -1,7 +1,9 @@
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
-import { applicants } from "@srms/server/db/schemas";
-import { CreateApplicantAddressSchema } from "@srms/server/schemas/tables/applicantAddressSchema";
-import { CreateApplicantHouseholdSchema } from "@srms/server/schemas/tables/applicantHouseholdSchema";
+import {
+  applicants,
+  CreateApplicantAddressSchema,
+  CreateApplicantHouseholdSchema,
+} from "@srms/server/db/schemas";
 import { CreateApplicantDocumentSchema } from "@srms/server/schemas/tables/applicantDocsSchema";
 import { z } from "zod";
 import { CreateApplicantPlumbingFixtureSchema } from "./applicantFixtureSchema";

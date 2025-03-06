@@ -8,46 +8,53 @@ services:
       POSTGRES_PASSWORD: ${DB_PASS}
       POSTGRES_DB: ${DB_NAME}
       POSTGRES_MULTIPLE_EXTENSIONS: postgis,postgis_topology
+    networks:
+      mars:
+        ipv4_address: 175.20.1.3
     ports:
       - "${DB_PORT}:5432"
     volumes:
-      - data:/var/lib/postgresql/data
+      - /var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${DB_USER} -d ${DB_NAME}"]
       interval: 10s
       timeout: 5s
       retries: 5
-
-  geoserver:
-    image: kartoza/geoserver:2.24.1
-    container_name: srms-geoserver
-    depends_on:
-      - db
+  minio:
     ports:
-      - "${GEOSERVER_PORT:-8080}:8080"
-    environment:
-      - GEOSERVER_DATA_DIR=/opt/geoserver/data_dir
-      - GEOSERVER_ADMIN_PASSWORD=${GEOSERVER_ADMIN_PASS:-geoserver}
-      - GEOSERVER_ADMIN_USER=${GEOSERVER_ADMIN_USER:-admin}
-      - INITIAL_MEMORY=2G
-      - MAXIMUM_MEMORY=4G
-      # Database connection parameters
-      - POSTGIS_HOST=db
-      - POSTGIS_PORT=5432
-      - POSTGIS_DB=${DB_NAME}
-      - POSTGIS_USER=${DB_USER}
-      - POSTGIS_PASS=${DB_PASS}
+      - 9000:9000
+      - 9001:9001
+    container_name: minio-srms
+    networks:
+      mars:
+        ipv4_address: 175.20.1.5
     volumes:
-      - geoserver-data:/opt/geoserver/data_dir
-      - geoserver-extensions:/opt/geoserver/extensions
-    restart: unless-stopped
-    healthcheck:
-      test: curl --fail -s http://localhost:8080/geoserver/web/ || exit 1
-      interval: 30s
-      timeout: 10s
-      retries: 3
-
+      - /home/gscwd/minio-srms/data:/data
+    environment:
+      - MINIO_ROOT_USER=${MINIO_USER}
+      - MINIO_ROOT_PASSWORD=${MINIO_PASS}
+    image: quay.io/minio/minio
+    command: server /data --console-address ":9001"
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: pgadmin
+    networks:
+      mars:
+        ipv4_address: 175.20.1.4
+    ports:
+      - 2782:80
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PG_ADMIN_EMAIL}
+      PGADMIN_DEFAULT_PASSWORD: ${PG_ADMIN_PASSWORD}
 volumes:
   data:
   geoserver-data:
   geoserver-extensions:
+networks:
+  mars:
+    name: mars
+    ipam:
+      driver: default
+      config:
+        - subnet: "175.20.1.0/24"
