@@ -180,5 +180,15 @@ export class MinioManager implements I_MinioManager {
       throw new UnableToDeleteError("Unable to delete");
     }
   }
+
+  async getbucketList() {
+    try {
+      //const url = await this.minioClient.listBuckets();
+      console.log(env.MINIO_USE_SSL as boolean);
+      return await this.minioClient;
+    } catch (err) {
+      console.error("test", err);
+    }
+  }
   //#endregion Delete File/s
 }

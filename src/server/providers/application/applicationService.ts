@@ -8,9 +8,16 @@
 // } from "@srms/server/db/schemas";
 // import { db } from "@srms/server/db/postgres";
 // import { eq } from "drizzle-orm";
-// import { paginateQuery } from "@srms/server/helpers/paginateQuery";
-// import { QueryParams } from "@srms/server/types/helperTypes";
-
+// import type {
+//   Application,
+//   ApplicationDetails,
+//   ApplicationStatus,
+//   CreateApplicant,
+//   CreateApplication,
+//   QueryParams,
+// } from "@srms/server/types";
+// import { paginateQuery } from "@srms/server/helpers";
+// import { NotFoundError } from "@srms/server/errors";
 
 // export class ApplicationService implements ApplicationRepository {
 //   /**
@@ -22,9 +29,11 @@
 //    *
 //    * @returns new application
 //    */
-//   public async createApplication(details: CreateApplication, applicant: CreateApplicant) {
+
+//   async createApplication(details: CreateApplication, applicant: CreateApplicant) {
 //     // Deconstruct applicant
-//     const { address, household, documents, ...rest } = applicant;
+//     const { address, household, ...rest } = applicant;
+
 //     // Implementation will handle:
 //     // 1. Start transaction
 //     // 2. Insert into applications table
@@ -64,24 +73,21 @@
 //         })
 //         .returning();
 
-
-
-
 //       // Insert applicant document data
-//       const newDocuments = await tx
+//       /*  const newDocuments = await tx
 //         .insert(applicantDocs)
 //         .values({
 //           applicantId: newApplicant[0]!.id,
 //           ...documents,
 //         })
-//         .returning();
+//         .returning(); */
 
 //       return {
 //         ...newApplication[0]!,
 //         applicant: { ...newApplicant[0]! },
 //         address: { ...newApplicantAddress[0]! },
 //         household: { ...newHousehold[0]! },
-//         documents: { ...newDocuments[0]! },
+//         //documents: { ...newDocuments[0]! },
 //       };
 //     });
 

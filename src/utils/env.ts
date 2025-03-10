@@ -19,7 +19,7 @@ const EnvSchema = z.object({
   MINIO_USE_SSL: z.coerce.boolean(),
   MINIO_BUCKET: z.string(),
   MINIO_USER: z.string(),
-  MINIO_PASS: z.string()
+  MINIO_PASS: z.string(),
 });
 
 export type Env = z.infer<typeof EnvSchema>;
