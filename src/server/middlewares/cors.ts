@@ -4,8 +4,23 @@ import { createMiddleware } from "hono/factory";
 
 export const crossOrigin = createMiddleware(async (c, next) => {
   const corsMiddleware = cors({
-    origin: [env.NEXT_PUBLIC_APP_URL, "http://localhost:3000", "http://172.20.10.57:3000"],
-    allowHeaders: ["Content-Type", "Authorization", "User-Agent", "X-Response-Time", "Content-Length"],
+    origin: [env.NEXT_PUBLIC_APP_URL],
+    allowHeaders: [
+      "Access-Control-Request-Headers",
+      "Access-Control-Request-Method",
+      "Access-Control-Allow-Headers",
+      "Next-Router-State-Tree",
+      "X-Requested-With",
+      "X-Response-Time",
+      "Content-Length",
+      "Authorization",
+      "Content-Type",
+      "User-Agent",
+      "Next-Url",
+      "Origin",
+      "Accept",
+      "RSC",
+    ],
     allowMethods: ["POST", "GET", "PATCH", "PUT", "DELETE", "OPTIONS"],
     credentials: true,
   });

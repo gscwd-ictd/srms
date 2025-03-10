@@ -19,7 +19,11 @@ export function configureOpenApi(app: AppOpenAPI) {
     servers: [
       {
         url: "http://localhost:3000",
-        description: "Local server.",
+        description: "Local server 1",
+      },
+      {
+        url: "http://localhost:3001",
+        description: "Local server 2",
       },
       {
         url: "http://172.20.10.55:3000",

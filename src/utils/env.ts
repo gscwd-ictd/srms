@@ -12,6 +12,10 @@ const EnvSchema = z.object({
   DB_PASS: z.string(),
   DB_USER: z.string(),
   DB_NAME: z.string(),
+  // AUTHORIZATION_SERVER_URL: z.string().url(),
+  // CLIENT_ID: z.string(),
+  // CLIENT_SECRET: z.string(),
+  // REDIRECT_URI: z.string().url(),
 });
 
 export type Env = z.infer<typeof EnvSchema>;

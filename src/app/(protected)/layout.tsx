@@ -1,8 +1,11 @@
+import { type PropsWithChildren } from "react";
 import { AppSidebar } from "@srms/components/features/sidebarNavigation/AppSidebar";
 import { SidebarInset, SidebarProvider } from "@srms/components/ui/Sidebar";
-import { type PropsWithChildren } from "react";
 
-export default function ProtectedPagesLayout({ children }: Readonly<PropsWithChildren>) {
+export const dynamic = "force-dynamic";
+export const fetchCache = "force-no-store";
+
+export default async function ProtectedPagesLayout({ children }: Readonly<PropsWithChildren>) {
   return (
     <SidebarProvider>
       <AppSidebar className="z-50" />
