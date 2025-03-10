@@ -1,6 +1,6 @@
-import { I_PlumbingFixtureRepository } from "./interfaces/IPlumbingFixtureRepository";
-import { PlumbingFixtureRepository } from "./repositories/PlumbingFixtureRepository";
-import { PlumbingFixtureService } from "./services/PlumbingFixtureService";
+import { I_PlumbingFixtureRepository } from "./interfaces";
+import { PlumbingFixtureRepository } from "./repositories";
+import { PlumbingFixtureService } from "./services";
 
 export class PlumbingFixtureManager {
   private static instance: PlumbingFixtureManager;

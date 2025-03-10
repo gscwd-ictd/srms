@@ -1,7 +1,7 @@
 import { date, pgEnum, pgTable, timestamp, varchar } from "drizzle-orm/pg-core";
 import { generateCuid } from "@srms/server/helpers/generateCuid";
 import { applications } from "@srms/server/db/schemas/applications";
-import { createSelectSchema } from "drizzle-zod";
+import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 import { Gender } from "@srms/utils/constants";
 
 export const genderEnum = pgEnum("gender", Gender);
@@ -29,3 +29,14 @@ export const applicants = pgTable("applicants", {
 });
 
 export const SelectApplicantSchema = createSelectSchema(applicants);
+
+export const CreateApplicantSchema = createInsertSchema(applicants)
+  .omit({
+    id: true,
+    email: true,
+    createdAt: true,
+    updatedAt: true,
+  })
+  .openapi({
+    description: "The details of an individual or entity requesting for a new water service connection",
+  });

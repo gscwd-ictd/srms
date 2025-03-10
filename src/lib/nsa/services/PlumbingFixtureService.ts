@@ -1,6 +1,5 @@
-import { I_PlumbingFixtureRepository } from "../interfaces/IPlumbingFixtureRepository";
-import { I_PlumbingFixtureService } from "../interfaces/IPlumbingFixtureService";
-import { CreatePlumbingFixture, PlumbingFixture } from "../types/PlumbingFixture";
+import { I_PlumbingFixtureRepository, I_PlumbingFixtureService } from "../interfaces";
+import { CreatePlumbingFixture, PlumbingFixture } from "../types";
 
 export class PlumbingFixtureService implements I_PlumbingFixtureService {
   constructor(private readonly repository: I_PlumbingFixtureRepository) {}

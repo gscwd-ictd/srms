@@ -1,10 +1,10 @@
 import { db } from "@srms/server/db/postgres";
-import { I_PlumbingFixtureRepository } from "../interfaces/IPlumbingFixtureRepository";
 import { eq } from "drizzle-orm";
-import { CreatePlumbingFixture, PlumbingFixture } from "../types/PlumbingFixture";
+import { CreatePlumbingFixture, PlumbingFixture, UpdatePlumbingFixture } from "../types";
 import { plumbingFixtures } from "@srms/server/db/schemas";
 import { createFileFormData } from "@srms/utils/fileUtils";
 import { minioManager } from "@srms/server/app";
+import { I_PlumbingFixtureRepository } from "../interfaces";
 
 export class PlumbingFixtureRepository implements I_PlumbingFixtureRepository {
   async getAllPlumbingFixtures(): Promise<Array<PlumbingFixture>> {
@@ -15,11 +15,10 @@ export class PlumbingFixtureRepository implements I_PlumbingFixtureRepository {
     // Step 2: Fetch corresponding file data for each fixture
     const result = await Promise.all(
       fixtures.map(async (items) => {
-        //const file = (await minioManager.getFile(items.file)) as string;
-        await minioManager.getbucketList();
+        const file = (await minioManager.getFile(items.file)) as string;
         return {
           ...items,
-          //file: file,
+          file: file,
         };
       }),
     );
@@ -77,7 +76,7 @@ export class PlumbingFixtureRepository implements I_PlumbingFixtureRepository {
     };
   }
 
-  async updatePlumbingFixtureById(id: string, data: CreatePlumbingFixture): Promise<PlumbingFixture> {
+  async updatePlumbingFixtureById(id: string, data: UpdatePlumbingFixture): Promise<PlumbingFixture> {
     // Step 1: Check if the plumbing fixture exists
     const stmtSelect = db
       .select()
@@ -93,7 +92,7 @@ export class PlumbingFixtureRepository implements I_PlumbingFixtureRepository {
 
     // Step 2: Extract file information and update fields
     const { file, ...updateFields } = data;
-    const filePath = `fixtures/${file.name}`;
+    const filePath = file && file.name.trim() !== "" ? `fixtures/${file.name}` : plumbingFixture[0]!.file; // Use existing file if no new file is provided or if file name is blank
 
     // Step 3: Prepare the update statement
     const stmtUpdate = db
@@ -103,14 +102,22 @@ export class PlumbingFixtureRepository implements I_PlumbingFixtureRepository {
       .returning()
       .prepare("update_plumbing_fixture_by_id");
 
-    // Step 4: Handle file storage (delete old file, upload new file)
-    const formData = createFileFormData(file, filePath);
-    await minioManager.deleteFile(plumbingFixture[0]!.file);
-    await minioManager.uploadFileBuffer(formData);
+    // Step 4: Handle file storage (delete old file, upload new file) only if file is provided
+    if (file && file.name.trim() !== "") {
+      const formData = createFileFormData(file, filePath);
+
+      // Delete the old file if a new file is provided
+      await minioManager.deleteFile(plumbingFixture[0]!.file);
+
+      // Upload the new file to storage
+      await minioManager.uploadFileBuffer(formData);
+    }
 
     // Step 5: Execute the update and return the updated fixture
     const updatedFixture = await stmtUpdate.execute();
-    return updatedFixture[0]!;
+
+    const fixture = await this.getPlumbingFixtureById(updatedFixture[0]!.id);
+    return fixture;
   }
 
   async deletePlumbingFixtureById(id: string): Promise<PlumbingFixture> {

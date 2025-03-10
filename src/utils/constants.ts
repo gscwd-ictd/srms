@@ -16,5 +16,6 @@ export const FixtureCategory = ["General", "Sinks", "Urinals"] as const;
 
 export const TAGS = {
   PLUMBING_FIXTURES: ["Plumbing Fixtures"],
+  APPLICATIONS: ["Applications"],
   APPLICANTS: ["Applicants"],
 };

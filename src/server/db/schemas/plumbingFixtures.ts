@@ -1,7 +1,7 @@
 import { generateCuid } from "@srms/server/helpers/generateCuid";
 import { FixtureCategory } from "@srms/utils/constants";
 import { pgEnum, pgTable, text, timestamp, varchar } from "drizzle-orm/pg-core";
-import { createInsertSchema, createSelectSchema } from "drizzle-zod";
+import { createInsertSchema, createSelectSchema, createUpdateSchema } from "drizzle-zod";
 import { z } from "zod";
 
 export const fixtureCategoryEnum = pgEnum("fixture_category_enum", FixtureCategory);
@@ -30,4 +30,14 @@ export const CreatePlumbingFixtureSchema = createInsertSchema(plumbingFixtures)
   })
   .extend({
     file: z.instanceof(File),
+  });
+
+export const UpdatePlumbingFixtureSchema = createUpdateSchema(plumbingFixtures)
+  .omit({
+    id: true,
+    createdAt: true,
+    updatedAt: true,
+  })
+  .extend({
+    file: z.instanceof(File).optional(),
   });

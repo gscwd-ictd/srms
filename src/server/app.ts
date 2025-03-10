@@ -7,6 +7,7 @@ import { crossOrigin } from "./middlewares/cors";
 import { MinioManager } from "@srms/lib/minio";
 import env from "@srms/utils/env";
 import { PlumbingFixtureManager } from "@srms/lib/nsa/PlumbingFixtureManager";
+import { ApplicationManager } from "@srms/lib/nsa/ApplicationManager";
 
 function createApp() {
   const app = createOpenAPIRoute().basePath("/api");
@@ -40,3 +41,5 @@ export const minioManager = MinioManager.getInstance({
 });
 
 export const plumbingFixtureManager = PlumbingFixtureManager.getInstance();
+
+export const applicationManager = ApplicationManager.getInstance();

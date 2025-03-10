@@ -1,5 +1,9 @@
 import { createRoute, z } from "@hono/zod-openapi";
-import { CreatePlumbingFixtureSchema, SelectPlumbingFixtureSchema } from "@srms/server/db/schemas";
+import {
+  CreatePlumbingFixtureSchema,
+  SelectPlumbingFixtureSchema,
+  UpdatePlumbingFixtureSchema,
+} from "@srms/server/db/schemas";
 import { ErrorResponseSchema, IdParamsSchema } from "@srms/server/schemas/helperSchemas";
 import { TAGS } from "@srms/utils/constants";
 
@@ -160,7 +164,7 @@ export const updatePlumbingFixtureById = createRoute({
     body: {
       content: {
         "multipart/form-data": {
-          schema: CreatePlumbingFixtureSchema,
+          schema: UpdatePlumbingFixtureSchema,
         },
       },
       required: true,
