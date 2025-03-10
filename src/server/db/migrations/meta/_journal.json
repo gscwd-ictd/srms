@@ -43,6 +43,13 @@
       "when": 1739803918707,
       "tag": "0005_faulty_falcon",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1741073554542,
+      "tag": "0006_eminent_thor",
+      "breakpoints": true
     }
   ]
 }
