@@ -1,10 +1,12 @@
-import { notFound, onError, pinoLogger } from "@srms/server/middlewares";
 import { secureHeaders } from "hono/secure-headers";
 import { healthcheck, applications } from "@srms/server/routes";
 import { createOpenAPIRoute } from "./openapi/createOpenApiRoute";
 import { configureOpenApi } from "./openapi/configureOpenApi";
 import { crossOrigin } from "./middlewares/cors";
 import { requestId } from "hono/request-id";
+import { onError } from "./middlewares/onError";
+import { notFound } from "./middlewares/notFound";
+import { pinoLogger } from "./middlewares/pinoLogger";
 
 function createApp() {
   const app = createOpenAPIRoute().basePath("/api");
