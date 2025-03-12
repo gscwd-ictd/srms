@@ -9,7 +9,8 @@ export default async function ProtectedPagesLayout({ children }: Readonly<PropsW
   return (
     <SidebarProvider>
       <AppSidebar className="z-50" />
-      <SidebarInset>{children}</SidebarInset>
+      {/** TODO: Padding is temporary only */}
+      <SidebarInset className="px-40 py-10">{children}</SidebarInset>
     </SidebarProvider>
   );
 }
