@@ -19,3 +19,5 @@ export const TAGS = {
   APPLICATIONS: ["Applications"],
   APPLICANTS: ["Applicants"],
 };
+
+export const fixtureUnitType = ["private", "public"] as const;
