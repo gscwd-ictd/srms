@@ -1,5 +1,5 @@
 import { secureHeaders } from "hono/secure-headers";
-import { healthcheck, applications } from "@srms/server/routes";
+import { healthcheck } from "@srms/server/routes";
 import { createOpenAPIRoute } from "./openapi/createOpenApiRoute";
 import { configureOpenApi } from "./openapi/configureOpenApi";
 import { crossOrigin } from "./middlewares/cors";
@@ -21,7 +21,7 @@ function createApp() {
   app.use(requestId());
   app.use(pinoLogger());
 
-  const routes = [healthcheck, applications] as const;
+  const routes = [healthcheck] as const;
 
   routes.forEach((route) => app.route("/", route));
 
