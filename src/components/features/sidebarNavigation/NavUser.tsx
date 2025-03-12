@@ -1,7 +1,6 @@
 "use client";
 
 import { BadgeCheck, Bell, ChevronsUpDown, CreditCard, LogOut, Sparkles } from "lucide-react";
-
 import { Avatar, AvatarFallback, AvatarImage } from "@srms/components/ui/Avatar";
 import {
   DropdownMenu,
@@ -13,16 +12,18 @@ import {
   DropdownMenuTrigger,
 } from "@srms/components/ui/DropdownMenu";
 import { SidebarMenu, SidebarMenuButton, SidebarMenuItem, useSidebar } from "@srms/components/ui/Sidebar";
+import { ThemeSwitcher } from "../themes/ThemeSwitcher";
+import { FunctionComponent } from "react";
 
-export function NavUser({
-  user,
-}: {
+type NavUserProps = {
   user: {
     name: string;
     email: string;
     avatar: string;
   };
-}) {
+};
+
+export const NavUser: FunctionComponent<NavUserProps> = ({ user }) => {
   const { isMobile } = useSidebar();
 
   return (
@@ -66,25 +67,26 @@ export function NavUser({
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
               <DropdownMenuItem>
-                <Sparkles />
-                Upgrade to Pro
-              </DropdownMenuItem>
-            </DropdownMenuGroup>
-            <DropdownMenuSeparator />
-            <DropdownMenuGroup>
-              <DropdownMenuItem>
                 <BadgeCheck />
                 Account
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <CreditCard />
-                Billing
               </DropdownMenuItem>
               <DropdownMenuItem>
                 <Bell />
                 Notifications
               </DropdownMenuItem>
             </DropdownMenuGroup>
+            <DropdownMenuSeparator />
+
+            <DropdownMenuGroup>
+              <DropdownMenuItem
+                className="flex items-center justify-between focus:bg-transparent"
+                onSelect={(e) => e.preventDefault()}
+              >
+                <span>Theme</span>
+                <ThemeSwitcher />
+              </DropdownMenuItem>
+            </DropdownMenuGroup>
+
             <DropdownMenuSeparator />
             <DropdownMenuItem>
               <LogOut />
@@ -95,4 +97,4 @@ export function NavUser({
       </SidebarMenuItem>
     </SidebarMenu>
   );
-}
+};
