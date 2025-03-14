@@ -14,13 +14,31 @@ import {
 } from "date-fns";
 import { useEffect, useState, useMemo } from "react";
 
-type CalendarDay = {
+export type CalendarDay = {
   date: string;
   dueAt: string | undefined;
   disconnectAt: string | undefined;
 };
 
-export const useCalendarDays = (month?: number, year?: number) => {
+export type UseCalendarHook = {
+  calendarDays: CalendarDay[];
+  month: string;
+  year: number;
+  week: string[];
+  getLeadingDays: () => string[];
+  getTrailingDays: () => string[];
+  goToPreviousMonth: () => void;
+  goToNextMonth: () => void;
+  getCurrentMonthRange: () => {
+    monthStart: Date;
+    monthEnd: Date;
+  };
+  getRestDays: (restDay: 0 | 6) => string[];
+  getWorkingDays: (restDay: 0 | 6) => string[];
+  today: () => void;
+};
+
+export const useCalendarDays = (month?: number, year?: number): UseCalendarHook => {
   const [currentYear, setCurrentYear] = useState(year ?? new Date().getFullYear());
   const [currentMonth, setCurrentMonth] = useState(month ?? new Date().getMonth());
   const [calendarDays, setCalendarDays] = useState<CalendarDay[]>([]);
@@ -113,7 +131,7 @@ export const useCalendarDays = (month?: number, year?: number) => {
     // Filter out rest days
     const restDays = daysInRange.filter((date) => getDay(date) !== restDay);
 
-    return restDays.map((day) => format(day, "MMM dd yyyy"));
+    return restDays.map((day) => format(day, "yyyy-MM-dd"));
   };
 
   /**
@@ -162,7 +180,7 @@ export const useCalendarDays = (month?: number, year?: number) => {
     // Filter out rest days
     const workingDays = daysInRange.filter((date) => getDay(date) !== restDay);
 
-    return workingDays.map((day) => format(day, "MMM dd yyyy"));
+    return workingDays.map((day) => format(day, "yyyy-MM-dd"));
   };
 
   // Memoize calendar days calculation
@@ -180,7 +198,7 @@ export const useCalendarDays = (month?: number, year?: number) => {
 
     // Create detailed day objects
     return days.map((date) => {
-      const formattedDate = format(date, "MMM dd yyyy");
+      const formattedDate = format(date, "yyyy-MM-dd");
       const isInCurrentMonth = isSameMonth(date, monthStart);
 
       // Only calculate dates for current month
@@ -240,14 +258,41 @@ export const useCalendarDays = (month?: number, year?: number) => {
     setCurrentYear(new Date().getFullYear());
   };
 
+  const getLeadingDays = () => {
+    const monthStart = startOfMonth(new Date(currentYear, currentMonth)); // month is 0-based
+
+    return calendarDays
+      .filter((day) => !isSameMonth(day.date, monthStart) && new Date(day.date) < monthStart)
+      .map((day) => day.date);
+  };
+
+  const getTrailingDays = () => {
+    const monthStart = startOfMonth(new Date(currentYear, currentMonth)); // month is 0-based
+    const monthEnd = endOfMonth(monthStart);
+
+    return calendarDays
+      .filter((day) => !isSameMonth(day.date, monthStart) && new Date(day.date) > monthEnd)
+      .map((day) => day.date);
+  };
+
+  const getCurrentMonthRange = () => {
+    const monthStart = startOfMonth(new Date(currentYear, currentMonth)); // month is 0-based
+    const monthEnd = endOfMonth(monthStart);
+
+    return { monthStart, monthEnd };
+  };
+
   // Return data and utility functions
   return {
     calendarDays,
     month: currentMonthName,
     year: currentYear,
     week: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
+    getLeadingDays,
+    getTrailingDays,
     goToPreviousMonth,
     goToNextMonth,
+    getCurrentMonthRange,
     getRestDays,
     getWorkingDays,
     today,
