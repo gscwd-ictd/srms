@@ -1,7 +1,8 @@
-import { integer, pgTable, timestamp, varchar } from "drizzle-orm/pg-core";
 import { generateCuid } from "@srms/server/helpers/generateCuid";
-import { applicants } from "@srms/server/db/schemas/applicants";
+import { integer, pgTable, timestamp, varchar } from "drizzle-orm/pg-core";
+
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
+import { applicants } from "./applicants";
 
 export const applicantHousehold = pgTable("applicant_household", {
   id: varchar("id")

@@ -31,6 +31,7 @@ export class MinioManager implements I_MinioManager {
   async uploadFileBuffer(formData: FormData, options?: MinioManagerUploadOptions) {
     const file = formData.get("file") as File;
     const fileName = formData.get("fileName") as string;
+    console.log(formData);
 
     if (options) {
       if (options.allowedFileTypes && !options.allowedFileTypes.includes(file.type)) {

@@ -29,6 +29,23 @@ export const HealthCheckResponseSchema = z.object({
   }),
 });
 
+export const yearSchema = z.object({
+  year: z.coerce
+    .number()
+    .min(1000)
+    .max(9999)
+    .openapi({
+      description: "Query the year ( where a column of an entity is applicable )",
+      param: {
+        name: "year",
+        in: "path",
+        required: true,
+      },
+      example: 2025,
+      required: ["year"],
+    }),
+});
+
 export const IdParamsSchema = z.object({
   id: z.string().openapi({
     param: {

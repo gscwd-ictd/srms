@@ -1,8 +1,8 @@
 import { date, pgEnum, pgTable, timestamp, varchar } from "drizzle-orm/pg-core";
 import { generateCuid } from "@srms/server/helpers/generateCuid";
-import { applications } from "@srms/server/db/schemas/applications";
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 import { Gender } from "@srms/utils/constants";
+import { applications } from "./applications";
 
 export const genderEnum = pgEnum("gender", Gender);
 

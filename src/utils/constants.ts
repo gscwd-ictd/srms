@@ -18,6 +18,7 @@ export const TAGS = {
   PLUMBING_FIXTURES: ["Plumbing Fixtures"],
   APPLICATIONS: ["Applications"],
   APPLICANTS: ["Applicants"],
+  FIXTURE_UNITS: ["Fixture Units"],
 };
 
 export const fixtureUnitType = ["private", "public"] as const;

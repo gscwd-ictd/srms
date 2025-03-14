@@ -1,6 +1,6 @@
 import { notFound, onError, pinoLogger } from "@srms/server/middlewares";
 import { secureHeaders } from "hono/secure-headers";
-import { healthcheck, applications, plumbingFixtures } from "@srms/server/routes";
+import { healthcheck, applications, plumbingFixtures, fixtureUnits } from "@srms/server/routes";
 import { createOpenAPIRoute } from "./openapi/createOpenApiRoute";
 import { configureOpenApi } from "./openapi/configureOpenApi";
 import { crossOrigin } from "./middlewares/cors";
@@ -21,7 +21,7 @@ function createApp() {
   app.use(secureHeaders());
   app.use(crossOrigin);
 
-  const routes = [healthcheck, applications, plumbingFixtures] as const;
+  const routes = [healthcheck, applications, plumbingFixtures, fixtureUnits] as const;
 
   routes.forEach((route) => app.route("/", route));
 

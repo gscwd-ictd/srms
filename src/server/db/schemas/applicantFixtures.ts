@@ -1,6 +1,6 @@
-import { generateCuid } from "@srms/server/helpers";
 import { pgTable, timestamp, varchar } from "drizzle-orm/pg-core";
 import { applicants } from "./applicants";
+import { generateCuid } from "@srms/server/helpers/generateCuid";
 import { plumbingFixtures } from "./plumbingFixtures";
 
 export const applicantPlumbingFixtures = pgTable("applicant_plumbing_fixtures", {
