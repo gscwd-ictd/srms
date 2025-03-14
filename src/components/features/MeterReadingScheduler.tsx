@@ -6,6 +6,7 @@ import { format } from "date-fns";
 import { cn } from "@srms/utils/shadcn";
 import { Button } from "../ui/Button";
 import { ButtonGroup } from "../ui/ButtonGroup";
+import { AvatarUser, StackedAvatars } from "../ui/StackedAvatar";
 import {
   CalendarPlus,
   Check,
@@ -24,7 +25,6 @@ import {
   CommandList,
 } from "@srms/components/ui/Command";
 import { Popover, PopoverContent, PopoverTrigger } from "@srms/components/ui/Popover";
-import { AvatarUser, StackedAvatars } from "../ui/StackedAvatar";
 
 type MeterReader = {
   id: string;
