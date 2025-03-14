@@ -20,7 +20,7 @@ export type CalendarDay = {
   disconnectAt: string | undefined;
 };
 
-export type UseCalendarHook = {
+type UseCalendarHook = {
   calendarDays: CalendarDay[];
   month: string;
   year: number;
