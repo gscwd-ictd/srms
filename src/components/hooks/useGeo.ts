@@ -1,13 +1,13 @@
-"use client";
+'use client';
 
-import { MultiPoint, MultiPolygon } from "ol/geom";
-import { useCallback } from "react";
+import { MultiPoint, MultiPolygon } from 'ol/geom';
+import { useCallback } from 'react';
 
 export const useGeo = () => {
   const createMultiPolygonCallback = useCallback((polygons: number[][][]): MultiPolygon => {
     const multipolygon = {
-      type: "MultiPolygon",
-      coordinates: polygons.map((polygon) => [polygon]),
+      type: 'MultiPolygon',
+      coordinates: polygons.map(polygon => [polygon]),
     };
 
     return new MultiPolygon(multipolygon.coordinates);
@@ -15,7 +15,7 @@ export const useGeo = () => {
 
   const createMultipointCallback = useCallback((points: number[]): MultiPoint => {
     const multiPoint = {
-      type: "MultiPoint",
+      type: 'MultiPoint',
       coordinates: points,
     };
 

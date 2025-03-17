@@ -1,7 +1,7 @@
-import { generateCuid } from "../../server/helpers/generateCuid";
-import Feature from "ol/Feature";
-import { Geometry } from "ol/geom";
-import Style, { StyleFunction } from "ol/style/Style";
+import { generateCuid } from '../../server/helpers/generateCuid';
+import Feature from 'ol/Feature';
+import { Geometry } from 'ol/geom';
+import Style, { StyleFunction } from 'ol/style/Style';
 
 export type FeatureProperties = {
   id?: string | number;
@@ -94,18 +94,18 @@ export class FeatureManager {
       const currentStyle = feature.getStyle();
 
       if (currentStyle) {
-        feature.set("originalStyle", currentStyle);
+        feature.set('originalStyle', currentStyle);
       }
 
       // Hide feature
       feature.setStyle(undefined);
     } else {
       // Restore original style if it exists
-      const originalStyle = feature.get("originalStyle");
+      const originalStyle = feature.get('originalStyle');
 
       if (originalStyle) {
         feature.setStyle(originalStyle);
-        feature.unset("originalStyle"); // Clean up stored style
+        feature.unset('originalStyle'); // Clean up stored style
       }
     }
   }

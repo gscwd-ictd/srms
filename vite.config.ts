@@ -1,20 +1,20 @@
-import path from "path";
-import { defineConfig } from "vite";
+import path from 'path';
+import { defineConfig } from 'vite';
 
 export default defineConfig({
   test: {
-    environment: "jsdom",
-    setupFiles: ["./src/lib/mapstudio/tests/setup.ts"],
+    environment: 'jsdom',
+    setupFiles: ['./src/lib/mapstudio/tests/setup.ts'],
     globals: true,
     environmentOptions: {
       jsdom: {
-        resources: "usable",
+        resources: 'usable',
       },
     },
   },
   resolve: {
     alias: {
-      "@srms": path.resolve(__dirname, "./src"),
+      '@srms': path.resolve(__dirname, './src'),
     },
   },
 });

@@ -1,18 +1,18 @@
-import { describe, test, expect, beforeEach, afterEach } from "vitest";
-import { MapManager } from "../mapManager";
-import Map from "ol/Map";
-import View from "ol/View";
-import TileLayer from "ol/layer/Tile";
-import OSM from "ol/source/OSM";
+import { describe, test, expect, beforeEach, afterEach } from 'vitest';
+import { MapManager } from '../mapManager';
+import Map from 'ol/Map';
+import View from 'ol/View';
+import TileLayer from 'ol/layer/Tile';
+import OSM from 'ol/source/OSM';
 
-describe("MapManager", () => {
+describe('MapManager', () => {
   let mapManager: MapManager;
   let target: HTMLDivElement;
 
   beforeEach(() => {
-    target = document.createElement("div");
-    target.style.width = "100px";
-    target.style.height = "100px";
+    target = document.createElement('div');
+    target.style.width = '100px';
+    target.style.height = '100px';
     document.body.appendChild(target);
     mapManager = new MapManager();
   });
@@ -22,8 +22,8 @@ describe("MapManager", () => {
     target.remove();
   });
 
-  describe("Initialization", () => {
-    test("should initialize map with default options", () => {
+  describe('Initialization', () => {
+    test('should initialize map with default options', () => {
       mapManager.init({ target });
       const map = mapManager.getMap();
 
@@ -33,7 +33,7 @@ describe("MapManager", () => {
       expect(map.getView().getCenter()).toEqual([0, 0]);
     });
 
-    test("should initialize map with custom options", () => {
+    test('should initialize map with custom options', () => {
       const customView = new View({
         center: [10, 20],
         zoom: 5,
@@ -49,29 +49,29 @@ describe("MapManager", () => {
       expect(map.getView().getCenter()).toEqual([10, 20]);
     });
 
-    test("should throw error when accessing map before initialization", () => {
-      expect(() => mapManager.getMap()).toThrow("Map not initialized");
+    test('should throw error when accessing map before initialization', () => {
+      expect(() => mapManager.getMap()).toThrow('Map not initialized');
     });
   });
 
-  describe("Map Operations", () => {
+  describe('Map Operations', () => {
     beforeEach(() => {
       mapManager.init({ target });
     });
 
-    test("should set and get center", () => {
+    test('should set and get center', () => {
       const center = [10, 20];
       mapManager.setCenter(center);
       expect(mapManager.getCenter()).toEqual(center);
     });
 
-    test("should set and get zoom", () => {
+    test('should set and get zoom', () => {
       const zoom = 5;
       mapManager.setZoom(zoom);
       expect(mapManager.getZoom()).toBe(zoom);
     });
 
-    test("should fit to extent", () => {
+    test('should fit to extent', () => {
       const extent = [0, 0, 10, 10];
       mapManager.fitToExtent(extent);
 
@@ -92,22 +92,22 @@ describe("MapManager", () => {
     });
   });
 
-  describe("Manager Access", () => {
-    test("should provide access to layer manager", () => {
+  describe('Manager Access', () => {
+    test('should provide access to layer manager', () => {
       expect(mapManager.getLayerManager()).toBeDefined();
     });
 
-    test("should provide access to interaction manager", () => {
+    test('should provide access to interaction manager', () => {
       expect(mapManager.getInteractionManager()).toBeDefined();
     });
 
-    test("should provide access to control manager", () => {
+    test('should provide access to control manager', () => {
       expect(mapManager.getControlManager()).toBeDefined();
     });
   });
 
-  describe("Map Integration", () => {
-    test("should integrate with layer manager", () => {
+  describe('Map Integration', () => {
+    test('should integrate with layer manager', () => {
       mapManager.init({ target });
       const layerManager = mapManager.getLayerManager();
       const osmLayer = new TileLayer({
@@ -115,17 +115,17 @@ describe("MapManager", () => {
       });
 
       const initialLayerCount = mapManager.getMap().getLayers().getLength();
-      layerManager.addLayer("osm", osmLayer);
+      layerManager.addLayer('osm', osmLayer);
       expect(mapManager.getMap().getLayers().getLength()).toBe(initialLayerCount + 1);
     });
 
-    test("should cleanup properly on destroy", () => {
+    test('should cleanup properly on destroy', () => {
       mapManager.init({ target });
       const layerManager = mapManager.getLayerManager();
-      layerManager.addLayer("test", new TileLayer({ source: new OSM() }));
+      layerManager.addLayer('test', new TileLayer({ source: new OSM() }));
 
       mapManager.destroy();
-      expect(() => mapManager.getMap()).toThrow("Map not initialized");
+      expect(() => mapManager.getMap()).toThrow('Map not initialized');
     });
   });
 });

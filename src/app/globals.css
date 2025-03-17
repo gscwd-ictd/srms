@@ -1,4 +1,4 @@
-@import "../../node_modules/ol/ol.css" layer(base);
+@import '../../node_modules/ol/ol.css' layer(base);
 
 /*
   ---break---
@@ -9,7 +9,7 @@
 */
 @custom-variant dark (&:is(.dark *));
 
-@import "tailwindcss";
+@import 'tailwindcss';
 
 @theme {
   --color-background: var(--background);
@@ -204,7 +204,7 @@
     @apply bg-background text-foreground;
   }
   button:not(:disabled),
-  [role="button"]:not(:disabled) {
+  [role='button']:not(:disabled) {
     cursor: pointer;
   }
 }

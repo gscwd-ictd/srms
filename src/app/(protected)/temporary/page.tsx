@@ -1,4 +1,4 @@
-import { MeterReadingScheduler } from "@srms/components/features/MeterReadingScheduler";
+import { MeterReadingScheduler } from '@srms/components/features/MeterReadingScheduler';
 
 export default function TemporaryPage() {
   return (

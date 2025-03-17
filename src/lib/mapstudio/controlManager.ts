@@ -1,5 +1,5 @@
-import { Map } from "ol";
-import Control from "ol/control/Control";
+import { Map } from 'ol';
+import Control from 'ol/control/Control';
 
 export class ControlManager {
   private controls: Record<string, Control>;
@@ -14,7 +14,7 @@ export class ControlManager {
     this.map = map;
 
     // Add all existing controls to the new map
-    Object.values(this.controls).forEach((control) => {
+    Object.values(this.controls).forEach(control => {
       this.map?.addControl(control);
     });
   }
@@ -48,7 +48,7 @@ export class ControlManager {
 
   public clear(): void {
     if (this.map) {
-      Object.values(this.controls).forEach((control) => {
+      Object.values(this.controls).forEach(control => {
         this.map?.removeControl(control);
       });
     }

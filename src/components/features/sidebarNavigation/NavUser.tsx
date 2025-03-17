@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import { BadgeCheck, Bell, ChevronsUpDown, CreditCard, LogOut, Sparkles } from "lucide-react";
-import { Avatar, AvatarFallback, AvatarImage } from "@srms/components/ui/Avatar";
+import { BadgeCheck, Bell, ChevronsUpDown, CreditCard, LogOut, Sparkles } from 'lucide-react';
+import { Avatar, AvatarFallback, AvatarImage } from '@srms/components/ui/Avatar';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -10,10 +10,10 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@srms/components/ui/DropdownMenu";
-import { SidebarMenu, SidebarMenuButton, SidebarMenuItem, useSidebar } from "@srms/components/ui/Sidebar";
-import { ThemeSwitcher } from "../themes/ThemeSwitcher";
-import { FunctionComponent } from "react";
+} from '@srms/components/ui/DropdownMenu';
+import { SidebarMenu, SidebarMenuButton, SidebarMenuItem, useSidebar } from '@srms/components/ui/Sidebar';
+import { ThemeSwitcher } from '../themes/ThemeSwitcher';
+import { FunctionComponent } from 'react';
 
 type NavUserProps = {
   user: {
@@ -48,7 +48,7 @@ export const NavUser: FunctionComponent<NavUserProps> = ({ user }) => {
           </DropdownMenuTrigger>
           <DropdownMenuContent
             className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg"
-            side={isMobile ? "bottom" : "right"}
+            side={isMobile ? 'bottom' : 'right'}
             align="end"
             sideOffset={4}
           >
@@ -80,7 +80,7 @@ export const NavUser: FunctionComponent<NavUserProps> = ({ user }) => {
             <DropdownMenuGroup>
               <DropdownMenuItem
                 className="flex items-center justify-between focus:bg-transparent"
-                onSelect={(e) => e.preventDefault()}
+                onSelect={e => e.preventDefault()}
               >
                 <span>Theme</span>
                 <ThemeSwitcher />

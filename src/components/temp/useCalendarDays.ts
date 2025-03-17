@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import {
   addDays,
@@ -11,8 +11,8 @@ import {
   parseISO,
   startOfMonth,
   startOfWeek,
-} from "date-fns";
-import { useEffect, useState, useMemo } from "react";
+} from 'date-fns';
+import { useEffect, useState, useMemo } from 'react';
 
 export type CalendarDay = {
   date: string;
@@ -67,7 +67,7 @@ export const useCalendarDays = (month?: number, year?: number): UseCalendarHook 
       dueDate = addDays(dueDate, 1);
     }
 
-    return format(dueDate, "yyyy-MM-dd");
+    return format(dueDate, 'yyyy-MM-dd');
   };
 
   const calculateDisconnectionDate = (dueDate: Date): string => {
@@ -86,7 +86,7 @@ export const useCalendarDays = (month?: number, year?: number): UseCalendarHook 
       disconnectionDate = addDays(disconnectionDate, 1);
     }
 
-    return format(disconnectionDate, "yyyy-MM-dd");
+    return format(disconnectionDate, 'yyyy-MM-dd');
   };
 
   /**
@@ -129,9 +129,9 @@ export const useCalendarDays = (month?: number, year?: number): UseCalendarHook 
     });
 
     // Filter out rest days
-    const restDays = daysInRange.filter((date) => getDay(date) !== restDay);
+    const restDays = daysInRange.filter(date => getDay(date) !== restDay);
 
-    return restDays.map((day) => format(day, "yyyy-MM-dd"));
+    return restDays.map(day => format(day, 'yyyy-MM-dd'));
   };
 
   /**
@@ -178,9 +178,9 @@ export const useCalendarDays = (month?: number, year?: number): UseCalendarHook 
     });
 
     // Filter out rest days
-    const workingDays = daysInRange.filter((date) => getDay(date) !== restDay);
+    const workingDays = daysInRange.filter(date => getDay(date) !== restDay);
 
-    return workingDays.map((day) => format(day, "yyyy-MM-dd"));
+    return workingDays.map(day => format(day, 'yyyy-MM-dd'));
   };
 
   // Memoize calendar days calculation
@@ -197,8 +197,8 @@ export const useCalendarDays = (month?: number, year?: number): UseCalendarHook 
     });
 
     // Create detailed day objects
-    return days.map((date) => {
-      const formattedDate = format(date, "yyyy-MM-dd");
+    return days.map(date => {
+      const formattedDate = format(date, 'yyyy-MM-dd');
       const isInCurrentMonth = isSameMonth(date, monthStart);
 
       // Only calculate dates for current month
@@ -229,7 +229,7 @@ export const useCalendarDays = (month?: number, year?: number): UseCalendarHook 
 
   // Get current month name
   const currentMonthName = useMemo(() => {
-    return format(new Date(currentYear, currentMonth), "MMMM");
+    return format(new Date(currentYear, currentMonth), 'MMMM');
   }, [currentMonth, currentYear]);
 
   // Provide navigation methods
@@ -237,9 +237,9 @@ export const useCalendarDays = (month?: number, year?: number): UseCalendarHook 
     if (currentMonth === 0) {
       // If January, go to December of previous year
       setCurrentMonth(11);
-      setCurrentYear((prevYear) => prevYear - 1);
+      setCurrentYear(prevYear => prevYear - 1);
     } else {
-      setCurrentMonth((prevMonth) => prevMonth - 1);
+      setCurrentMonth(prevMonth => prevMonth - 1);
     }
   };
 
@@ -247,9 +247,9 @@ export const useCalendarDays = (month?: number, year?: number): UseCalendarHook 
     if (currentMonth === 11) {
       // If December, go to January of next year
       setCurrentMonth(0);
-      setCurrentYear((prevYear) => prevYear + 1);
+      setCurrentYear(prevYear => prevYear + 1);
     } else {
-      setCurrentMonth((prevMonth) => prevMonth + 1);
+      setCurrentMonth(prevMonth => prevMonth + 1);
     }
   };
 
@@ -262,8 +262,8 @@ export const useCalendarDays = (month?: number, year?: number): UseCalendarHook 
     const monthStart = startOfMonth(new Date(currentYear, currentMonth)); // month is 0-based
 
     return calendarDays
-      .filter((day) => !isSameMonth(day.date, monthStart) && new Date(day.date) < monthStart)
-      .map((day) => day.date);
+      .filter(day => !isSameMonth(day.date, monthStart) && new Date(day.date) < monthStart)
+      .map(day => day.date);
   };
 
   const getTrailingDays = () => {
@@ -271,8 +271,8 @@ export const useCalendarDays = (month?: number, year?: number): UseCalendarHook 
     const monthEnd = endOfMonth(monthStart);
 
     return calendarDays
-      .filter((day) => !isSameMonth(day.date, monthStart) && new Date(day.date) > monthEnd)
-      .map((day) => day.date);
+      .filter(day => !isSameMonth(day.date, monthStart) && new Date(day.date) > monthEnd)
+      .map(day => day.date);
   };
 
   const getCurrentMonthRange = () => {
@@ -287,7 +287,7 @@ export const useCalendarDays = (month?: number, year?: number): UseCalendarHook 
     calendarDays,
     month: currentMonthName,
     year: currentYear,
-    week: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
+    week: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
     getLeadingDays,
     getTrailingDays,
     goToPreviousMonth,

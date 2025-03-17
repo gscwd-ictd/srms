@@ -1,11 +1,11 @@
-import { z } from "zod";
+import { z } from 'zod';
 import {
   ErrorResponseSchema,
   HealthCheckResponseSchema,
   IdParamsSchema,
   QueryParamsSchema,
   ResultMetaDataSchema,
-} from "../schemas/helperSchemas";
+} from '../schemas/helperSchemas';
 
 export type PaginatedResult<T> = {
   data: T[];

@@ -1,8 +1,8 @@
-import type { HealthCheckResponse } from "@srms/server/types/helperTypes";
-import { sql } from "drizzle-orm/sql";
-import { db } from "@srms/server/db/postgres";
-import { format, formatDistanceStrict } from "date-fns";
-import packageJson from "@/package.json";
+import type { HealthCheckResponse } from '@srms/server/types/helperTypes';
+import { sql } from 'drizzle-orm/sql';
+import { db } from '@srms/server/db/postgres';
+import { format, formatDistanceStrict } from 'date-fns';
+import packageJson from '@/package.json';
 
 function formatUptime(seconds: number): string {
   const now = new Date();
@@ -27,7 +27,7 @@ async function checkPgHealth() {
 
     if (!metrics.rows?.[0]) {
       return {
-        status: "up" as const,
+        status: 'up' as const,
         responseTime: Math.round(endTime - startTime),
         connectionCount: 0,
         maxConnections: 0,
@@ -35,7 +35,7 @@ async function checkPgHealth() {
     }
 
     return {
-      status: "up" as const,
+      status: 'up' as const,
       responseTime: Math.round(endTime - startTime),
       connectionCount: metrics.rows[0].connection_count as number,
       maxConnections: parseInt(metrics.rows[0].max_connections as string),
@@ -44,7 +44,7 @@ async function checkPgHealth() {
     console.error(error);
 
     return {
-      status: "down" as const,
+      status: 'down' as const,
       responseTime: Math.round(performance.now() - startTime),
       connectionCount: 0,
       maxConnections: 0,
@@ -58,8 +58,8 @@ export async function checkHealth(): Promise<HealthCheckResponse> {
   const memoryUsage = process.memoryUsage();
 
   return {
-    status: dbHealth.status === "up" ? "healthy" : "unhealthy",
-    datetime: format(new Date(), "EEEE, MMMM do yyyy, h:mm:ss a zzz"),
+    status: dbHealth.status === 'up' ? 'healthy' : 'unhealthy',
+    datetime: format(new Date(), 'EEEE, MMMM do yyyy, h:mm:ss a zzz'),
     version: packageJson.version,
     environment: process.env.NODE_ENV,
     database: dbHealth,

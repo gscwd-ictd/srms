@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import * as React from "react";
-import { ChevronsUpDown, Plus } from "lucide-react";
+import * as React from 'react';
+import { ChevronsUpDown, Plus } from 'lucide-react';
 
 import {
   DropdownMenu,
@@ -11,8 +11,8 @@ import {
   DropdownMenuSeparator,
   DropdownMenuShortcut,
   DropdownMenuTrigger,
-} from "@srms/components/ui/DropdownMenu";
-import { SidebarMenu, SidebarMenuButton, SidebarMenuItem, useSidebar } from "@srms/components/ui/Sidebar";
+} from '@srms/components/ui/DropdownMenu';
+import { SidebarMenu, SidebarMenuButton, SidebarMenuItem, useSidebar } from '@srms/components/ui/Sidebar';
 
 export function TeamSwitcher({
   teams,
@@ -48,7 +48,7 @@ export function TeamSwitcher({
           <DropdownMenuContent
             className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg"
             align="start"
-            side={isMobile ? "bottom" : "right"}
+            side={isMobile ? 'bottom' : 'right'}
             sideOffset={4}
           >
             <DropdownMenuLabel className="text-muted-foreground text-xs">Teams</DropdownMenuLabel>

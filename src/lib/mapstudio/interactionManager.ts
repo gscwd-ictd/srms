@@ -1,11 +1,11 @@
-import { Map } from "ol";
-import { Coordinate } from "ol/coordinate";
-import Feature from "ol/Feature";
-import { LineString, Point, Polygon } from "ol/geom";
-import { Draw, Interaction, Modify, Select, Snap } from "ol/interaction";
-import VectorLayer from "ol/layer/Vector";
-import VectorSource from "ol/source/Vector";
-import { Style } from "ol/style";
+import { Map } from 'ol';
+import { Coordinate } from 'ol/coordinate';
+import Feature from 'ol/Feature';
+import { LineString, Point, Polygon } from 'ol/geom';
+import { Draw, Interaction, Modify, Select, Snap } from 'ol/interaction';
+import VectorLayer from 'ol/layer/Vector';
+import VectorSource from 'ol/source/Vector';
+import { Style } from 'ol/style';
 
 export type SnapConfig = {
   pixel?: number; // Pixel tolerance for snapping
@@ -15,7 +15,7 @@ export type SnapConfig = {
 };
 
 export type DrawConfig = {
-  type: "Point" | "LineString" | "Polygon";
+  type: 'Point' | 'LineString' | 'Polygon';
   freehand?: boolean;
   drawStyle?: Style;
   snapConfig?: SnapConfig | boolean;
@@ -43,7 +43,7 @@ export class InteractionManager {
     this.map.addLayer(this.drawingLayer);
 
     // Add all existing interactions to the new map
-    Object.values(this.interactions).forEach((interaction) => {
+    Object.values(this.interactions).forEach(interaction => {
       this.map?.addInteraction(interaction);
     });
   }
@@ -89,13 +89,13 @@ export class InteractionManager {
     });
 
     // Add draw interaction first
-    this.addInteraction("draw", drawInteraction);
+    this.addInteraction('draw', drawInteraction);
 
     // Then handle snapping
     if (snapConfig) {
       let snapOptions: Partial<SnapConfig> = {};
 
-      if (typeof snapConfig === "boolean") {
+      if (typeof snapConfig === 'boolean') {
         snapOptions = {
           pixel: 10,
           edge: true,
@@ -119,10 +119,10 @@ export class InteractionManager {
       });
 
       // Add snap interaction after draw interaction
-      this.addInteraction("snap", snapInteraction);
+      this.addInteraction('snap', snapInteraction);
     }
 
-    drawInteraction.on("drawend", (event) => {
+    drawInteraction.on('drawend', event => {
       const feature = event.feature;
       feature.setStyle(drawStyle);
 
@@ -149,18 +149,18 @@ export class InteractionManager {
   }
 
   public disableDrawing() {
-    this.removeInteraction("draw");
-    this.removeInteraction("snap");
+    this.removeInteraction('draw');
+    this.removeInteraction('snap');
   }
 
   public enableModify(layerId: string) {
     // Disable any existing modify interaction
-    this.removeInteraction("modify");
+    this.removeInteraction('modify');
 
     const targetLayer = this.map
       ?.getLayers()
       .getArray()
-      .find((layer) => layer.get("id") === layerId) as VectorLayer<VectorSource>;
+      .find(layer => layer.get('id') === layerId) as VectorLayer<VectorSource>;
 
     if (!targetLayer) {
       throw new Error(`Layer with id ${layerId} not found`);
@@ -170,7 +170,7 @@ export class InteractionManager {
       source: targetLayer.getSource() as VectorSource,
     });
 
-    this.addInteraction("modify", modifyInteraction);
+    this.addInteraction('modify', modifyInteraction);
   }
 
   public enableSelect() {
@@ -179,12 +179,12 @@ export class InteractionManager {
     }
 
     this.selectInteraction = new Select();
-    this.addInteraction("select", this.selectInteraction);
+    this.addInteraction('select', this.selectInteraction);
   }
 
   public disableSelect(): void {
     if (this.selectInteraction) {
-      this.removeInteraction("select");
+      this.removeInteraction('select');
       this.selectInteraction = null;
     }
   }
@@ -206,7 +206,7 @@ export class InteractionManager {
 
   public clear(): void {
     if (this.map) {
-      Object.values(this.interactions).forEach((interaction) => {
+      Object.values(this.interactions).forEach(interaction => {
         this.map?.removeInteraction(interaction);
       });
     }

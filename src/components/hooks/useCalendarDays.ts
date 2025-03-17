@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import {
   startOfMonth,
@@ -11,10 +11,10 @@ import {
   addDays,
   getDay,
   lastDayOfMonth,
-} from "date-fns";
-import { useState } from "react";
+} from 'date-fns';
+import { useState } from 'react';
 
-const WEEKS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"] as const;
+const WEEKS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'] as const;
 
 type Schedule = {
   date: string;
@@ -51,11 +51,11 @@ export const useCalendarDays = () => {
   const allDays = eachDayOfInterval({ start: calendarStart, end: calendarEnd });
 
   // Separate into categories
-  const currentMonthDays = allDays.filter((day) => isSameMonth(day, monthStart));
-  const previousMonthDays = allDays.filter((day) => !isSameMonth(day, monthStart) && day < monthStart);
-  const nextMonthDays = allDays.filter((day) => !isSameMonth(day, monthStart) && day > monthEnd);
+  const currentMonthDays = allDays.filter(day => isSameMonth(day, monthStart));
+  const previousMonthDays = allDays.filter(day => !isSameMonth(day, monthStart) && day < monthStart);
+  const nextMonthDays = allDays.filter(day => !isSameMonth(day, monthStart) && day > monthEnd);
 
-  const sundays = allDays.filter((day) => getDay(day) === 0);
+  const sundays = allDays.filter(day => getDay(day) === 0);
 
   // Function to calculate due date
   const calculateDueDate = (day: Date) => {
@@ -97,10 +97,10 @@ export const useCalendarDays = () => {
 
   // Calculate the 22nd working day (excluding either Saturday or Sunday)
   const calculate22ndDay = () => {
-    let restDayStart = "";
+    let restDayStart = '';
     let count = 0;
 
-    currentMonthDays.forEach((day) => {
+    currentMonthDays.forEach(day => {
       const currentDay = getDay(day);
 
       if (currentDay !== 6) {
@@ -108,7 +108,7 @@ export const useCalendarDays = () => {
       }
 
       if (count === 21) {
-        restDayStart = format(day, "yyyy-MM-dd");
+        restDayStart = format(day, 'yyyy-MM-dd');
       }
     });
 
@@ -117,7 +117,7 @@ export const useCalendarDays = () => {
       end: lastDayOfMonth(new Date().setMonth(currentMonth)).setFullYear(currentYear),
     });
 
-    const formatted = range.map((restDay) => format(restDay, "yyyy-MM-dd"));
+    const formatted = range.map(restDay => format(restDay, 'yyyy-MM-dd'));
 
     console.log({ range: formatted });
 
@@ -129,14 +129,14 @@ export const useCalendarDays = () => {
   console.log({ restDayStart });
 
   // Map dates with due and disconnection dates
-  const allDaysWithDueAndDisconnection = allDays.map((day) => {
-    const isRestDay = restDayStart.includes(format(day, "yyyy-MM-dd"));
+  const allDaysWithDueAndDisconnection = allDays.map(day => {
+    const isRestDay = restDayStart.includes(format(day, 'yyyy-MM-dd'));
     const dueDate = isRestDay ? null : calculateDueDate(day);
     const disconnectionDate = isRestDay ? null : calculateDisconnectionDate(dueDate);
     return {
-      date: format(day, "yyyy-MM-dd"),
-      dueDate: dueDate ? format(dueDate, "yyyy-MM-dd") : null,
-      disconnectionDate: disconnectionDate ? format(disconnectionDate, "yyyy-MM-dd") : null,
+      date: format(day, 'yyyy-MM-dd'),
+      dueDate: dueDate ? format(dueDate, 'yyyy-MM-dd') : null,
+      disconnectionDate: disconnectionDate ? format(disconnectionDate, 'yyyy-MM-dd') : null,
       isRestDay,
     };
   });
@@ -144,11 +144,11 @@ export const useCalendarDays = () => {
   return {
     allDays: allDaysWithDueAndDisconnection,
     currentMonthDays, // Includes due & disconnection dates
-    leadingDays: previousMonthDays.map((day) => format(day, "yyyy-MM-dd")),
-    trailingDays: nextMonthDays.map((day) => format(day, "yyyy-MM-dd")),
-    sundays: sundays.map((day) => format(day, "yyyy-MM-dd")),
+    leadingDays: previousMonthDays.map(day => format(day, 'yyyy-MM-dd')),
+    trailingDays: nextMonthDays.map(day => format(day, 'yyyy-MM-dd')),
+    sundays: sundays.map(day => format(day, 'yyyy-MM-dd')),
     weeks: WEEKS,
-    today: format(new Date(), "dd"),
+    today: format(new Date(), 'dd'),
     currentMonth,
     setCurrentMonth,
   };

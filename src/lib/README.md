@@ -4,7 +4,8 @@ First, create a directory inside `/lib` for your custom library.
 
 ### `lib/myLib`
 
-Then add the neccessary folders for your library. It would normally contain these folders: `/interfaces`, `/services`, `/repositories`, `/errors`. (But still subject for implementation)
+Then add the neccessary folders for your library. It would normally contain these folders: `/interfaces`,
+`/services`, `/repositories`, `/errors`. (But still subject for implementation)
 
 1. ### Interfaces (Contracts and Abstractions)
 
@@ -122,7 +123,8 @@ class MyLibManager {
 
 ## Usage
 
-Initialize the main entry point of your library. Note that by now, you should have a concrete implementation of your interfaces.
+Initialize the main entry point of your library. Note that by now, you should have a concrete implementation
+of your interfaces.
 
 ```typescript
 export const myLibManager = MyLibManager.getInstance();
@@ -144,7 +146,7 @@ First, create your custom error codes (add more codes as you discover more possi
 ```typescript
 /* lib/myLib/errors/codes */
 
-export type MyCustomErrorCode = "invalid_request" | "unauthorized";
+export type MyCustomErrorCode = 'invalid_request' | 'unauthorized';
 
 // then let's create a custom type for out ErrorResponse
 export type MyCustomErrorResponse = {
@@ -205,10 +207,10 @@ export class InvalidRequestError extends MyCustomError {
   // pass in the desription field
   constructor(description?: string) {
     // override the parent class (MyCustomError), and set the code to "invalid_request", and description.
-    super("invalid_request", description);
+    super('invalid_request', description);
 
     // make sure to override the default name as well, to match the actual nature of this error.
-    this.name = "InvalidRequestError";
+    this.name = 'InvalidRequestError';
   }
 }
 ```
@@ -218,7 +220,7 @@ export class InvalidRequestError extends MyCustomError {
 ```typescript
 try {
   if (something_goes_wrong) {
-    throw new InvalidRequestError("The request is malformed.");
+    throw new InvalidRequestError('The request is malformed.');
   }
 } catch (error) {
   // in most cases, you don't need this, since hono already serializes error into JSON format.

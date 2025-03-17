@@ -1,8 +1,8 @@
-import { transform, get as getProjection } from "ol/proj";
-import { getDistance } from "ol/sphere";
-import { boundingExtent, containsCoordinate, Extent } from "ol/extent";
-import { Coordinate } from "ol/coordinate";
-import { Polygon } from "ol/geom";
+import { transform, get as getProjection } from 'ol/proj';
+import { getDistance } from 'ol/sphere';
+import { boundingExtent, containsCoordinate, Extent } from 'ol/extent';
+import { Coordinate } from 'ol/coordinate';
+import { Polygon } from 'ol/geom';
 
 export class GeoUtils {
   public static transformCoordinates(coords: number[], fromProj: string, toProj: string): number[] {
@@ -10,7 +10,7 @@ export class GeoUtils {
     const targetProj = getProjection(toProj);
 
     if (!sourceProj || !targetProj) {
-      throw new Error("Invalid projection");
+      throw new Error('Invalid projection');
     }
 
     return transform(coords, sourceProj, targetProj);
@@ -47,7 +47,7 @@ export class GeoUtils {
   }
 
   public static formatCoordinates(coords: number[], decimals: number = 6): number[] {
-    return coords.map((coord) => Number(coord.toFixed(decimals)));
+    return coords.map(coord => Number(coord.toFixed(decimals)));
   }
 
   public static isValidCoordinate(coord: number[]): boolean {
@@ -57,8 +57,8 @@ export class GeoUtils {
 
     const [lon, lat] = coord;
     return (
-      typeof lon === "number" &&
-      typeof lat === "number" &&
+      typeof lon === 'number' &&
+      typeof lat === 'number' &&
       lon >= -180 &&
       lon <= 180 &&
       lat >= -90 &&

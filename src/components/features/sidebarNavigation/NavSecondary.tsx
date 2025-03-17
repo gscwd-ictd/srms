@@ -1,12 +1,12 @@
-import { ComponentPropsWithoutRef, FunctionComponent } from "react";
-import { NavProps } from "./NavMain";
+import { ComponentPropsWithoutRef, FunctionComponent } from 'react';
+import { NavProps } from './NavMain';
 import {
   SidebarGroup,
   SidebarGroupContent,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-} from "@srms/components/ui/Sidebar";
+} from '@srms/components/ui/Sidebar';
 
 export const NavSecondary: FunctionComponent<NavProps & ComponentPropsWithoutRef<typeof SidebarGroup>> = ({
   items,
@@ -16,7 +16,7 @@ export const NavSecondary: FunctionComponent<NavProps & ComponentPropsWithoutRef
     <SidebarGroup {...props}>
       <SidebarGroupContent>
         <SidebarMenu>
-          {items.map((item) => (
+          {items.map(item => (
             <SidebarMenuItem key={item.title}>
               <SidebarMenuButton asChild size="sm">
                 <a href={item.url}>

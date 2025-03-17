@@ -1,10 +1,10 @@
-import env from "@srms/utils/env";
-import { defineConfig } from "drizzle-kit";
+import env from '@srms/utils/env';
+import { defineConfig } from 'drizzle-kit';
 
 export default defineConfig({
-  dialect: "postgresql",
-  schema: "./src/server/db/schemas/*.ts",
-  out: "./src/server/db/migrations",
+  dialect: 'postgresql',
+  schema: './src/server/db/schemas/*.ts',
+  out: './src/server/db/migrations',
   dbCredentials: {
     host: env.DB_HOST,
     port: env.DB_PORT,

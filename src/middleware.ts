@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse } from 'next/server';
 
 export default async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
@@ -11,8 +11,8 @@ export default async function middleware(req: NextRequest) {
     return NextResponse.next();
   }
 
-  if (pathname.startsWith("/legacy")) {
-    return NextResponse.redirect(new URL("/dashboard", req.url));
+  if (pathname.startsWith('/legacy')) {
+    return NextResponse.redirect(new URL('/dashboard', req.url));
   }
 
   // Your other middleware logic here...
@@ -29,7 +29,7 @@ export const config = {
      * - _next/image (image optimization files)
      * - favicon.ico, sitemap.xml, robots.txt (metadata files)
      */
-    "/((?!api|_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt).*)",
-    "/docs/:path*",
+    '/((?!api|_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt).*)',
+    '/docs/:path*',
   ],
 };

@@ -1,23 +1,23 @@
-import { type Metadata } from "next";
-import { type PropsWithChildren } from "react";
-import { Geist, Geist_Mono } from "next/font/google";
-import { ReactQueryProvider } from "@srms/components/providers/ReactQueryProvider";
-import { ThemeProvider } from "@srms/components/providers/ThemeProvider";
-import { ReactScan } from "@srms/components/features/ReactScan";
-import "@srms/app/globals.css";
+import { type Metadata } from 'next';
+import { type PropsWithChildren } from 'react';
+import { Geist, Geist_Mono } from 'next/font/google';
+import { ReactQueryProvider } from '@srms/components/providers/ReactQueryProvider';
+import { ThemeProvider } from '@srms/components/providers/ThemeProvider';
+import { ReactScan } from '@srms/components/features/ReactScan';
+import '@srms/app/globals.css';
 
 const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
+  variable: '--font-geist-sans',
+  subsets: ['latin'],
 });
 
 const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+  variable: '--font-geist-mono',
+  subsets: ['latin'],
 });
 
 export const metadata: Metadata = {
-  title: "SRMS",
+  title: 'SRMS',
 };
 
 export default async function RootLayout({ children }: Readonly<PropsWithChildren>) {

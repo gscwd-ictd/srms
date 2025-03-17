@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from 'zod';
 
 export const ErrorResponseSchema = z.object({
   name: z.string().optional(),
@@ -11,12 +11,12 @@ export const ErrorResponseSchema = z.object({
 });
 
 export const HealthCheckResponseSchema = z.object({
-  status: z.literal("healthy").or(z.literal("unhealthy")),
+  status: z.literal('healthy').or(z.literal('unhealthy')),
   datetime: z.string(),
   version: z.string(),
   environment: z.string(),
   database: z.object({
-    status: z.literal("up").or(z.literal("down")),
+    status: z.literal('up').or(z.literal('down')),
     responseTime: z.number(),
     connectionCount: z.number(),
     maxConnections: z.number(),
@@ -32,13 +32,13 @@ export const HealthCheckResponseSchema = z.object({
 export const IdParamsSchema = z.object({
   id: z.string().openapi({
     param: {
-      name: "id",
-      in: "path",
+      name: 'id',
+      in: 'path',
       required: true,
     },
-    required: ["id"],
-    description: "The unique identifier of an entity you intend to operate on.",
-    example: "cm6p7d5og0jbx7s65qcu",
+    required: ['id'],
+    description: 'The unique identifier of an entity you intend to operate on.',
+    example: 'cm6p7d5og0jbx7s65qcu',
   }),
 });
 
@@ -49,12 +49,12 @@ export const QueryParamsSchema = z.object({
     .optional()
     .openapi({
       param: {
-        name: "limit",
+        name: 'limit',
         required: false,
-        in: "query",
+        in: 'query',
       },
       default: 10,
-      description: "The number of rows to retreive in a single fetch.",
+      description: 'The number of rows to retreive in a single fetch.',
     }),
   page: z.coerce
     .number()
@@ -62,12 +62,12 @@ export const QueryParamsSchema = z.object({
     .optional()
     .openapi({
       param: {
-        name: "page",
+        name: 'page',
         required: false,
-        in: "query",
+        in: 'query',
       },
       default: 1,
-      description: "Page number of results to return.",
+      description: 'Page number of results to return.',
     }),
 });
 

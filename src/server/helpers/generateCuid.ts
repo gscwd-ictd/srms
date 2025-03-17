@@ -7,7 +7,7 @@ export function generateCuid(): string {
   // Helper function to generate random string
   const randomString = (length: number): string => {
     return Array.from({ length }, () => Math.random().toString(36).slice(2))
-      .join("")
+      .join('')
       .slice(0, length);
   };
 
@@ -20,9 +20,9 @@ export function generateCuid(): string {
 
   // Create a fingerprint based on current environment
   const pid = process.pid || 1;
-  const hostname = typeof window !== "undefined" ? window.location.hostname : "node";
+  const hostname = typeof window !== 'undefined' ? window.location.hostname : 'node';
   const fingerprint = (String(pid) + hostname)
-    .split("")
+    .split('')
     .reduce((acc, char) => {
       return acc + char.charCodeAt(0);
     }, 0)

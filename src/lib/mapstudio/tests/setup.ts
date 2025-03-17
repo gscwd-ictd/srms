@@ -1,4 +1,4 @@
-import { beforeAll } from "vitest";
+import { beforeAll } from 'vitest';
 
 beforeAll(() => {
   // Mock browser APIs that OpenLayers uses

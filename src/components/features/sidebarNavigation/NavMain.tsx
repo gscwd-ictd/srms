@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import { type LucideIcon } from "lucide-react";
+import { type LucideIcon } from 'lucide-react';
 
 import {
   SidebarGroup,
@@ -9,9 +9,9 @@ import {
   SidebarMenuBadge,
   SidebarMenuButton,
   SidebarMenuItem,
-} from "@srms/components/ui/Sidebar";
-import { FunctionComponent } from "react";
-import { usePathname, useRouter } from "next/navigation";
+} from '@srms/components/ui/Sidebar';
+import { FunctionComponent } from 'react';
+import { usePathname, useRouter } from 'next/navigation';
 
 export type NavProps = {
   items: Array<{

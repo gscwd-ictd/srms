@@ -1,7 +1,7 @@
-import type { PgSelect, PgTable } from "drizzle-orm/pg-core";
-import type { PaginatedResult, QueryParams } from "@srms/server/types/helperTypes";
-import { db } from "@srms/server/db/postgres";
-import { sql } from "drizzle-orm";
+import type { PgSelect, PgTable } from 'drizzle-orm/pg-core';
+import type { PaginatedResult, QueryParams } from '@srms/server/types/helperTypes';
+import { db } from '@srms/server/db/postgres';
+import { sql } from 'drizzle-orm';
 
 /**
  *
@@ -42,8 +42,8 @@ export async function paginateQuery<TResult>(
   const totalPages = Math.ceil(rowCount / limit);
 
   const stmt = baseQuery
-    .limit(sql.placeholder("limit"))
-    .offset(sql.placeholder("page"))
+    .limit(sql.placeholder('limit'))
+    .offset(sql.placeholder('page'))
     .prepare(preparedStmtName);
 
   const result = await stmt.execute({ limit: limit, page: (page - 1) * limit });

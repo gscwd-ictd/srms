@@ -1,4 +1,4 @@
-import { z, ZodError } from "zod";
+import { z, ZodError } from 'zod';
 
 /**
  * Define all you env variables in this schema to get full type-safety in accessing them.
@@ -6,7 +6,7 @@ import { z, ZodError } from "zod";
 const EnvSchema = z.object({
   NEXT_PUBLIC_APP_URL: z.string(),
   NEXT_PUBLIC_APP_DOCS_URL: z.string(),
-  LOG_LEVEL: z.enum(["debug", "error", "fatal", "info", "silent", "trace", "warn"]),
+  LOG_LEVEL: z.enum(['debug', 'error', 'fatal', 'info', 'silent', 'trace', 'warn']),
   DB_HOST: z.string(),
   DB_PORT: z.coerce.number().default(5436),
   DB_PASS: z.string(),

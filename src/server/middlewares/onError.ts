@@ -1,12 +1,12 @@
-import type { ErrorHandler } from "hono";
-import type { ContentfulStatusCode } from "hono/utils/http-status";
-import type { AppBindings } from "@srms/server/types/appTypes";
-import { INTERNAL_SERVER_ERROR, OK } from "@srms/utils/httpStatusCodes";
-import { jsonError } from "../helpers/jsonError";
-import { ErrorResponse } from "../types/helperTypes";
+import type { ErrorHandler } from 'hono';
+import type { ContentfulStatusCode } from 'hono/utils/http-status';
+import type { AppBindings } from '@srms/server/types/appTypes';
+import { INTERNAL_SERVER_ERROR, OK } from '@srms/utils/httpStatusCodes';
+import { jsonError } from '../helpers/jsonError';
+import { ErrorResponse } from '../types/helperTypes';
 
 export const onError: ErrorHandler<AppBindings> = (err, c) => {
-  const currentStatus = "status" in err ? err.status : c.newResponse(null).status;
+  const currentStatus = 'status' in err ? err.status : c.newResponse(null).status;
 
   const statusCode = currentStatus !== OK ? (currentStatus as ContentfulStatusCode) : INTERNAL_SERVER_ERROR;
 
@@ -14,17 +14,17 @@ export const onError: ErrorHandler<AppBindings> = (err, c) => {
     name: err.name,
     status: statusCode,
     message: err.message,
-    stack: process.env.NODE_ENV === "production" ? undefined : err.stack,
+    stack: process.env.NODE_ENV === 'production' ? undefined : err.stack,
   };
 
   // Add other instances of error here...
 
-  if (err.message === "Malformed JSON in request body") {
-    return jsonError(c, { ...errorResponse, name: "InvalidJSONError" }, statusCode);
+  if (err.message === 'Malformed JSON in request body') {
+    return jsonError(c, { ...errorResponse, name: 'InvalidJSONError' }, statusCode);
   }
 
   // Optionally, if description is available, append it to the errorReponse object
-  if ("description" in err && typeof err.description === "string") {
+  if ('description' in err && typeof err.description === 'string') {
     errorResponse.description = err.description;
   }
 

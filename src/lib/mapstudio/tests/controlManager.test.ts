@@ -1,18 +1,18 @@
-import { describe, test, expect, beforeEach, afterEach } from "vitest";
-import { Map, View } from "ol";
-import { Control } from "ol/control";
-import { ControlManager } from "../controlManager";
+import { describe, test, expect, beforeEach, afterEach } from 'vitest';
+import { Map, View } from 'ol';
+import { Control } from 'ol/control';
+import { ControlManager } from '../controlManager';
 
-describe("ControlManager", () => {
+describe('ControlManager', () => {
   let controlManager: ControlManager;
   let map: Map;
   let target: HTMLDivElement;
 
   beforeEach(() => {
     // Create a target element for the map
-    target = document.createElement("div");
-    target.style.width = "100px";
-    target.style.height = "100px";
+    target = document.createElement('div');
+    target.style.width = '100px';
+    target.style.height = '100px';
     document.body.appendChild(target);
 
     map = new Map({
@@ -32,71 +32,71 @@ describe("ControlManager", () => {
     target.remove();
   });
 
-  describe("Basic Control Operations", () => {
-    test("should add control successfully", () => {
+  describe('Basic Control Operations', () => {
+    test('should add control successfully', () => {
       const customControl = new Control({
-        element: document.createElement("div"),
+        element: document.createElement('div'),
       });
 
-      controlManager.addControl("custom", customControl);
-      expect(controlManager.getControl("custom")).toBe(customControl);
-      expect(controlManager.hasControl("custom")).toBe(true);
+      controlManager.addControl('custom', customControl);
+      expect(controlManager.getControl('custom')).toBe(customControl);
+      expect(controlManager.hasControl('custom')).toBe(true);
     });
 
-    test("should throw error when adding duplicate control ID", () => {
+    test('should throw error when adding duplicate control ID', () => {
       const control1 = new Control({
-        element: document.createElement("div"),
+        element: document.createElement('div'),
       });
       const control2 = new Control({
-        element: document.createElement("div"),
+        element: document.createElement('div'),
       });
 
-      controlManager.addControl("test", control1);
+      controlManager.addControl('test', control1);
       expect(() => {
-        controlManager.addControl("test", control2);
-      }).toThrowError("Control with id test already exists");
+        controlManager.addControl('test', control2);
+      }).toThrowError('Control with id test already exists');
     });
 
-    test("should remove control successfully", () => {
+    test('should remove control successfully', () => {
       const control = new Control({
-        element: document.createElement("div"),
+        element: document.createElement('div'),
       });
 
-      controlManager.addControl("test", control);
-      controlManager.removeControl("test");
+      controlManager.addControl('test', control);
+      controlManager.removeControl('test');
 
-      expect(controlManager.getControl("test")).toBeUndefined();
-      expect(controlManager.hasControl("test")).toBe(false);
+      expect(controlManager.getControl('test')).toBeUndefined();
+      expect(controlManager.hasControl('test')).toBe(false);
     });
 
-    test("should handle removing non-existent control", () => {
+    test('should handle removing non-existent control', () => {
       expect(() => {
-        controlManager.removeControl("nonexistent");
+        controlManager.removeControl('nonexistent');
       }).not.toThrow();
     });
   });
 
-  describe("Map Integration", () => {
-    test("should add controls to map when setting map", () => {
+  describe('Map Integration', () => {
+    test('should add controls to map when setting map', () => {
       const control = new Control({
-        element: document.createElement("div"),
+        element: document.createElement('div'),
       });
 
       // Add control before setting map
       const newControlManager = new ControlManager();
-      newControlManager.addControl("test", control);
+      newControlManager.addControl('test', control);
 
       // Set map and verify control is added
       newControlManager.setMap(map);
       expect(map.getControls().getArray()).toContain(control);
     });
 
-    test("should remove controls from map when clearing", () => {
+    test('should remove controls from map when clearing', () => {
       const control = new Control({
-        element: document.createElement("div"),
+        element: document.createElement('div'),
       });
 
-      controlManager.addControl("test", control);
+      controlManager.addControl('test', control);
       expect(map.getControls().getArray()).toContain(control);
 
       controlManager.clear();
@@ -105,8 +105,8 @@ describe("ControlManager", () => {
     });
   });
 
-  describe("Control Updates", () => {
-    test("should update control properties", () => {
+  describe('Control Updates', () => {
+    test('should update control properties', () => {
       // Create a custom control with a property we can verify
       class CustomControl extends Control {
         private customProperty: string;
@@ -114,9 +114,9 @@ describe("ControlManager", () => {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         constructor(options: any) {
           super({
-            element: document.createElement("div"),
+            element: document.createElement('div'),
           });
-          this.customProperty = options.customProperty || "";
+          this.customProperty = options.customProperty || '';
         }
 
         getCustomProperty(): string {
@@ -125,21 +125,21 @@ describe("ControlManager", () => {
       }
 
       const control = new CustomControl({
-        customProperty: "initial",
+        customProperty: 'initial',
       });
 
-      controlManager.addControl("test", control);
+      controlManager.addControl('test', control);
 
       // Update the custom property
-      controlManager.updateControl("test", { customProperty: "updated" });
+      controlManager.updateControl('test', { customProperty: 'updated' });
 
-      const updatedControl = controlManager.getControl("test") as CustomControl;
-      expect(updatedControl.getCustomProperty()).toBe("updated");
+      const updatedControl = controlManager.getControl('test') as CustomControl;
+      expect(updatedControl.getCustomProperty()).toBe('updated');
     });
 
-    test("should handle updating non-existent control", () => {
+    test('should handle updating non-existent control', () => {
       expect(() => {
-        controlManager.updateControl("nonexistent", { target: document.createElement("div") });
+        controlManager.updateControl('nonexistent', { target: document.createElement('div') });
       }).not.toThrow();
     });
   });

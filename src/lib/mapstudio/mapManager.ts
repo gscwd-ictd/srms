@@ -1,15 +1,15 @@
-import Map, { MapOptions } from "ol/Map";
-import { defaults as defaultInteractions } from "ol/interaction";
-import { LayerManager } from "./layerManager";
-import { InteractionManager } from "./interactionManager";
-import { ControlManager } from "./controlManager";
-import { Coordinate } from "ol/coordinate";
-import { MapBrowserEvent, View } from "ol";
-import { Extent } from "ol/extent";
-import TileLayer from "ol/layer/Tile";
-import { OSM } from "ol/source";
-import { MapEvents } from "./utils/mapEvents";
-import { FitOptions } from "ol/View";
+import Map, { MapOptions } from 'ol/Map';
+import { defaults as defaultInteractions } from 'ol/interaction';
+import { LayerManager } from './layerManager';
+import { InteractionManager } from './interactionManager';
+import { ControlManager } from './controlManager';
+import { Coordinate } from 'ol/coordinate';
+import { MapBrowserEvent, View } from 'ol';
+import { Extent } from 'ol/extent';
+import TileLayer from 'ol/layer/Tile';
+import { OSM } from 'ol/source';
+import { MapEvents } from './utils/mapEvents';
+import { FitOptions } from 'ol/View';
 
 export class MapManager {
   private map: Map | undefined;
@@ -26,7 +26,7 @@ export class MapManager {
 
   public init(options?: MapOptions): this {
     if (!options?.target) {
-      throw new Error("The map has no container!");
+      throw new Error('The map has no container!');
     }
 
     this.map = new Map({
@@ -67,7 +67,7 @@ export class MapManager {
 
   public getMap() {
     if (!this.map) {
-      throw new Error("Map not initialized. Call init() first.");
+      throw new Error('Map not initialized. Call init() first.');
     }
 
     return this.map;
@@ -87,7 +87,7 @@ export class MapManager {
 
   public setCenter(coordinates: Coordinate): void {
     if (!this.map) {
-      throw new Error("Map not initialized. Call init() first.");
+      throw new Error('Map not initialized. Call init() first.');
     }
 
     this.map.getView().setCenter(coordinates);
@@ -95,7 +95,7 @@ export class MapManager {
 
   public setZoom(level: number): void {
     if (!this.map) {
-      throw new Error("Map not initialized. Call init() first.");
+      throw new Error('Map not initialized. Call init() first.');
     }
 
     this.map.getView().setZoom(level);
@@ -103,7 +103,7 @@ export class MapManager {
 
   public fitToExtent(extent?: Extent, options?: FitOptions): void {
     if (!this.map) {
-      throw new Error("Map not initialized. Call init() first.");
+      throw new Error('Map not initialized. Call init() first.');
     }
 
     if (extent) {
@@ -113,21 +113,21 @@ export class MapManager {
 
   public getCenter(): Coordinate {
     if (!this.map) {
-      throw new Error("Map not initialized. Call init() first.");
+      throw new Error('Map not initialized. Call init() first.');
     }
     return this.map.getView().getCenter() as Coordinate;
   }
 
   public getZoom(): number {
     if (!this.map) {
-      throw new Error("Map not initialized. Call init() first.");
+      throw new Error('Map not initialized. Call init() first.');
     }
     return this.map.getView().getZoom() as number;
   }
 
   public getExtent(): Extent {
     if (!this.map) {
-      throw new Error("Map not initialized. Call init() first.");
+      throw new Error('Map not initialized. Call init() first.');
     }
     return this.map.getView().calculateExtent(this.map.getSize());
   }
@@ -138,7 +138,7 @@ export class MapManager {
     callback: (event: MapBrowserEvent<UIEvent>) => void,
   ): void {
     if (!this.map) {
-      throw new Error("Map not initialized. Call init() first.");
+      throw new Error('Map not initialized. Call init() first.');
     }
 
     //@ts-expect-error type mismatch only

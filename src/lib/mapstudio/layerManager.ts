@@ -1,7 +1,7 @@
-import Collection from "ol/Collection";
-import LayerGroup from "ol/layer/Group";
-import Layer from "ol/layer/Layer";
-import Map from "ol/Map";
+import Collection from 'ol/Collection';
+import LayerGroup from 'ol/layer/Group';
+import Layer from 'ol/layer/Layer';
+import Map from 'ol/Map';
 
 export class LayerManager {
   private layers: Record<string, Layer>;
@@ -18,12 +18,12 @@ export class LayerManager {
     this.map = map;
 
     // Add all existing layers to the new map
-    Object.values(this.layers).forEach((layer) => {
+    Object.values(this.layers).forEach(layer => {
       this.map?.addLayer(layer);
     });
 
     // Add all existing layer groups to the new map
-    Object.values(this.layerGroups).forEach((group) => {
+    Object.values(this.layerGroups).forEach(group => {
       this.map?.addLayer(group);
     });
   }
@@ -52,7 +52,7 @@ export class LayerManager {
       this.map.removeLayer(layer);
     }
 
-    Object.values(this.layerGroups).forEach((group) => {
+    Object.values(this.layerGroups).forEach(group => {
       const layers = group.getLayers();
       if (layers instanceof Collection) {
         const index = layers.getArray().indexOf(layer);
@@ -136,11 +136,11 @@ export class LayerManager {
 
   public clear(): void {
     if (this.map) {
-      Object.values(this.layers).forEach((layer) => {
+      Object.values(this.layers).forEach(layer => {
         this.map?.removeLayer(layer);
       });
 
-      Object.values(this.layerGroups).forEach((group) => {
+      Object.values(this.layerGroups).forEach(group => {
         this.map?.removeLayer(group);
       });
     }

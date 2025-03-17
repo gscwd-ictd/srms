@@ -31,7 +31,7 @@ export function isDeepEqual<T extends NestedValue>(
   }
 
   // Handle strings with case-insensitive option
-  if (config.ignoreCase && typeof obj1 === "string" && typeof obj2 === "string") {
+  if (config.ignoreCase && typeof obj1 === 'string' && typeof obj2 === 'string') {
     return obj1.toLowerCase() === obj2.toLowerCase();
   }
 
@@ -52,21 +52,21 @@ export function isDeepEqual<T extends NestedValue>(
   }
 
   // Handle Objects
-  if (typeof obj1 === "object" && typeof obj2 === "object") {
+  if (typeof obj1 === 'object' && typeof obj2 === 'object') {
     const keys1 = Object.keys(obj1 as object);
     const keys2 = Object.keys(obj2 as object);
 
     // Handle ignoreUndefined option
     const relevantKeys1 = config.ignoreUndefined
-      ? keys1.filter((key) => (obj1 as NestedObject)[key] !== undefined)
+      ? keys1.filter(key => (obj1 as NestedObject)[key] !== undefined)
       : keys1;
     const relevantKeys2 = config.ignoreUndefined
-      ? keys2.filter((key) => (obj2 as NestedObject)[key] !== undefined)
+      ? keys2.filter(key => (obj2 as NestedObject)[key] !== undefined)
       : keys2;
 
     if (relevantKeys1.length !== relevantKeys2.length) return false;
 
-    return relevantKeys1.every((key) => {
+    return relevantKeys1.every(key => {
       if (!relevantKeys2.includes(key)) return false;
       const val1 = (obj1 as NestedObject)[key];
       const val2 = (obj2 as NestedObject)[key];

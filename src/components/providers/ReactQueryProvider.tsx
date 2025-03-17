@@ -1,12 +1,12 @@
-"use client";
+'use client';
 
-import { type FunctionComponent, type PropsWithChildren, Suspense, lazy, useEffect } from "react";
-import { QueryClient, QueryClientProvider as ReactQueryClientProvider } from "@tanstack/react-query";
-import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-import { useRQDevtoolsInProd } from "../stores/useRQDevtoolsInProd";
+import { type FunctionComponent, type PropsWithChildren, Suspense, lazy, useEffect } from 'react';
+import { QueryClient, QueryClientProvider as ReactQueryClientProvider } from '@tanstack/react-query';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+import { useRQDevtoolsInProd } from '../stores/useRQDevtoolsInProd';
 
 const ReactQueryDevtoolsProduction = lazy(() =>
-  import("@tanstack/react-query-devtools/build/modern/production.js").then((d) => ({
+  import('@tanstack/react-query-devtools/build/modern/production.js').then(d => ({
     default: d.ReactQueryDevtools,
   })),
 );

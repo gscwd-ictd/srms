@@ -1,16 +1,16 @@
-"use client";
+'use client';
 
-import { Laptop, Moon, SunMedium } from "lucide-react";
-import { useTheme } from "next-themes";
+import { Laptop, Moon, SunMedium } from 'lucide-react';
+import { useTheme } from 'next-themes';
 
-import { Button } from "@srms/components/ui/Button";
+import { Button } from '@srms/components/ui/Button';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@srms/components/ui/DropdownMenu";
-import { type FunctionComponent } from "react";
+} from '@srms/components/ui/DropdownMenu';
+import { type FunctionComponent } from 'react';
 
 export const ThemeToggler: FunctionComponent = () => {
   const { setTheme } = useTheme();
@@ -25,16 +25,16 @@ export const ThemeToggler: FunctionComponent = () => {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
-        <DropdownMenuItem onClick={() => setTheme("light")}>
+        <DropdownMenuItem onClick={() => setTheme('light')}>
           <SunMedium />
           Light
         </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => setTheme("dark")}>
+        <DropdownMenuItem onClick={() => setTheme('dark')}>
           <Moon />
           Dark
         </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => setTheme("system")}>
-          {" "}
+        <DropdownMenuItem onClick={() => setTheme('system')}>
+          {' '}
           <Laptop />
           System
         </DropdownMenuItem>

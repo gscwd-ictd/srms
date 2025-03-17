@@ -1,31 +1,31 @@
-import { z, ZodError } from "zod";
-import { ErrorResponseSchema } from "../schemas/helperSchemas";
+import { z, ZodError } from 'zod';
+import { ErrorResponseSchema } from '../schemas/helperSchemas';
 
 export function formatZodError(error: ZodError): z.infer<typeof ErrorResponseSchema> {
   const fieldErrors = error.issues.reduce(
     (acc, issue) => {
-      const fieldName = issue.path[issue.path.length - 1]?.toString() ?? "unknown";
+      const fieldName = issue.path[issue.path.length - 1]?.toString() ?? 'unknown';
 
-      let errorMessage = "";
+      let errorMessage = '';
       switch (issue.code) {
-        case "invalid_type":
-          if (issue.received === "undefined") {
+        case 'invalid_type':
+          if (issue.received === 'undefined') {
             errorMessage = `${formatFieldName(fieldName)} is required`;
           } else {
             errorMessage = `${formatFieldName(fieldName)} must be a ${issue.expected}`;
           }
           break;
-        case "too_small":
+        case 'too_small':
           errorMessage = `${formatFieldName(fieldName)} must be at least ${issue.minimum} characters`;
           break;
-        case "too_big":
+        case 'too_big':
           errorMessage = `${formatFieldName(fieldName)} must be at most ${issue.maximum} characters`;
           break;
-        case "invalid_string":
-          if (issue.validation === "email") {
-            errorMessage = "Please enter a valid email address";
-          } else if (issue.validation === "url") {
-            errorMessage = "Please enter a valid URL";
+        case 'invalid_string':
+          if (issue.validation === 'email') {
+            errorMessage = 'Please enter a valid email address';
+          } else if (issue.validation === 'url') {
+            errorMessage = 'Please enter a valid URL';
           } else {
             errorMessage = `Invalid ${formatFieldName(fieldName)}`;
           }
@@ -46,7 +46,7 @@ export function formatZodError(error: ZodError): z.infer<typeof ErrorResponseSch
 
   return {
     status: 422,
-    name: "EntityValidationError",
+    name: 'EntityValidationError',
     message: summaryMessage,
     fields: fieldErrors,
   };
@@ -54,8 +54,8 @@ export function formatZodError(error: ZodError): z.infer<typeof ErrorResponseSch
 
 function formatFieldName(field: string): string {
   return field
-    .replace(/([A-Z])/g, " $1")
-    .replace(/_/g, " ")
-    .replace(/^./, (str) => str.toUpperCase())
+    .replace(/([A-Z])/g, ' $1')
+    .replace(/_/g, ' ')
+    .replace(/^./, str => str.toUpperCase())
     .trim();
 }

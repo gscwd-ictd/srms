@@ -92,12 +92,8 @@
           "name": "applicant_address_applicant_id_fk_applicants_id_fk",
           "tableFrom": "applicant_address",
           "tableTo": "applicants",
-          "columnsFrom": [
-            "applicant_id_fk"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["applicant_id_fk"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -105,12 +101,8 @@
           "name": "applicant_address_barangay_id_fk_serviceable_areas_id_fk",
           "tableFrom": "applicant_address",
           "tableTo": "serviceable_areas",
-          "columnsFrom": [
-            "barangay_id_fk"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["barangay_id_fk"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -233,12 +225,8 @@
           "name": "applicant_docs_applicant_id_fk_applicants_id_fk",
           "tableFrom": "applicant_docs",
           "tableTo": "applicants",
-          "columnsFrom": [
-            "applicant_id_fk"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["applicant_id_fk"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -300,12 +288,8 @@
           "name": "applicant_household_applicant_id_fk_applicants_id_fk",
           "tableFrom": "applicant_household",
           "tableTo": "applicants",
-          "columnsFrom": [
-            "applicant_id_fk"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["applicant_id_fk"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -408,12 +392,8 @@
           "name": "applicants_application_id_fk_applications_id_fk",
           "tableFrom": "applicants",
           "tableTo": "applications",
-          "columnsFrom": [
-            "application_id_fk"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["application_id_fk"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -495,28 +475,17 @@
     "public.gender": {
       "name": "gender",
       "schema": "public",
-      "values": [
-        "Male",
-        "Female"
-      ]
+      "values": ["Male", "Female"]
     },
     "public.application_status_enum": {
       "name": "application_status_enum",
       "schema": "public",
-      "values": [
-        "pending_payment",
-        "for_survey",
-        "for_installation"
-      ]
+      "values": ["pending_payment", "for_survey", "for_installation"]
     },
     "public.application_type_num": {
       "name": "application_type_num",
       "schema": "public",
-      "values": [
-        "New",
-        "Additional",
-        "Transfer"
-      ]
+      "values": ["New", "Additional", "Transfer"]
     }
   },
   "schemas": {},
