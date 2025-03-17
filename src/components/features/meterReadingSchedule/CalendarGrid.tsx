@@ -9,7 +9,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from '@srms/components/ui/Sheet';
-import { MeterReadingSchedule } from '@srms/lib/MeterReading/services/MeterReadingScheduleService';
+import { MeterReadingSchedule } from '@srms/lib/MeterReading/services/MeterReadingSchedule';
 import { cn } from '@srms/utils/shadcn';
 import { format } from 'date-fns';
 import { CalendarPlus, StickyNote } from 'lucide-react';
@@ -140,7 +140,9 @@ export const holidays = [
 
 // Memoized Calendar component with TypeScript props
 export const CalendarGrid = memo<CalendarGridProps>(({ calendarDays, week, restDays }) => {
-  const scheduler = new MeterReadingSchedule(holidays);
+  const meterSchedule = new MeterReadingSchedule(2, new Date().getFullYear(), holidays);
+
+  console.log({ meterSchedule: meterSchedule.getCalendarDays() });
 
   return (
     <>
@@ -162,12 +164,6 @@ export const CalendarGrid = memo<CalendarGridProps>(({ calendarDays, week, restD
           );
 
           const isRestDay = restDays.includes(day.date);
-
-          console.log({
-            readingDate: format(new Date(day.date), 'yyyy-MM-dd'),
-            dueDates: scheduler.calculateDueDate(new Date(day.date)),
-            disconnection: scheduler.calculateDisconnectionDate(new Date(day.date)),
-          });
 
           return (
             <Sheet key={index}>
