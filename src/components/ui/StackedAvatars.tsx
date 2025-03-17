@@ -1,6 +1,6 @@
-import React, { FunctionComponent } from 'react';
-import { Avatar, AvatarImage, AvatarFallback } from '@srms/components/ui/Avatar';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from './Tooltip';
+import React, { FunctionComponent } from "react";
+import { Avatar, AvatarImage, AvatarFallback } from "@srms/components/ui/Avatar";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "./Tooltip";
 
 export type AvatarUser = {
   id: string;
@@ -11,32 +11,32 @@ export type AvatarUser = {
 type StackedAvatarsProps = {
   users: AvatarUser[];
   limit?: number;
-  size?: 'sm' | 'md' | 'lg';
+  size?: "sm" | "md" | "lg";
 };
 
-export const StackedAvatars: FunctionComponent<StackedAvatarsProps> = ({ users, limit = 4, size = 'md' }) => {
+export const StackedAvatars: FunctionComponent<StackedAvatarsProps> = ({ users, limit = 4, size = "md" }) => {
   const visibleUsers = users.slice(0, limit);
   const remaining = users.length - limit;
 
   // Size configurations
   const sizeStyles = {
     sm: {
-      avatar: 'h-6 w-6',
-      overlap: '-ml-2',
-      text: 'text-xs',
-      container: 'space-x-[2px]',
+      avatar: "h-6 w-6",
+      overlap: "-ml-2",
+      text: "text-xs",
+      container: "space-x-[2px]",
     },
     md: {
-      avatar: 'h-8 w-8',
-      overlap: '-ml-1',
-      text: 'text-sm',
-      container: 'space-x-[-1px]',
+      avatar: "h-8 w-8",
+      overlap: "-ml-1",
+      text: "text-sm",
+      container: "space-x-[-1px]",
     },
     lg: {
-      avatar: 'h-10 w-10',
-      overlap: '-ml-4',
-      text: 'text-base',
-      container: 'space-x-[-1px]',
+      avatar: "h-10 w-10",
+      overlap: "-ml-4",
+      text: "text-base",
+      container: "space-x-[-1px]",
     },
   };
 
@@ -51,7 +51,7 @@ export const StackedAvatars: FunctionComponent<StackedAvatarsProps> = ({ users, 
               <TooltipTrigger asChild>
                 <Avatar
                   className={`${styles.avatar} ${
-                    index !== 0 ? styles.overlap : ''
+                    index !== 0 ? styles.overlap : ""
                   } ring-background cursor-pointer ring-2`}
                 >
                   <AvatarImage src={user.image ?? undefined} alt={user.name} className="object-cover" />
