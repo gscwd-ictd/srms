@@ -3,6 +3,19 @@ import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
   /* config options here */
+  async headers() {
+    return [
+      {
+        source: '/(.*)?', // Matches all pages
+        headers: [
+          {
+            key: 'X-Frame-Options',
+            value: 'DENY',
+          },
+        ],
+      },
+    ];
+  },
   devIndicators: false,
   assetPrefix: '/docs',
   async rewrites() {

@@ -8,11 +8,12 @@ import {
   format,
   getDay,
   isSameMonth,
+  parse,
   parseISO,
   startOfMonth,
   startOfWeek,
 } from 'date-fns';
-import { useEffect, useState, useMemo } from 'react';
+import { useEffect, useState, useMemo, useCallback } from 'react';
 
 export type CalendarDay = {
   date: string;
@@ -38,10 +39,81 @@ type UseCalendarHook = {
   today: () => void;
 };
 
-export const useCalendarDays = (month?: number, year?: number): UseCalendarHook => {
+type Holiday = {
+  id: string;
+  name: string;
+  holidayDate: string;
+  type: string;
+};
+
+export const useCalendarDays = (holidays: Holiday[], month?: number, year?: number): UseCalendarHook => {
   const [currentYear, setCurrentYear] = useState(year ?? new Date().getFullYear());
   const [currentMonth, setCurrentMonth] = useState(month ?? new Date().getMonth());
   const [calendarDays, setCalendarDays] = useState<CalendarDay[]>([]);
+
+  const holidayDates = useMemo(() => {
+    return holidays.map(holiday =>
+      format(parse(holiday.holidayDate, 'MMMM dd, yyyy', new Date()), 'yyyy-MM-dd'),
+    );
+  }, [holidays]);
+
+  const calculateDueDate = useCallback(
+    (day: Date): string => {
+      let dueDate = day;
+      let count = 0;
+      while (count < 15) {
+        dueDate = addDays(dueDate, 1);
+        if (!holidayDates.includes(format(dueDate, 'yyyy-MM-dd'))) {
+          count++;
+        }
+      }
+
+      const dueDay = getDay(dueDate);
+
+      if (dueDay === 6) {
+        // If Saturday, move to Monday
+        dueDate = addDays(dueDate, 2);
+      } else if (dueDay === 0) {
+        // If Sunday, move to Monday
+        dueDate = addDays(dueDate, 1);
+      }
+
+      return format(dueDate, 'yyyy-MM-dd');
+    },
+    [holidayDates],
+  );
+
+  const calculateDisconnectionDate = useCallback(
+    (dueDate: Date): string => {
+      let disconnectionDate = dueDate;
+      let count = 0;
+
+      const disconnectionDay = getDay(disconnectionDate);
+
+      while (count < 3) {
+        disconnectionDate = addDays(disconnectionDate, 1);
+        if (!holidayDates.includes(format(disconnectionDate, 'yyyy-MM-dd'))) {
+          count++;
+        }
+      }
+
+      //const disconnectionDay = getDay(disconnectionDate);
+
+      if (disconnectionDay === 5) {
+        // If Friday, move to Monday
+        disconnectionDate = addDays(disconnectionDate, 3);
+      } else if (disconnectionDay === 6) {
+        // If Saturday, move to Monday
+        disconnectionDate = addDays(disconnectionDate, 2);
+      } else if (disconnectionDay === 0) {
+        // If Sunday, move to Monday
+        disconnectionDate = addDays(disconnectionDate, 1);
+      }
+
+      return format(disconnectionDate, 'yyyy-MM-dd');
+    },
+    [holidayDates],
+  );
 
   // Update month and year if props change
   useEffect(() => {
@@ -52,42 +124,6 @@ export const useCalendarDays = (month?: number, year?: number): UseCalendarHook 
       setCurrentYear(year);
     }
   }, [month, year]);
-
-  // Pure functions for date calculations - defined before they're used
-  const calculateDueDate = (day: Date): string => {
-    let dueDate = addDays(day, 15);
-    const dueDay = getDay(dueDate);
-
-    // Adjust for weekends
-    if (dueDay === 6) {
-      // Saturday
-      dueDate = addDays(dueDate, 2);
-    } else if (dueDay === 0) {
-      // Sunday
-      dueDate = addDays(dueDate, 1);
-    }
-
-    return format(dueDate, 'yyyy-MM-dd');
-  };
-
-  const calculateDisconnectionDate = (dueDate: Date): string => {
-    let disconnectionDate = addDays(dueDate, 3);
-    const disconnectionDay = getDay(disconnectionDate);
-
-    // Adjust for weekends and Friday (to avoid weekend disconnections)
-    if (disconnectionDay === 5) {
-      // Friday
-      disconnectionDate = addDays(disconnectionDate, 3);
-    } else if (disconnectionDay === 6) {
-      // Saturday
-      disconnectionDate = addDays(disconnectionDate, 2);
-    } else if (disconnectionDay === 0) {
-      // Sunday
-      disconnectionDate = addDays(disconnectionDate, 1);
-    }
-
-    return format(disconnectionDate, 'yyyy-MM-dd');
-  };
 
   /**
    * Calculate a date that is 21 working days from the start of the month,
@@ -220,7 +256,7 @@ export const useCalendarDays = (month?: number, year?: number): UseCalendarHook 
         disconnectAt: disconnectionDate,
       };
     });
-  }, [currentMonth, currentYear]);
+  }, [calculateDisconnectionDate, calculateDueDate, currentMonth, currentYear]);
 
   // Update state when memoized value changes
   useEffect(() => {
