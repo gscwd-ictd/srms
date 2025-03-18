@@ -1,5 +1,10 @@
-import { createFixtureUnitsSchema, selectFixtureUnitsSchema } from "@srms/server/db/schemas";
+import {
+  createFixtureUnitsSchema,
+  selectFixtureUnitsSchema,
+  updateFixtureUnitsSchema,
+} from "@srms/server/db/schemas";
 import { z } from "zod";
 
 export type FixtureUnit = z.infer<typeof selectFixtureUnitsSchema>;
 export type CreateFixtureUnit = z.infer<typeof createFixtureUnitsSchema>;
+export type UpdateFixtureUnit = z.infer<typeof updateFixtureUnitsSchema>;

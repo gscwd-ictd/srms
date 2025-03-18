@@ -1,12 +1,16 @@
 import { createRoute, z } from "@hono/zod-openapi";
-import { createFixtureUnitsSchema, selectFixtureUnitsSchema } from "@srms/server/db/schemas";
-import { ErrorResponseSchema, yearSchema } from "@srms/server/schemas/helperSchemas";
+import {
+  createFixtureUnitsSchema,
+  selectFixtureUnitsSchema,
+  updateFixtureUnitsSchema,
+} from "@srms/server/db/schemas";
+import { ErrorResponseSchema, IdParamsSchema, yearSchema } from "@srms/server/schemas/helperSchemas";
 import { TAGS } from "@srms/utils/constants";
 import * as HttpStatusCodes from "@srms/utils/httpStatusCodes";
 
 export const addFixtureUnit = createRoute({
-  tags: ["ADD_FIXTURE_UNIT"],
-  description: "ADD FIXTURE UNIT",
+  tags: TAGS.FIXTURE_UNITS,
+  description: "Add Fixture Units",
   method: "post",
   path: "/v1/fixture-units",
   operationId: "addFixtureUnit",
@@ -21,6 +25,66 @@ export const addFixtureUnit = createRoute({
   },
   responses: {
     [HttpStatusCodes.CREATED]: {
+      content: {
+        "application/json": {
+          schema: selectFixtureUnitsSchema,
+        },
+      },
+      description: "",
+    },
+
+    [HttpStatusCodes.UNPROCESSABLE_ENTITY]: {
+      content: {
+        "application/json": {
+          schema: ErrorResponseSchema,
+        },
+      },
+      description: "",
+    },
+
+    [HttpStatusCodes.BAD_REQUEST]: {
+      content: {
+        "application/json": {
+          schema: ErrorResponseSchema,
+        },
+      },
+      description: "",
+    },
+
+    [HttpStatusCodes.INTERNAL_SERVER_ERROR]: {
+      content: {
+        "application/json": {
+          example: {
+            name: "ServerError",
+            status: 500,
+            message: "Something went wrong!",
+            stack: "...",
+          },
+          schema: ErrorResponseSchema,
+        },
+      },
+      description: "",
+    },
+  },
+});
+
+export const updateFixtureUnit = createRoute({
+  tags: TAGS.FIXTURE_UNITS,
+  description: "Update Fixture Unit",
+  method: "put",
+  path: "/v1/fixture-units",
+  operationId: "updateFixtureUnit",
+  request: {
+    body: {
+      content: {
+        "application/json": {
+          schema: updateFixtureUnitsSchema,
+        },
+      },
+    },
+  },
+  responses: {
+    [HttpStatusCodes.OK]: {
       content: {
         "application/json": {
           schema: selectFixtureUnitsSchema,
@@ -114,5 +178,108 @@ export const getFixtureUnitsByYear = createRoute({
   },
 });
 
+export const getFixtureUnitById = createRoute({
+  tags: TAGS.FIXTURE_UNITS,
+  description: "Get Fixture Unit By Id",
+  method: "get",
+  path: "/v1/fixture-units/single/{id}",
+  operationId: "getFixtureUnitsByYear",
+  request: {
+    params: IdParamsSchema,
+  },
+  responses: {
+    [HttpStatusCodes.OK]: {
+      content: {
+        "application/json": {
+          schema: selectFixtureUnitsSchema,
+        },
+      },
+      description: "",
+    },
+
+    [HttpStatusCodes.NOT_FOUND]: {
+      content: {
+        "application/json": {
+          example: {
+            name: "NotFoundError",
+            status: 404,
+            message: "Fixture Unit not found!",
+          },
+          schema: ErrorResponseSchema,
+        },
+      },
+      description: "",
+    },
+
+    [HttpStatusCodes.INTERNAL_SERVER_ERROR]: {
+      content: {
+        "application/json": {
+          example: {
+            name: "ServerError",
+            status: 500,
+            message: "Something went wrong!",
+            stack: "...",
+          },
+          schema: ErrorResponseSchema,
+        },
+      },
+      description: "",
+    },
+  },
+});
+
+export const deleteFixtureUnitById = createRoute({
+  tags: TAGS.FIXTURE_UNITS,
+  description: "Delete Fixture Unit By Id",
+  method: "delete",
+  path: "/v1/fixture-units/{id}",
+  operationId: "deleteFixtureUnitsByYear",
+  request: {
+    params: IdParamsSchema,
+  },
+  responses: {
+    [HttpStatusCodes.OK]: {
+      content: {
+        "application/json": {
+          schema: selectFixtureUnitsSchema,
+        },
+      },
+      description: "",
+    },
+
+    [HttpStatusCodes.NOT_FOUND]: {
+      content: {
+        "application/json": {
+          example: {
+            name: "NotFoundError",
+            status: 404,
+            message: "Fixture Unit not found!",
+          },
+          schema: ErrorResponseSchema,
+        },
+      },
+      description: "",
+    },
+
+    [HttpStatusCodes.INTERNAL_SERVER_ERROR]: {
+      content: {
+        "application/json": {
+          example: {
+            name: "ServerError",
+            status: 500,
+            message: "Something went wrong!",
+            stack: "...",
+          },
+          schema: ErrorResponseSchema,
+        },
+      },
+      description: "",
+    },
+  },
+});
+
 export type AddFixtureUnitRoute = typeof addFixtureUnit;
 export type GetFixtureUnitsByYearRoute = typeof getFixtureUnitsByYear;
+export type UpdateFixtureUnitRoute = typeof updateFixtureUnit;
+export type GetFixtureUnitByIdRoute = typeof getFixtureUnitById;
+export type DeleteFixtureUnitByIdRoute = typeof deleteFixtureUnitById;

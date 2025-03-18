@@ -2,11 +2,11 @@ import { generateCuid } from "@srms/server/helpers/generateCuid";
 import { decimal, integer, pgEnum, pgTable, timestamp, varchar } from "drizzle-orm/pg-core";
 import { plumbingFixtures } from "./plumbingFixtures";
 import { fixtureUnitType } from "@srms/utils/constants";
-import { createInsertSchema, createSelectSchema } from "drizzle-zod";
+import { createInsertSchema, createSelectSchema, createUpdateSchema } from "drizzle-zod";
 
 export const fixtureUnitTypeEnum = pgEnum("fixture_unit_type_enum", fixtureUnitType);
 
-export const fixtureUnits = pgTable("applicant_plumbing_fixtures", {
+export const fixtureUnits = pgTable("fixtures_unit", {
   id: varchar("id")
     .primaryKey()
     .$defaultFn(() => generateCuid()),
@@ -33,3 +33,11 @@ export const createFixtureUnitsSchema = createInsertSchema(fixtureUnits)
   });
 
 export const selectFixtureUnitsSchema = createSelectSchema(fixtureUnits);
+export const updateFixtureUnitsSchema = createUpdateSchema(fixtureUnits)
+  .omit({
+    createdAt: true,
+    updatedAt: true,
+  })
+  .openapi({
+    description: "Update a fixture unit",
+  });
