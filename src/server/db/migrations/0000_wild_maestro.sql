@@ -1,7 +1,6 @@
--- CREATE TYPE IF NOT EXISTS "public"."fixture_unit_type_enum" AS ENUM('private', 'public');--> statement-breakpoint
+-- CREATE TYPE "public"."fixture_unit_type_enum" AS ENUM('private', 'public');--> statement-breakpoint
 -- CREATE TYPE "public"."fixture_category_enum" AS ENUM('General', 'Sinks', 'Urinals');--> statement-breakpoint
--- CREATE TYPE "public"."fixture_unit_type_enum" AS ENUM('General', 'Sinks', 'Urinals');--> statement-breakpoint
-CREATE TABLE IF NOT EXISTS "applicant_plumbing_fixtures" (
+CREATE TABLE  IF NOT EXISTS  "fixtures_unit" (
 	"id" varchar PRIMARY KEY NOT NULL,
 	"plumbing_fixtures_id_fk" varchar NOT NULL,
 	"type" "fixture_unit_type_enum",
@@ -22,4 +21,4 @@ CREATE TABLE IF NOT EXISTS "plumbing_fixtures" (
 	CONSTRAINT "plumbing_fixtures_name_unique" UNIQUE("name")
 );
 --> statement-breakpoint
--- ALTER TABLE "applicant_plumbing_fixtures" ADD CONSTRAINT "applicant_plumbing_fixtures_plumbing_fixtures_id_fk_plumbing_fixtures_id_fk" FOREIGN KEY ("plumbing_fixtures_id_fk") REFERENCES "public"."plumbing_fixtures"("id") ON DELETE no action ON UPDATE no action;
+ALTER TABLE "fixtures_unit" ADD CONSTRAINT "fixtures_unit_plumbing_fixtures_id_fk_plumbing_fixtures_id_fk" FOREIGN KEY ("plumbing_fixtures_id_fk") REFERENCES "public"."plumbing_fixtures"("id") ON DELETE no action ON UPDATE no action;

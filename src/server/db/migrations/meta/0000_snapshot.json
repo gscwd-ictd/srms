@@ -1,11 +1,11 @@
 {
-  "id": "a49a7635-8bb9-43a8-83bb-d1b5308103c5",
+  "id": "86ddc7f6-350b-4633-b748-3fcd6a421db1",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
-    "public.applicant_plumbing_fixtures": {
-      "name": "applicant_plumbing_fixtures",
+    "public.fixtures_unit": {
+      "name": "fixtures_unit",
       "schema": "",
       "columns": {
         "id": {
@@ -56,9 +56,9 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "applicant_plumbing_fixtures_plumbing_fixtures_id_fk_plumbing_fixtures_id_fk": {
-          "name": "applicant_plumbing_fixtures_plumbing_fixtures_id_fk_plumbing_fixtures_id_fk",
-          "tableFrom": "applicant_plumbing_fixtures",
+        "fixtures_unit_plumbing_fixtures_id_fk_plumbing_fixtures_id_fk": {
+          "name": "fixtures_unit_plumbing_fixtures_id_fk_plumbing_fixtures_id_fk",
+          "tableFrom": "fixtures_unit",
           "tableTo": "plumbing_fixtures",
           "columnsFrom": [
             "plumbing_fixtures_id_fk"
