@@ -2,8 +2,8 @@ import {
   CreatePlumbingFixtureSchema,
   SelectPlumbingFixtureSchema,
   UpdatePlumbingFixtureSchema,
-} from "@srms/server/db/schemas";
-import { z } from "zod";
+} from "../schemas";
+import { z } from "@hono/zod-openapi";
 
 export type PlumbingFixture = z.infer<typeof SelectPlumbingFixtureSchema>;
 export type CreatePlumbingFixture = z.infer<typeof CreatePlumbingFixtureSchema>;

@@ -6,8 +6,7 @@ import { configureOpenApi } from "./openapi/configureOpenApi";
 import { crossOrigin } from "./middlewares/cors";
 import { MinioManager } from "@srms/lib/minio";
 import env from "@srms/utils/env";
-import { PlumbingFixtureManager } from "@srms/lib/nsa/PlumbingFixtureManager";
-import { ApplicationManager } from "@srms/lib/nsa/ApplicationManager";
+import { NSAManager } from "@srms/lib/nsa/nsaManager";
 
 function createApp() {
   const app = createOpenAPIRoute().basePath("/api");
@@ -40,6 +39,4 @@ export const minioManager = MinioManager.getInstance({
   secretKey: env.MINIO_SECRET,
 });
 
-export const plumbingFixtureManager = PlumbingFixtureManager.getInstance();
-
-export const applicationManager = ApplicationManager.getInstance();
+export const nsaManager = NSAManager.getInstance();
