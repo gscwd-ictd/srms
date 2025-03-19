@@ -14,6 +14,7 @@ import { cn } from '@srms/utils/shadcn';
 import { format } from 'date-fns';
 import { CalendarPlus, StickyNote } from 'lucide-react';
 import { memo } from 'react';
+import { useCalendar } from './useCalendar';
 
 type CalendarGridProps = {
   calendarDays: CalendarDay[];
@@ -40,6 +41,26 @@ export const holidays = [
     holidayDate: 'February 27, 2025',
     type: 'special',
   },
+
+  // {
+  //   id: 'fa322f83-7956-4efd-b0f2-21561d0586a3',
+  //   name: 'Kalilangan Festival',
+  //   holidayDate: 'March 01, 2025',
+  //   type: 'special',
+  // },
+  // {
+  //   id: 'fa322f83-7956-4efd-b0f2-21561d0586a3',
+  //   name: 'Kalilangan Festival',
+  //   holidayDate: 'March 02, 2025',
+  //   type: 'special',
+  // },
+  // {
+  //   id: 'fa322f83-7956-4efd-b0f2-21561d0586a3',
+  //   name: 'Kalilangan Festival',
+  //   holidayDate: 'March 03, 2025',
+  //   type: 'special',
+  // },
+
   {
     id: '380a86f3-b92a-4d50-aed7-e542baa43cac',
     name: 'Araw ng Kagitingan',
@@ -63,6 +84,12 @@ export const holidays = [
     name: 'Black Saturday',
     holidayDate: 'April 19, 2025',
     type: 'special',
+  },
+  {
+    id: '26007302-8bc3-4846-8f3b-afeb8b9ee73d',
+    name: 'Char',
+    holidayDate: 'March 31, 2025',
+    type: 'regular',
   },
   {
     id: '26007302-8bc3-4846-8f3b-afeb8b9ee73c',
@@ -140,9 +167,18 @@ export const holidays = [
 
 // Memoized Calendar component with TypeScript props
 export const CalendarGrid = memo<CalendarGridProps>(({ calendarDays, week, restDays }) => {
-  const meterSchedule = new MeterReadingSchedule(2, new Date().getFullYear(), holidays);
+  // const meterSchedule = new MeterReadingSchedule(3, new Date().getFullYear(), holidays);
 
-  console.log({ meterSchedule: meterSchedule.getCalendarDays() });
+  // console.log({ meterSchedule: meterSchedule.calendarDays });
+
+  // console.log(meterSchedule.splitDates('2025-01-09'));
+
+  // console.log(meterSchedule.splitDates('2025-01-13'));
+  // console.log({ dues: meterSchedule.calculateDueDateExperimental() });
+  //console.log({ meterSchedule: meterSchedule.splitDatesExperimental(16) });
+
+  const calendar = useCalendar(holidays, 3);
+  console.log(calendar.calculateDueDates());
 
   return (
     <>
