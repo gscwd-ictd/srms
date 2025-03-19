@@ -1,7 +1,17 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 'use client';
 
-import { addDays, format, isSameDay, isSameMonth, isWeekend, parse, startOfMonth } from 'date-fns';
+import {
+  addDays,
+  format,
+  isSameDay,
+  isSameMonth,
+  isSunday,
+  isWeekend,
+  nextMonday,
+  parse,
+  startOfMonth,
+} from 'date-fns';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 
 type Holiday = {
@@ -25,12 +35,24 @@ export const useCalendar = (holidays: Holiday[], month?: number, year?: number) 
     [holidays],
   );
 
-  const moveToNextMonday = useCallback((date: Date) => {
-    while (isWeekend(date)) {
-      date = addDays(date, 1);
+  const adjustForHolidayOrWeekend = (date: Date) => {
+    while (isWeekend(date) || isHoliday(date)) {
+      if (isWeekend(date)) {
+        date = nextMonday(date);
+      } else {
+        date = addDays(date, 1);
+      }
     }
     return date;
-  }, []);
+  };
+
+  const adjustForHolidayOrSunday = (date: Date) => {
+    if (isSunday(date) || isHoliday(date)) {
+      date = addDays(date, 1);
+    }
+
+    return date;
+  };
 
   const isHoliday = useCallback(
     (date: Date) => holidayDates.some(holidayDate => isSameDay(format(holidayDate, 'yyyy-MM-dd'), date)),
@@ -48,31 +70,66 @@ export const useCalendar = (holidays: Holiday[], month?: number, year?: number) 
   }, [month, year]);
 
   const calculateDueDates = useCallback(() => {
-    const dues: string[] = [];
-    const monthStart = startOfMonth(new Date(currentYear, currentMonth - 1, 1));
+    const dueDates = [];
+    const monthStart = startOfMonth(new Date(currentYear, currentMonth));
     let currentDate = monthStart;
     let dueDate = monthStart;
 
-    while (isHoliday(currentDate) || currentDate.getDay() === 0) {
-      currentDate = addDays(currentDate, 1);
+    while (isHoliday(currentDate) || isSunday(currentDate)) {
+      currentDate = adjustForHolidayOrWeekend(currentDate);
     }
 
     dueDate = addDays(currentDate, 15);
 
     while (isSameMonth(currentDate, monthStart)) {
+      dueDate = adjustForHolidayOrWeekend(dueDate);
+
+      currentDate = adjustForHolidayOrSunday(currentDate);
+
+      dueDates.push({ currentDate, dueDate });
+
       currentDate = addDays(currentDate, 1);
-
-      if (dueDate.getDay() === 0) {
-        dueDate = addDays(currentDate, 1);
-      }
-
-      console.log(dueDate);
+      dueDate = addDays(dueDate, 1);
     }
 
-    //console.log(dues); //
+    return dueDates;
   }, [currentMonth, currentYear, isHoliday]);
+
+  const splitDates = useCallback((selectedDate: Date, dates: Array<{ currentDate: Date; dueDate: Date }>) => {
+    const leadingDates = dates
+      .filter(entry => new Date(entry.currentDate) <= selectedDate)
+      .map(entry => ({ ...entry })); // Ensure we don't mutate the original array
+
+    // Filter dates greater than selectedDate
+    const trailingDates = dates
+      .filter(entry => new Date(entry.currentDate) > selectedDate)
+      .map(entry => ({ ...entry })); // Ensure we don't mutate the original array
+
+    const result = [...trailingDates];
+
+    // Store the original due dates
+    const originalDueDates = trailingDates.map(item => item.dueDate);
+
+    // Iterate starting from index 1 (second element)
+    for (let i = 1; i < result.length; i++) {
+      // Use the non-null assertion operator since we know i-1 is valid
+      // (we start at i=1 and we've checked arr.length > 1)
+      result[i]!.dueDate = originalDueDates[i - 1]!;
+    }
+
+    const previousDate = leadingDates[leadingDates.length - 2]!;
+    const currentDate = leadingDates[leadingDates.length - 1]!;
+    const nextDate = trailingDates[0]!;
+
+    nextDate.dueDate = currentDate.dueDate;
+    currentDate.dueDate = [formatDate(previousDate.dueDate), formatDate(currentDate.dueDate)] as string[];
+
+    return [...leadingDates, ...result];
+  }, []);
 
   return {
     calculateDueDates,
+    splitDates,
+    formatDate,
   };
 };

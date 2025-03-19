@@ -9,12 +9,12 @@ import {
   SheetTitle,
   SheetTrigger,
 } from '@srms/components/ui/Sheet';
-import { MeterReadingSchedule } from '@srms/lib/MeterReading/services/MeterReadingSchedule';
 import { cn } from '@srms/utils/shadcn';
 import { format } from 'date-fns';
 import { CalendarPlus, StickyNote } from 'lucide-react';
 import { memo } from 'react';
 import { useCalendar } from './useCalendar';
+import { calculateDueDates, splitDates } from '@srms/lib/testingLang';
 
 type CalendarGridProps = {
   calendarDays: CalendarDay[];
@@ -42,25 +42,6 @@ export const holidays = [
     type: 'special',
   },
 
-  // {
-  //   id: 'fa322f83-7956-4efd-b0f2-21561d0586a3',
-  //   name: 'Kalilangan Festival',
-  //   holidayDate: 'March 01, 2025',
-  //   type: 'special',
-  // },
-  // {
-  //   id: 'fa322f83-7956-4efd-b0f2-21561d0586a3',
-  //   name: 'Kalilangan Festival',
-  //   holidayDate: 'March 02, 2025',
-  //   type: 'special',
-  // },
-  // {
-  //   id: 'fa322f83-7956-4efd-b0f2-21561d0586a3',
-  //   name: 'Kalilangan Festival',
-  //   holidayDate: 'March 03, 2025',
-  //   type: 'special',
-  // },
-
   {
     id: '380a86f3-b92a-4d50-aed7-e542baa43cac',
     name: 'Araw ng Kagitingan',
@@ -85,6 +66,30 @@ export const holidays = [
     holidayDate: 'April 19, 2025',
     type: 'special',
   },
+  // {
+  //   id: '26007302-8bc3-4846-8f3b-afeb8b9ee73d',
+  //   name: 'Char',
+  //   holidayDate: 'March 01, 2025',
+  //   type: 'regular',
+  // },
+  // {
+  //   id: '26007302-8bc3-4846-8f3b-afeb8b9ee73d',
+  //   name: 'Char',
+  //   holidayDate: 'March 02, 2025',
+  //   type: 'regular',
+  // },
+  // {
+  //   id: '26007302-8bc3-4846-8f3b-afeb8b9ee73d',
+  //   name: 'Char',
+  //   holidayDate: 'March 03, 2025',
+  //   type: 'regular',
+  // },
+  // {
+  //   id: '26007302-8bc3-4846-8f3b-afeb8b9ee73d',
+  //   name: 'Char',
+  //   holidayDate: 'March 04, 2025',
+  //   type: 'regular',
+  // },
   {
     id: '26007302-8bc3-4846-8f3b-afeb8b9ee73d',
     name: 'Char',
@@ -167,18 +172,23 @@ export const holidays = [
 
 // Memoized Calendar component with TypeScript props
 export const CalendarGrid = memo<CalendarGridProps>(({ calendarDays, week, restDays }) => {
-  // const meterSchedule = new MeterReadingSchedule(3, new Date().getFullYear(), holidays);
+  const calendar = useCalendar(holidays, 1, 2025);
 
-  // console.log({ meterSchedule: meterSchedule.calendarDays });
+  const dueDates = calendar.calculateDueDates();
+  const splitDueDates = calendar.splitDates(new Date(2025, 1, 13), dueDates); // Call splitDates correctly
+  const splitDueDates2 = calendar.splitDates(new Date(2025, 1, 19), splitDueDates);
 
-  // console.log(meterSchedule.splitDates('2025-01-09'));
+  // const updated = splitDueDates.map(date => ({
+  //   currentDate: format(date.currentDate, 'yyyy-MM-dd'),
+  //   dueDate: format(date.dueDate, 'yyyy-MM-dd'),
+  // }));
 
-  // console.log(meterSchedule.splitDates('2025-01-13'));
-  // console.log({ dues: meterSchedule.calculateDueDateExperimental() });
-  //console.log({ meterSchedule: meterSchedule.splitDatesExperimental(16) });
+  const formattedDues = dueDates.map(date => ({
+    currentDate: calendar.formatDate(date.currentDate),
+    dueDate: calendar.formatDate(date.dueDate),
+  }));
 
-  const calendar = useCalendar(holidays, 3);
-  console.log(calendar.calculateDueDates());
+  console.log({ formattedDues, splitDueDates, splitDueDates2 });
 
   return (
     <>
