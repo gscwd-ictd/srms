@@ -1,25 +1,25 @@
 'use client';
 
-import { CalendarDay } from '@srms/components/temp/useCalendarDays';
-import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from '@srms/components/ui/Sheet';
+// import {
+//   Sheet,
+//   SheetContent,
+//   SheetDescription,
+//   SheetHeader,
+//   SheetTitle,
+//   SheetTrigger,
+// } from '@srms/components/ui/Sheet';
 import { cn } from '@srms/utils/shadcn';
-import { format } from 'date-fns';
+import { format, isSameMonth, isSunday } from 'date-fns';
 import { CalendarPlus, StickyNote } from 'lucide-react';
 import { memo } from 'react';
-import { useCalendar } from './useCalendar';
-import { calculateDueDates, splitDates } from '@srms/lib/testingLang';
+import { DateEntry } from './useCalendar';
+
+export type CalendarDay = DateEntry;
 
 type CalendarGridProps = {
   calendarDays: CalendarDay[];
-  restDays: string[];
   week: string[];
+  currentDate: Date;
 };
 
 export const holidays = [
@@ -171,24 +171,18 @@ export const holidays = [
 ];
 
 // Memoized Calendar component with TypeScript props
-export const CalendarGrid = memo<CalendarGridProps>(({ calendarDays, week, restDays }) => {
-  const calendar = useCalendar(holidays, 1, 2025);
+export const CalendarGrid = memo<CalendarGridProps>(({ currentDate, calendarDays, week }) => {
+  // const calendar = useCalendar(holidays);
 
-  const dueDates = calendar.calculateDueDates();
-  const splitDueDates = calendar.splitDates(new Date(2025, 1, 13), dueDates); // Call splitDates correctly
-  const splitDueDates2 = calendar.splitDates(new Date(2025, 1, 19), splitDueDates);
+  // const dueAndDisconnectionDates = calendar.getDueAndDisconnectionDates();
 
-  // const updated = splitDueDates.map(date => ({
-  //   currentDate: format(date.currentDate, 'yyyy-MM-dd'),
-  //   dueDate: format(date.dueDate, 'yyyy-MM-dd'),
-  // }));
+  // const calendarDays = calendar.getFullCalendar(dueAndDisconnectionDates);
 
-  const formattedDues = dueDates.map(date => ({
-    currentDate: calendar.formatDate(date.currentDate),
-    dueDate: calendar.formatDate(date.dueDate),
-  }));
-
-  console.log({ formattedDues, splitDueDates, splitDueDates2 });
+  // const dueDates = calendar.calculateDueAndDisconnectionDates();
+  // const splitDueDates = calendar.splitDates(new Date(2025, 2, 20), dueDates);
+  // const splitDueDates2 = calendar.splitDates(new Date(2025, 0, 13), splitDueDates);
+  // const fullCalendar = calendar.getFullCalendar(splitDueDates);
+  // console.log({ dueDates, splitDueDates, fullCalendar });
 
   return (
     <>
@@ -205,82 +199,108 @@ export const CalendarGrid = memo<CalendarGridProps>(({ calendarDays, week, restD
 
       <div className="grid flex-1 grid-cols-7 overflow-y-auto">
         {calendarDays.map((day, index) => {
-          const isHoliday = holidays.some(
-            holiday => holiday.holidayDate === format(day.date, 'MMMM dd, yyyy'),
-          );
-
-          const isRestDay = restDays.includes(day.date);
+          const sundayOnSameMonth = !isSunday(day.readingDate) || !isSameMonth(day.readingDate, currentDate);
 
           return (
-            <Sheet key={index}>
-              <SheetTrigger asChild>
-                <div
-                  role="button"
-                  className={cn(
-                    !day.dueAt || !day.disconnectAt || isHoliday || isRestDay
-                      ? 'bg-muted/60 dark:bg-muted/30 text-muted-foreground/30 cursor-default'
-                      : 'bg-background text-muted-foreground/85',
+            <div
+              key={index}
+              role="button"
+              className={cn(
+                (!day.dueDate || !day.disconnectionDate) && sundayOnSameMonth
+                  ? 'bg-muted/60 dark:bg-muted/30 text-muted-foreground/30 cursor-default'
+                  : 'bg-background text-muted-foreground/85',
 
-                    'col-span-1 flex h-full min-h-16 flex-col justify-between border-t border-l p-2 [&:nth-child(-n+7)]:border-t-0 [&:nth-child(7n+1)]:border-l-0',
+                'col-span-1 flex min-h-16 flex-col justify-between border-t border-l p-2 [&:nth-child(-n+7)]:border-t-0 [&:nth-child(7n+1)]:border-l-0',
+              )}
+            >
+              <section className="flex items-center justify-between">
+                <div
+                  className={cn(
+                    format(new Date(), 'MM-dd-yyyy') === format(day.readingDate, 'MM-dd-yyyy')
+                      ? 'bg-primary text-primary-foreground rounded-full'
+                      : 'bg-transparent',
+                    'flex size-7 items-center justify-center text-sm font-semibold',
                   )}
                 >
-                  <section className="flex items-center justify-between">
-                    <div
-                      className={cn(
-                        format(new Date(), 'MM-dd-yyyy') === format(day.date, 'MM-dd-yyyy')
-                          ? 'bg-primary text-primary-foreground rounded-full'
-                          : 'bg-transparent',
-                        'flex size-7 items-center justify-center text-sm font-semibold',
-                      )}
-                    >
-                      {format(new Date(day.date), 'dd')}
-                    </div>
+                  {format(new Date(day.readingDate), 'dd')}
+                </div>
 
-                    {(day.dueAt || day.disconnectAt) && !isHoliday && !isRestDay ? (
-                      <div className="flex items-center gap-2 pr-4">
-                        <button>
-                          <CalendarPlus className="size-4" />
-                        </button>
+                {day.dueDate || day.disconnectionDate || !sundayOnSameMonth ? (
+                  <div className="flex items-center gap-2 pr-4">
+                    <button>
+                      <CalendarPlus className="size-4" />
+                    </button>
 
-                        <button>
-                          <StickyNote className="size-4" />
-                        </button>
+                    <button>
+                      <StickyNote className="size-4" />
+                    </button>
+                  </div>
+                ) : null}
+              </section>
+
+              <section>
+                {day.dueDate || day.disconnectionDate ? (
+                  <div className="space-y-1 text-xs">
+                    {day.dueDate instanceof Array ? (
+                      <div className="flex items-center gap-1">
+                        {day.dueDate.map((day, index) => (
+                          <div
+                            key={index}
+                            className="bg-secondary dark:border-primary/10 flex w-full items-center gap-1 rounded border px-2 py-1"
+                          >
+                            <div className="size-2 rounded-full bg-indigo-500" />
+                            <p className="font-semibold">{format(day, 'MMM dd')}</p>
+                          </div>
+                        ))}
                       </div>
-                    ) : null}
-                  </section>
-
-                  {/* <section>
-                    {(day.dueAt || day.disconnectAt) && !restDays.includes(day.date) ? (
-                      <div className="space-y-1 text-xs">
-                        <div className="bg-secondary dark:border-primary/10 flex items-center gap-1 rounded border px-2 py-1">
-                          <div className="size-2 rounded-full bg-indigo-500" />
-                          <p className="font-semibold">{format(day.dueAt!, 'MMM dd')}</p>
-                        </div>
-                        <div className="bg-secondary dark:border-primary/10 flex items-center gap-1 rounded border px-2 py-1">
-                          <div className="size-2 rounded-full bg-rose-500" />
-                          <p className="font-semibold">{format(day.disconnectAt!, 'MMM dd')}</p>
-                        </div>
+                    ) : (
+                      <div className="bg-secondary dark:border-primary/10 flex items-center gap-1 rounded border px-2 py-1">
+                        <div className="size-2 rounded-full bg-indigo-500" />
+                        <p key={index} className="font-semibold">
+                          {format(day.dueDate, 'MMM dd')}
+                        </p>
                       </div>
-                    ) : null}
-                  </section> */}
+                    )}
+                    {/* {day.dueDate instanceof Array ? (
+                          <div className="bg-secondary dark:border-primary/10 flex items-center gap-1 rounded border px-2 py-1">
+                            <div className="size-2 rounded-full bg-indigo-500" />
+                            {day.dueDate.map((day, index) => (
+                              <p key={index} className="font-semibold">
+                                {format(day, 'MMM dd')}
+                              </p>
+                            ))}
+                          </div>
+                        ) : (
+                          <p className="font-semibold">{format(day.dueDate, 'MMM dd')}</p>
+                        )} */}
+                    {day.disconnectionDate instanceof Array ? (
+                      <div className="flex items-center gap-1">
+                        {day.disconnectionDate.map((day, index) => (
+                          <div
+                            key={index}
+                            className="bg-secondary dark:border-primary/10 flex w-full items-center gap-1 rounded border px-2 py-1"
+                          >
+                            <div className="size-2 rounded-full bg-rose-500" />
+                            <p className="font-semibold">{format(day, 'MMM dd')}</p>
+                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      <div className="bg-secondary dark:border-primary/10 flex items-center gap-1 rounded border px-2 py-1">
+                        <div className="size-2 rounded-full bg-rose-500" />
+                        <p key={index} className="font-semibold">
+                          {format(day.disconnectionDate, 'MMM dd')}
+                        </p>
+                      </div>
+                    )}
+                  </div>
+                ) : null}
+              </section>
 
-                  {/* <section>
+              {/* <section>
                   {day.dueAt || day.disconnectAt ? <StackedAvatars users={users} size="sm" limit={3} /> : null}
                 </section> */}
-                </div>
-              </SheetTrigger>
-
-              {day.dueAt && day.disconnectAt ? (
-                <SheetContent>
-                  <SheetHeader>
-                    <SheetTitle>Edit profile</SheetTitle>
-                    <SheetDescription>Make changes to your profile here.</SheetDescription>
-                  </SheetHeader>
-
-                  <div>{day.date}</div>
-                </SheetContent>
-              ) : null}
-            </Sheet>
+            </div>
           );
         })}
       </div>
