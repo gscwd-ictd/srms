@@ -3,7 +3,7 @@ import { type PropsWithChildren } from 'react';
 import { Geist, Geist_Mono } from 'next/font/google';
 import { ReactQueryProvider } from '@srms/components/providers/ReactQueryProvider';
 import { ThemeProvider } from '@srms/components/providers/ThemeProvider';
-import { ReactScan } from '@srms/components/features/ReactScan';
+import { ReactScan } from '@srms/components/providers/ReactScan';
 import '@srms/app/globals.css';
 
 const geistSans = Geist({
@@ -24,7 +24,7 @@ export default async function RootLayout({ children }: Readonly<PropsWithChildre
   return (
     <html lang="en" suppressHydrationWarning>
       <ReactScan />
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+      <body className={`${geistSans.className} ${geistMono.variable} antialiased`}>
         <ReactQueryProvider>
           <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
             <main className="h-[100svh] overflow-x-hidden">{children}</main>
