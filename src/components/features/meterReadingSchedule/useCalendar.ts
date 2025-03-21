@@ -6,7 +6,6 @@ import {
   endOfMonth,
   endOfWeek,
   format,
-  isSameDay,
   isSameMonth,
   isSunday,
   isWeekend,
@@ -43,14 +42,18 @@ export const useCalendar = (holidays: Holiday[], month?: number, year?: number) 
     return format(new Date(currentYear, currentMonth), 'MMMM');
   }, [currentMonth, currentYear]);
 
-  const holidayDates = useMemo(
-    () =>
+  // Memoize formatted holiday dates for efficient lookups
+  const holidayDates = useMemo(() => {
+    return new Set(
       holidays.map(holiday => format(parse(holiday.holidayDate, 'MMMM dd, yyyy', new Date()), 'yyyy-MM-dd')),
-    [holidays],
-  );
+    );
+  }, [holidays]);
 
+  // Check if a date is a holiday
   const isHoliday = useCallback(
-    (date: Date) => holidayDates.some(holidayDate => isSameDay(format(holidayDate, 'yyyy-MM-dd'), date)),
+    (date: Date): boolean => {
+      return holidayDates.has(format(date, 'yyyy-MM-dd'));
+    },
     [holidayDates],
   );
 
@@ -58,10 +61,8 @@ export const useCalendar = (holidays: Holiday[], month?: number, year?: number) 
     (date: Date) => {
       while (isWeekend(date) || isHoliday(date)) {
         if (isWeekend(date)) {
-          console.log('Weekend!', date);
           date = nextMonday(date);
         } else {
-          console.log('Holiday!', date);
           date = addDays(date, 1);
         }
       }
@@ -91,25 +92,18 @@ export const useCalendar = (holidays: Holiday[], month?: number, year?: number) 
 
   const calculateDisconnectionDates = useCallback(
     (date: Date, businessDays: number) => {
-      // Make a copy of the input date to avoid mutation
       let result = new Date(date);
       let daysAdded = 0;
 
-      // Add days until we've added the requested number of business days
       while (daysAdded < businessDays) {
-        // Add one calendar day
         result = addDays(result, 1);
 
-        // Only count it if it's not a weekend
         if (!isWeekend(result) && !isHoliday(result)) {
           daysAdded++;
         }
       }
 
-      // Check if the final date is a weekend, and if so, move to Monday
       if (isWeekend(result) || isHoliday(result)) {
-        // If it's Saturday, add 2 days to get to Monday
-        // If it's Sunday, add 1 day to get to Monday
         const daysToAdd = result.getDay() === 0 ? 1 : 2;
         result = addDays(result, daysToAdd);
       }
@@ -122,6 +116,7 @@ export const useCalendar = (holidays: Holiday[], month?: number, year?: number) 
   const getDueAndDisconnectionDates = useCallback(() => {
     const dueDates: DateEntry[] = [];
     const monthStart = startOfMonth(new Date(currentYear, currentMonth));
+
     let readingDateCount = 1;
     let readingDate = monthStart;
     let dueDate = monthStart;
@@ -162,7 +157,11 @@ export const useCalendar = (holidays: Holiday[], month?: number, year?: number) 
     currentYear,
   ]);
 
-  const splitDates = useCallback((selectedDate: Date, dates: DateEntry[]): DateEntry[] => {
+  const splitDates = useCallback((dates: DateEntry[], selectedDate?: Date): DateEntry[] => {
+    if (!selectedDate) {
+      return dates;
+    }
+
     // Create deep copies to avoid mutating the original objects
     const datesCopy: DateEntry[] = dates.map(date => ({
       readingDate: new Date(date.readingDate),
@@ -233,7 +232,7 @@ export const useCalendar = (holidays: Holiday[], month?: number, year?: number) 
       // Convert to the desired format
       const calendarDays = allDays.map(day => {
         const existingEntry = dates.find(
-          entry => format(new Date(entry.readingDate), 'yyyy-MM-dd') === format(day, 'yyyy-MM-dd'),
+          entry => formatDate(new Date(entry.readingDate)) === formatDate(day),
         );
 
         return existingEntry

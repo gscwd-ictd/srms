@@ -1,4 +1,4 @@
-import { MeterReadingScheduler } from '@srms/components/features/meterReadingSchedule/MeterReadingScheduler';
+import { MeterReadingSchedule } from '@srms/components/features/meterReading/schedule/MeterReadingSchedule';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -6,5 +6,5 @@ export const metadata: Metadata = {
 };
 
 export default function TemporaryPage() {
-  return <MeterReadingScheduler />;
+  return <MeterReadingSchedule />;
 }
