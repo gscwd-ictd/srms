@@ -7,5 +7,6 @@ const fixtureUnits = createOpenAPIRoute()
   .openapi(routes.addFixtureUnit, handlers.addFixtureUnit)
   .openapi(routes.updateFixtureUnit, handlers.updateFixtureUnit)
   .openapi(routes.getFixtureUnitById, handlers.getFixtureUnitById)
-  .openapi(routes.deleteFixtureUnitById, handlers.deleteFixtureUnitById);
+  .openapi(routes.deleteFixtureUnitById, handlers.deleteFixtureUnitById)
+  .openapi(routes.addFixtureUnitsByFile, handlers.addFixtureUnitsByFile);
 export default fixtureUnits;

@@ -1,5 +1,5 @@
 import { createRoute, z } from "@hono/zod-openapi";
-import { CreateApplicationSchema, SelectApplicationSchema } from "@srms/server/db/schemas";
+import { CreateApplicationSchema, SelectApplicationSchema } from "@srms/lib/nsa/schemas/ApplicationSchema";
 import { ErrorResponseSchema, IdParamsSchema, QueryParamsSchema } from "@srms/server/schemas/helperSchemas";
 import { TAGS } from "@srms/utils/constants";
 

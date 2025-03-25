@@ -3,7 +3,8 @@ import {
   CreatePlumbingFixtureSchema,
   SelectPlumbingFixtureSchema,
   UpdatePlumbingFixtureSchema,
-} from "@srms/server/db/schemas";
+} from "@srms/lib/nsa/schemas";
+
 import { ErrorResponseSchema, IdParamsSchema } from "@srms/server/schemas/helperSchemas";
 import { TAGS } from "@srms/utils/constants";
 

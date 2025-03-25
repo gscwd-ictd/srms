@@ -3,8 +3,13 @@ import {
   createFixtureUnitsSchema,
   selectFixtureUnitsSchema,
   updateFixtureUnitsSchema,
-} from "@srms/server/db/schemas";
-import { ErrorResponseSchema, IdParamsSchema, yearSchema } from "@srms/server/schemas/helperSchemas";
+} from "@srms/lib/nsa/schemas";
+import {
+  ErrorResponseSchema,
+  FileFormSchema,
+  IdParamsSchema,
+  yearSchema,
+} from "@srms/server/schemas/helperSchemas";
 import { TAGS } from "@srms/utils/constants";
 import * as HttpStatusCodes from "@srms/utils/httpStatusCodes";
 
@@ -28,6 +33,66 @@ export const addFixtureUnit = createRoute({
       content: {
         "application/json": {
           schema: selectFixtureUnitsSchema,
+        },
+      },
+      description: "",
+    },
+
+    [HttpStatusCodes.UNPROCESSABLE_ENTITY]: {
+      content: {
+        "application/json": {
+          schema: ErrorResponseSchema,
+        },
+      },
+      description: "",
+    },
+
+    [HttpStatusCodes.BAD_REQUEST]: {
+      content: {
+        "application/json": {
+          schema: ErrorResponseSchema,
+        },
+      },
+      description: "",
+    },
+
+    [HttpStatusCodes.INTERNAL_SERVER_ERROR]: {
+      content: {
+        "application/json": {
+          example: {
+            name: "ServerError",
+            status: 500,
+            message: "Something went wrong!",
+            stack: "...",
+          },
+          schema: ErrorResponseSchema,
+        },
+      },
+      description: "",
+    },
+  },
+});
+
+export const addFixtureUnitsByFile = createRoute({
+  tags: TAGS.FIXTURE_UNITS,
+  description: "Add Fixture Units",
+  method: "post",
+  path: "/v1/fixture-units/csv",
+  operationId: "addFixtureUnitsByFile",
+  request: {
+    body: {
+      content: {
+        "multipart/form-data": {
+          schema: FileFormSchema,
+        },
+      },
+    },
+  },
+  responses: {
+    [HttpStatusCodes.CREATED]: {
+      content: {
+        "application/json": {
+          schema: z.array(z.object({})),
         },
       },
       description: "",
@@ -279,6 +344,7 @@ export const deleteFixtureUnitById = createRoute({
 });
 
 export type AddFixtureUnitRoute = typeof addFixtureUnit;
+export type AddFixtureUnitsByFileRoute = typeof addFixtureUnitsByFile;
 export type GetFixtureUnitsByYearRoute = typeof getFixtureUnitsByYear;
 export type UpdateFixtureUnitRoute = typeof updateFixtureUnit;
 export type GetFixtureUnitByIdRoute = typeof getFixtureUnitById;

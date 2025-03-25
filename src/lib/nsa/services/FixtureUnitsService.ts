@@ -5,6 +5,9 @@ import { FixtureUnit, CreateFixtureUnit, UpdateFixtureUnit } from "../types/fixt
 export class FixtureUnitService implements I_FixtureUnitService {
   constructor(private readonly fixtureUnitsRepository: FixtureUnitRepository) {}
 
+  async addFixtureUnitsByFile(formData: FormData): Promise<FixtureUnit[]> {
+    return await this.fixtureUnitsRepository.addFixtureUnitsByFile(formData);
+  }
   async getFixtureUnitsByYear(year: number): Promise<FixtureUnit[]> {
     return await this.fixtureUnitsRepository.getFixtureUnitsByYear(year);
   }

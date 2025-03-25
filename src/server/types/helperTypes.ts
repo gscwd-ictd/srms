@@ -1,6 +1,7 @@
 import { z } from "zod";
 import {
   ErrorResponseSchema,
+  FileFormSchema,
   HealthCheckResponseSchema,
   IdParamsSchema,
   QueryParamsSchema,
@@ -13,6 +14,7 @@ export type PaginatedResult<T> = {
 };
 
 export type IdParams = z.infer<typeof IdParamsSchema>;
+export type FileFormSchema = z.infer<typeof FileFormSchema>;
 export type QueryParams = z.infer<typeof QueryParamsSchema>;
 export type ResultMetada = z.infer<typeof ResultMetaDataSchema>;
 export type ErrorResponse = z.infer<typeof ErrorResponseSchema>;

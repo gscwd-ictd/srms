@@ -6,8 +6,8 @@ import { configureOpenApi } from "./openapi/configureOpenApi";
 import { crossOrigin } from "./middlewares/cors";
 import { MinioManager } from "@srms/lib/minio";
 import env from "@srms/utils/env";
-import { PlumbingFixtureManager } from "@srms/lib/nsa/PlumbingFixtureManager";
-import { ApplicationManager } from "@srms/lib/nsa/ApplicationManager";
+import { NSAManager } from "@srms/lib/nsa/nsaManager";
+import multer from "multer";
 
 function createApp() {
   const app = createOpenAPIRoute().basePath("/api");
@@ -20,11 +20,8 @@ function createApp() {
   app.use(pinoLogger());
   app.use(secureHeaders());
   app.use(crossOrigin);
-
   const routes = [healthcheck, applications, plumbingFixtures, fixtureUnits] as const;
-
   routes.forEach((route) => app.route("/", route));
-
   return app;
 }
 
@@ -40,6 +37,5 @@ export const minioManager = MinioManager.getInstance({
   secretKey: env.MINIO_SECRET,
 });
 
-export const plumbingFixtureManager = PlumbingFixtureManager.getInstance();
-
-export const applicationManager = ApplicationManager.getInstance();
+export const upload = multer({ storage: multer.memoryStorage() });
+export const nsaManager = NSAManager.getInstance();

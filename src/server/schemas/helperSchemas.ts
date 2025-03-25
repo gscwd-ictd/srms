@@ -59,6 +59,10 @@ export const IdParamsSchema = z.object({
   }),
 });
 
+export const FileFormSchema = z.object({
+  file: z.instanceof(File).openapi({ description: "File to be uploaded" }),
+});
+
 export const QueryParamsSchema = z.object({
   limit: z.coerce
     .number()
