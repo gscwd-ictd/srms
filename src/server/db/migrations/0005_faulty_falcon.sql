@@ -1,1 +1,0 @@
-ALTER TABLE "serviceable_areas" ALTER COLUMN "boundaries" SET DATA TYPE geometry(MultiPolygon, 4326);
