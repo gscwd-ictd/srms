@@ -1,13 +1,12 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 'use client';
 
 import {
   addDays,
+  addMonths,
   eachDayOfInterval,
   endOfMonth,
   endOfWeek,
   format,
-  isFirstDayOfMonth,
   isSameMonth,
   isSunday,
   isWeekend,
@@ -15,9 +14,9 @@ import {
   parse,
   startOfMonth,
   startOfWeek,
-  subDays,
+  subMonths,
 } from 'date-fns';
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 
 export type Holiday = {
   id: string;
@@ -26,7 +25,7 @@ export type Holiday = {
   type: string;
 };
 
-export type CalendarDay = {
+export type MeterReadingSchedule = {
   readingDate: Date;
   dueDate: Date | Date[] | undefined;
   disconnectionDate: Date | Date[] | undefined;
@@ -35,18 +34,37 @@ export type CalendarDay = {
 export const useMeterReadingSchedule = (holidays: Holiday[], date?: Date) => {
   const [currentDate, setCurrentDate] = useState(date ?? new Date());
 
+  useEffect(() => {
+    if (date !== undefined && date.getTime() !== currentDate.getTime()) {
+      setCurrentDate(date);
+    }
+  }, [currentDate, date]);
+
   // Memoize formatted holiday dates for efficient lookups
   const holidayDates = useMemo(() => {
-    return new Set(
-      holidays.map(holiday => format(parse(holiday.holidayDate, 'MMMM dd, yyyy', new Date()), 'yyyy-MM-dd')),
+    return holidays.map(holiday =>
+      format(parse(holiday.holidayDate, 'MMMM dd, yyyy', new Date()), 'yyyy-MM-dd'),
     );
   }, [holidays]);
 
   // Utility function to have a uniform format for dates
-  const formatDate = (date: Date) => format(date, 'yyyy-MM-dd');
+  const formatDate = (date: Date | undefined, dateFormat?: 'yyyy-MM-dd' | 'MMM dd') => {
+    if (!date) {
+      return undefined;
+    }
+
+    if (!dateFormat) {
+      dateFormat = 'yyyy-MM-dd';
+    }
+
+    return format(date, dateFormat);
+  };
 
   // Check if a date is a holiday
-  const isHoliday = useCallback((date: Date): boolean => holidayDates.has(formatDate(date)), [holidayDates]);
+  const isHoliday = useCallback(
+    (date: Date): boolean => holidayDates.includes(formatDate(date) as string),
+    [holidayDates],
+  );
 
   // Add 1 day if the provided date is a holiday
   const adjustForHolidayOrWeekend = useCallback(
@@ -65,7 +83,7 @@ export const useMeterReadingSchedule = (holidays: Holiday[], date?: Date) => {
     [isHoliday],
   );
 
-  const getCalendarDays = () => {
+  const getCalendarDays = useCallback(() => {
     const firstDayOfMonth = startOfMonth(currentDate);
     const lastDayOfMonth = endOfMonth(currentDate);
 
@@ -78,30 +96,190 @@ export const useMeterReadingSchedule = (holidays: Holiday[], date?: Date) => {
     });
 
     return allDays;
-  };
+  }, [currentDate]);
 
-  const calculateDueDate = (readingDate: Date) => {
+  // const calculateDisconnectionDates = useCallback(
+  //   (date: Date, businessDays: number) => {
+  //     let result = new Date(date);
+  //     let daysAdded = 0;
+
+  //     while (daysAdded < businessDays) {
+  //       result = addDays(result, 1);
+
+  //       if (!isWeekend(result) && !isHoliday(result)) {
+  //         daysAdded++;
+  //       }
+  //     }
+
+  //     if (isWeekend(result) || isHoliday(result)) {
+  //       const daysToAdd = result.getDay() === 0 ? 1 : 2;
+  //       result = addDays(result, daysToAdd);
+  //     }
+
+  //     return result;
+  //   },
+  //   [isHoliday],
+  // );
+  const calculateDisconnectionDates = useCallback(
+    (date: Date, businessDays: number) => {
+      let result = new Date(date);
+      let daysAdded = 0;
+
+      while (daysAdded < businessDays) {
+        result = addDays(result, 1);
+
+        if (!isWeekend(result) && !isHoliday(result)) {
+          daysAdded++;
+        }
+      }
+
+      if (isWeekend(result) || isHoliday(result)) {
+        const daysToAdd = result.getDay() === 0 ? 1 : 2;
+        result = addDays(result, daysToAdd);
+      }
+
+      return result;
+    },
+    [isHoliday],
+  );
+
+  const calculateSchedule = useCallback(() => {
+    const dates: MeterReadingSchedule[] = [];
     const monthStart = startOfMonth(currentDate);
+
+    let readingDateCount = 1;
+    let readingDate = monthStart;
     let dueDate = readingDate;
 
-    if (isSunday(readingDate) || isHoliday(readingDate) || !isSameMonth(readingDate, monthStart)) {
-      return undefined;
+    while (isHoliday(readingDate) || isSunday(readingDate)) {
+      readingDate = adjustForHolidayOrWeekend(readingDate);
     }
 
-    dueDate = addDays(dueDate, 15);
+    // if (isSunday(readingDate)) {
+    //   readingDate = nextMonday(readingDate);
+    // }
 
-    dueDate = adjustForHolidayOrWeekend(dueDate);
+    dueDate = addDays(readingDate, 15);
 
-    return formatDate(dueDate);
+    while (isSameMonth(readingDate, monthStart) && readingDateCount < 22) {
+      dueDate = adjustForHolidayOrWeekend(dueDate);
+
+      const disconnectionDate = calculateDisconnectionDates(dueDate, 3);
+
+      if (isSunday(readingDate)) {
+        readingDate = nextMonday(readingDate);
+      }
+
+      dates.push({ readingDate, dueDate, disconnectionDate });
+
+      readingDate = addDays(readingDate, 1);
+      dueDate = addDays(dueDate, 1);
+      readingDateCount++;
+    }
+
+    return dates;
+  }, [adjustForHolidayOrWeekend, calculateDisconnectionDates, currentDate, isHoliday]);
+
+  const getFullCalendar = useCallback(
+    (dates: MeterReadingSchedule[]) => {
+      if (dates.length === 0) return [];
+
+      const allDays = getCalendarDays();
+
+      // Convert to the desired format
+      const calendarDays = allDays.map(day => {
+        const existingEntry = dates.find(
+          entry => formatDate(new Date(entry.readingDate)) === formatDate(day),
+        );
+
+        return existingEntry
+          ? existingEntry
+          : {
+              readingDate: day,
+              dueDate: undefined,
+              disconnectionDate: undefined,
+            };
+      });
+
+      return calendarDays;
+    },
+    [getCalendarDays],
+  );
+
+  const splitDates = useCallback(
+    (dates: MeterReadingSchedule[], selectedDate: Date): MeterReadingSchedule[] => {
+      if (!selectedDate) {
+        return dates;
+      }
+
+      // Perform the filtering
+      const leadingDates = dates.filter(entry => entry.readingDate <= selectedDate);
+      const trailingDates = dates.filter(entry => entry.readingDate > selectedDate);
+
+      // Early return if we don't have enough dates to perform the operation
+      if (leadingDates.length < 2 || trailingDates.length < 1) {
+        return dates; // Return the original dates without modifications
+      }
+
+      // Clone trailing dates to avoid interference
+      const trailingResults = trailingDates.map(item => ({ ...item }));
+
+      // Store the original due dates
+      const originalDueDates = trailingDates.map(item => ({
+        dueDate: item.dueDate,
+        disconnectionDate: item.disconnectionDate,
+      }));
+
+      // Shift due dates for trailing results
+      for (let i = 1; i < trailingResults.length; i++) {
+        trailingResults[i]!.dueDate = originalDueDates[i - 1]!.dueDate;
+        trailingResults[i]!.disconnectionDate = originalDueDates[i - 1]!.disconnectionDate;
+      }
+
+      // Get the relevant dates
+      const previousDate = leadingDates[leadingDates.length - 2]!;
+      const currentDate = leadingDates[leadingDates.length - 1]!;
+      const nextDate = trailingResults[0]!;
+
+      // Update due dates
+      nextDate.dueDate = currentDate.dueDate;
+      currentDate.dueDate = [previousDate.dueDate, currentDate.dueDate] as Date[];
+
+      nextDate.disconnectionDate = currentDate.disconnectionDate;
+      currentDate.disconnectionDate = [
+        previousDate.disconnectionDate,
+        currentDate.disconnectionDate,
+      ] as Date[];
+
+      return [...leadingDates, ...trailingResults];
+    },
+    [],
+  );
+
+  // Provide navigation methods
+  const goToPreviousMonth = () => {
+    setCurrentDate(subMonths(currentDate, 1));
   };
 
-  const calculateDisconnectionDate = (dueDate: Date | undefined) => {};
+  const goToNextMonth = () => {
+    setCurrentDate(addMonths(currentDate, 1));
+  };
+
+  const today = () => {
+    setCurrentDate(new Date());
+  };
 
   return {
     getCalendarDays,
-    calculateDueDate,
-    calculateDisconnectionDate,
+    calculateSchedule,
+    splitDates,
+    getFullCalendar,
     isHoliday,
     formatDate,
+    goToPreviousMonth,
+    goToNextMonth,
+    today,
+    setCurrentDate,
+    currentDate,
   };
 };

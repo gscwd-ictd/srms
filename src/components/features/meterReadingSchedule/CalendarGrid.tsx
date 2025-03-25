@@ -41,7 +41,6 @@ export const holidays = [
     holidayDate: 'February 27, 2025',
     type: 'special',
   },
-
   {
     id: '380a86f3-b92a-4d50-aed7-e542baa43cac',
     name: 'Araw ng Kagitingan',
