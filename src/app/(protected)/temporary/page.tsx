@@ -1,4 +1,4 @@
-import { MeterReadingSchedule } from '@srms/components/features/meterReading/schedule/MeterReadingSchedule';
+import { MeterReadingSchedule } from '@srms/components/features/meterReading/scheduler/MeterReadingSchedule';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
