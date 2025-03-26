@@ -1,13 +1,29 @@
 'use client';
 
 import { useState, useEffect, type FunctionComponent } from 'react';
-import { CalendarPlus, ChevronDown, ChevronLeft, ChevronRight } from 'lucide-react';
+import {
+  CalendarPlus,
+  CalendarX2,
+  ChevronDown,
+  ChevronLeft,
+  ChevronRight,
+  FilePen,
+  FilePlus2,
+  SquareSplitHorizontal,
+  UserPen,
+} from 'lucide-react';
 import { Button } from '@srms/components/ui/Button';
 import { ButtonGroup } from '@srms/components/ui/ButtonGroup';
 import { holidays } from '../../meterReadingSchedule/CalendarGrid';
-import { endOfMonth, format, startOfMonth } from 'date-fns';
+import { endOfMonth, format, isSameMonth, startOfMonth } from 'date-fns';
 import { useMeterReadingSchedule } from '@srms/components/hooks/useMeterReadingSchedule';
 import { cn } from '@srms/utils/shadcn';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@srms/components/ui/DropdownMenu';
 
 export const MeterReadingSchedule: FunctionComponent = () => {
   const meterReadingSchedule = useMeterReadingSchedule(holidays);
@@ -39,9 +55,9 @@ export const MeterReadingSchedule: FunctionComponent = () => {
   return (
     <div className="flex h-full flex-col rounded-2xl border">
       <header className="flex items-center justify-between p-4">
-        <section className="flex items-center gap-3">
-          <div className="flex size-15 flex-col overflow-clip rounded-lg border">
-            <div className="bg-primary text-primary-foreground flex flex-1 items-center justify-center border-b text-sm font-bold tracking-wider uppercase">
+        <section className="flex items-start gap-3">
+          <div className="flex size-14 flex-col overflow-clip rounded-lg border">
+            <div className="bg-secondary text-secondary-foreground/70 flex flex-1 items-center justify-center border-b text-xs font-semibold tracking-wider uppercase">
               {format(new Date(), 'MMM')}
             </div>
 
@@ -50,10 +66,10 @@ export const MeterReadingSchedule: FunctionComponent = () => {
             </div>
           </div>
 
-          <div>
-            <h1 className="text-xl font-bold">{format(meterReadingSchedule.currentDate, 'MMMM yyyy')}</h1>
+          <div className="-space-y-1">
+            <h1 className="text-lg font-bold">{format(meterReadingSchedule.currentDate, 'MMMM yyyy')}</h1>
 
-            <section className="text-muted-foreground flex items-center gap-1">
+            <section className="text-muted-foreground flex items-center gap-1 text-sm">
               <p>{format(startOfMonth(meterReadingSchedule.currentDate), 'MMM dd, yyyy')}</p>
               <p>{`-`}</p>
               <p>{format(endOfMonth(meterReadingSchedule.currentDate), 'MMM dd, yyyy')}</p>
@@ -95,18 +111,25 @@ export const MeterReadingSchedule: FunctionComponent = () => {
 
         <section className="flex-1" style={gridStyle}>
           {calendarDays.map((date, index) => {
+            const withinThisMonth = isSameMonth(
+              date.readingDate,
+              startOfMonth(meterReadingSchedule.currentDate),
+            );
+
             return (
               <div
                 key={index}
-                role="button"
                 // onClick={() => {
                 //   const newSchedule = meterReadingSchedule.splitDates(schedule, date.readingDate);
                 //   setSchedule(newSchedule);
                 //   setCalendarDays(meterReadingSchedule.getFullCalendar(newSchedule));
                 // }}
-                className="col-span-1 overflow-hidden border-t border-l p-2 text-sm [&:nth-child(-n+7)]:border-t-0 [&:nth-child(7n+1)]:border-l-0"
+                className={cn(
+                  withinThisMonth ? 'bg-transparent' : 'bg-muted/40 text-muted-foreground/70',
+                  'col-span-1 overflow-hidden border-t border-l p-2 text-sm [&:nth-child(-n+7)]:border-t-0 [&:nth-child(7n+1)]:border-l-0',
+                )}
               >
-                <div className="flex items-center justify-between">
+                <div className="mb-2 flex items-center justify-between">
                   <section
                     className={cn(
                       format(new Date(), 'MM-dd-yyyy') === format(date.readingDate, 'MM-dd-yyyy')
@@ -118,15 +141,92 @@ export const MeterReadingSchedule: FunctionComponent = () => {
                     {format(new Date(date.readingDate), 'dd')}
                   </section>
 
-                  <section>
-                    <button
-                      onClick={() => console.log(date)}
-                      className="hover:bg-secondary text-muted-foreground hover:text-primary flex size-8 items-center justify-center rounded-full"
-                    >
-                      <ChevronDown className="size-4" />
-                    </button>
-                  </section>
+                  {withinThisMonth && (
+                    <DropdownMenu>
+                      <DropdownMenuTrigger className="hover:bg-secondary text-muted-foreground hover:text-primary flex size-8 items-center justify-center rounded-full">
+                        <ChevronDown className="size-4" />
+                      </DropdownMenuTrigger>
+
+                      <DropdownMenuContent align="end">
+                        <DropdownMenuItem>
+                          <UserPen />
+                          <span>Assign</span>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem
+                          disabled={Array.isArray(date.dueDate) || Array.isArray(date.disconnectionDate)}
+                          onClick={() => {
+                            const newSchedule = meterReadingSchedule.splitDates(schedule, date.readingDate);
+                            setSchedule(newSchedule);
+                            setCalendarDays(meterReadingSchedule.getFullCalendar(newSchedule));
+                          }}
+                        >
+                          <SquareSplitHorizontal />
+                          <span>Split Dates</span>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem>
+                          <FilePlus2 />
+                          <span>Add Schedule</span>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem>
+                          <FilePen />
+                          <span>Edit Schedule</span>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem>
+                          <CalendarX2 />
+                          <span>Remove</span>
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  )}
                 </div>
+
+                {withinThisMonth && date.dueDate && date.disconnectionDate && (
+                  <section className="flex flex-col space-y-1">
+                    {Array.isArray(date.dueDate) && Array.isArray(date.disconnectionDate) ? (
+                      <>
+                        <div className="flex items-center gap-1">
+                          {date.dueDate.map((due, index) => (
+                            <div
+                              key={index}
+                              className="bg-muted/30 dark:border-muted border-muted-foreground/10 w-full rounded border px-2 py-0.5 text-xs"
+                            >
+                              <div className="flex items-center gap-1">
+                                <div className="size-2 rounded-full bg-indigo-400" />
+                                {meterReadingSchedule.formatDate(due, 'MMM dd')}
+                              </div>
+
+                              {/* <Calendar /> */}
+                            </div>
+                          ))}
+                        </div>
+
+                        <div className="flex items-center gap-1">
+                          {date.disconnectionDate.map((discon, index) => (
+                            <div
+                              key={index}
+                              className="bg-muted/30 dark:border-muted border-muted-foreground/10 flex w-full items-center gap-1 rounded border px-2 py-0.5 text-xs"
+                            >
+                              <div className="size-2 rounded-full bg-rose-400" />
+                              {meterReadingSchedule.formatDate(discon, 'MMM dd')}
+                            </div>
+                          ))}
+                        </div>
+                      </>
+                    ) : (
+                      <>
+                        <div className="bg-muted/30 dark:border-muted border-muted-foreground/10 flex items-center gap-1 rounded border px-2 py-0.5 text-xs">
+                          <div className="size-2 rounded-full bg-indigo-400" />
+                          {meterReadingSchedule.formatDate(date.dueDate as Date, 'MMM dd')}
+                        </div>
+
+                        <div className="bg-muted/30 dark:border-muted border-muted-foreground/10 flex items-center gap-1 rounded border px-2 py-0.5 text-xs">
+                          <div className="size-2 rounded-full bg-rose-400" />
+                          {meterReadingSchedule.formatDate(date.disconnectionDate as Date, 'MMM dd')}
+                        </div>
+                      </>
+                    )}
+                  </section>
+                )}
 
                 {/* <section className="pt-2">
                   {Array.isArray(date.dueDate) && Array.isArray(date.disconnectionDate) ? (

@@ -151,13 +151,13 @@ export const useMeterReadingSchedule = (holidays: Holiday[], date?: Date) => {
     let readingDate = monthStart;
     let dueDate = readingDate;
 
-    while (isHoliday(readingDate) || isSunday(readingDate)) {
-      readingDate = adjustForHolidayOrWeekend(readingDate);
-    }
-
-    // if (isSunday(readingDate)) {
-    //   readingDate = nextMonday(readingDate);
+    // while (isHoliday(readingDate) || isSunday(readingDate)) {
+    //   readingDate = adjustForHolidayOrWeekend(readingDate);
     // }
+
+    if (isSunday(readingDate)) {
+      readingDate = nextMonday(readingDate);
+    }
 
     dueDate = addDays(readingDate, 15);
 
@@ -178,7 +178,7 @@ export const useMeterReadingSchedule = (holidays: Holiday[], date?: Date) => {
     }
 
     return dates;
-  }, [adjustForHolidayOrWeekend, calculateDisconnectionDates, currentDate, isHoliday]);
+  }, [adjustForHolidayOrWeekend, calculateDisconnectionDates, currentDate]);
 
   const getFullCalendar = useCallback(
     (dates: MeterReadingSchedule[]) => {
@@ -237,19 +237,16 @@ export const useMeterReadingSchedule = (holidays: Holiday[], date?: Date) => {
       }
 
       // Get the relevant dates
-      const previousDate = leadingDates[leadingDates.length - 2]!;
-      const currentDate = leadingDates[leadingDates.length - 1]!;
-      const nextDate = trailingResults[0]!;
+      const prev = leadingDates[leadingDates.length - 2]!;
+      const curr = leadingDates[leadingDates.length - 1]!;
+      const next = trailingResults[0]!;
 
       // Update due dates
-      nextDate.dueDate = currentDate.dueDate;
-      currentDate.dueDate = [previousDate.dueDate, currentDate.dueDate] as Date[];
+      next.dueDate = curr.dueDate;
+      curr.dueDate = [prev.dueDate, curr.dueDate] as Date[];
 
-      nextDate.disconnectionDate = currentDate.disconnectionDate;
-      currentDate.disconnectionDate = [
-        previousDate.disconnectionDate,
-        currentDate.disconnectionDate,
-      ] as Date[];
+      next.disconnectionDate = curr.disconnectionDate;
+      curr.disconnectionDate = [prev.disconnectionDate, curr.disconnectionDate] as Date[];
 
       return [...leadingDates, ...trailingResults];
     },
