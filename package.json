@@ -90,7 +90,7 @@
     "@types/pg": "^8.11.11",
     "@types/react": "^19",
     "@types/react-dom": "^19",
-    "drizzle-kit": "^0.19.1",
+    "drizzle-kit": "^0.19.13",
     "eslint": "^9",
     "eslint-config-next": "15.2.0",
     "install": "^0.13.0",
