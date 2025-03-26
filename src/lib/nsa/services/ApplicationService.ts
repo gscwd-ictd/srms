@@ -1,6 +1,6 @@
 import { PaginatedResult, QueryParams } from "@srms/server/types/helperTypes";
 import { I_ApplicantionRepository, I_ApplicantionService } from "../interfaces";
-import { Application, CreateApplication } from "../types";
+import { ApplicantDocs, Application, CreateApplication, UploadApplicationDocs } from "../types";
 
 export class ApplicationService implements I_ApplicantionService {
   constructor(private readonly repository: I_ApplicantionRepository) {}
@@ -11,5 +11,9 @@ export class ApplicationService implements I_ApplicantionService {
 
   async getAllApplication(queryParams?: QueryParams): Promise<PaginatedResult<Application>> {
     return await this.repository.getAllApplication(queryParams);
+  }
+
+  async uploadApplicationDocs(data: UploadApplicationDocs): Promise<ApplicantDocs> {
+    return await this.repository.uploadApplicationDocs(data);
   }
 }

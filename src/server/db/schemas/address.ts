@@ -3,7 +3,7 @@ import { generateCuid } from "@srms/server/helpers/generateCuid";
 import { applicants } from "@srms/server/db/schemas/applicants";
 
 export const applicantAddress = pgTable("applicant_address", {
-  id: varchar("id")
+  id: varchar("applicant_address_id")
     .primaryKey()
     .$defaultFn(() => generateCuid())
     .notNull(),

@@ -1,7 +1,8 @@
 import {
+  CreateApplicantDocsSchema,
   CreateApplicantSchema,
   CreateApplicationSchema,
-  DocumentPathSchema,
+  SelectApplicantDocsSchema,
   SelectApplicantSchema,
   SelectApplicationSchema,
 } from "../schemas";
@@ -14,4 +15,5 @@ export type CreateApplicant = z.infer<typeof CreateApplicantSchema>;
 export type Application = z.infer<typeof SelectApplicationSchema>;
 export type CreateApplication = z.infer<typeof CreateApplicationSchema>;
 
-export type DocumentPath = z.infer<typeof DocumentPathSchema>;
+export type ApplicantDocs = z.infer<typeof SelectApplicantDocsSchema>;
+export type UploadApplicationDocs = z.infer<typeof CreateApplicantDocsSchema>;

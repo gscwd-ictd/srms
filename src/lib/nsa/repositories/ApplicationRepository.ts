@@ -6,40 +6,22 @@ import {
   applicantPlumbingFixtures,
   applicants,
   applications,
+  applicationView,
 } from "@srms/server/db/schemas";
 import { I_ApplicantionRepository } from "../interfaces";
-import { Application, CreateApplication } from "../types";
+import { ApplicantDocs, Application, CreateApplication, UploadApplicationDocs } from "../types";
 import { PaginatedResult, QueryParams } from "@srms/server/types/helperTypes";
-import { eq, sql } from "drizzle-orm";
 import { paginateQuery } from "@srms/server/helpers/paginateQuery";
 import { minioManager } from "@srms/server/app";
+import { createFormData } from "@srms/utils/fileUtils";
+import { desc } from "drizzle-orm";
 
 export class ApplicantionRepository implements I_ApplicantionRepository {
   async getAllApplication(queryParams?: QueryParams): Promise<PaginatedResult<Application>> {
-    const query = db
-      .select({
-        id: applications.id,
-        type: applications.type,
-        landmark: applications.landmark,
-        nearestNeighbor: applications.nearestNeighbor,
-        remarks: applications.remarks,
-        status: applications.status,
-        createdAt: applications.createdAt,
-        updatedAt: applications.updatedAt,
-        applicant: { ...applicants },
-        address: { ...applicantAddress },
-        household: { ...applicantHousehold },
-        fixtures: sql`json_agg(${applicantPlumbingFixtures})`.as("fixtures"),
-      })
-      .from(applications)
-      .innerJoin(applicants, eq(applicants.applicationId, applications.id))
-      .innerJoin(applicantAddress, eq(applicantAddress.applicantId, applicants.id))
-      .innerJoin(applicantHousehold, eq(applicantHousehold.applicantId, applicants.id))
-      .leftJoin(applicantPlumbingFixtures, eq(applicantPlumbingFixtures.applicantId, applicants.id))
-      .groupBy(applications.id, applicants.id, applicantAddress.id, applicantHousehold.id)
-      //.innerJoin(applicantDocs, eq(applicantDocs.applicantId, applicants.id))
-      .$dynamic();
+    // Construct the base query: select all from applicationView, ordered by latest createdAt
+    const query = db.select().from(applicationView).orderBy(desc(applicationView.createdAt)).$dynamic();
 
+    // Execute the paginated query with caching support (if applicable)
     const result = await paginateQuery<Application>(
       "get_all_application_details",
       applications,
@@ -47,12 +29,13 @@ export class ApplicantionRepository implements I_ApplicantionRepository {
       queryParams,
     );
 
+    // Return the paginated dataset
     return result;
   }
 
   async addApplication(data: CreateApplication): Promise<Application> {
     // Deconstruct applicant
-    const { applicant, address, household, fixtures, documents, ...rest } = data;
+    const { applicant, address, household, fixtures, ...rest } = data;
 
     // Implementation will handle:
     // 1. Start transaction
@@ -101,47 +84,8 @@ export class ApplicantionRepository implements I_ApplicantionRepository {
           fixtures.map(async (items) => {
             return await tx
               .insert(applicantPlumbingFixtures)
-              .values({ applicantId: newApplicant[0]!.id, ...items })
+              .values({ applicationId: newApplication[0]!.id, ...items })
               .returning();
-          }),
-        )
-      ).flat();
-
-      const newDocs = (
-        await Promise.all(
-          documents.map(async (items) => {
-            /* 
-              upload file = {
-
-                name: applicantId + items.type
-                source: items.pathNames
-              }
-            
-
-            */
-
-            const uploadFiles = items.pathNames.map((filePath, idx) => {
-              const extension = filePath.split(".")[filePath.split(".").length - 1];
-              return {
-                name: newApplicant[0]!.id + "/" + items.type + "/" + idx + "." + extension,
-                source: filePath,
-              };
-            });
-
-            /*  const applicantId = newApplicant[0]!.id;
-            const folderName = items.type;
-            const files = items.pathNames; */
-            const file = await minioManager.uploadFiles(uploadFiles);
-
-            // return await tx
-            //   .insert(applicantDocuments)
-            //   .values({
-            //     applicantId: newApplicant[0]!.id,
-            //     ...items,
-            //   })
-            //   .returning();
-
-            return file;
           }),
         )
       ).flat();
@@ -152,10 +96,43 @@ export class ApplicantionRepository implements I_ApplicantionRepository {
         address: { ...newApplicantAddress[0]! },
         household: { ...newHousehold[0]! },
         fixtures: newFixtures,
-        documents: newDocs,
       };
     });
 
     return res;
+  }
+
+  async uploadApplicationDocs(data: UploadApplicationDocs): Promise<ApplicantDocs> {
+    // Extract relevant fields from input payload
+    const { files, applicationId, type } = data;
+
+    // Construct file storage path based on application context
+    const filePath = `${applicationId}/${type}`;
+
+    // Enforce allowed file types before processing
+    const allowedFileTypes = ["image/jpeg", "image/jpg", "application/pdf", "image/png"];
+
+    // Prepare files for upload
+    const formData = createFormData(files, filePath);
+
+    // Upload files to MinIO with type validation handled internally
+    const uploadedFiles = (await minioManager.uploadFileBuffers(formData, { allowedFileTypes })) as string[];
+
+    // Persist file metadata in the database
+    const res = await db
+      .insert(applicantDocuments)
+      .values({ applicationId, type, files: uploadedFiles })
+      .returning()
+      .prepare("add_application_docs")
+      .execute();
+
+    // Retrieve stored file paths from MinIO (excluding full URLs)
+    const fileNames = (await minioManager.getFilesByFolder(filePath)).map((file) => file.name) as string[];
+
+    // Return the updated document payload with normalized file paths
+    return {
+      ...res[0]!,
+      files: fileNames,
+    };
   }
 }

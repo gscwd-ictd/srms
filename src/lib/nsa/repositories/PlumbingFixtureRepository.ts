@@ -2,12 +2,12 @@ import { db } from "@srms/server/db/postgres";
 import { eq } from "drizzle-orm";
 import { CreatePlumbingFixture, PlumbingFixture, UpdatePlumbingFixture } from "../types";
 import { plumbingFixtures } from "@srms/server/db/schemas";
-import { createFileFormData } from "@srms/utils/fileUtils";
+import { createFormData } from "@srms/utils/fileUtils";
 import { minioManager } from "@srms/server/app";
 import { I_PlumbingFixtureRepository } from "../interfaces";
 
 export class PlumbingFixtureRepository implements I_PlumbingFixtureRepository {
-  async getAllPlumbingFixtures(): Promise<Array<PlumbingFixture>> {
+  async getAllPlumbingFixtures(): Promise<PlumbingFixture[]> {
     // Step 1: Retrieve all plumbing fixtures from the database
     const sqlStmt = db.select().from(plumbingFixtures).prepare("get_all_plumbing_fixtures");
     const fixtures = await sqlStmt.execute();
@@ -41,8 +41,10 @@ export class PlumbingFixtureRepository implements I_PlumbingFixtureRepository {
     const res = await stmtInsert.execute();
 
     // Step 3: Handle file upload
-    const formData = createFileFormData(file, filePath);
-    await minioManager.uploadFileBuffer(formData);
+    const formData = createFormData(file, filePath);
+    await minioManager.uploadFileBuffer(formData, {
+      allowedFileTypes: ["image/jpeg", "image/jpg", "image/png"],
+    });
 
     // Step 4: Retrieve the uploaded file
     const fileName = (await minioManager.getFile(res[0]!.file)) as string;
@@ -104,7 +106,7 @@ export class PlumbingFixtureRepository implements I_PlumbingFixtureRepository {
 
     // Step 4: Handle file storage (delete old file, upload new file) only if file is provided
     if (file && file.name.trim() !== "") {
-      const formData = createFileFormData(file, filePath);
+      const formData = createFormData(file, filePath);
 
       // Delete the old file if a new file is provided
       await minioManager.deleteFile(plumbingFixture[0]!.file);

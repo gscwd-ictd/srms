@@ -5,7 +5,7 @@ import { pgEnum, pgTable, text, timestamp, varchar } from "drizzle-orm/pg-core";
 export const fixtureCategoryEnum = pgEnum("fixture_category_enum", FixtureCategory);
 
 export const plumbingFixtures = pgTable("plumbing_fixtures", {
-  id: varchar("id")
+  id: varchar("plumbing_fixture_id")
     .primaryKey()
     .$defaultFn(() => generateCuid())
     .notNull(),

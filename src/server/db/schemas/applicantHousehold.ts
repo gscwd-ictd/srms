@@ -3,7 +3,7 @@ import { generateCuid } from "@srms/server/helpers/generateCuid";
 import { applicants } from "@srms/server/db/schemas/applicants";
 
 export const applicantHousehold = pgTable("applicant_household", {
-  id: varchar("id")
+  id: varchar("applicant_household_id")
     .primaryKey()
     .$defaultFn(() => generateCuid())
     .notNull(),
@@ -17,3 +17,15 @@ export const applicantHousehold = pgTable("applicant_household", {
     .defaultNow()
     .$onUpdateFn(() => new Date()),
 });
+
+/* 
+
+  SERVICEABLE CONVER TO GEOJSON
+  select st_asgeojson(st_geomfromwkb(geom))::jsonb from public."SERVICEABLEAREA"
+
+
+  172.20.110.85
+  gensan.ictd@gmail.com 
+  gensancitywaterdistrict
+
+  */

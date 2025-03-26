@@ -4,7 +4,7 @@ import { CreatePlumbingFixture, PlumbingFixture, UpdatePlumbingFixture } from ".
 export class PlumbingFixtureService implements I_PlumbingFixtureService {
   constructor(private readonly repository: I_PlumbingFixtureRepository) {}
 
-  async getAllPlumbingFixtures(): Promise<Array<PlumbingFixture>> {
+  async getAllPlumbingFixtures(): Promise<PlumbingFixture[]> {
     return await this.repository.getAllPlumbingFixtures();
   }
 

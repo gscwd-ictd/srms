@@ -1,17 +1,17 @@
 import { integer, pgTable, timestamp, unique, varchar } from "drizzle-orm/pg-core";
-import { applicants } from "./applicants";
-import { plumbingFixtures } from "./plumbingFixtures";
 import { generateCuid } from "@srms/server/helpers/generateCuid";
+import { applications } from "@srms/server/db/schemas/applications";
+import { plumbingFixtures } from "@srms/server/db/schemas/plumbingFixtures";
 
 export const applicantPlumbingFixtures = pgTable(
   "applicant_plumbing_fixtures",
   {
-    id: varchar("id")
+    id: varchar("applicant_plumbing_fixture_id")
       .primaryKey()
       .$defaultFn(() => generateCuid())
       .notNull(),
-    applicantId: varchar("applicant_id_fk")
-      .references(() => applicants.id, { onDelete: "cascade" })
+    applicationId: varchar("application_id_fk")
+      .references(() => applications.id, { onDelete: "cascade" })
       .notNull(),
     fixtureId: varchar("plumbing_fixture_id_fk")
       .references(() => plumbingFixtures.id, { onDelete: "cascade" })
@@ -22,9 +22,5 @@ export const applicantPlumbingFixtures = pgTable(
       .defaultNow()
       .$onUpdateFn(() => new Date()),
   },
-  (table) => {
-    return {
-      uniqueApplicantFixture: unique().on(table.applicantId, table.fixtureId),
-    };
-  },
+  (table) => [unique().on(table.applicationId, table.fixtureId)],
 );

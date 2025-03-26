@@ -6,13 +6,13 @@ import { Gender } from "@srms/utils/constants";
 export const genderEnum = pgEnum("gender", Gender);
 
 export const applicants = pgTable("applicants", {
-  id: varchar("id")
+  id: varchar("applicant_id")
     .primaryKey()
     .$defaultFn(() => generateCuid())
     .notNull(),
   applicationId: varchar("application_id_fk")
-    .references(() => applications.id, { onDelete: "cascade" })
-    .notNull(),
+    .notNull()
+    .references(() => applications.id, { onDelete: "cascade" }),
   firstName: varchar("first_name").notNull(),
   middleName: varchar("middle_name"),
   lastName: varchar("last_name").notNull(),

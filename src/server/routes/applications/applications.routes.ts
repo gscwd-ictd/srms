@@ -1,4 +1,5 @@
 import { createRoute, z } from "@hono/zod-openapi";
+import { CreateApplicantDocsSchema, SelectApplicantDocsSchema } from "@srms/lib/nsa/schemas";
 import { CreateApplicationSchema, SelectApplicationSchema } from "@srms/lib/nsa/schemas/ApplicationSchema";
 import { ErrorResponseSchema, IdParamsSchema, QueryParamsSchema } from "@srms/server/schemas/helperSchemas";
 import { TAGS } from "@srms/utils/constants";
@@ -239,7 +240,72 @@ export const updateApplicationStatus = createRoute({
   },
 });
 
+export const uploadApplicantDocuments = createRoute({
+  tags: TAGS.APPLICATIONS,
+  description: "Upload applicant documents .",
+  method: "post",
+  path: "/v1/applications/upload/documents",
+  operationId: "uploadApplicantDocuments",
+  request: {
+    body: {
+      content: {
+        "multipart/form-data": {
+          schema: CreateApplicantDocsSchema,
+        },
+      },
+      required: true,
+    },
+  },
+  responses: {
+    // Status: Ok
+    [HttpStatusCodes.OK]: {
+      content: {
+        "application/json": {
+          schema: SelectApplicantDocsSchema,
+        },
+      },
+      description: "",
+    },
+
+    [HttpStatusCodes.UNPROCESSABLE_ENTITY]: {
+      content: {
+        "application/json": {
+          schema: ErrorResponseSchema,
+        },
+      },
+      description: "",
+    },
+
+    [HttpStatusCodes.BAD_REQUEST]: {
+      content: {
+        "application/json": {
+          schema: ErrorResponseSchema,
+        },
+      },
+      description: "",
+    },
+
+    // Status: Internal Server Error
+    [HttpStatusCodes.INTERNAL_SERVER_ERROR]: {
+      content: {
+        "application/json": {
+          example: {
+            name: "ServerError",
+            status: 500,
+            message: "Something went wrong!",
+            stack: "...",
+          },
+          schema: ErrorResponseSchema,
+        },
+      },
+      description: "",
+    },
+  },
+});
+
 export type CreateApplicationRoute = typeof createNewApplication;
+
+export type UploadApplicantDocumentsRoute = typeof uploadApplicantDocuments;
 
 export type GetApplicationDetailsByIdRoute = typeof getApplicationDetailsById;
 
