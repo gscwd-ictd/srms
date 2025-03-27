@@ -13,6 +13,10 @@ export class ApplicationService implements I_ApplicantionService {
     return await this.repository.getAllApplication(queryParams);
   }
 
+  async getApplicationById(id: string): Promise<Application> {
+    return await this.repository.getApplicationById(id);
+  }
+
   async uploadApplicationDocs(data: UploadApplicationDocs): Promise<ApplicantDocs> {
     return await this.repository.uploadApplicationDocs(data);
   }

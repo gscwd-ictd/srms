@@ -2,6 +2,7 @@ import type { AppRouteHandler } from "@srms/server/types/appTypes";
 import {
   CreateApplicationRoute,
   GetAllApplicationDetailsRoute,
+  GetApplicationDetailsByIdRoute,
   UpdateApplicationStatusRoute,
   UploadApplicantDocumentsRoute,
 } from "@srms/server/routes/applications/applications.routes";
@@ -9,6 +10,12 @@ import { nsaManager } from "@srms/server/app";
 
 export const getAllApplicationDetails: AppRouteHandler<GetAllApplicationDetailsRoute> = async (c) => {
   const applications = await nsaManager.getApplicationService().getAllApplication();
+  return c.json(applications, 200);
+};
+
+export const getApplicationById: AppRouteHandler<GetApplicationDetailsByIdRoute> = async (c) => {
+  const id = c.req.param("id");
+  const applications = await nsaManager.getApplicationService().getApplicationById(id);
   return c.json(applications, 200);
 };
 

@@ -1,16 +1,11 @@
-import { applications } from "@srms/server/db/schemas";
+import { applications, applicationView } from "@srms/server/db/schemas";
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
-import { CreateApplicantSchema, SelectApplicantSchema } from "./ApplicantSchema";
-import { CreateApplicantFixtures, SelectApplicantFixtures } from "./ApplicantFixtureSchema";
-import { CreateApplicantAddressSchema, SelectApplicantAddressSchema } from "./ApplicantAddressSchema";
-import { CreateApplicantHouseholdSchema, SelectApplicantHouseholdSchema } from "./ApplicantHouseholdSchema";
+import { CreateApplicantSchema } from "./ApplicantSchema";
+import { CreateApplicantFixtures } from "./ApplicantFixtureSchema";
+import { CreateApplicantAddressSchema } from "./ApplicantAddressSchema";
+import { CreateApplicantHouseholdSchema } from "./ApplicantHouseholdSchema";
 
-export const SelectApplicationSchema = createSelectSchema(applications).extend({
-  applicant: SelectApplicantSchema,
-  address: SelectApplicantAddressSchema,
-  household: SelectApplicantHouseholdSchema,
-  fixtures: SelectApplicantFixtures.array(),
-});
+export const SelectApplicationSchema = createSelectSchema(applicationView);
 
 export const CreateApplicationSchema = createInsertSchema(applications)
   .omit({

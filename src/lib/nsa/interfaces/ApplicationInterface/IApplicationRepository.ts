@@ -4,5 +4,6 @@ import { ApplicantDocs, Application, CreateApplication, UploadApplicationDocs } 
 export interface I_ApplicantionRepository {
   getAllApplication(queryParams?: QueryParams): Promise<PaginatedResult<Application>>;
   addApplication(data: CreateApplication): Promise<Application>;
+  getApplicationById(id: string): Promise<Application>;
   uploadApplicationDocs(data: UploadApplicationDocs): Promise<ApplicantDocs>;
 }

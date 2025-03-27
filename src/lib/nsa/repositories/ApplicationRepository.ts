@@ -14,7 +14,7 @@ import { PaginatedResult, QueryParams } from "@srms/server/types/helperTypes";
 import { paginateQuery } from "@srms/server/helpers/paginateQuery";
 import { minioManager } from "@srms/server/app";
 import { createFormData } from "@srms/utils/fileUtils";
-import { desc } from "drizzle-orm";
+import { desc, eq } from "drizzle-orm";
 
 export class ApplicantionRepository implements I_ApplicantionRepository {
   async getAllApplication(queryParams?: QueryParams): Promise<PaginatedResult<Application>> {
@@ -102,6 +102,26 @@ export class ApplicantionRepository implements I_ApplicantionRepository {
     return res;
   }
 
+  async getApplicationById(id: string): Promise<Application> {
+    // Throw an error if no application ID is provided
+    if (!id) {
+      throw new Error("Invalid application ID: An ID must be provided");
+    }
+
+    // Prepare a SQL statement to select the application by ID
+    const stmtSelect = db
+      .select()
+      .from(applicationView)
+      .where(eq(applicationView.id, id))
+      .prepare("get_application_by_id");
+
+    // Execute the prepared statement and retrieve the result
+    const rest = await stmtSelect.execute();
+
+    // Return the first result (assuming there is always at least one result)
+    return rest[0]!;
+  }
+
   async uploadApplicationDocs(data: UploadApplicationDocs): Promise<ApplicantDocs> {
     // Extract relevant fields from input payload
     const { files, applicationId, type } = data;
@@ -119,12 +139,14 @@ export class ApplicantionRepository implements I_ApplicantionRepository {
     const uploadedFiles = (await minioManager.uploadFileBuffers(formData, { allowedFileTypes })) as string[];
 
     // Persist file metadata in the database
-    const res = await db
+    const stmtInsert = db
       .insert(applicantDocuments)
       .values({ applicationId, type, files: uploadedFiles })
       .returning()
-      .prepare("add_application_docs")
-      .execute();
+      .prepare("add_application_docs");
+
+    // Execute the prepared statement and retrieve the result
+    const res = await stmtInsert.execute();
 
     // Retrieve stored file paths from MinIO (excluding full URLs)
     const fileNames = (await minioManager.getFilesByFolder(filePath)).map((file) => file.name) as string[];
