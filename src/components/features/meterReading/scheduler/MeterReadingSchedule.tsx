@@ -1,27 +1,12 @@
 'use client';
 
 import { useState, useEffect, type FunctionComponent } from 'react';
-import {
-  CalendarPlus,
-  CalendarX2,
-  ChevronDown,
-  ChevronLeft,
-  ChevronRight,
-  FilePen,
-  FilePlus2,
-  SquareSplitHorizontal,
-  UserPen,
-} from 'lucide-react';
+import { CalendarPlus, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Button } from '@srms/components/ui/Button';
 import { ButtonGroup } from '@srms/components/ui/ButtonGroup';
 import { endOfMonth, format, isSameMonth, startOfMonth } from 'date-fns';
 import { cn } from '@srms/utils/shadcn';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@srms/components/ui/DropdownMenu';
+
 import { holidays } from './holidays';
 import { useMeterReadingSchedule } from './useMeterReadingSchedule';
 
@@ -46,23 +31,32 @@ export const MeterReadingSchedule: FunctionComponent = () => {
   const [schedule, setSchedule] = useState(scheduler.calculateSchedule());
   const [selectedDatesToSplit, setSelectedDatesToSplit] = useState<Date[]>([]);
 
-  // Example usage:
-  const march2025SelectedDates = [
-    // new Date(2025, 2, 5), // March 5th
-    // new Date(2025, 2, 15), // March 15th
-    new Date(2025, 2, 20), // March 25th
-    // new Date(2025, 1, 13),
-    // new Date(2025, 1, 19),
-  ];
+  // // Example usage:
+  // const march2025SelectedDates = [
+  //   //new Date(2025, 2, 5), // March 5th
+  //   // new Date(2025, 2, 15), // March 15th
+  //   //new Date(2025, 2, 20), // March 20th
 
-  const splitResult = scheduler.splitDates(march2025SelectedDates, schedule);
+  //   // new Date(2025, 0, 13),
+  //   // new Date(2025, 0, 9),
+  //   // new Date(2025, 0, 13),
 
-  console.log({ splitResult, schedule });
+  //   new Date(2025, 1, 19),
+  //   new Date(2025, 1, 13),
+  // ];
+
+  //const splitResult = scheduler.splitDates(march2025SelectedDates, schedule);
+
+  //console.log({ splitResult });
+
+  useEffect(() => console.log(schedule), [schedule]);
 
   // When the currentDate changes, update the schedule
   useEffect(() => {
     const newSchedule = scheduler.calculateSchedule();
     setSchedule(newSchedule);
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [scheduler.currentDate]);
 
   // Calculate number of rows needed for the calendar
@@ -150,6 +144,7 @@ export const MeterReadingSchedule: FunctionComponent = () => {
                 onClick={() => {
                   const selectedDates = [...selectedDatesToSplit];
                   selectedDates.push(date.readingDate);
+                  setSchedule(scheduler.splitDates(selectedDates, schedule));
                   setSelectedDatesToSplit(selectedDates);
                 }}
                 className={cn(
@@ -169,19 +164,21 @@ export const MeterReadingSchedule: FunctionComponent = () => {
                     {format(new Date(date.readingDate), 'dd')}
                   </section>
                 </div>
-                {withinThisMonth && date.dueDate && date.disconnectionDate && (
+                {/* {withinThisMonth && date.dueDate && date.disconnectionDate && (
                   <section className="flex flex-col space-y-1">
                     <div className="bg-muted/30 dark:border-muted border-muted-foreground/10 flex items-center gap-1 rounded border px-2 py-0.5 text-xs">
                       <div className="size-2 rounded-full bg-indigo-400" />
-                      {scheduler.formatDate(date.dueDate as Date, 'MMM dd')}
+                      {scheduler.formatDate(date.dueDate as Date | undefined, 'MMM dd')}
+                      {date.dueDate.toString()}
                     </div>
 
                     <div className="bg-muted/30 dark:border-muted border-muted-foreground/10 flex items-center gap-1 rounded border px-2 py-0.5 text-xs">
                       <div className="size-2 rounded-full bg-rose-400" />
-                      {scheduler.formatDate(date.disconnectionDate as Date, 'MMM dd')}
+                      {scheduler.formatDate(date.disconnectionDate as Date | undefined, 'MMM dd')}
+                      {date.disconnectionDate.toString()}
                     </div>
                   </section>
-                )}
+                )} */}
               </div>
             );
           })}
