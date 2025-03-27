@@ -19,6 +19,7 @@ export const TAGS = {
   APPLICATIONS: ["Applications"],
   APPLICANTS: ["Applicants"],
   FIXTURE_UNITS: ["Fixture Units"],
+  GEOSERVER: ["GeoServer"],
 };
 
 export const fixtureUnitType = ["private", "public"] as const;

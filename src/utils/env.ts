@@ -12,21 +12,18 @@ const EnvSchema = z.object({
   DB_PASS: z.string(),
   DB_USER: z.string(),
   DB_NAME: z.string(),
-<<<<<<< HEAD
-  // AUTHORIZATION_SERVER_URL: z.string().url(),
-  // CLIENT_ID: z.string(),
-  // CLIENT_SECRET: z.string(),
-  // REDIRECT_URI: z.string().url(),
-=======
-  MINIO_ENDPOINT: z.string().ip(),
+  GEOSERVER_URL: z.string(),
+  GEOSERVER_WORKSPACE: z.string(),
+  GEOSERVER_USERNAME: z.string(),
+  GEOSERVER_PASSWORD: z.string(),
+  MINIO_ENDPOINT: z.string(),
   MINIO_PORT: z.coerce.number(),
   MINIO_ACCESS_KEY: z.string(),
   MINIO_SECRET: z.string(),
-  MINIO_USE_SSL: z.coerce.boolean(),
+  MINIO_USE_SSL: z.string(),
   MINIO_BUCKET: z.string(),
-  MINIO_USER: z.string(),
-  MINIO_PASS: z.string(),
->>>>>>> 13b7ffe712f0e6b7d95b71cae686e8b5a58e6b00
+  NEXT_PUBLIC_MAPTILER_KEY: z.string(),
+  NEXT_PUBLIC_BING_KEY: z.string(),
 });
 
 export type Env = z.infer<typeof EnvSchema>;

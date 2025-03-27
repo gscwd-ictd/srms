@@ -7,6 +7,7 @@ import {
   CircleHelp,
   Command,
   Droplets,
+  Car,
   Frame,
   GalleryVerticalEnd,
   LayoutDashboard,
@@ -80,6 +81,11 @@ const data = {
       title: "Operations",
       url: "/operations",
       icon: Droplets,
+    },
+    {
+      title: "Vehicle",
+      url: "/vehicle",
+      icon: Car,
     },
     {
       title: "Settings",
