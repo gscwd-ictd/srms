@@ -14,3 +14,12 @@ export const db = drizzle({
     ...schemas,
   },
 });
+
+const geoPool = new Pool({
+  connectionString: `postgres://srms_user:srms_password@172.20.110.85:5440/srms`,
+});
+
+export const geoDb = drizzle({
+  client: geoPool,
+  logger: true,
+});

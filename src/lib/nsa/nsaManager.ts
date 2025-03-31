@@ -1,8 +1,10 @@
-import { I_ApplicantionRepository, I_PlumbingFixtureRepository } from "./interfaces";
-import { ApplicantionRepository } from "./repositories/ApplicationRepository";
-import { PlumbingFixtureRepository } from "./repositories/PlumbingFixtureRepository";
-import { ApplicationService } from "./services/ApplicationService";
-import { PlumbingFixtureService } from "./services/PlumbingFixtureService";
+import {
+  I_ApplicantionRepository,
+  I_PlumbingFixtureRepository,
+  I_ServiceableAreaRepository,
+} from "./interfaces";
+import { ApplicantionRepository, PlumbingFixtureRepository, ServiceableAreaRepository } from "./repositories";
+import { ApplicationService, PlumbingFixtureService, ServiceableAreaService } from "./services";
 
 export class NSAManager {
   // Singleton instance of NSAManager
@@ -16,6 +18,10 @@ export class NSAManager {
   private plumbingFixtureService: PlumbingFixtureService;
   private plumbingFixtureRepository: I_PlumbingFixtureRepository;
 
+  // Serviceable-related service and repositories
+  private serviceableAreaService: ServiceableAreaService;
+  private serviceableAreaRepository: I_ServiceableAreaRepository;
+
   // Private constructor to prevent direct instantiation
   private constructor() {
     // Initialize application repository and service
@@ -25,6 +31,10 @@ export class NSAManager {
     // Initialize plumbing repository and service
     this.plumbingFixtureRepository = new PlumbingFixtureRepository();
     this.plumbingFixtureService = new PlumbingFixtureService(this.plumbingFixtureRepository);
+
+    // Initialize serviceable repository and service
+    this.serviceableAreaRepository = new ServiceableAreaRepository();
+    this.serviceableAreaService = new ServiceableAreaService(this.serviceableAreaRepository);
   }
 
   // Returns the singleton instance of NSAManager
@@ -53,5 +63,15 @@ export class NSAManager {
   // Getter for plumbing fixture service
   public getPlumbingFixtureService(): PlumbingFixtureService {
     return this.plumbingFixtureService;
+  }
+
+  // Getter for serviceable area repository
+  public getServiceableAreaRepository(): I_ServiceableAreaRepository {
+    return this.serviceableAreaRepository;
+  }
+
+  // Getter for serviceable area service
+  public getServiceableAreaService(): ServiceableAreaService {
+    return this.serviceableAreaService;
   }
 }

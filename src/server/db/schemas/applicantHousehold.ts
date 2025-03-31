@@ -17,15 +17,3 @@ export const applicantHousehold = pgTable("applicant_household", {
     .defaultNow()
     .$onUpdateFn(() => new Date()),
 });
-
-/* 
-
-  SERVICEABLE CONVER TO GEOJSON
-  select st_asgeojson(st_geomfromwkb(geom))::jsonb from public."SERVICEABLEAREA"
-
-
-  172.20.110.85
-  gensan.ictd@gmail.com 
-  gensancitywaterdistrict
-
-  */
