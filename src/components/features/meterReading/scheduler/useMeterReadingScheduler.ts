@@ -1,5 +1,3 @@
-/* eslint-disable prefer-const */
-/* eslint-disable @typescript-eslint/no-unused-vars */
 'use client';
 
 import {
@@ -10,19 +8,15 @@ import {
   endOfMonth,
   endOfWeek,
   format,
-  isAfter,
   isBefore,
   isSameDay,
   isSameMonth,
-  isSameYear,
   isSunday,
   isWeekend,
   nextMonday,
   parse,
-  startOfDay,
   startOfMonth,
   startOfWeek,
-  subDays,
   subMonths,
 } from 'date-fns';
 import { useCallback, useEffect, useMemo, useState } from 'react';
@@ -45,20 +39,17 @@ type DisconnectionDate = {
   disconnectionDate: Date;
 };
 
-type SplitDate = {
-  selectedDate: Date;
-  leadingDates: MeterReadingSchedule[];
-  trailingDates: MeterReadingSchedule[];
-};
-
 export type MeterReadingSchedule = {
   readingDate: Date;
   dueDate: Date | Date[] | undefined;
   disconnectionDate: Date | Date[] | undefined;
 };
 
-export const useMeterReadingSchedule = (holidays: Holiday[], date?: Date) => {
+export type Scheduler = ReturnType<typeof useMeterReadingScheduler>;
+
+export const useMeterReadingScheduler = (holidays: Holiday[], restDays: Date[], date?: Date) => {
   const [currentDate, setCurrentDate] = useState(date ?? new Date());
+  // const [currentRestDays, setCurrentRestDays] = useState(restDays);
 
   useEffect(() => {
     if (date !== undefined && date.getTime() !== currentDate.getTime()) {
@@ -84,11 +75,15 @@ export const useMeterReadingSchedule = (holidays: Holiday[], date?: Date) => {
     [holidays],
   );
 
+  const restDayDates = useMemo(() => restDays.map(restDay => formatDate(restDay)), [restDays]);
+
   // Check if a date is a holiday
   const isHoliday = useCallback(
     (date: Date): boolean => holidayDates.includes(formatDate(date) as string),
     [holidayDates],
   );
+
+  const isRestDay = useCallback((date: Date) => restDayDates.includes(formatDate(date)), [restDayDates]);
 
   const addBusinessDays = useCallback(
     (date: Date, daysToAdd: number) => {
@@ -204,16 +199,20 @@ export const useMeterReadingSchedule = (holidays: Holiday[], date?: Date) => {
     let startOfReadingDate = monthStart;
 
     //* Use this instead, if starting date requires to skip holidays as well.
-    while (isHoliday(startOfReadingDate) || isSunday(startOfReadingDate)) {
-      startOfReadingDate = adjustForHolidayOrWeekend(startOfReadingDate);
-    }
-
-    // if (isSunday(startOfReadingDate)) {
-    //   startOfReadingDate = nextMonday(startOfReadingDate);
+    // while (isHoliday(startOfReadingDate) || isSunday(startOfReadingDate)) {
+    //   startOfReadingDate = adjustForHolidayOrWeekend(startOfReadingDate);
     // }
 
+    if (isSunday(startOfReadingDate)) {
+      startOfReadingDate = nextMonday(startOfReadingDate);
+    }
+
+    while (isRestDay(startOfReadingDate)) {
+      startOfReadingDate = addDays(startOfReadingDate, 1);
+    }
+
     return { monthStart, startOfReadingDate };
-  }, [adjustForHolidayOrWeekend, currentDate, isHoliday]);
+  }, [currentDate, isRestDay]);
 
   const calculateDueDates = useCallback((): DueDate[] => {
     const { monthStart, startOfReadingDate } = getStartingReadingDate();
@@ -232,6 +231,10 @@ export const useMeterReadingSchedule = (holidays: Holiday[], date?: Date) => {
         readingDate = nextMonday(readingDate);
       }
 
+      if (isRestDay(readingDate)) {
+        readingDate = addDays(readingDate, 1);
+      }
+
       dueDates.push({ readingDate, dueDate });
 
       readingDate = addDays(readingDate, 1);
@@ -240,7 +243,7 @@ export const useMeterReadingSchedule = (holidays: Holiday[], date?: Date) => {
     }
 
     return dueDates;
-  }, [adjustForHolidayOrWeekend, getStartingReadingDate]);
+  }, [adjustForHolidayOrWeekend, getStartingReadingDate, isRestDay]);
 
   const calculateDisconnectionDates = useCallback(
     (dueDates: DueDate[]): DisconnectionDate[] => {
@@ -286,12 +289,11 @@ export const useMeterReadingSchedule = (holidays: Holiday[], date?: Date) => {
   }, [calculateDisconnectionDates, calculateDueDates, getCalendarDays]);
 
   const splitDates = useCallback(
-    (selectedDates: Date[], schedule: MeterReadingSchedule[]) => {
-      // Make sure no similar dates are selected
-      const uniqueDates = removeDuplicateDates(selectedDates);
+    (selectedDates: Date[]) => {
+      const schedule = calculateSchedule();
 
       // Sort the selected dates chronologically
-      const sortedSelectedDates = [...uniqueDates].sort(compareAsc);
+      const sortedSelectedDates = [...selectedDates].sort(compareAsc);
 
       let split = [...schedule];
 
@@ -311,7 +313,7 @@ export const useMeterReadingSchedule = (holidays: Holiday[], date?: Date) => {
 
       // Process each selected date
       for (let i = 0; i < sortedSelectedDates.length; i++) {
-        let result: MeterReadingSchedule[] = [];
+        const result: MeterReadingSchedule[] = [];
         let startIndex = 0;
 
         const currentSelectedDate = sortedSelectedDates[i]!;
@@ -366,7 +368,7 @@ export const useMeterReadingSchedule = (holidays: Holiday[], date?: Date) => {
 
       return split;
     },
-    [removeDuplicateDates],
+    [calculateSchedule],
   );
 
   const goToPreviousMonth = () => {
@@ -389,6 +391,7 @@ export const useMeterReadingSchedule = (holidays: Holiday[], date?: Date) => {
     formatDate,
     goToPreviousMonth,
     goToNextMonth,
+    removeDuplicateDates,
     today,
     currentDate,
   };
