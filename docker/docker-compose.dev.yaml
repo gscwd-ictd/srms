@@ -1,8 +1,11 @@
 services:
   db:
     image: postgis/postgis:15-3.4
-    container_name: srms-pg
+    container_name: srms-db
     restart: always
+    networks:
+      mars:
+        ipv4_address: 10.10.1.2
     environment:
       POSTGRES_USER: ${DB_USER}
       POSTGRES_PASSWORD: ${DB_PASS}
@@ -18,36 +21,28 @@ services:
       timeout: 5s
       retries: 5
 
-  geoserver:
-    image: kartoza/geoserver:2.24.1
-    container_name: srms-geoserver
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: pgadmin
+    networks:
+      mars:
+        ipv4_address: 10.10.1.4
     depends_on:
       - db
     ports:
-      - '${GEOSERVER_PORT:-8080}:8080'
+      - '2781:80'
+    restart: always
     environment:
-      - GEOSERVER_DATA_DIR=/opt/geoserver/data_dir
-      - GEOSERVER_ADMIN_PASSWORD=${GEOSERVER_ADMIN_PASS:-geoserver}
-      - GEOSERVER_ADMIN_USER=${GEOSERVER_ADMIN_USER:-admin}
-      - INITIAL_MEMORY=2G
-      - MAXIMUM_MEMORY=4G
-      # Database connection parameters
-      - POSTGIS_HOST=db
-      - POSTGIS_PORT=5432
-      - POSTGIS_DB=${DB_NAME}
-      - POSTGIS_USER=${DB_USER}
-      - POSTGIS_PASS=${DB_PASS}
-    volumes:
-      - geoserver-data:/opt/geoserver/data_dir
-      - geoserver-extensions:/opt/geoserver/extensions
-    restart: unless-stopped
-    healthcheck:
-      test: curl --fail -s http://localhost:8080/geoserver/web/ || exit 1
-      interval: 30s
-      timeout: 10s
-      retries: 3
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_EMAIL}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_PASS}
 
 volumes:
   data:
-  geoserver-data:
-  geoserver-extensions:
+
+networks:
+  mars:
+    name: mars
+    ipam:
+      driver: default
+      config:
+        - subnet: '10.10.1.0/24'
