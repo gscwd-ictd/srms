@@ -1,6 +1,5 @@
 import { geoDb } from "@srms/server/db/postgres";
 import { sql } from "drizzle-orm";
-import { ServiceableAreaSchema } from "../schemas";
 import { ServiceableArea } from "../types";
 import { I_ServiceableAreaRepository } from "../interfaces";
 
@@ -11,16 +10,24 @@ export class ServiceableAreaRepository implements I_ServiceableAreaRepository {
     // - Converts the `geom` (geometry) column into GeoJSON format using `st_asgeojson(st_geomfromwkb(geom))`.
     // - Extracts the `coordinates` field from the resulting GeoJSON object as JSONB.
     const sqlStmt = await geoDb.execute(
-      sql`
-  SELECT gid, purok, barangay, (st_asgeojson(st_geomfromwkb(geom))::jsonb->'coordinates') AS coordinates
-        FROM "SERVICEABLEAREA"`,
+      sql`SELECT 
+    fid, 
+    barangay, 
+    jsonb_build_object(
+        'type', (st_asgeojson(st_geomfromwkb(geom))::jsonb)->'type',
+        'coordinates', (st_asgeojson(st_geomfromwkb(geom))::jsonb)->'coordinates'
+    ) AS boundaries
+FROM "BARANGAY";
+`,
     );
 
     // Validate and parse the database response using Zod schema to ensure correct data structure
     // - Ensures the response adheres to the `ServiceableAreaSchema` structure.
     // - Uses `.array().parse()` to validate and parse multiple records into an array.
-    const res = ServiceableAreaSchema.array().parse(sqlStmt.rows);
+    //const res = ServiceableAreaSchema.array().parse(sqlStmt.rows);
 
+    //throw new HTTPException(401, { message: "" });
+    const res = sqlStmt.rows;
     return res;
   }
 }
@@ -59,8 +66,20 @@ FROM "SERVICEABLEAREA";
   DB_HOST=172.20.110.85
   DB_PORT=5432
   DB_USER=srms_user
-  DB_PASS=password
+  DB_PASS=srms_password
   DB_NAME=srms
+
+
+
+
+boundaries: {
+  type: multip
+  coordinates:
+
+
+}
+
+
 
 
   */

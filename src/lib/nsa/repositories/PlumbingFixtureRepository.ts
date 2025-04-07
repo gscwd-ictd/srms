@@ -5,6 +5,7 @@ import { plumbingFixtures } from "@srms/server/db/schemas";
 import { createFormData } from "@srms/utils/fileUtils";
 import { minioManager } from "@srms/server/app";
 import { I_PlumbingFixtureRepository } from "../interfaces";
+import { NotFoundError } from "../errors/codes";
 
 export class PlumbingFixtureRepository implements I_PlumbingFixtureRepository {
   async getAllPlumbingFixtures(): Promise<PlumbingFixture[]> {
@@ -66,7 +67,7 @@ export class PlumbingFixtureRepository implements I_PlumbingFixtureRepository {
     const res = await stmtSelect.execute();
 
     if (res.length === 0 || !res[0]) {
-      throw new Error("Plumbing fixture not found!");
+      throw new NotFoundError("Plumbing fixture not found!");
     }
 
     // Step 2: Retrieve the existing file from storage
@@ -89,7 +90,7 @@ export class PlumbingFixtureRepository implements I_PlumbingFixtureRepository {
     const plumbingFixture = await stmtSelect.execute();
 
     if (plumbingFixture.length === 0) {
-      throw new Error("Update failed. Plumbing fixture not found!");
+      throw new NotFoundError("Update failed. Plumbing fixture not found!");
     }
 
     // Step 2: Extract file information and update fields
@@ -133,7 +134,7 @@ export class PlumbingFixtureRepository implements I_PlumbingFixtureRepository {
     const plumbingFixture = await stmtSelect.execute();
 
     if (plumbingFixture.length === 0) {
-      throw new Error("Delete failed. Plumbing fixture not found!");
+      throw new NotFoundError("Delete failed. Plumbing fixture not found!");
     }
 
     // Step 2: Delete the associated file from storage

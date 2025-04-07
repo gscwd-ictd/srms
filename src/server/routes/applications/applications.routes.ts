@@ -132,7 +132,7 @@ export const getAllApplicationDetails = createRoute({
     [HttpStatusCodes.OK]: {
       content: {
         "application/json": {
-          schema: z.object({}),
+          schema: z.array(SelectApplicationSchema),
         },
       },
       description: "",

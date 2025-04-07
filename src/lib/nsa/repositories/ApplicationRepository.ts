@@ -15,6 +15,7 @@ import { paginateQuery } from "@srms/server/helpers/paginateQuery";
 import { minioManager } from "@srms/server/app";
 import { createFormData } from "@srms/utils/fileUtils";
 import { desc, eq } from "drizzle-orm";
+import { NotFoundError } from "../errors/codes";
 
 export class ApplicantionRepository implements I_ApplicantionRepository {
   async getAllApplication(queryParams?: QueryParams): Promise<PaginatedResult<Application>> {
@@ -105,7 +106,7 @@ export class ApplicantionRepository implements I_ApplicantionRepository {
   async getApplicationById(id: string): Promise<Application> {
     // Throw an error if no application ID is provided
     if (!id) {
-      throw new Error("Invalid application ID: An ID must be provided");
+      throw new NotFoundError("Invalid application ID: An ID must be provided");
     }
 
     // Prepare a SQL statement to select the application by ID
