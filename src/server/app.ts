@@ -4,11 +4,13 @@ import { healthcheck, applications, plumbingFixtures, fixtureUnits, geoserver } 
 import { createOpenAPIRoute } from "./openapi/createOpenApiRoute";
 import { configureOpenApi } from "./openapi/configureOpenApi";
 import { crossOrigin } from "./middlewares/cors";
-import { MinioManager } from "@srms/lib/minio";
 import env from "@srms/utils/env";
-import { NSAManager } from "@srms/lib/nsa/nsaManager";
 import multer from "multer";
+import { MinioManager } from "@srms/lib/minio";
+import { NSAManager } from "@srms/lib/nsa/nsaManager";
 import { GeoServerManager } from "@srms/lib/geoserver/geoServerManager";
+import { TrackSolidManager } from "@srms/lib/tracksolid/trackSolidManager";
+import tracksolid from "./routes/trackSolid/trackSolid.index";
 
 function createApp() {
   const app = createOpenAPIRoute().basePath("/api");
@@ -20,7 +22,9 @@ function createApp() {
 
   app.use(secureHeaders());
   app.use(crossOrigin);
-  const routes = [healthcheck, applications, plumbingFixtures, fixtureUnits, geoserver] as const;
+
+  // IMPORTANT! Add each route to this array
+  const routes = [healthcheck, applications, plumbingFixtures, fixtureUnits, geoserver, tracksolid] as const;
   routes.forEach((route) => app.route("/", route));
   return app;
 }
@@ -38,6 +42,9 @@ export const minioManager = MinioManager.getInstance({
 });
 
 export const upload = multer({ storage: multer.memoryStorage() });
+
 export const nsaManager = NSAManager.getInstance();
 
 export const geoServerManager = GeoServerManager.getInstance();
+
+export const trackSolidManager = TrackSolidManager.getInstance();

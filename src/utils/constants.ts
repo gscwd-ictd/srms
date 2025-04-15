@@ -20,6 +20,14 @@ export const TAGS = {
   APPLICANTS: ["Applicants"],
   FIXTURE_UNITS: ["Fixture Units"],
   GEOSERVER: ["GeoServer"],
+  TRACKSOLID: ["Tracksolid"],
 };
 
 export const fixtureUnitType = ["private", "public"] as const;
+
+export const JimiMethods = {
+  OAUTH: "jimi.oauth.token.get",
+  USER: "jimi.user.child.list",
+  DEVICE: "jimi.user.device.list",
+  LOCATION: "jimi.device.location.get",
+};

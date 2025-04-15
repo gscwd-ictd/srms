@@ -24,6 +24,10 @@ const EnvSchema = z.object({
   MINIO_BUCKET: z.string(),
   NEXT_PUBLIC_MAPTILER_KEY: z.string(),
   NEXT_PUBLIC_BING_KEY: z.string(),
+  TRACKSOLID_URL: z.string(),
+  TRACKSOLID_APP_KEY: z.string(),
+  TRACKSOLID_APP_SECRET: z.string(),
+  TRACKSOLID_PASSWORD: z.string(),
 });
 
 export type Env = z.infer<typeof EnvSchema>;

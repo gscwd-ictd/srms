@@ -1,0 +1,5 @@
+import { TrackSolidAuth } from "../../types";
+
+export interface I_TrackSolidService {
+  getTsAccessToken(): Promise<TrackSolidAuth>;
+}

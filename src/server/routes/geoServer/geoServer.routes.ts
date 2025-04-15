@@ -25,7 +25,7 @@ export const getGeoServerLayers = createRoute({
           example: {
             name: "NotFoundError",
             status: 404,
-            message: "Fixture Units by this year not found!",
+            message: "Layer not found",
           },
           schema: ErrorResponseSchema,
         },

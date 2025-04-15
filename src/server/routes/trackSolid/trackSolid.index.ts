@@ -1,0 +1,7 @@
+import * as routes from "./trackSolid.routes";
+import * as handlers from "./trackSolid.handler";
+import { createOpenAPIRoute } from "@srms/server/openapi/createOpenApiRoute";
+
+const tracksolid = createOpenAPIRoute().openapi(routes.getTsAccessToken, handlers.getTsAccessToken);
+
+export default tracksolid;

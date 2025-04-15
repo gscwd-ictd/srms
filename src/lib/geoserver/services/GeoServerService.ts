@@ -1,6 +1,6 @@
 import env from "@srms/utils/env";
 import { DataStores, GeoserverLayer } from "../types";
-import { I_GeoServerService } from "./../interfaces/GeoServerInterface/IGeoServerService";
+import { I_GeoServerService } from "../interfaces/";
 import axios from "axios";
 
 export class GeoServerService implements I_GeoServerService {
