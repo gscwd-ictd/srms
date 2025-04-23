@@ -6,7 +6,7 @@ export type TrackSolidTokens = {
 export type TrackSolidAuth = {
   code: number;
   message: string;
-  result?: {
+  result: {
     appKey: string;
     account: string;
     accessToken: string;
@@ -14,7 +14,6 @@ export type TrackSolidAuth = {
     expiresIn: number;
     time: string;
   };
-  data?: unknown;
 };
 
 export type TrackSolidDevice = {

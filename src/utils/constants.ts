@@ -27,6 +27,7 @@ export const fixtureUnitType = ["private", "public"] as const;
 
 export const JimiMethods = {
   OAUTH: "jimi.oauth.token.get",
+  REFRESH: "jimi.oauth.token.refresh",
   USER: "jimi.user.child.list",
   DEVICE: "jimi.user.device.list",
   LOCATION: "jimi.device.location.get",

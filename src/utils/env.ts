@@ -27,6 +27,7 @@ const EnvSchema = z.object({
   TRACKSOLID_URL: z.string(),
   TRACKSOLID_APP_KEY: z.string(),
   TRACKSOLID_APP_SECRET: z.string(),
+  TRACKSOLID_USER: z.string(),
   TRACKSOLID_PASSWORD: z.string(),
 });
 
