@@ -1,4 +1,4 @@
-export type TrackSolidErrorCode = "incorrect_credentials";
+export type TrackSolidErrorCode = "incorrect_credentials" | "invalid_token";
 
 export type TrackSolidErrorResponse = {
   code: TrackSolidErrorCode;

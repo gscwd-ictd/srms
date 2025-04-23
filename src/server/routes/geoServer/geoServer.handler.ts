@@ -4,5 +4,6 @@ import { GetGeoServerRoute } from "./geoServer.routes";
 
 export const getGeoServerLayers: AppRouteHandler<GetGeoServerRoute> = async (c) => {
   const geoServerLayers = await geoServerManager.getGeoServerService().getGeoServerLayers();
+
   return c.json(geoServerLayers, 200);
 };
