@@ -2,9 +2,9 @@ import MapComponent from "@srms/components/features/map/MapComponent";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Vehicle",
+  title: "Fleet Tracking",
 };
 
-export default async function VehiclePage() {
+export default async function FleetPage() {
   return <MapComponent />;
 }
