@@ -35,6 +35,8 @@ export type TrackSolidDevice = {
   enabledFlag: number;
   engineNumber: string;
   status: string;
+  deviceGroupId: string;
+  deviceGroup: string;
   visible?: boolean;
 };
 
@@ -42,6 +44,25 @@ export type TrackSolidDeviceList = {
   code: number;
   message: string;
   result: Array<TrackSolidDevice>;
+};
+
+export type TrackSolidDeviceDetail = {
+  code: number;
+  message: string;
+  result: Omit<TrackSolidDevice, "visible"> & {
+    iccid: string;
+    importTime: string;
+    imsi: string;
+    licensePlatNo: string;
+    vin: string;
+    vehicleBrand: string;
+    fuel_100km: string;
+    status: string;
+    user_expiration: string;
+    currentMileage: string;
+    account: string;
+    customerName: string;
+  };
 };
 
 export type TrackSolidDeviceLocation = {
@@ -69,10 +90,26 @@ export type TrackSolidDeviceLocation = {
   temperature: string;
   trackerOil: string;
   currentMileage: string;
+  mcType: string;
+  trackerOils: string;
+  account: string;
+  customerName: string;
+  state: string;
+  stateTime: string;
+  iccid: string;
+  mac: string;
 };
 
 export type TrackSolidDeviceLocationList = {
   code: number;
   message: string;
   result: Array<TrackSolidDeviceLocation>;
+};
+
+export type DeviceImei = {
+  imei: string;
+};
+
+export type DeviceImeis = {
+  imeis: string;
 };

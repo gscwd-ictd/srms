@@ -83,8 +83,8 @@ const data = {
       icon: Droplets,
     },
     {
-      title: "Vehicle",
-      url: "/vehicle",
+      title: "Fleet",
+      url: "/fleet",
       icon: Car,
     },
     {
