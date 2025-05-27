@@ -9,7 +9,8 @@ import {
   SelectDevicesSchema,
   SelectDevicesLocationSchema,
   SelectImeisSchema,
-  SelectImeiSchema,
+  SelectDevicesMileageSchema,
+  SelectMileageSchema,
 } from "@srms/lib/tracksolid/schemas";
 
 export const getTsAccessToken = createRoute({
@@ -176,8 +177,8 @@ export const getDeviceDetail = createRoute({
     }),
     body: {
       content: {
-        "application/x-www-form-urlencoded": {
-          schema: SelectImeiSchema,
+        "application/json": {
+          schema: SelectMileageSchema,
         },
       },
       required: true,
@@ -226,7 +227,7 @@ export const getDeviceDetail = createRoute({
 
 export const getDevicesLocation = createRoute({
   tags: TAGS.TRACKSOLID,
-  description: "Get the latest location for one or multiple devices. ",
+  description: "Get the latest location for one or multiple devices.",
   method: "post",
   path: "/v1/tracksolid/devices-location",
   operationId: "getDevicesLocation",
@@ -236,7 +237,7 @@ export const getDevicesLocation = createRoute({
     }),
     body: {
       content: {
-        "application/x-www-form-urlencoded": {
+        "application/json": {
           schema: SelectImeisSchema,
         },
       },
@@ -259,7 +260,67 @@ export const getDevicesLocation = createRoute({
           example: {
             name: "NotFoundError",
             status: 404,
-            message: "Device location not found",
+            message: "Device/s not found",
+          },
+          schema: ErrorResponseSchema,
+        },
+      },
+      description: "",
+    },
+
+    [HttpStatusCodes.INTERNAL_SERVER_ERROR]: {
+      content: {
+        "application/json": {
+          example: {
+            name: "ServerError",
+            status: 500,
+            message: "Something went wrong!",
+            stack: "...",
+          },
+          schema: ErrorResponseSchema,
+        },
+      },
+      description: "",
+    },
+  },
+});
+
+export const getDevicesMileage = createRoute({
+  tags: TAGS.TRACKSOLID,
+  description: "Get device(s) mileage data of specified time range.",
+  method: "post",
+  path: "/v1/tracksolid/devices-mileage",
+  operationId: "getDevicesMileage",
+  request: {
+    headers: z.object({
+      "access-token": z.string(),
+    }),
+    body: {
+      content: {
+        "application/json": {
+          schema: SelectMileageSchema,
+        },
+      },
+      required: true,
+    },
+  },
+  responses: {
+    [HttpStatusCodes.OK]: {
+      content: {
+        "application/json": {
+          schema: SelectDevicesMileageSchema,
+        },
+      },
+      description: "",
+    },
+
+    [HttpStatusCodes.NOT_FOUND]: {
+      content: {
+        "application/json": {
+          example: {
+            name: "NotFoundError",
+            status: 404,
+            message: "Device/s not found",
           },
           schema: ErrorResponseSchema,
         },
@@ -289,3 +350,4 @@ export type GetTsRefreshTokenRoute = typeof getTsRefreshToken;
 export type GetDevicesRoute = typeof getDevices;
 export type GetDeviceDetailRoute = typeof getDeviceDetail;
 export type GetDevicesLocationRoute = typeof getDevicesLocation;
+export type GetDevicesMileageRoute = typeof getDevicesMileage;

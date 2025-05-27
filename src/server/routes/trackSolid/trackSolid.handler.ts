@@ -3,6 +3,7 @@ import { AppRouteHandler } from "@srms/server/types/appTypes";
 import {
   GetDeviceDetailRoute,
   GetDevicesLocationRoute,
+  GetDevicesMileageRoute,
   GetDevicesRoute,
   GetTsAccessTokenRoute,
   GetTsRefreshTokenRoute,
@@ -14,6 +15,7 @@ import {
   SelectDeviceDetailSchema,
   SelectDevicesSchema,
   SelectDevicesLocationSchema,
+  SelectDevicesMileageSchema,
 } from "@srms/lib/tracksolid/schemas";
 
 type AccessToken = z.infer<typeof SelectAccessTokenSchema>;
@@ -21,6 +23,7 @@ type RefreshToken = z.infer<typeof SelectRefreshTokenSchema>;
 type Devices = z.infer<typeof SelectDevicesSchema>;
 type DeviceDetail = z.infer<typeof SelectDeviceDetailSchema>;
 type DevicesLocation = z.infer<typeof SelectDevicesLocationSchema>;
+type DevicesMileage = z.infer<typeof SelectDevicesMileageSchema>;
 
 export const getTsAccessToken: AppRouteHandler<GetTsAccessTokenRoute> = async (c) => {
   const tsAccessToken = (await trackSolidManager.getTrackSolidService().getTsAccessToken()) as AccessToken;
@@ -49,8 +52,7 @@ export const getDevices: AppRouteHandler<GetDevicesRoute> = async (c) => {
 
 export const getDeviceDetail: AppRouteHandler<GetDeviceDetailRoute> = async (c) => {
   const accessToken = c.req.header("access-token") as string;
-  const body = c.req.valid("form");
-  // const imei = c.req.param("imei");
+  const body = c.req.valid("json");
 
   const deviceDetail = (await trackSolidManager
     .getTrackSolidService()
@@ -61,12 +63,22 @@ export const getDeviceDetail: AppRouteHandler<GetDeviceDetailRoute> = async (c) 
 
 export const getDevicesLocation: AppRouteHandler<GetDevicesLocationRoute> = async (c) => {
   const accessToken = c.req.header("access-token") as string;
-  const body = c.req.valid("form");
-  // const imeis = c.req.param("imeis");
+  const body = c.req.valid("json");
 
   const devicesLocation = (await trackSolidManager
     .getTrackSolidService()
     .getDevicesLocation(accessToken, body)) as DevicesLocation;
 
   return c.json(devicesLocation, 200);
+};
+
+export const getDevicesMileage: AppRouteHandler<GetDevicesMileageRoute> = async (c) => {
+  const accessToken = c.req.header("access-token") as string;
+  const body = c.req.valid("json");
+
+  const devicesMileage = (await trackSolidManager
+    .getTrackSolidService()
+    .getDevicesMileage(accessToken, body)) as DevicesMileage;
+
+  return c.json(devicesMileage, 200);
 };

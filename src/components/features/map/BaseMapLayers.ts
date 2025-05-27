@@ -2,7 +2,7 @@ import { BaseLayerOptions } from "@srms/components/enums";
 import { BaseMapConfig } from "@srms/components/types";
 import LayerGroup from "ol/layer/Group";
 import TileLayer from "ol/layer/Tile";
-import { Google, OSM } from "ol/source";
+import { OSM } from "ol/source";
 import BingMaps from "ol/source/BingMaps.js";
 
 export const BaseMapLayers: BaseMapConfig[] = [
@@ -17,17 +17,18 @@ export const BaseMapLayers: BaseMapConfig[] = [
     }),
   },
 
-  {
-    title: BaseLayerOptions.GOOGLE_MAP,
-    layer: new TileLayer({
-      source: new Google({
-        key: ` AIzaSyBmwXqqGZ_BTMB73dyCsCgL315lUqy87hY`,
-      }),
-      visible: false,
-      preload: Infinity,
-      className: BaseLayerOptions.GOOGLE_MAP,
-    }),
-  },
+  // FREE USE ALREADY EXPIRED
+  // {
+  //   title: BaseLayerOptions.GOOGLE_MAP,
+  //   layer: new TileLayer({
+  //     source: new Google({
+  //       key: ` AIzaSyBmwXqqGZ_BTMB73dyCsCgL315lUqy87hY`,
+  //     }),
+  //     visible: false,
+  //     preload: Infinity,
+  //     className: BaseLayerOptions.GOOGLE_MAP,
+  //   }),
+  // },
 
   {
     title: BaseLayerOptions.BING_AERIAL,

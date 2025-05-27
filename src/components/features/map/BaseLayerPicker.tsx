@@ -40,7 +40,7 @@ const BaseLayerPicker: FunctionComponent = ({}) => {
 
   return (
     <div className="base-layers absolute bottom-[10px] left-[10px] z-20 rounded-lg bg-white p-3">
-      <p className="text-sm text-black">Base Layers</p>
+      <p className="text-md pb-2 font-bold text-black">Base Layers</p>
       <form className="">
         {/* OSM */}
         <label htmlFor="field-osm" className="mr-2 text-sm text-black">
@@ -56,7 +56,7 @@ const BaseLayerPicker: FunctionComponent = ({}) => {
         </label>
 
         {/* Google Maps */}
-        <label htmlFor="field-google" className="mr-2 text-sm text-black">
+        {/* <label htmlFor="field-google" className="mr-2 text-sm text-black">
           <input
             {...register("baseMap")}
             name="baseMap"
@@ -66,7 +66,7 @@ const BaseLayerPicker: FunctionComponent = ({}) => {
             className="mr-1"
           />
           Google Maps
-        </label>
+        </label> */}
 
         {/* Bing Maps */}
         <label htmlFor="field-bing-maps" className="mr-2 text-sm text-black">

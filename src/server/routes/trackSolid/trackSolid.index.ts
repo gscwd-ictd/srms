@@ -7,6 +7,7 @@ const tracksolid = createOpenAPIRoute()
   .openapi(routes.getTsRefreshToken, handlers.getTsRefreshToken)
   .openapi(routes.getDevices, handlers.getDevices)
   .openapi(routes.getDeviceDetail, handlers.getDeviceDetail)
-  .openapi(routes.getDevicesLocation, handlers.getDevicesLocation);
+  .openapi(routes.getDevicesLocation, handlers.getDevicesLocation)
+  .openapi(routes.getDevicesMileage, handlers.getDevicesMileage);
 
 export default tracksolid;

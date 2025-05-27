@@ -1,5 +1,6 @@
 import { z } from "@hono/zod-openapi";
 
+// Request schemas
 export const SelectImeiSchema = z.object({
   imei: z.string(),
 });
@@ -8,6 +9,15 @@ export const SelectImeisSchema = z.object({
   imeis: z.string(),
 });
 
+export const SelectMileageSchema = z.object({
+  imeis: z.string(),
+  beginTime: z.string(),
+  endTime: z.string(),
+  startRow: z.number().optional(),
+  pageSize: z.number().optional(),
+});
+
+// Response schemas
 export const SelectDevicesSchema = z.array(
   z.object({
     imei: z.string(),
@@ -69,6 +79,7 @@ export const SelectDeviceDetailSchema = z.object({
     currentMileage: z.string(),
     account: z.string(),
     customerName: z.string(),
+    todaysMileage: z.number(),
   }),
 });
 
@@ -106,5 +117,20 @@ export const SelectDevicesLocationSchema = z.array(
     stateTime: z.string(),
     iccid: z.string(),
     mac: z.string(),
+  }),
+);
+
+export const SelectDevicesMileageSchema = z.array(
+  z.object({
+    imei: z.string(),
+    startTime: z.string(),
+    endTime: z.string(),
+    startLat: z.string(),
+    startLng: z.string(),
+    endLat: z.string(),
+    endLng: z.string(),
+    elapsed: z.number(),
+    distance: z.string(),
+    avgSpeed: z.string(),
   }),
 );

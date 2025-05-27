@@ -5,6 +5,7 @@ import { ReactQueryProvider } from "@srms/components/providers/ReactQueryProvide
 import { ThemeProvider } from "@srms/components/providers/ThemeProvider";
 import { ReactScan } from "@srms/components/features/ReactScan";
 import "@srms/app/globals.css";
+// import { TokensProvider } from "./context/tracksolid-provider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -27,6 +28,8 @@ export default async function RootLayout({ children }: Readonly<PropsWithChildre
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <ReactQueryProvider>
           <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
+            {/* <TokensProvider>{children}</TokensProvider> */}
+
             <main className="h-screen w-screen overflow-x-hidden">{children}</main>
           </ThemeProvider>
         </ReactQueryProvider>

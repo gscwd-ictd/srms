@@ -3,7 +3,8 @@ export type TrackSolidErrorCode =
   | "invalid_token"
   | "nonexistent_account"
   | "nonexistent_device"
-  | "illegal_device";
+  | "illegal_device"
+  | "missing_parameter";
 
 export type TrackSolidErrorResponse = {
   code: TrackSolidErrorCode;

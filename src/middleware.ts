@@ -1,4 +1,7 @@
+import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
+import { TrackSolidAuth } from "./lib/tracksolid/types";
+import axios from "axios";
 
 export default async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
@@ -16,6 +19,27 @@ export default async function middleware(req: NextRequest) {
   }
 
   // Your other middleware logic here...
+
+  // Tracksolid login to set accessToken and refreshToken
+  const cookieStore = await cookies();
+  // const tsAccessToken = cookieStore.get("accessToken");
+
+  // if (isEmpty(tsAccessToken) || tsAccessToken === undefined) {
+  if (!cookieStore.has("accessToken")) {
+    try {
+      const response = await axios.post<TrackSolidAuth>(
+        `${process.env.NEXT_PUBLIC_APP_URL}/api/v1/tracksolid/access_token`,
+      );
+
+      cookieStore.set("accessToken", response?.data?.result?.accessToken);
+      // cookieStore.set("refreshToken", response?.data?.result?.refreshToken);
+
+      return NextResponse.redirect(new URL("/fleet", req.url));
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  }
 
   return NextResponse.next();
 }

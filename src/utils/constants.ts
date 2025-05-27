@@ -31,4 +31,5 @@ export const JimiMethods = {
   DEVICE: "jimi.user.device.list",
   DETAIL: "jimi.track.device.detail",
   LOCATION: "jimi.device.location.get",
+  MILEAGE: "jimi.device.track.mileage",
 };

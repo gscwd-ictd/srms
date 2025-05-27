@@ -21,7 +21,8 @@
     ],
     "paths": {
       "@srms/*": ["./src/*"],
-      "@/*": ["./*"]
+      "@/*": ["./*"],
+      "@images/*": ["./public/images/*"]
     }
   },
   "include": ["**/*.ts", "**/*.tsx", "next-env.d.ts", ".next/types/**/*.ts"],

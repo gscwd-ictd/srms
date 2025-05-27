@@ -62,6 +62,7 @@ export type TrackSolidDeviceDetail = {
     currentMileage: string;
     account: string;
     customerName: string;
+    todaysMileage?: number;
   };
 };
 
@@ -112,4 +113,48 @@ export type DeviceImei = {
 
 export type DeviceImeis = {
   imeis: string;
+};
+
+export type DeviceMileage = {
+  imeis: string;
+  beginTime: string;
+  endTime: string;
+  startRow?: number;
+  pageSize?: number;
+};
+
+export type TrackSolidDeviceMileage = {
+  imei: string;
+  startTime: string;
+  endTime: string;
+  startLat: string;
+  startLng: string;
+  endLat: string;
+  endLng: string;
+  elapsed: number;
+  distance: string;
+  avgSpeed: string;
+};
+
+export type TrackSolidDeviceMileageList = {
+  code: number;
+  message: string;
+  result: Array<TrackSolidDeviceMileage>;
+};
+
+export type TrackSolidRequestBody = {
+  access_token: string;
+  app_key: string;
+  begin_time: string;
+  end_time: string;
+  expires_in: number;
+  format: string;
+  imeis: string;
+  method: string;
+  page_size?: number;
+  sign: string;
+  sign_method: string;
+  start_row?: number;
+  timestamp: string;
+  v: string;
 };

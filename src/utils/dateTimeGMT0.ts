@@ -1,14 +1,21 @@
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
+import { isEmpty } from "lodash";
 
-export const getDateTimeGMT0 = () => {
+export const getDateTimeGMT0 = (date?: string) => {
   dayjs.extend(utc);
   dayjs.extend(timezone);
 
   const tz = "Greenwich";
 
-  const dateTimeGMT0 = dayjs().tz(tz).format("YYYY-MM-DD HH:mm:ss");
+  if (isEmpty(date)) {
+    const dateTimeGMT0 = dayjs().tz(tz).format("YYYY-MM-DD HH:mm:ss");
 
-  return dateTimeGMT0;
+    return dateTimeGMT0;
+  } else {
+    const dateTimeGMT0 = dayjs(date).tz(tz).format("YYYY-MM-DD HH:mm:ss");
+
+    return dateTimeGMT0;
+  }
 };

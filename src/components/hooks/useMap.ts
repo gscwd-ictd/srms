@@ -1,10 +1,10 @@
 "use-client";
 
-import { ZoomSlider } from "ol/control";
+// import { ZoomSlider } from "ol/control";
 import View from "ol/View";
 import { useEffect, useRef, useState } from "react";
 import Map from "ol/Map";
-import { defaults as defaultControls } from "ol/control.js";
+// import { defaults as defaultControls } from "ol/control.js";
 import { useMapStore } from "../stores/useMapStore";
 import { mapStyles } from "../features/map/BaseMapLayers";
 
@@ -29,7 +29,7 @@ const useMap = () => {
       }),
       maxTilesLoading: 16,
       keyboardEventTarget: document,
-      controls: defaultControls().extend([new ZoomSlider()]),
+      // controls: defaultControls().extend([new ZoomSlider()]),
     });
 
     // Get coordinates when clicking on map
