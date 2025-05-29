@@ -16,7 +16,7 @@ import {
   PieChart,
   Send,
   Settings,
-  // SquareDashedMousePointer,
+  ShipWheel,
 } from "lucide-react";
 
 import { NavMain } from "./NavMain";
@@ -86,6 +86,11 @@ const data = {
       title: "Fleet",
       url: "/fleet",
       icon: Car,
+    },
+    {
+      title: "Valves",
+      url: "/valve",
+      icon: ShipWheel,
     },
     {
       title: "Settings",
