@@ -4,3 +4,4 @@ export { default as plumbingFixtures } from "./plumbingFixtures/plumbingFixtures
 export { default as fixtureUnits } from "./fixtureUnits/fixtureUnits.index";
 export { default as geoserver } from "./geoServer/geoServer.index";
 export { default as trackSolid } from "./trackSolid/trackSolid.index";
+export { default as serviceableAreas } from "./serviceableAreas/serviceableAreas.index";

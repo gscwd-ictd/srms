@@ -1,6 +1,13 @@
 import { notFound, onError } from "@srms/server/middlewares";
 import { secureHeaders } from "hono/secure-headers";
-import { healthcheck, applications, plumbingFixtures, fixtureUnits, geoserver } from "@srms/server/routes";
+import {
+  healthcheck,
+  applications,
+  plumbingFixtures,
+  fixtureUnits,
+  geoserver,
+  serviceableAreas,
+} from "@srms/server/routes";
 import { createOpenAPIRoute } from "./openapi/createOpenApiRoute";
 import { configureOpenApi } from "./openapi/configureOpenApi";
 import { crossOrigin } from "./middlewares/cors";
@@ -24,7 +31,15 @@ function createApp() {
   app.use(crossOrigin);
 
   // IMPORTANT! Add each route to this array
-  const routes = [healthcheck, applications, plumbingFixtures, fixtureUnits, geoserver, tracksolid] as const;
+  const routes = [
+    healthcheck,
+    applications,
+    plumbingFixtures,
+    fixtureUnits,
+    geoserver,
+    tracksolid,
+    serviceableAreas,
+  ] as const;
   routes.forEach((route) => app.route("/", route));
   return app;
 }

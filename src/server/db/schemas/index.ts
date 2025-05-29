@@ -7,3 +7,4 @@ export * from "./plumbingFixtures";
 export * from "./fixtureUnits";
 export * from "./applicantDocs";
 export * from "./applicantFixtures";
+export * from "./servicableAreas";

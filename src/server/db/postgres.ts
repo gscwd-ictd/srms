@@ -14,3 +14,11 @@ export const db = drizzle({
     ...schemas,
   },
 });
+
+const memoPool = new Pool({
+  connectionString: "postgres://user:password@host:port/db_name",
+});
+
+const memodb = drizzle({ client: memoPool });
+
+export default memodb;

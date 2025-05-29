@@ -5,8 +5,15 @@
     {
       "idx": 0,
       "version": "7",
-      "when": 1742174063365,
-      "tag": "0000_wild_maestro",
+      "when": 1748484621308,
+      "tag": "0000_sudden_frog_thor",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1748484923167,
+      "tag": "0001_long_goliath",
       "breakpoints": true
     }
   ]

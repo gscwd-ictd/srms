@@ -15,6 +15,7 @@ export const applicantDocuments = pgTable("applicant_documents", {
     .notNull(),
   type: documentTypeEnum("type").notNull(),
   pathNames: jsonb("document_paths").$type<Array<string>>().notNull(),
+  test: varchar("test-column"),
   createdAt: timestamp("created_at", { mode: "date", withTimezone: true }).notNull().defaultNow(),
   updatedAt: timestamp("updated_at", { mode: "date", withTimezone: true })
     .defaultNow()
