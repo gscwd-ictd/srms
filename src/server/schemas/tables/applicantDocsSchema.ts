@@ -1,5 +1,5 @@
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
-import { applicantDocs } from "@srms/server/db/schemas";
+import { applicantDocuments } from "@srms/server/db/schemas";
 import { z } from "zod";
 
 export const FileUploadSchema = z.object({
@@ -7,20 +7,13 @@ export const FileUploadSchema = z.object({
   url: z.string().url(),
 });
 
-export const SelectApplicantDocsSchema = createSelectSchema(applicantDocs);
+export const SelectApplicantDocsSchema = createSelectSchema(applicantDocuments);
 
-export const CreateApplicantDocsSchema = createInsertSchema(applicantDocs)
+export const CreateApplicantDocsSchema = createInsertSchema(applicantDocuments)
   .omit({
     id: true,
     createdAt: true,
     updatedAt: true,
-  })
-  .omit({
-    proofOfLotOwnership: true,
-    proofOfBilling: true,
-    barangayCertificate: true,
-    selfieWithValidId: true,
-    validId: true,
   })
   .extend({
     proofOfLotOwnership: z.array(FileUploadSchema),
