@@ -1,5 +1,5 @@
 // import { Collapse } from "@srms/components/Collapse";
-import MapComponent from "@srms/components/features/map/MapComponent";
+import MapComponent from "@srms/components/features/fleetMap/MapComponent";
 import { Token } from "@srms/components/types";
 import { Metadata } from "next";
 import { cookies } from "next/headers";

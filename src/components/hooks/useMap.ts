@@ -6,7 +6,7 @@ import { useEffect, useRef, useState } from "react";
 import Map from "ol/Map";
 // import { defaults as defaultControls } from "ol/control.js";
 import { useMapStore } from "../stores/useMapStore";
-import { mapStyles } from "../features/map/BaseMapLayers";
+import { mapStyles } from "../features/fleetMap/BaseMapLayers";
 
 const useMap = () => {
   const [map, setMap] = useState<Map | null>(null);

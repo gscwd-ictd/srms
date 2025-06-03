@@ -26,6 +26,14 @@ export class GeoServerService implements I_GeoServerService {
     return response.data.dataStores.dataStore;
   }
 
+  async getValvesLayers(): Promise<GeoserverLayer> {
+    const geoServerLayers = await this.getGeoServerLayers();
+
+    const valveLayer = geoServerLayers.filter((layer) => layer.name && layer.name === "Valves2025-1A"); //From geoserver layers
+
+    return valveLayer[0]!;
+  }
+
   async getPipelineLayer(): Promise<GeoserverLayer> {
     const geoServerLayers = await this.getGeoServerLayers();
 
