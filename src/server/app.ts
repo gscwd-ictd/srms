@@ -7,6 +7,8 @@ import {
   fixtureUnits,
   geoserver,
   serviceableAreas,
+  trackSolid,
+  pms,
 } from "@srms/server/routes";
 import { createOpenAPIRoute } from "./openapi/createOpenApiRoute";
 import { configureOpenApi } from "./openapi/configureOpenApi";
@@ -17,7 +19,7 @@ import { MinioManager } from "@srms/lib/minio";
 import { NSAManager } from "@srms/lib/nsa/nsaManager";
 import { GeoServerManager } from "@srms/lib/geoserver/geoServerManager";
 import { TrackSolidManager } from "@srms/lib/tracksolid/trackSolidManager";
-import tracksolid from "./routes/trackSolid/trackSolid.index";
+import { PmsManager } from "@srms/lib/pms/pmsManager";
 
 function createApp() {
   const app = createOpenAPIRoute().basePath("/api");
@@ -37,8 +39,9 @@ function createApp() {
     plumbingFixtures,
     fixtureUnits,
     geoserver,
-    tracksolid,
+    trackSolid,
     serviceableAreas,
+    pms,
   ] as const;
   routes.forEach((route) => app.route("/", route));
   return app;
@@ -63,3 +66,5 @@ export const nsaManager = NSAManager.getInstance();
 export const geoServerManager = GeoServerManager.getInstance();
 
 export const trackSolidManager = TrackSolidManager.getInstance();
+
+export const pmsManager = PmsManager.getInstance();

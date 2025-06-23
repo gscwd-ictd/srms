@@ -33,11 +33,11 @@ const useMap = () => {
     });
 
     // Get coordinates when clicking on map
-    olMap.on("click", (e) => {
-      const coord = e.coordinate;
+    // olMap.on("click", (e) => {
+    //   const coord = e.coordinate;
 
-      console.log(coord);
-    });
+    //   console.log(coord);
+    // });
 
     // set the map ref in the global store
     // let the map to be used in other components

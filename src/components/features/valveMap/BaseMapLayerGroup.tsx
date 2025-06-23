@@ -1,25 +1,23 @@
 import { BaseLayerOptions } from "@srms/components/enums";
-import { BaseMapConfig } from "@srms/components/types";
 import LayerGroup from "ol/layer/Group";
 import TileLayer from "ol/layer/Tile";
 import { OSM } from "ol/source";
 import BingMaps from "ol/source/BingMaps.js";
 
-export const BaseMapLayers: BaseMapConfig[] = [
-  // Set to true to set as default base map layer
-  {
-    title: BaseLayerOptions.OSM,
-    layer: new TileLayer({
+export const BaseMapLayerGroup: LayerGroup = new LayerGroup({
+  layers: [
+    // Set to true to set as default base map layer
+    new TileLayer({
       source: new OSM(),
       visible: true,
       preload: Infinity,
       className: BaseLayerOptions.OSM,
+      properties: {
+        title: "OpenStreetMap",
+      },
     }),
-  },
 
-  {
-    title: BaseLayerOptions.BING_AERIAL,
-    layer: new TileLayer({
+    new TileLayer({
       source: new BingMaps({
         key: `${process.env.NEXT_PUBLIC_BING_KEY}`,
         imagerySet: `AerialWithLabelsOnDemand`,
@@ -27,15 +25,9 @@ export const BaseMapLayers: BaseMapConfig[] = [
       visible: false,
       preload: Infinity,
       className: BaseLayerOptions.BING_AERIAL,
+      properties: {
+        title: "Bing Aerial",
+      },
     }),
-  },
-];
-
-// get the layers from the layerList
-// to be used in the layer group
-const layers = BaseMapLayers.map((layer) => layer.layer);
-
-// create the layer group
-export const mapStyles = new LayerGroup({
-  layers,
+  ],
 });

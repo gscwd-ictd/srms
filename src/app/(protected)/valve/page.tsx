@@ -1,4 +1,7 @@
-import MapComponent from "@srms/components/features/valveMap/MapComponent";
+import BaseLayerPicker from "@srms/components/features/valveMap/BaseLayerPicker";
+import { ValveRenderFeatures } from "@srms/components/features/valveMap/ValveRenderFeatures";
+import { ValvesMap } from "@srms/components/features/valveMap/ValvesMap";
+import { ValvesMapProvider } from "@srms/components/providers/ValvesMapProvider";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -7,8 +10,11 @@ export const metadata: Metadata = {
 
 export default async function ValvePage() {
   return (
-    <div className="h-screen w-screen">
-      <MapComponent />
-    </div>
+    <ValvesMapProvider>
+      <ValvesMap />
+
+      <BaseLayerPicker />
+      <ValveRenderFeatures />
+    </ValvesMapProvider>
   );
 }

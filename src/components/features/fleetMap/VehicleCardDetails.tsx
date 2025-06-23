@@ -13,13 +13,17 @@ import { SignalHigh, SignalLow, SignalMedium, SignalZero } from "lucide-react";
 import { isEmpty } from "lodash";
 import { Dispatch, FunctionComponent, SetStateAction, useEffect } from "react";
 
-interface TsTokensProps {
+interface VehicleCardDetailsProps {
   accessToken: Token;
   open: boolean;
   onOpenChange: Dispatch<SetStateAction<boolean>>;
 }
 
-const VehicleCardDetails: FunctionComponent<TsTokensProps> = ({ accessToken, open, onOpenChange }) => {
+const VehicleCardDetails: FunctionComponent<VehicleCardDetailsProps> = ({
+  accessToken,
+  open,
+  onOpenChange,
+}) => {
   // zustand initialization
   const {
     selectedDevice,
@@ -224,7 +228,7 @@ const VehicleCardDetails: FunctionComponent<TsTokensProps> = ({ accessToken, ope
                 <div className="grid gap-2">
                   <div className="flex space-x-1.5 text-sm">
                     <Label htmlFor="todays-mileage" className="w-[50%]">
-                      Today&apos;s Mieage
+                      Today&apos;s Mileage
                     </Label>
                     <p id="todays-mileage" className="w-[50%] text-right font-bold">
                       {tsDeviceDetails?.result?.todaysMileage

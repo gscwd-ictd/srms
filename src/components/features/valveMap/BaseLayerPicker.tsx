@@ -1,73 +1,60 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { BaseLayerOptions } from "@srms/components/enums";
-import { useMapStore } from "@srms/components/stores/useMapStore";
-import { isEmpty } from "lodash";
-import { FunctionComponent, useEffect } from "react";
-import { useForm } from "react-hook-form";
+import { FunctionComponent, useEffect, useState } from "react";
+import { useValvesMap } from "./contexts/useValvesMapContext";
+import { BaseMapLayerGroup } from "./BaseMapLayerGroup";
+import { isEmpty } from "@srms/utils/isEmpty";
+import LayerGroup from "ol/layer/Group";
+import BaseLayer from "ol/layer/Base";
 
-type BaseMap = {
-  baseMap: BaseLayerOptions;
-};
+/* 
+    Component for switching between Base Layers
+ */
 
 const BaseLayerPicker: FunctionComponent = ({}) => {
-  // zustand initialization
-  const { setSelectedBaseMap, mapRef } = useMapStore();
-
-  // React hook form
-  const { register, watch } = useForm<BaseMap>({
-    mode: "onChange",
-    defaultValues: {
-      baseMap: BaseLayerOptions.OSM,
-    },
-  });
-  const watchBaseMap = watch("baseMap");
+  const valvesMap = useValvesMap();
+  const [baseMap, setBaseMap] = useState<string>();
 
   useEffect(() => {
-    if (!isEmpty(watchBaseMap)) {
-      const mapBaseTileLayers = mapRef?.getAllLayers();
+    if (!isEmpty(baseMap)) {
+      const mapBaseTileLayers = valvesMap.mapManager.getMap().getLayers().getArray();
 
-      mapBaseTileLayers?.map((layer: any) => {
-        if (watchBaseMap === layer.className_) {
-          layer.setVisible(true);
-        } else {
-          layer.setVisible(false);
+      mapBaseTileLayers?.map((layer: BaseLayer) => {
+        if (layer instanceof LayerGroup) {
+          const groupLayers = layer.getLayers().getArray();
+
+          groupLayers.map((groupLayer: BaseLayer) => {
+            if (groupLayer.getClassName() === baseMap) {
+              groupLayer.setVisible(true);
+            } else {
+              groupLayer.setVisible(false);
+            }
+          });
         }
       });
     }
-  }, [mapRef, setSelectedBaseMap, watchBaseMap]);
+  }, [valvesMap.mapManager, baseMap]);
 
   return (
     <div className="base-layers absolute bottom-[10px] left-[10px] z-20 rounded-lg bg-white p-3">
       <p className="text-md pb-2 font-bold text-black">Base Layers</p>
-      <form className="">
-        {/* OSM */}
-        <label htmlFor="field-osm" className="mr-2 text-sm text-black">
-          <input
-            {...register("baseMap")}
-            name="baseMap"
-            type="radio"
-            value={BaseLayerOptions.OSM}
-            id="field-osm"
-            className="mr-1"
-          />
-          OpenStreetMap
-        </label>
 
-        {/* Bing Maps */}
-        <label htmlFor="field-bing-maps" className="mr-2 text-sm text-black">
-          <input
-            {...register("baseMap")}
-            name="baseMap"
-            type="radio"
-            value={BaseLayerOptions.BING_AERIAL}
-            id="field-bing-maps"
-            className="mr-1"
-          />
-          Bing Aerial
-        </label>
-      </form>
+      {BaseMapLayerGroup.getLayers()
+        .getArray()
+        .map((baseMapLayer, index) => (
+          <label htmlFor="field-osm" className="mr-2 text-sm text-black" key={index}>
+            <input
+              name="baseMap"
+              type="radio"
+              value={baseMapLayer.getClassName()}
+              className="mr-1"
+              onChange={() => setBaseMap(baseMapLayer.getClassName())}
+              defaultChecked={baseMapLayer.getClassName() === BaseLayerOptions.OSM}
+            />
+            {baseMapLayer.getProperties()["title"]}
+          </label>
+        ))}
     </div>
   );
 };

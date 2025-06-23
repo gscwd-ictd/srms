@@ -15,10 +15,8 @@ export const db = drizzle({
   },
 });
 
-const memoPool = new Pool({
-  connectionString: "postgres://user:password@host:port/db_name",
+const gisPool = new Pool({
+  connectionString: `postgres://${env.DB_USER_GIS}:${env.DB_PASS_GIS}@${env.DB_HOST_GIS}:${env.DB_PORT_GIS}/${env.DB_NAME}`,
 });
 
-const memodb = drizzle({ client: memoPool });
-
-export default memodb;
+export const gisdb = drizzle({ client: gisPool });

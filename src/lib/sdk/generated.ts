@@ -477,4 +477,30 @@ export class ApiClient {
       }>("get", `/api/v1/serviceable-areas/${id}`, {});
     },
   };
+
+  valves = {
+    getAllValves: () => {
+      return this.Fetch<{
+        type: string;
+        totalFeatures: number;
+        features: {
+          type: string;
+          id: string;
+          geometry: {
+            type: "Point";
+            coordinates: number[];
+          };
+          geometry_name: string;
+          properties: {
+            diameter: string;
+            brand: string;
+            ["yr.install"]: string;
+            status: string;
+            curnt_stat: string;
+            type: string;
+          };
+        }[];
+      }>("get", "/api/v1/layers/valves", {});
+    },
+  };
 }

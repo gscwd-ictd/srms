@@ -7,7 +7,7 @@ import {
   QueryParamsSchema,
   ResultMetaDataSchema,
 } from "../schemas/helperSchemas";
-import { FeatureStylesSchema } from "@srms/lib/servicableareas/schemas";
+import { FeatureStylesSchema, IconStylesSchema } from "@srms/lib/servicableareas/schemas";
 
 export type PaginatedResult<T> = {
   data: T[];
@@ -22,3 +22,4 @@ export type ErrorResponse = z.infer<typeof ErrorResponseSchema>;
 export type HealthCheckResponse = z.infer<typeof HealthCheckResponseSchema>;
 
 export type FeatureStyles = z.infer<typeof FeatureStylesSchema>;
+export type IconStyles = z.infer<typeof IconStylesSchema>;

@@ -14,7 +14,6 @@ import VectorLayer from "ol/layer/Vector";
 import VectorSource from "ol/source/Vector";
 import { Icon, Style } from "ol/style";
 import { FunctionComponent, useEffect, useState } from "react";
-// import { useFieldArray, useForm } from "react-hook-form";
 import CarMarker from "../../../../public/images/car_icon.svg";
 import { Point } from "ol/geom";
 import { ScrollArea } from "@srms/components/ui/ScrollArea";

@@ -1,4 +1,5 @@
 import { z } from "zod";
+import ValveThrottle from "../../../../public/images/valve_throttle.svg";
 
 // Position schemas
 export const Position2DSchema = z.tuple([z.number(), z.number()]);
@@ -128,4 +129,28 @@ export const FeatureStylesSchema = z.object({
       default: true,
     })
     .default(true),
+});
+
+export const IconStylesSchema = z.object({
+  src: z
+    .string()
+    .openapi({
+      description: "Icon to be used as valve marker.",
+      default: ValveThrottle,
+    })
+    .default(ValveThrottle),
+  anchor: z
+    .array(z.number())
+    .openapi({
+      description: "Offsetting position of icon in relevance to the valve coordinates",
+      default: [0.5, 0.5],
+    })
+    .default([0.5, 0.5]),
+  scale: z
+    .number()
+    .openapi({
+      description: "Scale size of icon.",
+      default: 0.8,
+    })
+    .default(0.8),
 });

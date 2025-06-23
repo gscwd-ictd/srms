@@ -3,6 +3,7 @@ import { devtools } from "zustand/middleware";
 import { Map } from "ol";
 import { BaseLayerOptions } from "../enums";
 import { TileLayerType, ViewPort } from "../types";
+import { ValveData } from "@srms/lib/pms/types";
 
 export type MapState = {
   // Map View configuration
@@ -22,6 +23,9 @@ export type MapState = {
 
   geoserverLayers: Array<TileLayerType>;
   setGeoserverLayer: (geoserverLayer: TileLayerType) => void;
+
+  valvesLayer: Array<ValveData>;
+  setValvesLayer: (valvesLayer: Array<ValveData>) => void;
 
   // setLayerVisibility: (className: string, visibility: boolean) => void;
 };
@@ -53,6 +57,9 @@ export const useMapStore = create<MapState>()(
     geoserverLayers: [],
     setGeoserverLayer: (geoserverLayer: TileLayerType) =>
       set((state) => ({ geoserverLayers: [...state.geoserverLayers, geoserverLayer] })),
+
+    valvesLayer: [],
+    setValvesLayer: (valvesLayer) => set({ valvesLayer }),
 
     //     setLayerVisibility: (className: string, visibility: boolean) => set((state) =>
     // (  {  geoserverLayers: geoserverLayers.map(item) => className === Item.className  })
