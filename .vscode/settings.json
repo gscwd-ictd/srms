@@ -4,6 +4,7 @@
     "EPSG",
     "GENSANWD",
     "GEOSERVER",
+    "HDPE",
     "healthcheck",
     "imei",
     "imeis",
@@ -15,6 +16,7 @@
     "Servicable",
     "servicableareas",
     "srms",
-    "TRACKSOLID"
+    "TRACKSOLID",
+    "UPVC"
   ]
 }

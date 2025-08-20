@@ -153,4 +153,36 @@ export const IconStylesSchema = z.object({
       default: 0.8,
     })
     .default(0.8),
+  rotation: z
+    .number()
+    .openapi({
+      description: "Rotation of icon",
+      default: 0,
+    })
+    .optional(),
+});
+
+export const LineStringStylesSchema = z.object({
+  strokeColor: z
+    .string()
+    .openapi({
+      description: "Color of the line's outline.",
+      default: "rgb(79, 70, 229, 1.0)",
+    })
+    .default("rgb(79, 70, 229, 1.0)"),
+  strokeWidth: z
+    .array(z.number())
+    .openapi({
+      description: "Thickness of the polygon's outline, in pixels.",
+      default: [3],
+    })
+    .default([3]),
+  outlineStyle: z
+    .union([z.literal("solid"), z.literal("dashed")])
+    .openapi({
+      description: "Style of the line's outline (solid or dashed).",
+      default: "solid",
+    })
+    .default("solid")
+    .optional(),
 });

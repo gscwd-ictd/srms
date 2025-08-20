@@ -5,8 +5,10 @@ import { useGeographic } from "ol/proj";
 import View from "ol/View";
 import { useValvesMap } from "./contexts/useValvesMapContext";
 import { BaseMapLayerGroup } from "./BaseMapLayerGroup";
+import { useSidebar } from "@srms/components/ui/Sidebar";
 
 export const ValvesMap: FunctionComponent<PropsWithChildren> = ({ children }) => {
+  const { setOpen } = useSidebar();
   /**
    * Calling the useGeographic function makes it so the map view uses
    * geographic coordinates (even if the view projection is not geographic).
@@ -20,6 +22,8 @@ export const ValvesMap: FunctionComponent<PropsWithChildren> = ({ children }) =>
   const mapRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    // By default in this page, sidebar is closed
+    setOpen(false);
     if (!mapRef.current) return;
 
     valvesMap.mapManager.init({
@@ -37,16 +41,6 @@ export const ValvesMap: FunctionComponent<PropsWithChildren> = ({ children }) =>
 
     // Console coordinates
     // valvesMap.mapManager.getMap().on("click", (e) => console.log(e.coordinate));
-
-    // Testing Extent functionality
-    // valvesMap.mapManager
-    //   .getMap()
-    //   .getLayers()
-    //   .getArray()[0]
-    //   ?.setExtent([5.9612280279350145, 125.28567920348077, 6.3129954587321295, 125.32948570886408]);
-    // [5.953291, 125.278558, 6.325989, 125.286705],
-    // [13906485.166068409, 662066.9967097231, 13948865.159361392, 706731.4638312651]
-    // [5.9612280279350145, 125.28567920348077, 6.3129954587321295, 125.32948570886408]
 
     return () => {
       valvesMap.mapManager.destroy();

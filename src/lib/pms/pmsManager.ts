@@ -1,12 +1,15 @@
-import { ValvesService } from "./services";
+import { PipelinesService, ValvesService } from "./services";
 
 export class PmsManager {
   private static instance: PmsManager;
 
   private valvesService: ValvesService;
 
+  private pipelinesService: PipelinesService;
+
   private constructor() {
     this.valvesService = new ValvesService();
+    this.pipelinesService = new PipelinesService();
   }
 
   public static getInstance(): PmsManager {
@@ -18,5 +21,9 @@ export class PmsManager {
 
   public getValvesService(): ValvesService {
     return this.valvesService;
+  }
+
+  public getPipelinesService(): PipelinesService {
+    return this.pipelinesService;
   }
 }

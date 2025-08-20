@@ -6,7 +6,9 @@ import { useEffect, useRef, useState } from "react";
 import Map from "ol/Map";
 // import { defaults as defaultControls } from "ol/control.js";
 import { useMapStore } from "../stores/useMapStore";
-import { mapStyles } from "../features/fleetMap/BaseMapLayers";
+import TileLayer from "ol/layer/Tile";
+import { OSM } from "ol/source";
+// import { mapStyles } from "../features/fleetMap/BaseMapLayers";
 
 const useMap = () => {
   const [map, setMap] = useState<Map | null>(null);
@@ -17,7 +19,12 @@ const useMap = () => {
 
   useEffect(() => {
     const olMap = new Map({
-      layers: [mapStyles],
+      // layers: [mapStyles],
+      layers: [
+        new TileLayer({
+          source: new OSM(),
+        }),
+      ],
       target: "mainMap",
       view: new View({
         projection: viewport.projection,

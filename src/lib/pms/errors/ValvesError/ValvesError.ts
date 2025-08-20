@@ -13,7 +13,7 @@ export class ValvesError extends Error {
     super(description || code);
 
     // add a custom name for your error
-    this.name = "ServiceableAreasError";
+    this.name = "ValvesError";
   }
 
   // create a utility method to serialize error response into a structured JSON response

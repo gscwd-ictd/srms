@@ -5,13 +5,13 @@ import { useTsDeviceStore } from "@srms/components/stores/useTsDeviceStore";
 import { Token } from "@srms/components/types";
 import { Spinner } from "@srms/components/ui-custom/Spinner";
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "@srms/components/ui/Sheet";
-import { TrackSolidDevice } from "@srms/lib/tracksolid/types";
-import { useMutation } from "@tanstack/react-query";
-import axios, { AxiosError } from "axios";
+import { TrackSolidDeviceDetail, TrackSolidDeviceLocation } from "@srms/lib/tracksolid/types";
+import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
 import dayjs from "dayjs";
 import { SignalHigh, SignalLow, SignalMedium, SignalZero } from "lucide-react";
-import { isEmpty } from "lodash";
 import { Dispatch, FunctionComponent, SetStateAction, useEffect } from "react";
+import { isEmpty } from "@srms/utils/isEmpty";
 
 interface VehicleCardDetailsProps {
   accessToken: Token;
@@ -25,24 +25,19 @@ const VehicleCardDetails: FunctionComponent<VehicleCardDetailsProps> = ({
   onOpenChange,
 }) => {
   // zustand initialization
-  const {
-    selectedDevice,
-    tsDeviceLocation,
-    setTsDeviceLocation,
-    tsDeviceDetails,
-    setTsDeviceDetails,
-    // tsDeviceCurrentDayMileage,
-    // setTsDeviceCurrentDayMileage,
-  } = useTsDeviceStore();
+  const { selectedDevice, tsDeviceDetails, setTsDeviceDetails, tsDeviceLocation, setTsDeviceLocation } =
+    useTsDeviceStore();
 
-  // Get details of device.
-  const deviceDetailsMutation = useMutation({
-    mutationKey: ["device-details"],
-    mutationFn: async (deviceDetails: TrackSolidDevice) => {
-      const tsDeviceDetails = await axios.post(
+  const { data: deviceDetails, fetchStatus: fStatusDeviceDetails } = useQuery({
+    queryKey: ["device-details"],
+    refetchOnReconnect: false,
+    enabled: !!open,
+    retry: 5,
+    queryFn: async () => {
+      const response = await axios.post(
         `${process.env.NEXT_PUBLIC_APP_URL}/api/v1/tracksolid/device-detail`,
         {
-          imeis: deviceDetails.imei,
+          imeis: selectedDevice.imei,
           beginTime: dayjs().startOf("day").format("YYYY-MM-DD HH:mm:ss"),
           endTime: dayjs().subtract(30, "minutes").format("YYYY-MM-DD HH:mm:ss"),
         },
@@ -51,50 +46,36 @@ const VehicleCardDetails: FunctionComponent<VehicleCardDetailsProps> = ({
         },
       );
 
-      return tsDeviceDetails.data;
+      return response.data;
     },
-    onMutate: (variables) => {
-      console.log(`Pulling details of device attached to vehicle: ${variables?.deviceName}`);
-    },
-    onSuccess: async (data) => {
-      setTsDeviceDetails(data);
-    },
-    onError: (error: AxiosError<{ message: string }>) => {
-      console.log(error);
-    },
+    throwOnError: true,
   });
 
-  // Get location details of device.
-  const deviceLocationMutation = useMutation({
-    mutationKey: ["device-location"],
-    mutationFn: async (deviceDetails: TrackSolidDevice) => {
-      const tsDeviceLocation = await axios.post(
+  const { data: deviceLocation, fetchStatus: fStatusDeviceLocation } = useQuery({
+    queryKey: ["device-location"],
+    enabled: !!open,
+    retry: 5,
+    queryFn: async () => {
+      const response = await axios.post(
         `${process.env.NEXT_PUBLIC_APP_URL}/api/v1/tracksolid/devices-location`,
         {
-          imeis: deviceDetails.imei,
+          imeis: selectedDevice.imei,
         },
         {
           headers: { "access-token": accessToken.value },
         },
       );
 
-      return tsDeviceLocation.data[0];
+      return response.data[0];
     },
-    onMutate: (variables) => {
-      console.log(`Pulling location of device attached to vehicle: ${variables?.deviceName}`);
-    },
-    onSuccess: async (data) => {
-      setTsDeviceLocation(data);
-    },
-    onError: (error: AxiosError<{ message: string }>) => {
-      console.log(error);
-    },
+    throwOnError: true,
   });
 
+  // vehicle/engine status
   const checkAccStatus = () => {
-    if (tsDeviceLocation.accStatus === "1" && parseInt(tsDeviceLocation.speed) > 0) {
+    if (tsDeviceLocation?.accStatus === "1" && parseInt(tsDeviceLocation?.speed) > 0) {
       return AccStatus.MOVING;
-    } else if (tsDeviceLocation.accStatus === "0") {
+    } else if (tsDeviceLocation?.accStatus === "0") {
       return AccStatus.PARKED;
     } else {
       return AccStatus.IDLING;
@@ -134,10 +115,18 @@ const VehicleCardDetails: FunctionComponent<VehicleCardDetailsProps> = ({
 
   useEffect(() => {
     if (open) {
-      deviceLocationMutation.mutate(selectedDevice);
-      deviceDetailsMutation.mutate(selectedDevice);
+      if (!isEmpty(deviceDetails)) {
+        setTsDeviceDetails(deviceDetails);
+      }
+
+      if (!isEmpty(deviceLocation)) {
+        setTsDeviceLocation(deviceLocation);
+      }
+    } else {
+      setTsDeviceDetails({} as TrackSolidDeviceDetail);
+      setTsDeviceLocation({} as TrackSolidDeviceLocation);
     }
-  }, [open]);
+  }, [open, deviceDetails, deviceLocation]);
 
   return (
     <Sheet key="right" open={open} onOpenChange={onOpenChange} modal={false}>
@@ -151,23 +140,24 @@ const VehicleCardDetails: FunctionComponent<VehicleCardDetailsProps> = ({
         </SheetHeader>
 
         <ScrollArea className="h-full">
-          {deviceDetailsMutation.isPending || deviceLocationMutation.isPending ? (
+          {/* {loadingDeviceDetails || loadingDeviceLocation ? <Spinner size={"lg"} /> : null} */}
+          {fStatusDeviceDetails === "fetching" || fStatusDeviceLocation === "fetching" ? (
             <Spinner size={"lg"} />
           ) : null}
 
-          {!isEmpty(tsDeviceLocation) && !isEmpty(tsDeviceDetails.result) ? (
+          {!isEmpty(tsDeviceDetails) && !isEmpty(tsDeviceLocation) ? (
             <>
               <div className="m-4 rounded-md border-1 border-stone-400 p-3">
                 <div className="flex space-x-1.5">
                   <p className="w-[50%]">
                     <span className="font-bold">{checkAccStatus()}</span>{" "}
                     <span className="text-stone-400">
-                      (ACC:{tsDeviceLocation.accStatus === "0" ? "OFF" : "ON"})
+                      (ACC:{tsDeviceLocation?.accStatus === "0" ? "OFF" : "ON"})
                     </span>
                   </p>
 
                   <p className="w-[50%] text-right">
-                    Speed: <span className="font-bold">{tsDeviceLocation.speed}</span> km/h
+                    Speed: <span className="font-bold">{tsDeviceLocation?.speed}</span> km/h
                   </p>
                 </div>
               </div>
@@ -180,7 +170,7 @@ const VehicleCardDetails: FunctionComponent<VehicleCardDetailsProps> = ({
                       GNSS
                     </Label>
                     <p id="gnss" className="w-[50%] text-right font-bold">
-                      {tsDeviceLocation.posType}
+                      {tsDeviceLocation?.posType}
                     </p>
                   </div>
 
@@ -189,7 +179,7 @@ const VehicleCardDetails: FunctionComponent<VehicleCardDetailsProps> = ({
                       Visible Satellites
                     </Label>
                     <p id="gpsNum" className="w-[50%] text-right font-bold">
-                      {tsDeviceLocation.gpsNum}
+                      {tsDeviceLocation?.gpsNum}
                     </p>
                   </div>
 
@@ -198,7 +188,7 @@ const VehicleCardDetails: FunctionComponent<VehicleCardDetailsProps> = ({
                       Cellular Signal Strength
                     </Label>
                     <div id="gpsSignal" className="w-[50%] text-right font-bold">
-                      {renderSignalIcon(tsDeviceLocation.gpsSignal)}
+                      {renderSignalIcon(tsDeviceLocation?.gpsSignal)}
                     </div>
                   </div>
 
@@ -207,7 +197,7 @@ const VehicleCardDetails: FunctionComponent<VehicleCardDetailsProps> = ({
                       Last Online
                     </Label>
                     <p id="last-online" className="w-[50%] text-right font-bold">
-                      {dayjs(tsDeviceLocation.hbTime).format("YYYY-MM-DD hh:mm:ss a")}
+                      {dayjs(tsDeviceLocation?.hbTime).format("YYYY-MM-DD hh:mm:ss a")}
                     </p>
                   </div>
 
@@ -216,7 +206,7 @@ const VehicleCardDetails: FunctionComponent<VehicleCardDetailsProps> = ({
                       Last Fix
                     </Label>
                     <p id="gps-time" className="w-[50%] text-right font-bold">
-                      {dayjs(tsDeviceLocation.gpsTime).format("YYYY-MM-DD hh:mm:ss a")}
+                      {dayjs(tsDeviceLocation?.gpsTime).format("YYYY-MM-DD hh:mm:ss a")}
                     </p>
                   </div>
                 </div>
@@ -243,7 +233,7 @@ const VehicleCardDetails: FunctionComponent<VehicleCardDetailsProps> = ({
                       Vehicle Battery Voltage
                     </Label>
                     <p id="vbv" className="w-[50%] text-right font-bold">
-                      {tsDeviceLocation.batteryPowerVal}
+                      {tsDeviceLocation?.batteryPowerVal}
                     </p>
                   </div>
                 </div>

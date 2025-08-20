@@ -503,4 +503,26 @@ export class ApiClient {
       }>("get", "/api/v1/layers/valves", {});
     },
   };
+
+  pipelines = {
+    getAllPipelines: () => {
+      return this.Fetch<{
+        type: string;
+        totalFeatures: number;
+        features: {
+          type: string;
+          id: string;
+          geometry: {
+            type: "MultiLineString";
+            coordinates: number[][][];
+          };
+          geometry_name: string;
+          properties: {
+            diameter: string;
+            material: string;
+          };
+        }[];
+      }>("get", "/api/v1/layers/pipelines", {});
+    },
+  };
 }
