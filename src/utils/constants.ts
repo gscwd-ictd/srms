@@ -22,6 +22,7 @@ export const TAGS = {
   GEOSERVER: ["GeoServer"],
   TRACKSOLID: ["Tracksolid"],
   PRESSURE_MANAGEMENT: ["Pressure Management"],
+  WATER_METERS: ["Water Meters"],
 };
 
 export const fixtureUnitType = ["private", "public"] as const;

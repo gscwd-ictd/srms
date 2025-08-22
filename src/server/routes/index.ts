@@ -6,3 +6,4 @@ export { default as geoserver } from "./geoServer/geoServer.index";
 export { default as trackSolid } from "./trackSolid/trackSolid.index";
 export { default as serviceableAreas } from "./serviceableAreas/serviceableAreas.index";
 export { default as pms } from "./pms/pms.index";
+export { default as waterMeters } from "./waterMeters/waterMeters.index";

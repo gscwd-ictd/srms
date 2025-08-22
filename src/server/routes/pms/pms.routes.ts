@@ -99,5 +99,5 @@ export const getPipelinesGeoJson = createRoute({
   },
 });
 
-export type GetGValvesGeoJsonRoute = typeof getValvesGeoJson;
+export type GetValvesGeoJsonRoute = typeof getValvesGeoJson;
 export type GetPipelinesGeoJsonRoute = typeof getPipelinesGeoJson;

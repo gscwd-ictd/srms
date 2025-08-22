@@ -22,6 +22,7 @@ const EnvSchema = z.object({
   NEXT_PUBLIC_GEOSERVER_PASSWORD: z.string(),
   VALVE_LAYER_NAME: z.string(),
   PIPELINE_LAYER_NAME: z.string(),
+  WATER_METERS_LAYER_NAME: z.string(),
   MINIO_ENDPOINT: z.string(),
   MINIO_PORT: z.coerce.number(),
   MINIO_ACCESS_KEY: z.string(),

@@ -9,6 +9,7 @@ import {
   serviceableAreas,
   trackSolid,
   pms,
+  waterMeters,
 } from "@srms/server/routes";
 import { createOpenAPIRoute } from "./openapi/createOpenApiRoute";
 import { configureOpenApi } from "./openapi/configureOpenApi";
@@ -20,6 +21,7 @@ import { NSAManager } from "@srms/lib/nsa/nsaManager";
 import { GeoServerManager } from "@srms/lib/geoserver/geoServerManager";
 import { TrackSolidManager } from "@srms/lib/tracksolid/trackSolidManager";
 import { PmsManager } from "@srms/lib/pms/pmsManager";
+import { WaterMetersManager } from "@srms/lib/watermeters/waterMetersManager";
 
 function createApp() {
   const app = createOpenAPIRoute().basePath("/api");
@@ -42,6 +44,7 @@ function createApp() {
     trackSolid,
     serviceableAreas,
     pms,
+    waterMeters,
   ] as const;
   routes.forEach((route) => app.route("/", route));
   return app;
@@ -68,3 +71,5 @@ export const geoServerManager = GeoServerManager.getInstance();
 export const trackSolidManager = TrackSolidManager.getInstance();
 
 export const pmsManager = PmsManager.getInstance();
+
+export const waterMetersManager = WaterMetersManager.getInstance();
