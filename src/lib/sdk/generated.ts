@@ -525,4 +525,65 @@ export class ApiClient {
       }>("get", "/api/v1/layers/pipelines", {});
     },
   };
+
+  waterMeters = {
+    getAllWaterMetersGeoJson: () => {
+      return this.Fetch<{
+        type: string;
+        totalFeatures: number;
+        features: {
+          type: string;
+          id: string;
+          geometry: {
+            type: "Point";
+            coordinates: number[];
+          };
+          geometry_name: string;
+          properties: {
+            accountno: string;
+            meterno: string;
+            consumern: string;
+            address: string;
+            datecon: string;
+            status: string;
+            datediscon: string | null;
+            zonecode: string;
+            bookcode: string;
+            consumert: string | null;
+            meterbrnd: string | null;
+            metersize: string | null;
+            aveusage: string | null;
+            m3perhr: string | null;
+            contactno: string | null;
+            billedvol: string | null;
+            billed: string | null;
+          };
+        }[];
+      }>("get", "/api/v1/layers/water-meters", {});
+    },
+
+    getConsumersMeterDetails: () => {
+      return this.Fetch<
+        {
+          accountno: string;
+          meterno: string;
+          consumern: string;
+          address: string;
+          datecon: string;
+          status: string;
+          datediscon: string | null;
+          zonecode: string;
+          bookcode: string;
+          consumert: string | null;
+          meterbrnd: string | null;
+          metersize: string | null;
+          aveusage: string | null;
+          m3perhr: string | null;
+          contactno: string | null;
+          billedvol: string | null;
+          billed: string | null;
+        }[]
+      >("get", "/api/v1/consumers/water-meters", {});
+    },
+  };
 }

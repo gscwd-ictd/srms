@@ -162,6 +162,34 @@ export const IconStylesSchema = z.object({
     .optional(),
 });
 
+export const MarkerStylesSchema = z.object({
+  radius: z
+    .number()
+    .openapi({
+      description: "Marker radius.",
+      default: 10,
+    })
+    .default(10),
+  fillColor: z.string().openapi({
+    description: "Color of the marker",
+    default: "rgb(20, 88, 252, 1.0)",
+  }),
+  strokeColor: z
+    .string()
+    .openapi({
+      description: "Color of the line's outline.",
+      default: "rgb(79, 70, 229, 1.0)",
+    })
+    .default("rgb(1, 40, 133, 1.0)"),
+  strokeWidth: z
+    .number()
+    .openapi({
+      description: "Thickness of the polygon's outline, in pixels.",
+      default: 3,
+    })
+    .default(3),
+});
+
 export const LineStringStylesSchema = z.object({
   strokeColor: z
     .string()

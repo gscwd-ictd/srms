@@ -266,8 +266,6 @@ const VehicleRenderToggleList: FunctionComponent<TsTokensProps> = ({ accessToken
 
       // 10 seconds of fetching car location
       const intervalId = setInterval(() => {
-        // console.log(vehicleLayerGroup?.getLayers().getLength());
-        // console.log(fleetMap.mapManager.getLayerManager().getLayerIds());
         multipleDeviceLocationMutation.mutate(imeisString);
       }, intervalSeconds);
 

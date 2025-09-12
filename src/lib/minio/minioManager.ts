@@ -185,7 +185,7 @@ export class MinioManager implements I_MinioManager {
   async getbucketList() {
     try {
       //const url = await this.minioClient.listBuckets();
-      console.log(env.MINIO_USE_SSL as boolean);
+      // console.log(env.MINIO_USE_SSL as boolean);
       return await this.minioClient;
     } catch (err) {
       console.error("test", err);

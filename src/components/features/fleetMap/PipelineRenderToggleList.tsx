@@ -114,7 +114,7 @@ const PipelineRenderToggleList: FunctionComponent = ({}) => {
 
     vectorLayer.setSource(vectorSource);
 
-    vectorLayer.setVisible(true);
+    vectorLayer.setVisible(false);
 
     vectorLayer.setZIndex(999);
 
@@ -137,7 +137,7 @@ const PipelineRenderToggleList: FunctionComponent = ({}) => {
             onChange={(event) => {
               setLayerVisibility(event.target.checked);
             }}
-            defaultChecked={true}
+            defaultChecked={false}
           />
           <EyeOff className="mr-2 block w-5 text-stone-800 peer-checked:hidden" />
           <Eye className="mr-2 hidden w-5 text-stone-800 peer-checked:block" />

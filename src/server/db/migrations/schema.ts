@@ -11,7 +11,6 @@ import {
   jsonb,
   pgEnum,
 } from "drizzle-orm/pg-core";
-import { sql } from "drizzle-orm";
 
 export const applicationStatusEnum = pgEnum("application_status_enum", [
   "pending_payment",

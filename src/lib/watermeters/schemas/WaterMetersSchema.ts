@@ -25,6 +25,8 @@ export const SelectWaterMeterPropertiesSchema = z.object({
   billed: z.string(),
 });
 
+export const SelectConsumersWaterMeterDetails = z.array(SelectWaterMeterPropertiesSchema);
+
 export const SelectWaterMeterDataSchema = z.object({
   type: z.string(),
   id: z.string(),
@@ -37,4 +39,14 @@ export const SelectWaterMetersGeoJSONSchema = z.object({
   type: z.string(),
   totalFeatures: z.number(),
   features: z.array(SelectWaterMeterDataSchema),
+});
+
+export const TablePaginationParamsSchema = z.object({
+  pageIndex: z.string(),
+  pageSize: z.string(),
+});
+
+export const TableFilterSchema = z.object({
+  id: z.string(),
+  value: z.string(),
 });

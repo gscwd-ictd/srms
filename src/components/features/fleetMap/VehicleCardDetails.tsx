@@ -126,13 +126,14 @@ const VehicleCardDetails: FunctionComponent<VehicleCardDetailsProps> = ({
       setTsDeviceDetails({} as TrackSolidDeviceDetail);
       setTsDeviceLocation({} as TrackSolidDeviceLocation);
     }
-  }, [open, deviceDetails, deviceLocation]);
+  }, [open, deviceDetails, deviceLocation, setTsDeviceDetails, setTsDeviceLocation]);
 
   return (
-    <Sheet key="right" open={open} onOpenChange={onOpenChange} modal={false}>
+    <Sheet open={open} onOpenChange={onOpenChange} modal={false}>
       <SheetContent
-        className="m-1.5 w-[400px] gap-0 rounded-lg border-0 bg-white text-black"
+        className="m-1.5 h-[98vh] w-[400px] gap-0 rounded-lg border-0 bg-white text-black"
         onInteractOutside={(e) => e.preventDefault()}
+        side="right"
       >
         <SheetHeader className="m-6 mb-2 p-0">
           <SheetTitle className="text-black">{selectedDevice.deviceName}</SheetTitle>
@@ -147,7 +148,7 @@ const VehicleCardDetails: FunctionComponent<VehicleCardDetailsProps> = ({
 
           {!isEmpty(tsDeviceDetails) && !isEmpty(tsDeviceLocation) ? (
             <>
-              <div className="m-4 rounded-md border-1 border-stone-400 p-3">
+              <div className="m-4 mb-2 rounded-md border-1 border-stone-400 p-3">
                 <div className="flex space-x-1.5">
                   <p className="w-[50%]">
                     <span className="font-bold">{checkAccStatus()}</span>{" "}

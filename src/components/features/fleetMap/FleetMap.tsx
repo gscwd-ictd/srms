@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 
 import { type PropsWithChildren, type FunctionComponent, useRef, useEffect } from "react";
@@ -5,10 +6,10 @@ import { useGeographic } from "ol/proj";
 import View from "ol/View";
 import { BaseMapLayerGroup } from "./BaseMapLayerGroup";
 import { useFleetMap } from "./contexts/useFleetMapContext";
-import { useSidebar } from "@srms/components/ui/Sidebar";
+// import { useSidebar } from "@srms/components/ui/Sidebar";
 
 export const FleetMap: FunctionComponent<PropsWithChildren> = ({ children }) => {
-  const { setOpen } = useSidebar();
+  // const { setOpen } = useSidebar();
 
   /**
    * Calling the useGeographic function makes it so the map view uses
@@ -23,8 +24,8 @@ export const FleetMap: FunctionComponent<PropsWithChildren> = ({ children }) => 
   const mapRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    // By default in this page, sidebar is closed
-    setOpen(false);
+    // // By default in this page, sidebar is closed
+    // setOpen(false);
 
     if (!mapRef.current) return;
 

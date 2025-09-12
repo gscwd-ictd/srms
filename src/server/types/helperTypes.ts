@@ -11,6 +11,7 @@ import {
   FeatureStylesSchema,
   IconStylesSchema,
   LineStringStylesSchema,
+  MarkerStylesSchema,
 } from "@srms/lib/servicableareas/schemas";
 
 export type PaginatedResult<T> = {
@@ -27,4 +28,5 @@ export type HealthCheckResponse = z.infer<typeof HealthCheckResponseSchema>;
 
 export type FeatureStyles = z.infer<typeof FeatureStylesSchema>;
 export type IconStyles = z.infer<typeof IconStylesSchema>;
+export type MarkerStyles = z.infer<typeof MarkerStylesSchema>;
 export type LineStringStyles = z.infer<typeof LineStringStylesSchema>;

@@ -1,9 +1,9 @@
 import { Coordinate } from "ol/coordinate";
-import { LineString } from "ol/geom";
 
 export type WaterMeterCoordinates = {
   type: string;
-  coordinates: number[] | (Coordinate[] | LineString)[];
+  coordinates: Coordinate;
+  // number[] | Coordinate | (Coordinate[] | LineString)[];
 };
 
 export type WaterMeterProperties = {
@@ -16,14 +16,14 @@ export type WaterMeterProperties = {
   datediscon: string | null;
   zonecode: string;
   bookcode: string;
-  consumert: string;
-  meterbrnd: string;
-  metersize: string;
-  aveusage: string;
-  m3perhr: string;
-  contactno: string;
-  billedvol: string;
-  billed: string;
+  consumert: string | null;
+  meterbrnd: string | null;
+  metersize: string | null;
+  aveusage: string | null;
+  m3perhr: string | null;
+  contactno: string | null;
+  billedvol: string | null;
+  billed: string | null;
 };
 
 export type WaterMeterData = {
@@ -34,8 +34,15 @@ export type WaterMeterData = {
   properties: WaterMeterProperties;
 };
 
+export type ConsumersWaterMeterDetails = Array<WaterMeterData>;
+
 export type WaterMetersGeoJSON = {
   type: string;
   totalFeatures: number;
-  features: Array<WaterMeterData>;
+  features: ConsumersWaterMeterDetails;
+};
+
+export type WaterMeterFilter = {
+  id: string;
+  value: string;
 };

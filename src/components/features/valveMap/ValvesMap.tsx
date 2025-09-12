@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 
 import { type PropsWithChildren, type FunctionComponent, useRef, useEffect } from "react";

@@ -58,7 +58,7 @@ const useMap = () => {
       // remove the map when the component is unmounted
       olMap.setTarget(undefined);
     };
-  }, [viewport, map]);
+  }, [viewport, map, setMapRef]);
 
   return { map, mapRef };
 };
