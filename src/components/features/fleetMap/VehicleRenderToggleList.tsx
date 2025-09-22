@@ -13,7 +13,6 @@ import VectorSource from "ol/source/Vector";
 import { FunctionComponent, useEffect, useState } from "react";
 import CarMarker from "../../../../public/images/car_icon.svg";
 import { Point } from "ol/geom";
-import VehicleCardDetails from "./VehicleCardDetails";
 import { useFleetMap } from "./contexts/useFleetMapContext";
 import { FeatureManager } from "@srms/lib/mapstudio/featureManager";
 import { createIconStyles } from "./utils/createIconStyles";
@@ -23,6 +22,7 @@ import { isEmpty } from "@srms/utils/isEmpty";
 import React from "react";
 import { AccordionContent, AccordionTrigger } from "@srms/components/ui/Accordion";
 import { Eye, EyeOff } from "lucide-react";
+import VehicleDetailsCard from "./VehicleDetailsCard";
 
 interface TsTokensProps {
   accessToken: Token;
@@ -333,7 +333,7 @@ const VehicleRenderToggleList: FunctionComponent<TsTokensProps> = ({ accessToken
           ) : null}
         </form>
 
-        <VehicleCardDetails accessToken={accessToken} open={isModalOpen} onOpenChange={setIsModalOpen} />
+        <VehicleDetailsCard accessToken={accessToken} open={isModalOpen} onOpenChange={setIsModalOpen} />
       </AccordionContent>
     </React.Fragment>
   );

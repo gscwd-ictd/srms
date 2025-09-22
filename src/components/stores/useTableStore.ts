@@ -8,6 +8,9 @@ export type TableState = {
 
   columnFiltersState: ColumnFiltersState;
   setColumnFiltersState: (columnFiltersState: ColumnFiltersState) => void;
+
+  tableLoadingState: boolean;
+  setTableLoadingState: (tableLoadingState: boolean) => void;
 };
 
 export const useTableStore = create<TableState>()(
@@ -17,5 +20,8 @@ export const useTableStore = create<TableState>()(
 
     columnFiltersState: [] as ColumnFiltersState,
     setColumnFiltersState: (columnFiltersState: ColumnFiltersState) => set({ columnFiltersState }),
+
+    tableLoadingState: false,
+    setTableLoadingState: (tableLoadingState) => set({ tableLoadingState }),
   })),
 );

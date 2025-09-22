@@ -14,6 +14,7 @@ import { createMarkerStyles } from "./utils/createMarkerStyles";
 import { Spinner } from "@srms/components/ui-custom/Spinner";
 import WaterMeterCard from "./WaterMeterCard";
 import { useCardStore } from "@srms/components/stores/useCardStore";
+import WaterMeterDetailsCard from "./WaterMeterDetailsCard";
 
 const featureManager = new FeatureManager();
 
@@ -30,8 +31,14 @@ const WaterMeterRenderToggleList: FunctionComponent = ({}) => {
   };
 
   // Open modal for viewing vehicle details
-  const { layerToggleCardOpen, setLayerToggleCardOpen, waterMeterTableCardOpen, setWaterMeterTableCardOpen } =
-    useCardStore();
+  const {
+    layerToggleCardOpen,
+    setLayerToggleCardOpen,
+    waterMeterTableCardOpen,
+    setWaterMeterTableCardOpen,
+    waterMeterDetailsCardOpen,
+    setWaterMeterDetailsCardOpen,
+  } = useCardStore();
 
   const toggleTableModal = () => {
     setLayerToggleCardOpen(!layerToggleCardOpen);
@@ -142,6 +149,8 @@ const WaterMeterRenderToggleList: FunctionComponent = ({}) => {
       </AccordionContent>
 
       <WaterMeterCard open={waterMeterTableCardOpen} onOpenChange={setWaterMeterTableCardOpen} />
+
+      <WaterMeterDetailsCard open={waterMeterDetailsCardOpen} onOpenChange={setWaterMeterDetailsCardOpen} />
     </React.Fragment>
   );
 };

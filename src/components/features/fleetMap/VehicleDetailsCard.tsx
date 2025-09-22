@@ -13,13 +13,13 @@ import { SignalHigh, SignalLow, SignalMedium, SignalZero } from "lucide-react";
 import { Dispatch, FunctionComponent, SetStateAction, useEffect } from "react";
 import { isEmpty } from "@srms/utils/isEmpty";
 
-interface VehicleCardDetailsProps {
+interface VehicleDetailsCardProps {
   accessToken: Token;
   open: boolean;
   onOpenChange: Dispatch<SetStateAction<boolean>>;
 }
 
-const VehicleCardDetails: FunctionComponent<VehicleCardDetailsProps> = ({
+const VehicleDetailsCard: FunctionComponent<VehicleDetailsCardProps> = ({
   accessToken,
   open,
   onOpenChange,
@@ -307,4 +307,4 @@ const VehicleCardDetails: FunctionComponent<VehicleCardDetailsProps> = ({
   );
 };
 
-export default VehicleCardDetails;
+export default VehicleDetailsCard;

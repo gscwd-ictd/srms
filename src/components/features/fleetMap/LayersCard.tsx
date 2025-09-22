@@ -18,11 +18,26 @@ interface LayersCardProps {
 }
 
 export const LayersCard: FunctionComponent<LayersCardProps> = ({ accessToken }) => {
-  const { layerToggleCardOpen, setLayerToggleCardOpen } = useCardStore();
+  const {
+    layerToggleCardOpen,
+    setLayerToggleCardOpen,
+    waterMeterTableCardOpen,
+    setWaterMeterTableCardOpen,
+    setWaterMeterDetailsCardOpen,
+    waterMeterDetailsCardOpen,
+  } = useCardStore();
 
   // Open modal for layers card
   const toggleModal = () => {
     setLayerToggleCardOpen(!layerToggleCardOpen);
+
+    if (waterMeterTableCardOpen) {
+      setWaterMeterTableCardOpen(!waterMeterTableCardOpen);
+    }
+
+    if (waterMeterDetailsCardOpen) {
+      setWaterMeterDetailsCardOpen(!waterMeterDetailsCardOpen);
+    }
   };
 
   return (

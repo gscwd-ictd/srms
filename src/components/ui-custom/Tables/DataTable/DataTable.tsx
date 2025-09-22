@@ -16,7 +16,7 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import { ReactNode, useEffect, useState } from "react";
-import { ArrowDownIcon, ArrowUpDown, ArrowUpIcon, FileX2 } from "lucide-react";
+import { ArrowDownIcon, ArrowUpDown, ArrowUpIcon } from "lucide-react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@srms/components/ui/Table";
 import { Input } from "@srms/components/ui/Input";
 import { DataTablePagination } from "./DataTablePagination";
@@ -24,8 +24,9 @@ import { Spinner } from "../../Spinner";
 import { rankItem } from "@tanstack/match-sorter-utils";
 import { useTableStore } from "@srms/components/stores/useTableStore";
 import { Button } from "@srms/components/ui/Button";
-// import { DataTableColumnFilter } from "./DataTableColumnFilter";
 import React from "react";
+import { cn } from "@srms/utils/shadcn";
+import { isEmpty } from "@srms/utils/isEmpty";
 
 type DataTableProps<T> = {
   columns: Array<ColumnDef<T, unknown>>;
@@ -39,6 +40,8 @@ type DataTableProps<T> = {
   actionBtn?: ReactNode | ReactNode[];
   title: string;
   rowCount?: number;
+  sticky?: boolean;
+  fixedHeight?: string;
 };
 
 export function DataTable<T>({
@@ -53,6 +56,8 @@ export function DataTable<T>({
   actionBtn,
   title = "",
   rowCount = 0,
+  sticky = false,
+  fixedHeight,
 }: DataTableProps<T>) {
   const { setPaginationState, setColumnFiltersState } = useTableStore();
 
@@ -115,16 +120,21 @@ export function DataTable<T>({
 
   useEffect(() => {
     setPaginationState(pagination);
-  }, [pagination, setPaginationState]);
+  }, [pagination, setPagination, setPaginationState]);
 
   useEffect(() => {
     setColumnFiltersState(columnFilters);
-  }, [columnFilters, setColumnFiltersState]);
+  }, [columnFilters, setColumnFilters, setColumnFiltersState]);
 
   return (
     <div className="flex flex-col space-y-4">
       {/* Right-aligned: Search + Actions (flexible for mobile) */}
-      <div className="mb-3 grid grid-cols-1 items-start gap-2 sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-2">
+      <div
+        className={cn(
+          "grid grid-cols-1 items-start gap-2 sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-2",
+          enableGlobalFilter ? "mb-3" : "mb-0",
+        )}
+      >
         <h3 className="order-1 text-xl font-bold">{title}</h3>
 
         {/* Search Input (full width on mobile, fixed width on desktop) */}
@@ -144,24 +154,15 @@ export function DataTable<T>({
         </div>
       </div>
 
-      <div className="flex min-h-0 flex-1 flex-col overflow-auto border">
-        {loading || !table.getRowModel().rows?.length ? (
-          <div className="flex flex-1 items-center justify-center">
-            {loading ? (
-              <Spinner className="text-primary my-4 size-20" size={"lg"} />
-            ) : (
-              <div className="flex items-center justify-center gap-2">
-                <FileX2 className="text-muted-foreground h-7 w-7 dark:text-white" />
-                <span className="text-muted-foreground text-2xl font-extrabold tracking-wide dark:text-white">
-                  No Results
-                </span>
-              </div>
-            )}
-          </div>
+      <div className="mb-0 flex min-h-0 flex-1 flex-col overflow-auto border">
+        {loading ? (
+          <Spinner className="text-primary my-4 size-20" size={"lg"} />
         ) : (
-          <div className="w-full overflow-x-auto">
+          // !isEmpty(fixedHeight) ? "h-[" + fixedHeight + "]" : "h-full",
+          <div className={cn("w-full overflow-x-auto", !isEmpty(fixedHeight) ? fixedHeight : "h-full")}>
+            {/* <div className="w-full overflow-x-auto"> */}
             <Table className="min-w-full [&_td]:px-4 [&_th]:px-4">
-              <TableHeader>
+              <TableHeader className={cn(sticky ? "sticky top-0 z-10" : "")}>
                 {table.getHeaderGroups().map((headerGroup) => (
                   <TableRow
                     key={headerGroup.id}
@@ -170,10 +171,6 @@ export function DataTable<T>({
                     {headerGroup.headers.map((header) => (
                       <TableHead key={header.id}>
                         <div className="flex items-center py-1">
-                          {/* <DataTableColumnFilter
-                            column={header.column}
-                            title={flexRender(header.column.columnDef.header, header.getContext())}
-                          /> */}
                           <div>{flexRender(header.column.columnDef.header, header.getContext())}</div>
 
                           {/* Sorting */}
@@ -202,16 +199,25 @@ export function DataTable<T>({
               </TableHeader>
 
               <TableBody>
-                {table.getRowModel().rows.map((row) => (
-                  <TableRow key={row.id} data-state={row.getIsSelected() && "selected"}>
-                    {row.getVisibleCells().map((cell) => (
-                      // <TableCell key={cell.id} className="max-w-[30rem] truncate">
-                      <TableCell key={cell.id} className="word-wrap overflow-wrap">
-                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                      </TableCell>
-                    ))}
+                {!table.getRowModel().rows?.length ? (
+                  <TableRow>
+                    <TableCell colSpan={table.getAllColumns().length}>
+                      <div className="max-w-full py-5 text-center text-2xl font-bold text-black">
+                        No Results
+                      </div>
+                    </TableCell>
                   </TableRow>
-                ))}
+                ) : (
+                  table.getRowModel().rows.map((row) => (
+                    <TableRow key={row.id} data-state={row.getIsSelected() && "selected"}>
+                      {row.getVisibleCells().map((cell) => (
+                        <TableCell key={cell.id} className="word-wrap overflow-wrap">
+                          {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                        </TableCell>
+                      ))}
+                    </TableRow>
+                  ))
+                )}
               </TableBody>
             </Table>
           </div>
@@ -219,7 +225,7 @@ export function DataTable<T>({
       </div>
 
       {enablePagination && (
-        <div className="pt-4">
+        <div className="pt-2">
           <DataTablePagination table={table} />
         </div>
       )}
