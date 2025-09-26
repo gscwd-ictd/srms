@@ -114,6 +114,15 @@ export class LayerManager {
     delete this.layerGroups[groupId];
   }
 
+  public getLayerGroup(groupId: string): LayerGroup | undefined {
+    const group = this.layerGroups[groupId];
+    if (!group) return;
+
+    if (this.map) {
+      return group;
+    }
+  }
+
   public setLayerIndex(id: string, index: number): void {
     const layer = this.layers[id];
     if (!layer || !this.map) return;

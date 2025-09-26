@@ -1,0 +1,1 @@
+ALTER TABLE "applicant_documents" ADD COLUMN "test-column" varchar;

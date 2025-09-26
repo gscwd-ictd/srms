@@ -1,12 +1,27 @@
+import { notFound, onError } from "@srms/server/middlewares";
 import { secureHeaders } from "hono/secure-headers";
-import { healthcheck, applications } from "@srms/server/routes";
+import {
+  healthcheck,
+  applications,
+  plumbingFixtures,
+  fixtureUnits,
+  geoserver,
+  serviceableAreas,
+  trackSolid,
+  pms,
+  waterMeters,
+} from "@srms/server/routes";
 import { createOpenAPIRoute } from "./openapi/createOpenApiRoute";
 import { configureOpenApi } from "./openapi/configureOpenApi";
 import { crossOrigin } from "./middlewares/cors";
-import { requestId } from "hono/request-id";
-import { onError } from "./middlewares/onError";
-import { notFound } from "./middlewares/notFound";
-import { pinoLogger } from "./middlewares/pinoLogger";
+import env from "@srms/utils/env";
+import multer from "multer";
+import { MinioManager } from "@srms/lib/minio";
+import { NSAManager } from "@srms/lib/nsa/nsaManager";
+import { GeoServerManager } from "@srms/lib/geoserver/geoServerManager";
+import { TrackSolidManager } from "@srms/lib/tracksolid/trackSolidManager";
+import { PmsManager } from "@srms/lib/pms/pmsManager";
+import { WaterMetersManager } from "@srms/lib/watermeters/waterMetersManager";
 
 function createApp() {
   const app = createOpenAPIRoute().basePath("/api");
@@ -18,16 +33,43 @@ function createApp() {
 
   app.use(secureHeaders());
   app.use(crossOrigin);
-  app.use(requestId());
-  app.use(pinoLogger());
 
-  const routes = [healthcheck, applications] as const;
-
+  // IMPORTANT! Add each route to this array
+  const routes = [
+    healthcheck,
+    applications,
+    plumbingFixtures,
+    fixtureUnits,
+    geoserver,
+    trackSolid,
+    serviceableAreas,
+    pms,
+    waterMeters,
+  ] as const;
   routes.forEach((route) => app.route("/", route));
-
   return app;
 }
 
 const app = createApp();
 
 export default app;
+
+export const minioManager = MinioManager.getInstance({
+  endPoint: env.MINIO_ENDPOINT,
+  port: env.MINIO_PORT,
+  useSSL: false,
+  accessKey: env.MINIO_ACCESS_KEY,
+  secretKey: env.MINIO_SECRET,
+});
+
+export const upload = multer({ storage: multer.memoryStorage() });
+
+export const nsaManager = NSAManager.getInstance();
+
+export const geoServerManager = GeoServerManager.getInstance();
+
+export const trackSolidManager = TrackSolidManager.getInstance();
+
+export const pmsManager = PmsManager.getInstance();
+
+export const waterMetersManager = WaterMetersManager.getInstance();

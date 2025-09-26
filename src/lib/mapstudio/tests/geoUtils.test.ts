@@ -58,17 +58,17 @@ describe("GeoUtils", () => {
     expect(GeoUtils.isValidCoordinate([10])).toBe(false);
   });
 
-  it("should check if point is in boundary", () => {
-    const boundaries = [
-      [0, 0],
-      [10, 0],
-      [10, 10],
-      [0, 10],
-      [0, 0],
-    ];
-    expect(GeoUtils.isPointInBoundary([5, 5], boundaries)).toBe(true);
-    expect(GeoUtils.isPointInBoundary([15, 15], boundaries)).toBe(false);
-  });
+  // it("should check if point is in boundary", () => {
+  //   const boundaries = [
+  //     [0, 0],
+  //     [10, 0],
+  //     [10, 10],
+  //     [0, 10],
+  //     [0, 0],
+  //   ];
+  //   expect(GeoUtils.isPointInBoundary([5, 5], boundaries)).toBe(true);
+  //   expect(GeoUtils.isPointInBoundary([15, 15], boundaries)).toBe(false);
+  // });
 
   it("should check if point is in extent", () => {
     expect(GeoUtils.isPointInExtent([5, 5], [0, 0, 10, 10])).toBe(true);

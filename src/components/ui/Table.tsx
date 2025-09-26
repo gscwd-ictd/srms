@@ -6,9 +6,9 @@ import { cn } from "@srms/utils/shadcn";
 
 function Table({ className, ...props }: React.ComponentProps<"table">) {
   return (
-    <div className="relative w-full overflow-auto">
-      <table data-slot="table" className={cn("w-full caption-bottom text-sm", className)} {...props} />
-    </div>
+    // <div className="relative w-full overflow-auto">
+    <table data-slot="table" className={cn("w-full caption-bottom text-sm", className)} {...props} />
+    // </div>
   );
 }
 
@@ -45,9 +45,10 @@ function TableHead({ className, ...props }: React.ComponentProps<"th">) {
     <th
       data-slot="table-head"
       className={cn(
-        "text-muted-foreground h-10 px-2 text-left align-middle font-medium [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px]",
+        "h-10 px-2 text-left align-middle font-medium break-words [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px]",
         className,
       )}
+      // text-muted-foreground
       {...props}
     />
   );
@@ -58,7 +59,7 @@ function TableCell({ className, ...props }: React.ComponentProps<"td">) {
     <td
       data-slot="table-cell"
       className={cn(
-        "p-2 align-middle [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px]",
+        "p-2 align-middle break-words [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px]",
         className,
       )}
       {...props}

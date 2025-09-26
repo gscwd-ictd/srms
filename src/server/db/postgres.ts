@@ -14,3 +14,9 @@ export const db = drizzle({
     ...schemas,
   },
 });
+
+const gisPool = new Pool({
+  connectionString: `postgres://${env.DB_USER_GIS}:${env.DB_PASS_GIS}@${env.DB_HOST_GIS}:${env.DB_PORT_GIS}/${env.DB_NAME}`,
+});
+
+export const gisdb = drizzle({ client: gisPool });

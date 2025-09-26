@@ -35,7 +35,7 @@ export class MapManager {
 
       controls: [],
 
-      layers: [
+      layers: options.layers || [
         new TileLayer({
           source: new OSM(),
         }),
