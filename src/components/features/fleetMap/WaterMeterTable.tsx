@@ -206,7 +206,6 @@ const WaterMeterTable: FunctionComponent<WaterMeterTableProps> = ({ open }) => {
         rowCount={waterMeters?.totalFeatures || 0}
         pageSize={50}
         sticky={true}
-        // fixedHeight={"20.5rem"}
         fixedHeight={"h-80"}
       />
     </React.Fragment>

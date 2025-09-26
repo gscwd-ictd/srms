@@ -15,11 +15,27 @@ import { Spinner } from "@srms/components/ui-custom/Spinner";
 import WaterMeterCard from "./WaterMeterCard";
 import { useCardStore } from "@srms/components/stores/useCardStore";
 import WaterMeterDetailsCard from "./WaterMeterDetailsCard";
+import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
+import { WaterMeterData } from "@srms/lib/watermeters/types";
 
 const featureManager = new FeatureManager();
 
 const WaterMeterRenderToggleList: FunctionComponent = ({}) => {
   const fleetMap = useFleetMap();
+
+  const { data: waterMeters, isLoading } = useQuery({
+    queryKey: ["get-all-water-meters"],
+    refetchOnReconnect: false,
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
+    queryFn: async () => {
+      const { data } = await axios.get(`${process.env.NEXT_PUBLIC_APP_URL}/api/v1/layers/water-meters`, {});
+
+      return data;
+    },
+    throwOnError: true,
+  });
 
   // Update openlayers. Visibility status of selected layer.
   const setLayerVisibility = (isChecked: boolean) => {
@@ -48,69 +64,71 @@ const WaterMeterRenderToggleList: FunctionComponent = ({}) => {
   useEffect(() => {
     if (!fleetMap.mapManager) return;
 
-    const vectorSource = new VectorSource();
+    if (!isEmpty(waterMeters)) {
+      const vectorSource = new VectorSource();
 
-    const vectorLayer = new VectorLayer();
+      const vectorLayer = new VectorLayer();
 
-    fleetMap.waterMeters.features.forEach((waterMeter) => {
-      if (!isEmpty(waterMeter.geometry)) {
-        const wmProperties = {
-          id: waterMeter.id,
-          accountno: waterMeter.properties.accountno,
-          meterno: waterMeter.properties.meterno,
-          consumern: waterMeter.properties.consumern,
-          address: waterMeter.properties.address,
-          datecon: waterMeter.properties.datecon,
-          status: waterMeter.properties.status,
-          datediscon: waterMeter.properties.datediscon,
-          zonecode: waterMeter.properties.zonecode,
-          bookcode: waterMeter.properties.bookcode,
-          consumert: waterMeter.properties.consumert,
-          meterbrnd: waterMeter.properties.meterbrnd,
-          metersize: waterMeter.properties.metersize,
-          aveusage: waterMeter.properties.aveusage,
-          m3perhr: waterMeter.properties.m3perhr,
-          contactno: waterMeter.properties.contactno,
-          billedvol: waterMeter.properties.billedvol,
-          billed: waterMeter.properties.billed,
-        };
+      waterMeters.features.forEach((waterMeter: WaterMeterData) => {
+        if (!isEmpty(waterMeter.geometry)) {
+          const wmProperties = {
+            id: waterMeter.id,
+            accountno: waterMeter.properties.accountno,
+            meterno: waterMeter.properties.meterno,
+            consumern: waterMeter.properties.consumern,
+            address: waterMeter.properties.address,
+            datecon: waterMeter.properties.datecon,
+            status: waterMeter.properties.status,
+            datediscon: waterMeter.properties.datediscon,
+            zonecode: waterMeter.properties.zonecode,
+            bookcode: waterMeter.properties.bookcode,
+            consumert: waterMeter.properties.consumert,
+            meterbrnd: waterMeter.properties.meterbrnd,
+            metersize: waterMeter.properties.metersize,
+            aveusage: waterMeter.properties.aveusage,
+            m3perhr: waterMeter.properties.m3perhr,
+            contactno: waterMeter.properties.contactno,
+            billedvol: waterMeter.properties.billedvol,
+            billed: waterMeter.properties.billed,
+          };
 
-        const feature = featureManager.createFeature(
-          new Point(waterMeter.geometry.coordinates),
-          wmProperties,
-        );
-        vectorSource.addFeature(feature);
+          const feature = featureManager.createFeature(
+            new Point(waterMeter.geometry.coordinates),
+            wmProperties,
+          );
+          vectorSource.addFeature(feature);
 
-        const wmStyles = {
-          radius: 5,
-          fillColor: "rgb(20, 88, 252, 1.0)",
-          strokeColor: "rgb(1, 40, 133, 1.0)",
-          strokeWidth: 1,
-        };
+          const wmStyles = {
+            radius: 5,
+            fillColor: "rgb(20, 88, 252, 1.0)",
+            strokeColor: "rgb(1, 40, 133, 1.0)",
+            strokeWidth: 1,
+          };
 
-        const featureStyle = createMarkerStyles(wmStyles as MarkerStyles);
-        feature.setStyle(featureStyle.markerStyle);
-      }
-    });
+          const featureStyle = createMarkerStyles(wmStyles as MarkerStyles);
+          feature.setStyle(featureStyle.markerStyle);
+        }
+      });
 
-    vectorLayer.setSource(vectorSource);
+      vectorLayer.setSource(vectorSource);
 
-    vectorLayer.setVisible(false);
+      vectorLayer.setVisible(false);
 
-    vectorLayer.setZIndex(995);
+      vectorLayer.setZIndex(995);
 
-    vectorLayer.setProperties({ id: "water-meter" });
+      vectorLayer.setProperties({ id: "water-meter" });
 
-    fleetMap.mapManager.getLayerManager().addLayer("water-meters", vectorLayer);
+      fleetMap.mapManager.getLayerManager().addLayer("water-meters", vectorLayer);
 
-    return () => {
-      fleetMap.mapManager.getLayerManager().removeLayer("water-meters");
-    };
-  }, [fleetMap.mapManager, fleetMap.waterMeters.features]);
+      return () => {
+        fleetMap.mapManager.getLayerManager().removeLayer("water-meters");
+      };
+    }
+  }, [fleetMap.mapManager, waterMeters]);
 
   return (
     <React.Fragment>
-      {fleetMap.loadingWaterMeters ? (
+      {isLoading ? (
         <div className="spinner">
           <Spinner size={"xl"} />
         </div>

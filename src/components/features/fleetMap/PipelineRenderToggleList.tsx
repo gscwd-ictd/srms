@@ -11,11 +11,28 @@ import { createLineStringStyles } from "./utils/createLineStringStyles";
 import { isEmpty } from "@srms/utils/isEmpty";
 import { AccordionContent, AccordionTrigger } from "@srms/components/ui/Accordion";
 import { Eye, EyeOff } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
+import { PipelineData } from "@srms/lib/pms/types";
+import axios from "axios";
+import { Spinner } from "@srms/components/ui-custom/Spinner";
 
 const featureManager = new FeatureManager();
 
 const PipelineRenderToggleList: FunctionComponent = ({}) => {
   const fleetMap = useFleetMap();
+
+  const { data: pipelines, isLoading } = useQuery({
+    queryKey: ["get-all-pipelines"],
+    refetchOnReconnect: false,
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
+    queryFn: async () => {
+      const { data } = await axios.get(`${process.env.NEXT_PUBLIC_APP_URL}/api/v1/layers/pipelines`, {});
+
+      return data;
+    },
+    throwOnError: true,
+  });
 
   // Update openlayers. Visibility status of selected layer.
   const setLayerVisibility = (isChecked: boolean) => {
@@ -29,106 +46,115 @@ const PipelineRenderToggleList: FunctionComponent = ({}) => {
   useEffect(() => {
     if (!fleetMap.mapManager) return;
 
-    const vectorSource = new VectorSource();
+    if (!isEmpty(pipelines)) {
+      const vectorSource = new VectorSource();
 
-    const vectorLayer = new VectorLayer();
+      const vectorLayer = new VectorLayer();
 
-    fleetMap.pipelines.features.forEach((pipeline) => {
-      if (!isEmpty(pipeline.geometry)) {
-        const pipelineProperties = {
-          id: pipeline.id,
-          diameter: pipeline.properties.diameter,
-          material: pipeline.properties.material,
-        };
+      // fleetMap.pipelines
+      pipelines.features.forEach((pipeline: PipelineData) => {
+        if (!isEmpty(pipeline.geometry)) {
+          const pipelineProperties = {
+            id: pipeline.id,
+            diameter: pipeline.properties.diameter,
+            material: pipeline.properties.material,
+          };
 
-        const feature = featureManager.createFeature(
-          new MultiLineString(pipeline.geometry.coordinates),
-          pipelineProperties,
-        );
-        vectorSource.addFeature(feature);
+          const feature = featureManager.createFeature(
+            new MultiLineString(pipeline.geometry.coordinates),
+            pipelineProperties,
+          );
+          vectorSource.addFeature(feature);
 
-        // Set icon depending of valve status
-        if (pipeline.properties.diameter === PipeSize.SIZE_500MM) {
-          const pipeStyles = { strokeColor: "#745945", strokeWidth: [5], lineDash: "solid" };
+          // Set icon depending of valve status
+          if (pipeline.properties.diameter === PipeSize.SIZE_500MM) {
+            const pipeStyles = { strokeColor: "#745945", strokeWidth: [5], lineDash: "solid" };
 
-          const featureStyle = createLineStringStyles(pipeStyles);
-          feature.setStyle(featureStyle.lineStringStyle);
-        } else if (pipeline.properties.diameter === PipeSize.SIZE_400MM) {
-          const pipeStyles = { strokeColor: "#F787E1", strokeWidth: [5], lineDash: "solid" };
+            const featureStyle = createLineStringStyles(pipeStyles);
+            feature.setStyle(featureStyle.lineStringStyle);
+          } else if (pipeline.properties.diameter === PipeSize.SIZE_400MM) {
+            const pipeStyles = { strokeColor: "#F787E1", strokeWidth: [5], lineDash: "solid" };
 
-          const featureStyle = createLineStringStyles(pipeStyles);
-          feature.setStyle(featureStyle.lineStringStyle);
-        } else if (pipeline.properties.diameter === PipeSize.SIZE_300MM) {
-          const pipeStyles = { strokeColor: "#FAE334", strokeWidth: [4], lineDash: "solid" };
+            const featureStyle = createLineStringStyles(pipeStyles);
+            feature.setStyle(featureStyle.lineStringStyle);
+          } else if (pipeline.properties.diameter === PipeSize.SIZE_300MM) {
+            const pipeStyles = { strokeColor: "#FAE334", strokeWidth: [4], lineDash: "solid" };
 
-          const featureStyle = createLineStringStyles(pipeStyles);
-          feature.setStyle(featureStyle.lineStringStyle);
-        } else if (pipeline.properties.diameter === PipeSize.SIZE_250MM) {
-          const pipeStyles = { strokeColor: "#3EFB29", strokeWidth: [4], lineDash: "solid" };
+            const featureStyle = createLineStringStyles(pipeStyles);
+            feature.setStyle(featureStyle.lineStringStyle);
+          } else if (pipeline.properties.diameter === PipeSize.SIZE_250MM) {
+            const pipeStyles = { strokeColor: "#3EFB29", strokeWidth: [4], lineDash: "solid" };
 
-          const featureStyle = createLineStringStyles(pipeStyles);
-          feature.setStyle(featureStyle.lineStringStyle);
-        } else if (pipeline.properties.diameter === PipeSize.SIZE_200MM) {
-          const pipeStyles = { strokeColor: "#0768F1", strokeWidth: [3], lineDash: "solid" };
+            const featureStyle = createLineStringStyles(pipeStyles);
+            feature.setStyle(featureStyle.lineStringStyle);
+          } else if (pipeline.properties.diameter === PipeSize.SIZE_200MM) {
+            const pipeStyles = { strokeColor: "#0768F1", strokeWidth: [3], lineDash: "solid" };
 
-          const featureStyle = createLineStringStyles(pipeStyles);
-          feature.setStyle(featureStyle.lineStringStyle);
-        } else if (pipeline.properties.diameter === PipeSize.SIZE_150MM) {
-          const pipeStyles = { strokeColor: "#AD0EF6", strokeWidth: [3], lineDash: "solid" };
+            const featureStyle = createLineStringStyles(pipeStyles);
+            feature.setStyle(featureStyle.lineStringStyle);
+          } else if (pipeline.properties.diameter === PipeSize.SIZE_150MM) {
+            const pipeStyles = { strokeColor: "#AD0EF6", strokeWidth: [3], lineDash: "solid" };
 
-          const featureStyle = createLineStringStyles(pipeStyles);
-          feature.setStyle(featureStyle.lineStringStyle);
-        } else if (pipeline.properties.diameter === PipeSize.SIZE_100MM) {
-          const pipeStyles = { strokeColor: "#2DF0FE", strokeWidth: [2], lineDash: "solid" };
+            const featureStyle = createLineStringStyles(pipeStyles);
+            feature.setStyle(featureStyle.lineStringStyle);
+          } else if (pipeline.properties.diameter === PipeSize.SIZE_100MM) {
+            const pipeStyles = { strokeColor: "#2DF0FE", strokeWidth: [2], lineDash: "solid" };
 
-          const featureStyle = createLineStringStyles(pipeStyles);
-          feature.setStyle(featureStyle.lineStringStyle);
-        } else if (pipeline.properties.diameter === PipeSize.SIZE_75MM) {
-          const pipeStyles = { strokeColor: "#EF9E07", strokeWidth: [2], lineDash: "solid" };
+            const featureStyle = createLineStringStyles(pipeStyles);
+            feature.setStyle(featureStyle.lineStringStyle);
+          } else if (pipeline.properties.diameter === PipeSize.SIZE_75MM) {
+            const pipeStyles = { strokeColor: "#EF9E07", strokeWidth: [2], lineDash: "solid" };
 
-          const featureStyle = createLineStringStyles(pipeStyles);
-          feature.setStyle(featureStyle.lineStringStyle);
-        } else if (pipeline.properties.diameter === PipeSize.SIZE_50MM) {
-          const pipeStyles = { strokeColor: "#F01E07", strokeWidth: [2], lineDash: "solid" };
+            const featureStyle = createLineStringStyles(pipeStyles);
+            feature.setStyle(featureStyle.lineStringStyle);
+          } else if (pipeline.properties.diameter === PipeSize.SIZE_50MM) {
+            const pipeStyles = { strokeColor: "#F01E07", strokeWidth: [2], lineDash: "solid" };
 
-          const featureStyle = createLineStringStyles(pipeStyles);
-          feature.setStyle(featureStyle.lineStringStyle);
-        } else if (pipeline.properties.diameter === PipeSize.SIZE_50MM_HDPE) {
-          const pipeStyles = { strokeColor: "#F01E07", strokeWidth: [1.5], lineDash: "solid" };
+            const featureStyle = createLineStringStyles(pipeStyles);
+            feature.setStyle(featureStyle.lineStringStyle);
+          } else if (pipeline.properties.diameter === PipeSize.SIZE_50MM_HDPE) {
+            const pipeStyles = { strokeColor: "#F01E07", strokeWidth: [1.5], lineDash: "solid" };
 
-          const featureStyle = createLineStringStyles(pipeStyles);
-          feature.setStyle(featureStyle.lineStringStyle);
-        } else if (pipeline.properties.diameter === PipeSize.SIZE_64MM_HDPE) {
-          const pipeStyles = { strokeColor: "#F01E07", strokeWidth: [1.5], lineDash: "solid" };
+            const featureStyle = createLineStringStyles(pipeStyles);
+            feature.setStyle(featureStyle.lineStringStyle);
+          } else if (pipeline.properties.diameter === PipeSize.SIZE_64MM_HDPE) {
+            const pipeStyles = { strokeColor: "#F01E07", strokeWidth: [1.5], lineDash: "solid" };
 
-          const featureStyle = createLineStringStyles(pipeStyles);
-          feature.setStyle(featureStyle.lineStringStyle);
-        } else {
-          const pipeStyles = { strokeColor: "#070606", strokeWidth: [1.5], lineDash: "solid" };
+            const featureStyle = createLineStringStyles(pipeStyles);
+            feature.setStyle(featureStyle.lineStringStyle);
+          } else {
+            const pipeStyles = { strokeColor: "#070606", strokeWidth: [1.5], lineDash: "solid" };
 
-          const featureStyle = createLineStringStyles(pipeStyles);
-          feature.setStyle(featureStyle.lineStringStyle);
+            const featureStyle = createLineStringStyles(pipeStyles);
+            feature.setStyle(featureStyle.lineStringStyle);
+          }
         }
-      }
-    });
+      });
 
-    vectorLayer.setSource(vectorSource);
+      vectorLayer.setSource(vectorSource);
 
-    vectorLayer.setVisible(false);
+      vectorLayer.setVisible(false);
 
-    vectorLayer.setZIndex(999);
+      vectorLayer.setZIndex(999);
 
-    vectorLayer.setProperties({ id: "pipelines" });
+      vectorLayer.setProperties({ id: "pipelines" });
 
-    fleetMap.mapManager.getLayerManager().addLayer("pipelines", vectorLayer);
+      fleetMap.mapManager.getLayerManager().addLayer("pipelines", vectorLayer);
 
-    return () => {
-      fleetMap.mapManager.getLayerManager().removeLayer("pipelines");
-    };
-  }, [fleetMap.mapManager, fleetMap.pipelines.features]);
+      return () => {
+        fleetMap.mapManager.getLayerManager().removeLayer("pipelines");
+      };
+    }
+  }, [fleetMap.mapManager, pipelines]); //fleetMap.pipelines.features
 
   return (
     <React.Fragment>
+      {isLoading ? (
+        <div className="spinner">
+          <Spinner size={"xl"} />
+        </div>
+      ) : null}
+
       <div className="flex cursor-pointer items-center space-x-2 p-2">
         <label>
           <input

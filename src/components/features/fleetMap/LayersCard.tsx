@@ -12,6 +12,7 @@ import { Token } from "@srms/components/types";
 import { Card, CardContent, CardHeader, CardAction } from "@srms/components/ui/Card";
 import { cn } from "@srms/utils/shadcn";
 import { useCardStore } from "@srms/components/stores/useCardStore";
+import { ValveRenderToggleList } from "./ValveRenderToggleList";
 
 interface LayersCardProps {
   accessToken: Token;
@@ -82,6 +83,10 @@ export const LayersCard: FunctionComponent<LayersCardProps> = ({ accessToken }) 
 
               <AccordionItem value="item-3">
                 <WaterMeterRenderToggleList />
+              </AccordionItem>
+
+              <AccordionItem value="item-4">
+                <ValveRenderToggleList />
               </AccordionItem>
             </Accordion>
           </CardContent>
