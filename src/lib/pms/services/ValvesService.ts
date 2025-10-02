@@ -19,7 +19,7 @@ export class ValvesService implements I_ValvesService {
     const geoserverUsername = env.NEXT_PUBLIC_GEOSERVER_USERNAME;
     const geoserverPassword = env.NEXT_PUBLIC_GEOSERVER_PASSWORD;
 
-    const urlString = `${geoServerUrl}/${geoServerWorkspace}/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=${geoServerWorkspace}:${valveLayerName}&maxFeatures=2500&outputFormat=application/json&srsName=EPSG:4326`;
+    const urlString = `${geoServerUrl}/${geoServerWorkspace}/ows?service=WFS&version=2.0.0&request=GetFeature&typeNames=${geoServerWorkspace}:${valveLayerName}&maxFeatures=2500&outputFormat=application/json&srsName=EPSG:4326`;
 
     // added username and password in case URL is changed to cloud.
     const response = await axios.get<ValvesGeoJSON>(urlString, {

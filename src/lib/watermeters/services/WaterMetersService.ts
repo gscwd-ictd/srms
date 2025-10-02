@@ -19,7 +19,7 @@ export class WaterMetersService implements I_WaterMetersService {
     const geoserverUsername = env.NEXT_PUBLIC_GEOSERVER_USERNAME;
     const geoserverPassword = env.NEXT_PUBLIC_GEOSERVER_PASSWORD;
 
-    const urlString = `${geoServerUrl}/${geoServerWorkspace}/ows?service=WFS&version=2.0.0&request=GetFeature&typeName=${geoServerWorkspace}:${waterMetersLayerName}&outputFormat=application/json&srsName=EPSG:4326`;
+    const urlString = `${geoServerUrl}/${geoServerWorkspace}/ows?service=WFS&version=2.0.0&request=GetFeature&typeNames=${geoServerWorkspace}:${waterMetersLayerName}&outputFormat=application/json&srsName=EPSG:4326`;
 
     // added username and password in case URL is changed to cloud.
     const response = await axios.get<WaterMetersGeoJSON>(urlString, {
@@ -48,7 +48,7 @@ export class WaterMetersService implements I_WaterMetersService {
 
     const startIndex = parseInt(pageIndex) === 0 ? 0 : parseInt(pageIndex) * parseInt(pageSize);
 
-    const urlString = `${geoServerUrl}/${geoServerWorkspace}/ows?service=WFS&version=2.0.0&request=GetFeature&typeName=${geoServerWorkspace}:${waterMetersLayerName}&outputFormat=application/json&srsName=EPSG:4326&startIndex=${startIndex}&count=${pageSize}&sortBy=accountno`;
+    const urlString = `${geoServerUrl}/${geoServerWorkspace}/ows?service=WFS&version=2.0.0&request=GetFeature&typeNames=${geoServerWorkspace}:${waterMetersLayerName}&outputFormat=application/json&srsName=EPSG:4326&startIndex=${startIndex}&count=${pageSize}&sortBy=accountno`;
 
     // added username and password in case URL is changed to cloud.
     const response = await axios.get<WaterMetersGeoJSON>(urlString, {

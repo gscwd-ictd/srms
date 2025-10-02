@@ -120,11 +120,13 @@ export function DataTable<T>({
 
   useEffect(() => {
     setPaginationState(pagination);
-  }, [pagination, setPagination, setPaginationState]);
+  }, [pagination, setPaginationState]);
 
   useEffect(() => {
+    setPagination({ pageIndex: 0, pageSize: pageSize });
+    setPaginationState({ pageIndex: 0, pageSize: pageSize });
     setColumnFiltersState(columnFilters);
-  }, [columnFilters, setColumnFilters, setColumnFiltersState]);
+  }, [columnFilters, setColumnFiltersState]);
 
   return (
     <div className="flex flex-col space-y-4">

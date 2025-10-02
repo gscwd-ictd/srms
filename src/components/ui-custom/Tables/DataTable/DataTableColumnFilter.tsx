@@ -20,7 +20,6 @@ export function DataTableColumnFilter<TData, TValue>({
 
   // const sortedList = useMemo(() => Array.from(column.getFacetedUniqueValues().keys()).sort(), [column]);
   const handleSubmit = () => {
-    console.log(inputValue);
     column?.setFilterValue(inputValue);
   };
 
