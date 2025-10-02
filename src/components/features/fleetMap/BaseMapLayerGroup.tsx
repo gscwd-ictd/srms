@@ -13,7 +13,19 @@ export const BaseMapLayerGroup: LayerGroup = new LayerGroup({
       preload: Infinity,
       className: BaseLayerOptions.OSM,
       properties: {
-        title: "OpenStreetMap",
+        title: "OSM",
+      },
+    }),
+
+    new TileLayer({
+      source: new OSM({
+        url: "https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}.png",
+      }),
+      visible: true,
+      preload: Infinity,
+      className: BaseLayerOptions.OSMWHITE,
+      properties: {
+        title: "LIGHT",
       },
     }),
 

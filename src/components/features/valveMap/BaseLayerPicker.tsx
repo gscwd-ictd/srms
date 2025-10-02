@@ -37,7 +37,7 @@ const BaseLayerPicker: FunctionComponent = ({}) => {
   }, [valvesMap.mapManager, baseMap]);
 
   return (
-    <div className="base-layers absolute bottom-[10px] left-[10px] z-20 rounded-lg bg-white p-3">
+    <div className="base-layers absolute top-[10px] left-[10px] z-20 rounded-lg bg-white p-3">
       <p className="text-md pb-2 font-bold text-black">Base Layers</p>
 
       {BaseMapLayerGroup.getLayers()

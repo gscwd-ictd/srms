@@ -22,7 +22,7 @@ import BaseLayer from "ol/layer/Base";
 import { isEmpty } from "@srms/utils/isEmpty";
 import React from "react";
 import { AccordionContent, AccordionTrigger } from "@srms/components/ui/Accordion";
-import { Eye, EyeOff } from "lucide-react";
+import { Eye, EyeOff, CarFront } from "lucide-react";
 
 interface TsTokensProps {
   accessToken: Token;
@@ -54,7 +54,7 @@ const VehicleRenderToggleList: FunctionComponent<TsTokensProps> = ({ accessToken
 
       return data;
     },
-    throwOnError: true,
+    // throwOnError: true,
   });
 
   // Get location details of device. Success will set the marker and add to map.
@@ -287,11 +287,11 @@ const VehicleRenderToggleList: FunctionComponent<TsTokensProps> = ({ accessToken
             }}
             defaultChecked={true}
           />
-          <EyeOff className="mr-2 block w-5 text-stone-800 peer-checked:hidden" />
-          <Eye className="mr-2 hidden w-5 text-stone-800 peer-checked:block" />
+          <CarFront className="mr-2 block w-5 text-white opacity-30 peer-checked:hidden" />
+          <CarFront className="mr-2 hidden w-5 text-white peer-checked:block" />
         </label>
-        <AccordionTrigger>
-          <p className="text-md font-bold text-black">Vehicles</p>
+        <AccordionTrigger className="w-40 items-center">
+          <p className="text-md font-bold text-white">Vehicles</p>
         </AccordionTrigger>
       </div>
 
@@ -318,7 +318,7 @@ const VehicleRenderToggleList: FunctionComponent<TsTokensProps> = ({ accessToken
                     </label>
 
                     <div
-                      className="font-small w-full cursor-pointer text-sm leading-none text-black peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                      className="font-small w-full cursor-pointer text-sm leading-none text-stone-800 peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                       onClick={() => toggleModal(device)}
                     >
                       <p>Plate No./Driver: {device.deviceName}</p>
