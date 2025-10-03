@@ -31,11 +31,11 @@ export type LoggerChannelEntry = {
   data: Array<LoggerEntry>;
 };
 
-export type LoggerChannelEntries = {
-  data: LoggerChannelEntry;
-  status: number;
-  statusText: string;
-};
+// export type LoggerChannelEntries = {
+//   data: LoggerChannelEntry;
+//   status: number;
+//   statusText: string;
+// };
 
 export type LoggerFilterBody = {
   serialNumber: string;

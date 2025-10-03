@@ -107,7 +107,7 @@ export const getPipelinesGeoJson = createRoute({
 
 export const getLoggersList = createRoute({
   tags: TAGS.PRESSURE_MANAGEMENT,
-  description: "Get data loggers list. From XilogApi",
+  description: "Get data loggers list. From XilogApi. https://github.com/Ovarro/XilogApiDocs",
   method: "get",
   path: "/v1/layers/iot-loggers",
   operationId: "getLoggersList",
@@ -154,9 +154,10 @@ export const getLoggersList = createRoute({
 
 export const getLoggerChannelEntries = createRoute({
   tags: TAGS.PRESSURE_MANAGEMENT,
-  description: "Get loggers data based on channel set. With date from and to. From XilogApi",
+  description:
+    "Get loggers data based on channel set. With date from and to. From XilogApi. https://github.com/Ovarro/XilogApiDocs",
   method: "post",
-  path: "/v1/pms/iot-logger/entries",
+  path: "/v1/iot-logger/entries",
   operationId: "getLoggerChannelEntries",
   request: {
     body: {
