@@ -50,7 +50,7 @@ const BaseLayerPicker: FunctionComponent = ({}) => {
               value={baseMapLayer.getClassName()}
               className="mr-1"
               onChange={() => setBaseMap(baseMapLayer.getClassName())}
-              defaultChecked={baseMapLayer.getClassName() === BaseLayerOptions.OSM}
+              defaultChecked={baseMapLayer.getClassName() === BaseLayerOptions.POSITRON} // set default selected base layer
             />
             {baseMapLayer.getProperties()["title"]}
           </label>

@@ -1,3 +1,5 @@
+import { Coordinate } from "ol/coordinate";
+
 export type LoggerChannel = {
   index: string;
   readingType: string;
@@ -9,10 +11,11 @@ export type LoggerDetails = {
   serial: number;
   name: string;
   channels: Array<LoggerChannel>;
-  location: {
-    latitude: number;
-    longitude: number;
-  };
+  location: Coordinate;
+  // location: {
+  //   latitude: number;
+  //   longitude: number;
+  // };
 };
 
 export type LoggerEntry = {
