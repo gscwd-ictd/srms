@@ -9,13 +9,13 @@ import { MapValveData } from "@srms/lib/pms/types";
 import { isEmpty } from "@srms/utils/isEmpty";
 import { Dispatch, FunctionComponent, SetStateAction } from "react";
 
-interface ValveCardDetailsDrops {
+interface ValveDetailsCardDrops {
   open: boolean;
   onOpenChange: Dispatch<SetStateAction<boolean>>;
   featureData: MapValveData | undefined;
 }
 
-const ValveCardDetails: FunctionComponent<ValveCardDetailsDrops> = ({ open, onOpenChange, featureData }) => {
+const ValveDetailsCard: FunctionComponent<ValveDetailsCardDrops> = ({ open, onOpenChange, featureData }) => {
   // Valve type badge design
   const badgeValveType = (type: string) => {
     if (type === ValveCodeTypes.ISO) {
@@ -310,4 +310,4 @@ const ValveCardDetails: FunctionComponent<ValveCardDetailsDrops> = ({ open, onOp
   );
 };
 
-export default ValveCardDetails;
+export default ValveDetailsCard;

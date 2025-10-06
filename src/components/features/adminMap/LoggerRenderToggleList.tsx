@@ -1,11 +1,10 @@
 "use client";
 
-import React, { useEffect, type FunctionComponent } from "react";
+import React, { useEffect, useState, type FunctionComponent } from "react";
 import { FeatureManager } from "@srms/lib/mapstudio/featureManager";
 import VectorSource from "ol/source/Vector";
 import VectorLayer from "ol/layer/Vector";
 import { useAdminMonitMap } from "./contexts/useAdminMonitMapContext";
-import { PipeSize } from "@srms/components/enums/pipeSize.enum";
 import { isEmpty } from "@srms/utils/isEmpty";
 import { AccordionContent, AccordionTrigger } from "@srms/components/ui/Accordion";
 import { Eye, EyeOff } from "lucide-react";
@@ -17,11 +16,16 @@ import LoggerMarker from "../../../../public/images/pressure.svg";
 import { IconStyles } from "@srms/server/types";
 import { createIconStyles } from "./utils/createIconStyles";
 import { Point } from "ol/geom";
+import LoggerCardDetails from "./LoggerCardDetails";
 
 const featureManager = new FeatureManager();
 
 const LoggerRenderToggleList: FunctionComponent = ({}) => {
   const adminMonitMap = useAdminMonitMap();
+
+  // Open modal for viewing logger details
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [selectedValve, setSelectedValve] = useState<LoggerDetails>();
 
   const { data: loggers, isLoading } = useQuery({
     queryKey: ["get-all-loggers"],
@@ -29,7 +33,7 @@ const LoggerRenderToggleList: FunctionComponent = ({}) => {
     refetchOnMount: false,
     refetchOnWindowFocus: false,
     queryFn: async () => {
-      const { data } = await axios.get(`${process.env.NEXT_PUBLIC_APP_URL}/api/v1/layers/iot-loggers`);
+      const { data } = await axios.get(`${process.env.NEXT_PUBLIC_APP_URL}/api/v1/layers/iot-loggers`, {});
 
       return data;
     },
@@ -39,9 +43,9 @@ const LoggerRenderToggleList: FunctionComponent = ({}) => {
   // Update openlayers. Visibility status of selected layer.
   const setLayerVisibility = (isChecked: boolean) => {
     if (isChecked) {
-      adminMonitMap.mapManager.getLayerManager().getLayer("logger")?.setVisible(true);
+      adminMonitMap.mapManager.getLayerManager().getLayer("loggers")?.setVisible(true);
     } else {
-      adminMonitMap.mapManager.getLayerManager().getLayer("logger")?.setVisible(false);
+      adminMonitMap.mapManager.getLayerManager().getLayer("loggers")?.setVisible(false);
     }
   };
 
@@ -53,7 +57,7 @@ const LoggerRenderToggleList: FunctionComponent = ({}) => {
 
       const vectorLayer = new VectorLayer();
 
-      // adminMonitMap.pipelines
+      // adminMonitMap.loggers
       loggers.forEach((logger: LoggerDetails) => {
         if (!isEmpty(logger.location)) {
           const loggerProperties = {
@@ -61,13 +65,16 @@ const LoggerRenderToggleList: FunctionComponent = ({}) => {
             name: logger.name,
           };
 
-          const feature = featureManager.createFeature(new Point(logger.location), loggerProperties);
+          const feature = featureManager.createFeature(
+            new Point([logger.location?.longitude, logger.location?.latitude]),
+            loggerProperties,
+          );
           vectorSource.addFeature(feature);
 
           const loggerStyles = {
             src: LoggerMarker.src!,
             anchor: [0.5, 1],
-            scale: 0.55,
+            scale: 0.2,
           };
           const featureStyle = createIconStyles(loggerStyles as IconStyles);
           feature.setStyle(featureStyle.iconStyle);
@@ -78,17 +85,34 @@ const LoggerRenderToggleList: FunctionComponent = ({}) => {
 
       vectorLayer.setVisible(false);
 
-      vectorLayer.setZIndex(999);
+      vectorLayer.setZIndex(998);
 
-      vectorLayer.setProperties({ id: "pipelines" });
+      vectorLayer.setProperties({ id: "loggers" });
 
-      adminMonitMap.mapManager.getLayerManager().addLayer("pipelines", vectorLayer);
+      adminMonitMap.mapManager.getLayerManager().addLayer("loggers", vectorLayer);
+
+      // Open card modal for valve details
+      adminMonitMap.mapManager.getMap().on("click", (e) => {
+        const feature = adminMonitMap.mapManager.getMap().forEachFeatureAtPixel(e.pixel, (feature) => {
+          return feature;
+        });
+        setIsModalOpen(false);
+
+        if (!feature) {
+          return;
+        }
+
+        const props = feature.getProperties() as LoggerDetails | undefined;
+        setSelectedValve(props);
+
+        setIsModalOpen(true);
+      });
 
       return () => {
-        adminMonitMap.mapManager.getLayerManager().removeLayer("pipelines");
+        adminMonitMap.mapManager.getLayerManager().removeLayer("loggers");
       };
     }
-  }, [adminMonitMap.mapManager, loggers]); //adminMonitMap.pipelines.features
+  }, [adminMonitMap.mapManager, loggers]);
 
   return (
     <React.Fragment>
@@ -107,7 +131,7 @@ const LoggerRenderToggleList: FunctionComponent = ({}) => {
             <Eye className="mr-2 hidden w-5 text-stone-800 peer-checked:block" />
           </label>
           <AccordionTrigger className="items-center">
-            <p className="text-md font-bold text-black">Pipeline</p>
+            <p className="text-md font-bold text-black">Data Logger</p>
           </AccordionTrigger>
         </div>
 
@@ -122,78 +146,14 @@ const LoggerRenderToggleList: FunctionComponent = ({}) => {
         <ul className="mx-12 text-stone-900">
           <li>
             <div className="flex h-6">
-              <div className="mr-3 h-5 w-2 rotate-90 transform bg-[#745945]"></div>
-              {PipeSize.SIZE_500MM}
-            </div>
-          </li>
-          <li>
-            <div className="flex h-6">
-              <div className="mr-3 h-5 w-2 rotate-90 transform bg-[#F787E1]"></div>
-              {PipeSize.SIZE_400MM}
-            </div>
-          </li>
-          <li>
-            <div className="flex h-6">
-              <div className="mr-3 h-5 w-2 rotate-90 transform bg-[#FAE334]"></div>
-              {PipeSize.SIZE_300MM}
-            </div>
-          </li>
-          <li>
-            <div className="flex h-6">
-              <div className="mr-3 h-5 w-2 rotate-90 transform bg-[#3EFB29]"></div>
-              {PipeSize.SIZE_250MM}
-            </div>
-          </li>
-          <li>
-            <div className="flex h-6">
-              <div className="mr-3 h-5 w-2 rotate-90 transform bg-[#0768F1]"></div>
-              {PipeSize.SIZE_200MM}
-            </div>
-          </li>
-          <li>
-            <div className="flex h-6">
-              <div className="mr-3 h-5 w-2 rotate-90 transform bg-[#AD0EF6]"></div>
-              {PipeSize.SIZE_150MM}
-            </div>
-          </li>
-          <li>
-            <div className="flex h-6">
-              <div className="mr-3 h-5 w-2 rotate-90 transform bg-[#2DF0FE]"></div>
-              {PipeSize.SIZE_100MM}
-            </div>
-          </li>
-          <li>
-            <div className="flex h-6">
-              <div className="mr-3 h-5 w-2 rotate-90 transform bg-[#EF9E07]"></div>
-              {PipeSize.SIZE_75MM}
-            </div>
-          </li>
-          <li>
-            <div className="flex h-6">
-              <div className="mr-3 h-5 w-2 rotate-90 transform bg-[#F01E07]"></div>
-              {PipeSize.SIZE_50MM}
-            </div>
-          </li>
-          <li>
-            <div className="flex h-6">
-              <div className="mr-3 h-5 w-2 rotate-90 transform bg-[#F01E07]"></div>
-              {PipeSize.SIZE_64MM_HDPE}
-            </div>
-          </li>
-          <li>
-            <div className="flex h-6">
-              <div className="mr-3 h-5 w-2 rotate-90 transform bg-[#F01E07]"></div>
-              {PipeSize.SIZE_50MM_HDPE}
-            </div>
-          </li>
-          <li>
-            <div className="flex h-6">
-              <div className="mr-3 h-5 w-2 rotate-90 transform bg-[#070606]"></div>
-              {PipeSize.SIZE_32MM_HDPE}
+              <div className="mt-0.5 mr-2 h-4 w-4 rounded-3xl bg-blue-500"></div>
+              Data Logger
             </div>
           </li>
         </ul>
       </AccordionContent>
+
+      <LoggerCardDetails open={isModalOpen} onOpenChange={setIsModalOpen} featureData={selectedValve} />
     </React.Fragment>
   );
 };

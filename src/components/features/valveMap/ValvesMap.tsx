@@ -40,9 +40,6 @@ export const ValvesMap: FunctionComponent<PropsWithChildren> = ({ children }) =>
       }),
     });
 
-    // Console coordinates
-    // valvesMap.mapManager.getMap().on("click", (e) => console.log(e.coordinate));
-
     return () => {
       valvesMap.mapManager.destroy();
       mapRef.current = null;
