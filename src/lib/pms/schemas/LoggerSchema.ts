@@ -17,24 +17,21 @@ export const SelectLoggerDetails = z.object({
   }),
 });
 
-export const SelectLoggersList = z.object({
-  data: z.array(SelectLoggerDetails),
-  status: z.number(),
-  statusText: z.string(),
-});
+export const SelectLoggersListData = z.array(SelectLoggerDetails);
 
 export const SelectLoggerEntry = z.object({
   timestamp: z.string(),
   value: z.number(),
 });
 
-export const SelectLoggerChannelEntry = {
+export const SelectLoggerChannelEntry = z.object({
   channel: SelectLoggerChannel,
   data: z.array(SelectLoggerEntry),
-};
+});
 
-export const SelectLoggerChannelEntries = {
-  data: SelectLoggerChannelEntry,
-  status: z.number(),
-  statusText: z.string(),
-};
+export const LoggerFilterBody = z.object({
+  serialNumber: z.string(),
+  channel: z.string(),
+  startDateTime: z.string(),
+  endDateTime: z.string(),
+});

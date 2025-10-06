@@ -53,14 +53,14 @@ const WaterMeterTable: FunctionComponent<WaterMeterTableProps> = ({ open }) => {
     mutationFn: async () => {
       if (!isEmpty(columnFiltersState)) {
         const response = await axios.post(
-          `${process.env.NEXT_PUBLIC_APP_URL}/api/v1/consumers/water-meters/${paginationState.pageIndex}/${paginationState.pageSize}`,
+          `${process.env.NEXT_PUBLIC_APP_URL}/api/v1/consumers/water-meters/${paginationState?.pageIndex}/${paginationState?.pageSize}`,
           columnFiltersState,
         );
 
         return response.data;
       } else {
         const response = await axios.get(
-          `${process.env.NEXT_PUBLIC_APP_URL}/api/v1/consumers/water-meters/0/${paginationState.pageSize}`,
+          `${process.env.NEXT_PUBLIC_APP_URL}/api/v1/consumers/water-meters/${paginationState?.pageIndex}/${paginationState?.pageSize}`,
         );
 
         return response.data;
@@ -204,7 +204,7 @@ const WaterMeterTable: FunctionComponent<WaterMeterTableProps> = ({ open }) => {
         manualPagination={true}
         manualFiltering={true}
         rowCount={waterMeters?.totalFeatures || 0}
-        pageSize={50}
+        pageSize={100}
         sticky={true}
         fixedHeight={"h-80"}
       />
