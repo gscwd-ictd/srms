@@ -128,35 +128,38 @@ const WaterMeterRenderToggleList: FunctionComponent = ({}) => {
 
   return (
     <React.Fragment>
-      {isLoading ? (
-        <div className="spinner">
-          <Spinner size={"xl"} />
-        </div>
-      ) : null}
+      <div className="flex">
+        <div className="flex cursor-pointer items-center space-x-2 p-2">
+          <label>
+            <input
+              type="checkbox"
+              className="peer hidden"
+              onChange={(event) => {
+                setLayerVisibility(event.target.checked);
+              }}
+              defaultChecked={false}
+            />
+            <EyeOff className="mr-2 block w-5 text-stone-800 peer-checked:hidden" />
+            <Eye className="mr-2 hidden w-5 text-stone-800 peer-checked:block" />
+          </label>
 
-      <div className="flex cursor-pointer items-center space-x-2 p-2">
-        <label>
-          <input
-            type="checkbox"
-            className="peer hidden"
-            onChange={(event) => {
-              setLayerVisibility(event.target.checked);
-            }}
-            defaultChecked={false}
-          />
-          <EyeOff className="mr-2 block w-5 text-stone-800 peer-checked:hidden" />
-          <Eye className="mr-2 hidden w-5 text-stone-800 peer-checked:block" />
-        </label>
-        <AccordionTrigger className="items-center">
-          <p className="text-md font-bold text-black">Water Meters</p>
-        </AccordionTrigger>
-        <div>
-          <Table className="mr-2 w-5 text-stone-800" onClick={toggleTableModal} />
+          <AccordionTrigger className="items-center">
+            <p className="text-md font-bold text-black">Water Meters</p>
+          </AccordionTrigger>
+          <div>
+            <Table className="mr-2 w-5 text-stone-800" onClick={toggleTableModal} />
+          </div>
         </div>
+
+        {isLoading ? (
+          <div className="spinner">
+            <Spinner size={"sm"} className="mt-4" />
+          </div>
+        ) : null}
       </div>
 
       <AccordionContent className="flex flex-col gap-4 text-balance">
-        <ul className="text-stone-900">
+        <ul className="mx-12 text-stone-900">
           <li>
             <div className="flex h-6">
               <div className="mt-0.5 mr-2 h-4 w-4 rounded-3xl bg-[#1458FC]"></div>

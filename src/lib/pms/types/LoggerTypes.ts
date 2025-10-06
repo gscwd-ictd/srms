@@ -15,12 +15,6 @@ export type LoggerDetails = {
   };
 };
 
-// export type LoggersList = {
-//   data: Array<LoggerDetails>;
-//   status: number;
-//   statusText: string;
-// };
-
 export type LoggerEntry = {
   timestamp: string;
   value: number;
@@ -30,12 +24,6 @@ export type LoggerChannelEntry = {
   channel: LoggerChannel;
   data: Array<LoggerEntry>;
 };
-
-// export type LoggerChannelEntries = {
-//   data: LoggerChannelEntry;
-//   status: number;
-//   statusText: string;
-// };
 
 export type LoggerFilterBody = {
   serialNumber: string;
