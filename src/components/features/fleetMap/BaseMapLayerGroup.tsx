@@ -29,6 +29,18 @@ export const BaseMapLayerGroup: LayerGroup = new LayerGroup({
       },
     }),
 
+    new TileLayer({
+      source: new OSM({
+        url: "https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}.png",
+      }),
+      visible: true,
+      preload: Infinity,
+      className: BaseLayerOptions.OSM_LIGHT,
+      properties: {
+        title: "OsmLight",
+      },
+    }),
+
     // new TileLayer({
     //   source: new BingMaps({
     //     key: `${process.env.NEXT_PUBLIC_BING_KEY}`,
