@@ -63,10 +63,10 @@ export const LayersCard: FunctionComponent<LayersCardProps> = ({ accessToken }) 
       >
         <Card
           className={cn(
-            "vehicle-layers absolute z-20 mt-14 ml-2 h-[calc(100vh-80px)] w-[230px] overflow-x-hidden overflow-y-hidden rounded-lg border-none bg-gradient-to-r from-indigo-500/70 to-blue-500/80 transition-all transition-discrete duration-100",
+            "vehicle-layers absolute z-20 h-[calc(100vh-80px)] w-[230px] overflow-x-hidden overflow-y-hidden rounded-lg border-none bg-gradient-to-r from-indigo-500/70 to-blue-500/80 transition-all transition-discrete duration-100",
             layerToggleCardOpen
-              ? "intro-animated block backdrop-blur peer-checked:opacity-100"
-              : "hidden opacity-0 peer-checked:opacity-0",
+              ? "nav-intro-animated block backdrop-blur peer-checked:opacity-100"
+              : "nav-outro-animated peer-checked:opacity-0",
           )}
         >
           <div className="absolute -right-14 -mt-44 h-70 w-70 rounded-full bg-blue-500/20"></div>
@@ -104,7 +104,7 @@ export const LayersCard: FunctionComponent<LayersCardProps> = ({ accessToken }) 
           </ScrollArea>
         </Card>
         <div
-          className={`absolute z-50 mt-2 ml-2 w-[230px] rounded-lg bg-red-500/30 bg-gradient-to-r from-indigo-500/80 to-blue-500/80 p-1 text-center leading-none text-white backdrop-blur ${layerToggleCardOpen ? "intro-animated block" : "outro-animated hidden"}`}
+          className={`absolute z-50 mt-2 ml-2 w-[230px] rounded-lg bg-red-500/30 bg-gradient-to-r from-indigo-500/80 to-blue-500/80 p-1 text-center leading-none text-white backdrop-blur ${layerToggleCardOpen ? "nav-title-intro-animated block" : "nav-title-outro-animated"}`}
         >
           OPERATIONS MONITORING & MANAGEMENT SYSTEM
         </div>
