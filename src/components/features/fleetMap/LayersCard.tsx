@@ -14,6 +14,8 @@ import { cn } from "@srms/utils/shadcn";
 import { useCardStore } from "@srms/components/stores/useCardStore";
 import { ValveRenderToggleList } from "./ValveRenderToggleList";
 import { motion } from "framer-motion";
+import CustomSvg from "@srms/components/ui-custom/Svg/Svg";
+import GaugeSvg from "@srms/components/ui-custom/Svg/gauge/gaugeSvg";
 
 interface LayersCardProps {
   accessToken: Token;
@@ -109,6 +111,9 @@ export const LayersCard: FunctionComponent<LayersCardProps> = ({ accessToken }) 
           OPERATIONS MONITORING & MANAGEMENT SYSTEM
         </div>
       </motion.div>
+      <div className="absolute left-60 z-20 h-40 w-40 bg-red-400">
+        <GaugeSvg />
+      </div>
     </React.Fragment>
   );
 };
