@@ -168,7 +168,7 @@ export function DataTable<T>({
                 {table.getHeaderGroups().map((headerGroup) => (
                   <TableRow
                     key={headerGroup.id}
-                    className="sticky bg-cyan-600 text-amber-50 hover:bg-cyan-600"
+                    className="sticky bg-gradient-to-r from-indigo-500/70 to-blue-500/70 text-amber-50 backdrop-blur hover:bg-gradient-to-r hover:from-indigo-500/90 hover:to-blue-500/90"
                   >
                     {headerGroup.headers.map((header) => (
                       <TableHead key={header.id}>
@@ -182,7 +182,7 @@ export function DataTable<T>({
                               onClick={() =>
                                 header.column.toggleSorting(header.column.getIsSorted() === "asc")
                               }
-                              className="rounded-none hover:bg-cyan-600"
+                              className="h-8 rounded-md hover:bg-gradient-to-r hover:from-indigo-600 hover:to-blue-600"
                             >
                               {header.column.getIsSorted() === "desc" ? (
                                 <ArrowDownIcon className="ml-1 h-4 w-4" />

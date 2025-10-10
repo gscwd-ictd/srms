@@ -10,7 +10,7 @@ import { PipeSize } from "@srms/components/enums/pipeSize.enum";
 import { createLineStringStyles } from "./utils/createLineStringStyles";
 import { isEmpty } from "@srms/utils/isEmpty";
 import { AccordionContent, AccordionTrigger } from "@srms/components/ui/Accordion";
-import { Eye, EyeOff } from "lucide-react";
+import { Cog } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { PipelineData } from "@srms/lib/pms/types";
 import axios from "axios";
@@ -149,34 +149,32 @@ const PipelineRenderToggleList: FunctionComponent = ({}) => {
 
   return (
     <React.Fragment>
-      <div className="flex">
-        <div className="flex cursor-pointer items-center space-x-2 p-2">
-          <label>
-            <input
-              type="checkbox"
-              className="peer hidden"
-              onChange={(event) => {
-                setLayerVisibility(event.target.checked);
-              }}
-              defaultChecked={false}
-            />
-            <EyeOff className="mr-2 block w-5 text-stone-800 peer-checked:hidden" />
-            <Eye className="mr-2 hidden w-5 text-stone-800 peer-checked:block" />
-          </label>
-          <AccordionTrigger className="items-center">
-            <p className="text-md font-bold text-black">Pipeline</p>
-          </AccordionTrigger>
+      {isLoading ? (
+        <div className="spinner">
+          <Spinner size={"xl"} />
         </div>
+      ) : null}
 
-        {isLoading ? (
-          <div className="spinner">
-            <Spinner size={"sm"} className="mt-4" />
-          </div>
-        ) : null}
+      <div className="flex cursor-pointer items-center space-x-2 p-2">
+        <label>
+          <input
+            type="checkbox"
+            className="peer hidden"
+            onChange={(event) => {
+              setLayerVisibility(event.target.checked);
+            }}
+            defaultChecked={false}
+          />
+          <Cog className="mr-2 block w-5 cursor-pointer text-white opacity-30 peer-checked:hidden" />
+          <Cog className="mr-2 hidden w-5 cursor-pointer text-white peer-checked:block" />
+        </label>
+        <AccordionTrigger className="w-40 items-center">
+          <p className="text-md font-bold text-white">Pipeline</p>
+        </AccordionTrigger>
       </div>
 
       <AccordionContent className="flex flex-col gap-4 text-balance">
-        <ul className="mx-12 text-stone-900">
+        <ul className="pl-4 text-white">
           <li>
             <div className="flex h-6">
               <div className="mr-3 h-5 w-2 rotate-90 transform bg-[#745945]"></div>
