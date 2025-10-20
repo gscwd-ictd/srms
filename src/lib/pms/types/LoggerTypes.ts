@@ -31,3 +31,8 @@ export type LoggerFilterBody = {
   startDateTime: string;
   endDateTime: string;
 };
+
+export type LatestLoggerEntryFilter = {
+  serialNumber: string;
+  channel: string;
+};

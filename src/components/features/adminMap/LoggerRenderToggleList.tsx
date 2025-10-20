@@ -12,21 +12,25 @@ import { useQuery } from "@tanstack/react-query";
 import { LoggerDetails } from "@srms/lib/pms/types";
 import axios from "axios";
 import { Spinner } from "@srms/components/ui-custom/Spinner";
-import LoggerMarker from "../../../../public/images/pressure.svg";
-import { IconStyles } from "@srms/server/types";
+import LoggerMarker from "../../../../public/images/logger.svg";
+import { IconStyles, LabelStyles } from "@srms/server/types";
 import { createIconStyles } from "./utils/createIconStyles";
 import { Point } from "ol/geom";
-import LoggerCardDetails from "./LoggerCardDetails";
+import LoggerDetailsCard from "./LoggerDetailsCard";
+import { useCardStore } from "@srms/components/stores/useCardStore";
+import { createLabelStyles } from "./utils/createLabelStyles";
 
 const featureManager = new FeatureManager();
 
 const LoggerRenderToggleList: FunctionComponent = ({}) => {
   const adminMonitMap = useAdminMonitMap();
 
-  // Open modal for viewing logger details
-  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-  const [selectedValve, setSelectedValve] = useState<LoggerDetails>();
+  const { setLayerToggleCardOpen, loggerDetailsCardOpen, setLoggerDetailsCardOpen } = useCardStore();
 
+  // Open modal for viewing logger details
+  const [selectedLogger, setSelectedLogger] = useState<LoggerDetails>();
+
+  // /v1/iot-logger/entries/
   const { data: loggers, isLoading } = useQuery({
     queryKey: ["get-all-loggers"],
     refetchOnReconnect: false,
@@ -63,6 +67,7 @@ const LoggerRenderToggleList: FunctionComponent = ({}) => {
           const loggerProperties = {
             serial: logger.serial,
             name: logger.name,
+            channels: logger.channels,
           };
 
           const feature = featureManager.createFeature(
@@ -74,16 +79,28 @@ const LoggerRenderToggleList: FunctionComponent = ({}) => {
           const loggerStyles = {
             src: LoggerMarker.src!,
             anchor: [0.5, 1],
-            scale: 0.2,
+            scale: 0.18,
           };
           const featureStyle = createIconStyles(loggerStyles as IconStyles);
-          feature.setStyle(featureStyle.iconStyle);
+
+          const labelStyles = {
+            font: "13px Calibri,sans-serif",
+            overflow: true,
+            fillColor: "#000",
+            strokeColor: "#fff",
+            width: 3,
+            offsetY: 12,
+            text: `${logger.serial}`,
+          };
+          const featureStyle2 = createLabelStyles(labelStyles as LabelStyles);
+
+          feature.setStyle([featureStyle.iconStyle, featureStyle2.labelStyle]);
         }
       });
 
       vectorLayer.setSource(vectorSource);
 
-      vectorLayer.setVisible(false);
+      vectorLayer.setVisible(true); // set default visibility
 
       vectorLayer.setZIndex(998);
 
@@ -96,16 +113,19 @@ const LoggerRenderToggleList: FunctionComponent = ({}) => {
         const feature = adminMonitMap.mapManager.getMap().forEachFeatureAtPixel(e.pixel, (feature) => {
           return feature;
         });
-        setIsModalOpen(false);
+        setLoggerDetailsCardOpen(false);
 
         if (!feature) {
           return;
         }
 
         const props = feature.getProperties() as LoggerDetails | undefined;
-        setSelectedValve(props);
 
-        setIsModalOpen(true);
+        setSelectedLogger(props);
+
+        setLoggerDetailsCardOpen(true);
+        // console.log(layerToggleCardOpen);
+        setLayerToggleCardOpen(false);
       });
 
       return () => {
@@ -125,7 +145,7 @@ const LoggerRenderToggleList: FunctionComponent = ({}) => {
               onChange={(event) => {
                 setLayerVisibility(event.target.checked);
               }}
-              defaultChecked={false}
+              defaultChecked={true}
             />
             <EyeOff className="mr-2 block w-5 text-stone-800 peer-checked:hidden" />
             <Eye className="mr-2 hidden w-5 text-stone-800 peer-checked:block" />
@@ -153,7 +173,11 @@ const LoggerRenderToggleList: FunctionComponent = ({}) => {
         </ul>
       </AccordionContent>
 
-      <LoggerCardDetails open={isModalOpen} onOpenChange={setIsModalOpen} featureData={selectedValve} />
+      <LoggerDetailsCard
+        open={loggerDetailsCardOpen}
+        // onOpenChange={setLoggerDetailsCardOpen}
+        featureData={selectedLogger}
+      />
     </React.Fragment>
   );
 };

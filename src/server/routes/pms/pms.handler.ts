@@ -4,6 +4,7 @@ import {
   GetPipelinesGeoJsonRoute,
   GetLoggersListRoute,
   GetLoggerChannelEntriesRoute,
+  GetChannelLatestEntriesRoute,
 } from "./pms.routes";
 import { pmsManager } from "@srms/server/app";
 import { z } from "zod";
@@ -45,4 +46,15 @@ export const getLoggerChannelEntries: AppRouteHandler<GetLoggerChannelEntriesRou
     .getLoggerChannelEntries(body)) as LoggerChannelEntrySchema;
 
   return c.json(loggerChannelEntries, 200);
+};
+
+export const getChannelLatestEntries: AppRouteHandler<GetChannelLatestEntriesRoute> = async (c) => {
+  const serialNumber = c.req.param("serialNumber");
+  const channel = c.req.param("channel");
+
+  const loggerChannelLatestEntries = (await pmsManager
+    .getLoggersService()
+    .getChannelLatestEntries(serialNumber, channel)) as LoggerChannelEntrySchema;
+
+  return c.json(loggerChannelLatestEntries, 200);
 };

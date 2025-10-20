@@ -3,6 +3,7 @@ import { TAGS } from "@srms/utils/constants";
 import * as HttpStatusCodes from "@srms/utils/httpStatusCodes";
 import { ErrorResponseSchema } from "@srms/server/schemas/helperSchemas";
 import {
+  LatestLoggerEntryFilterSchema,
   LoggerFilterBody,
   SelectLoggerChannelEntry,
   SelectLoggersListData,
@@ -210,7 +211,60 @@ export const getLoggerChannelEntries = createRoute({
   },
 });
 
+export const getChannelLatestEntries = createRoute({
+  tags: TAGS.PRESSURE_MANAGEMENT,
+  description:
+    "Get latest(current time : previous 1 min) logger data based on channel set. From XilogApi. https://github.com/Ovarro/XilogApiDocs",
+  method: "get",
+  path: "/v1/iot-logger/entries/latest/{serialNumber}/{channel}",
+  operationId: "getChannelLatestEntries",
+  request: {
+    params: LatestLoggerEntryFilterSchema,
+  },
+
+  responses: {
+    [HttpStatusCodes.OK]: {
+      content: {
+        "application/json": {
+          schema: SelectLoggerChannelEntry,
+        },
+      },
+      description: OpenAPIResponses.OK,
+    },
+
+    [HttpStatusCodes.NOT_FOUND]: {
+      content: {
+        "application/json": {
+          example: {
+            name: "NotFoundError",
+            status: 404,
+            message: "Logger entries not found",
+          },
+          schema: ErrorResponseSchema,
+        },
+      },
+      description: OpenAPIResponses.NOT_FOUND,
+    },
+
+    [HttpStatusCodes.INTERNAL_SERVER_ERROR]: {
+      content: {
+        "application/json": {
+          example: {
+            name: "ServerError",
+            status: 500,
+            message: "Something went wrong!",
+            stack: "...",
+          },
+          schema: ErrorResponseSchema,
+        },
+      },
+      description: OpenAPIResponses.INTERNAL_SERVER_ERROR,
+    },
+  },
+});
+
 export type GetValvesGeoJsonRoute = typeof getValvesGeoJson;
 export type GetPipelinesGeoJsonRoute = typeof getPipelinesGeoJson;
 export type GetLoggersListRoute = typeof getLoggersList;
 export type GetLoggerChannelEntriesRoute = typeof getLoggerChannelEntries;
+export type GetChannelLatestEntriesRoute = typeof getChannelLatestEntries;

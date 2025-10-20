@@ -10,6 +10,7 @@ import {
 import {
   FeatureStylesSchema,
   IconStylesSchema,
+  LabelStylesSchema,
   LineStringStylesSchema,
   MarkerStylesSchema,
 } from "@srms/lib/servicableareas/schemas";
@@ -30,3 +31,4 @@ export type FeatureStyles = z.infer<typeof FeatureStylesSchema>;
 export type IconStyles = z.infer<typeof IconStylesSchema>;
 export type MarkerStyles = z.infer<typeof MarkerStylesSchema>;
 export type LineStringStyles = z.infer<typeof LineStringStylesSchema>;
+export type LabelStyles = z.infer<typeof LabelStylesSchema>;

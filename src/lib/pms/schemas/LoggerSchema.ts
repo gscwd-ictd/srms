@@ -35,3 +35,8 @@ export const LoggerFilterBody = z.object({
   startDateTime: z.string(),
   endDateTime: z.string(),
 });
+
+export const LatestLoggerEntryFilterSchema = z.object({
+  serialNumber: z.string(),
+  channel: z.string(),
+});
