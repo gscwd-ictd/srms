@@ -14,7 +14,7 @@ export class LoggersService implements I_LoggersService {
    *
    * @returns
    */
-  async getLoggersList(): Promise<Array<LoggerDetails>> {
+  async getXilogLoggersList(): Promise<Array<LoggerDetails>> {
     const xilogToken = env.XILOG_ACCESS_TOKEN;
 
     const urlString = `https://xilogdataapi.atriumiot.com/PlusLogger/All/${xilogToken}`;
@@ -34,7 +34,7 @@ export class LoggersService implements I_LoggersService {
     }
   }
 
-  async getLoggerChannelEntries(body: LoggerFilterBody): Promise<LoggerChannelEntry> {
+  async getXilogLoggerChannelEntries(body: LoggerFilterBody): Promise<LoggerChannelEntry> {
     const xilogToken = env.XILOG_ACCESS_TOKEN;
 
     const urlString = `https://xilogdataapi.atriumiot.com/PlusData/${body.serialNumber}/${body.channel}/${body.startDateTime}/${body.endDateTime}/${xilogToken}`;
@@ -56,7 +56,7 @@ export class LoggersService implements I_LoggersService {
     }
   }
 
-  async getChannelLatestEntries(serialNumber: string, channel: string): Promise<LoggerChannelEntry> {
+  async getXilogChannelLatestEntries(serialNumber: string, channel: string): Promise<LoggerChannelEntry> {
     const currentDateTime = dayjs().format("YYYY-MM-DD HH:mm");
     const prevDateTime = dayjs().subtract(12, "hour").format("YYYY-MM-DD HH:mm"); // previous 1 hour
 
@@ -67,7 +67,7 @@ export class LoggersService implements I_LoggersService {
       endDateTime: currentDateTime,
     };
 
-    const latestLoggerEntry = await this.getLoggerChannelEntries(body);
+    const latestLoggerEntry = await this.getXilogLoggerChannelEntries(body);
 
     if (!isEmpty(latestLoggerEntry)) {
       return latestLoggerEntry;

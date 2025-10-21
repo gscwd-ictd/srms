@@ -30,14 +30,16 @@ const LoggerRenderToggleList: FunctionComponent = ({}) => {
   // Open modal for viewing logger details
   const [selectedLogger, setSelectedLogger] = useState<LoggerDetails>();
 
-  // /v1/iot-logger/entries/
   const { data: loggers, isLoading } = useQuery({
     queryKey: ["get-all-loggers"],
     refetchOnReconnect: false,
     refetchOnMount: false,
     refetchOnWindowFocus: false,
     queryFn: async () => {
-      const { data } = await axios.get(`${process.env.NEXT_PUBLIC_APP_URL}/api/v1/layers/iot-loggers`, {});
+      const { data } = await axios.get(
+        `${process.env.NEXT_PUBLIC_APP_URL}/api/v1/layers/xilog-iot-loggers`,
+        {},
+      );
 
       return data;
     },

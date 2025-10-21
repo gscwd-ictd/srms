@@ -5,8 +5,8 @@ import { createOpenAPIRoute } from "@srms/server/openapi/createOpenApiRoute";
 const pms = createOpenAPIRoute()
   .openapi(routes.getValvesGeoJson, handlers.getValvesGeoJson)
   .openapi(routes.getPipelinesGeoJson, handlers.getPipelinesGeoJson)
-  .openapi(routes.getLoggersList, handlers.getLoggersList)
-  .openapi(routes.getLoggerChannelEntries, handlers.getLoggerChannelEntries)
-  .openapi(routes.getChannelLatestEntries, handlers.getChannelLatestEntries);
+  .openapi(routes.getXilogLoggersList, handlers.getXilogLoggersList)
+  .openapi(routes.getXilogLoggerChannelEntries, handlers.getXilogLoggerChannelEntries)
+  .openapi(routes.getXilogChannelLatestEntries, handlers.getXilogChannelLatestEntries);
 
 export default pms;

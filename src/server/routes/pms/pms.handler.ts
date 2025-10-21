@@ -2,9 +2,9 @@ import { AppRouteHandler } from "@srms/server/types/appTypes";
 import {
   GetValvesGeoJsonRoute,
   GetPipelinesGeoJsonRoute,
-  GetLoggersListRoute,
-  GetLoggerChannelEntriesRoute,
-  GetChannelLatestEntriesRoute,
+  GetXilogLoggersListRoute,
+  GetXilogLoggerChannelEntriesRoute,
+  GetXilogChannelLatestEntriesRoute,
 } from "./pms.routes";
 import { pmsManager } from "@srms/server/app";
 import { z } from "zod";
@@ -32,29 +32,29 @@ export const getPipelinesGeoJson: AppRouteHandler<GetPipelinesGeoJsonRoute> = as
   return c.json(pipelinesGeoJson, 200);
 };
 
-export const getLoggersList: AppRouteHandler<GetLoggersListRoute> = async (c) => {
-  const loggersList = (await pmsManager.getLoggersService().getLoggersList()) as LoggerListSchema;
+export const getXilogLoggersList: AppRouteHandler<GetXilogLoggersListRoute> = async (c) => {
+  const loggersList = (await pmsManager.getLoggersService().getXilogLoggersList()) as LoggerListSchema;
 
   return c.json(loggersList, 200);
 };
 
-export const getLoggerChannelEntries: AppRouteHandler<GetLoggerChannelEntriesRoute> = async (c) => {
+export const getXilogLoggerChannelEntries: AppRouteHandler<GetXilogLoggerChannelEntriesRoute> = async (c) => {
   const body = c.req.valid("json");
 
   const loggerChannelEntries = (await pmsManager
     .getLoggersService()
-    .getLoggerChannelEntries(body)) as LoggerChannelEntrySchema;
+    .getXilogLoggerChannelEntries(body)) as LoggerChannelEntrySchema;
 
   return c.json(loggerChannelEntries, 200);
 };
 
-export const getChannelLatestEntries: AppRouteHandler<GetChannelLatestEntriesRoute> = async (c) => {
+export const getXilogChannelLatestEntries: AppRouteHandler<GetXilogChannelLatestEntriesRoute> = async (c) => {
   const serialNumber = c.req.param("serialNumber");
   const channel = c.req.param("channel");
 
   const loggerChannelLatestEntries = (await pmsManager
     .getLoggersService()
-    .getChannelLatestEntries(serialNumber, channel)) as LoggerChannelEntrySchema;
+    .getXilogChannelLatestEntries(serialNumber, channel)) as LoggerChannelEntrySchema;
 
   return c.json(loggerChannelLatestEntries, 200);
 };

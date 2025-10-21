@@ -33,7 +33,7 @@ const LoggerDetailsCard: FunctionComponent<LoggerDetailsCardDrops> = ({ open, fe
     mutationKey: ["latest-pressure-log"],
     mutationFn: async (loggerData: LatestLoggerEntryFilter) => {
       const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_APP_URL}/api/v1/iot-logger/entries/latest/${loggerData?.serialNumber}/${loggerData.channel}`,
+        `${process.env.NEXT_PUBLIC_APP_URL}/api/v1/xilog-iot-logger/entries/latest/${loggerData?.serialNumber}/${loggerData.channel}`,
         {},
       );
       return response.data;
@@ -56,7 +56,7 @@ const LoggerDetailsCard: FunctionComponent<LoggerDetailsCardDrops> = ({ open, fe
     mutationKey: ["latest-flow-log"],
     mutationFn: async (loggerData: LatestLoggerEntryFilter) => {
       const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_APP_URL}/api/v1/iot-logger/entries/latest/${loggerData?.serialNumber}/${loggerData.channel}`,
+        `${process.env.NEXT_PUBLIC_APP_URL}/api/v1/xilog-iot-logger/entries/latest/${loggerData?.serialNumber}/${loggerData.channel}`,
         {},
       );
       return response.data;
@@ -82,7 +82,7 @@ const LoggerDetailsCard: FunctionComponent<LoggerDetailsCardDrops> = ({ open, fe
   //   refetchOnWindowFocus: false,
   //   queryFn: async () => {
   //     const { data } = await axios.post(
-  //       `${process.env.NEXT_PUBLIC_APP_URL}/api/v1/iot-logger/entries`,
+  //       `${process.env.NEXT_PUBLIC_APP_URL}/api/v1/xilog-/entries`,
   //       {
   //         serialNumber: `${featureData?.serial}`,
   //         channel: `${featureData?.channels[0]?.index}`, // pressure

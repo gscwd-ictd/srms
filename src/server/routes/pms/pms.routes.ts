@@ -106,11 +106,11 @@ export const getPipelinesGeoJson = createRoute({
   },
 });
 
-export const getLoggersList = createRoute({
+export const getXilogLoggersList = createRoute({
   tags: TAGS.PRESSURE_MANAGEMENT,
   description: "Get data loggers list. From XilogApi. https://github.com/Ovarro/XilogApiDocs",
   method: "get",
-  path: "/v1/layers/iot-loggers",
+  path: "/v1/layers/xilog-iot-loggers",
   operationId: "getLoggersList",
   responses: {
     [HttpStatusCodes.OK]: {
@@ -153,12 +153,12 @@ export const getLoggersList = createRoute({
   },
 });
 
-export const getLoggerChannelEntries = createRoute({
+export const getXilogLoggerChannelEntries = createRoute({
   tags: TAGS.PRESSURE_MANAGEMENT,
   description:
     "Get loggers data based on channel set. With date from and to. From XilogApi. https://github.com/Ovarro/XilogApiDocs",
   method: "post",
-  path: "/v1/iot-logger/entries",
+  path: "/v1/xilog-iot-logger/entries",
   operationId: "getLoggerChannelEntries",
   request: {
     body: {
@@ -211,12 +211,12 @@ export const getLoggerChannelEntries = createRoute({
   },
 });
 
-export const getChannelLatestEntries = createRoute({
+export const getXilogChannelLatestEntries = createRoute({
   tags: TAGS.PRESSURE_MANAGEMENT,
   description:
     "Get latest(current time : previous 1 min) logger data based on channel set. From XilogApi. https://github.com/Ovarro/XilogApiDocs",
   method: "get",
-  path: "/v1/iot-logger/entries/latest/{serialNumber}/{channel}",
+  path: "/v1/xilog-iot-logger/entries/latest/{serialNumber}/{channel}",
   operationId: "getChannelLatestEntries",
   request: {
     params: LatestLoggerEntryFilterSchema,
@@ -265,6 +265,6 @@ export const getChannelLatestEntries = createRoute({
 
 export type GetValvesGeoJsonRoute = typeof getValvesGeoJson;
 export type GetPipelinesGeoJsonRoute = typeof getPipelinesGeoJson;
-export type GetLoggersListRoute = typeof getLoggersList;
-export type GetLoggerChannelEntriesRoute = typeof getLoggerChannelEntries;
-export type GetChannelLatestEntriesRoute = typeof getChannelLatestEntries;
+export type GetXilogLoggersListRoute = typeof getXilogLoggersList;
+export type GetXilogLoggerChannelEntriesRoute = typeof getXilogLoggerChannelEntries;
+export type GetXilogChannelLatestEntriesRoute = typeof getXilogChannelLatestEntries;
