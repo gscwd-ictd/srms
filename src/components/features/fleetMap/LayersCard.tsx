@@ -13,6 +13,7 @@ import { Card, CardContent, CardHeader, CardAction } from "@srms/components/ui/C
 import { cn } from "@srms/utils/shadcn";
 import { useCardStore } from "@srms/components/stores/useCardStore";
 import { ValveRenderToggleList } from "./ValveRenderToggleList";
+import WebSocketTest from "./WebSocketTest";
 
 interface LayersCardProps {
   accessToken: Token;
@@ -87,6 +88,10 @@ export const LayersCard: FunctionComponent<LayersCardProps> = ({ accessToken }) 
 
               <AccordionItem value="item-4">
                 <ValveRenderToggleList />
+              </AccordionItem>
+
+              <AccordionItem value="item-5">
+                <WebSocketTest />
               </AccordionItem>
             </Accordion>
           </CardContent>
