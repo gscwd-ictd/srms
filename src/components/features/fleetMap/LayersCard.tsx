@@ -86,7 +86,7 @@ export const LayersCard: FunctionComponent<LayersCardProps> = ({ accessToken }) 
             <CardContent className="mr-1 p-1 text-white">
               <Accordion type="single" collapsible className="w-full">
                 <AccordionItem value="item-1">
-                  {/* <VehicleRenderToggleList accessToken={accessToken} /> */}
+                  <VehicleRenderToggleList accessToken={accessToken} />
                 </AccordionItem>
 
                 <AccordionItem value="item-2">

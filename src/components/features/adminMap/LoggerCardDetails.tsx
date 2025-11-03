@@ -117,13 +117,13 @@ const LoggerCardDetails: FunctionComponent<LoggerCardDetailsDrops> = ({
   return (
     <Sheet key="right" open={open} onOpenChange={onOpenChange} modal={false}>
       <SheetContent
-        className="m-1.5 h-[98vh] w-[400px] gap-0 rounded-lg border-0 bg-white text-black"
+        className="bg-primary-color/70 m-1.5 h-[98vh] w-[400px] gap-0 rounded-lg border-0 text-white backdrop-blur"
         onInteractOutside={(e) => e.preventDefault()}
         side="right"
       >
         <SheetHeader className="m-6 p-0">
-          <SheetTitle className="text-black">{featureData?.serial || "--"}</SheetTitle>
-          <SheetDescription className="text-stone-600">{featureData?.name || "--"}</SheetDescription>
+          <SheetTitle className="text-white">{featureData?.serial || "--"}</SheetTitle>
+          <SheetDescription className="text-white">{featureData?.name || "--"}</SheetDescription>
         </SheetHeader>
 
         <ScrollArea className="h-full">
@@ -133,7 +133,7 @@ const LoggerCardDetails: FunctionComponent<LoggerCardDetailsDrops> = ({
             </Alert>
           </div> */}
 
-          <div className="m-4 rounded-md border-1 border-stone-400 p-3">
+          <div className="m-4 rounded-md border-1 border-stone-100 p-3">
             {/* <h3 className="pb-2 font-bold">Device</h3> */}
             <div className="grid gap-2">
               <div className="flex space-x-1.5 text-sm">
