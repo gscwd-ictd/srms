@@ -1,4 +1,4 @@
-import { LoggerChannelEntry, LoggerDetails, LoggerFilterBody } from "../types";
+import { LoggerChannelEntry, LoggerDetails, LoggerFilterBody, MultilogBody } from "../types";
 import { I_LoggersService } from "../interfaces";
 import axios from "axios";
 import env from "@srms/utils/env";
@@ -6,6 +6,7 @@ import { LoggersDoesNotExistError } from "../errors/LoggerError/LoggersDoesNotEx
 import { LoggerChannelEntriesDoesNotExistError } from "../errors/LoggerError/LoggerChannelEntriesDoesNotExistError";
 import { isEmpty } from "@srms/utils/isEmpty";
 import dayjs from "dayjs";
+import { convertXML } from "simple-xml-to-json";
 
 export class LoggersService implements I_LoggersService {
   /**
@@ -19,7 +20,6 @@ export class LoggersService implements I_LoggersService {
 
     const urlString = `https://xilogdataapi.atriumiot.com/PlusLogger/All/${xilogToken}`;
 
-    // added username and password in case URL is changed to cloud.
     const response = await axios.get<Array<LoggerDetails>>(urlString, {
       headers: {
         "Content-Type": "application/json",
@@ -39,7 +39,6 @@ export class LoggersService implements I_LoggersService {
 
     const urlString = `https://xilogdataapi.atriumiot.com/PlusData/${body.serialNumber}/${body.channel}/${body.startDateTime}/${body.endDateTime}/${xilogToken}`;
 
-    // added username and password in case URL is changed to cloud.
     const response = await axios.get<LoggerChannelEntry>(urlString, {
       headers: {
         "Content-Type": "application/json",
@@ -75,6 +74,25 @@ export class LoggersService implements I_LoggersService {
       throw new LoggerChannelEntriesDoesNotExistError(
         `Returned number of entries: ${latestLoggerEntry.data?.length} for channel ${latestLoggerEntry.channel.index}`,
       );
+    }
+  }
+
+  async getMultilogLoggersList(): Promise<MultilogBody> {
+    const urlString = `http://tze-innovations.com/datagate/api/loggerapi.ashx?username=gscwd-online&password=Iamattbellamia26.`;
+
+    const responseXml = await axios.get<MultilogBody>(urlString, {
+      headers: {
+        "Content-Type": "application/xml",
+        "Access-Control-Allow-Origin": "*",
+      },
+    });
+
+    const responseJson = convertXML(`${responseXml.data}`);
+
+    if (!isEmpty(responseJson)) {
+      return responseJson;
+    } else {
+      throw new LoggersDoesNotExistError(`Returned number of loggers: ${responseJson.loggers.logger.length}`);
     }
   }
 }

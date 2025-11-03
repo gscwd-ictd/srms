@@ -7,6 +7,7 @@ const pms = createOpenAPIRoute()
   .openapi(routes.getPipelinesGeoJson, handlers.getPipelinesGeoJson)
   .openapi(routes.getXilogLoggersList, handlers.getXilogLoggersList)
   .openapi(routes.getXilogLoggerChannelEntries, handlers.getXilogLoggerChannelEntries)
-  .openapi(routes.getXilogChannelLatestEntries, handlers.getXilogChannelLatestEntries);
+  .openapi(routes.getXilogChannelLatestEntries, handlers.getXilogChannelLatestEntries)
+  .openapi(routes.getMultilogLoggersList, handlers.getMultilogLoggersList);
 
 export default pms;

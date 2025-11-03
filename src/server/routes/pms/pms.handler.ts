@@ -5,6 +5,7 @@ import {
   GetXilogLoggersListRoute,
   GetXilogLoggerChannelEntriesRoute,
   GetXilogChannelLatestEntriesRoute,
+  GetMultilogLoggersListRoute,
 } from "./pms.routes";
 import { pmsManager } from "@srms/server/app";
 import { z } from "zod";
@@ -13,12 +14,14 @@ import {
   SelectValvesGeoJSONSchema,
   SelectLoggersListData,
   SelectLoggerChannelEntry,
+  SelectMultilogBody,
 } from "@srms/lib/pms/schemas";
 
 type ValvesSchema = z.infer<typeof SelectValvesGeoJSONSchema>;
 type PipelinesSchema = z.infer<typeof SelectPipelinesGeoJSONSchema>;
-type LoggerListSchema = z.infer<typeof SelectLoggersListData>;
+type XilogLoggerListSchema = z.infer<typeof SelectLoggersListData>;
 type LoggerChannelEntrySchema = z.infer<typeof SelectLoggerChannelEntry>;
+type MultilogLoggerListSchema = z.infer<typeof SelectMultilogBody>;
 
 export const getValvesGeoJson: AppRouteHandler<GetValvesGeoJsonRoute> = async (c) => {
   const valvesGeoJson = (await pmsManager.getValvesService().getValvesGeoJson()) as ValvesSchema;
@@ -33,7 +36,7 @@ export const getPipelinesGeoJson: AppRouteHandler<GetPipelinesGeoJsonRoute> = as
 };
 
 export const getXilogLoggersList: AppRouteHandler<GetXilogLoggersListRoute> = async (c) => {
-  const loggersList = (await pmsManager.getLoggersService().getXilogLoggersList()) as LoggerListSchema;
+  const loggersList = (await pmsManager.getLoggersService().getXilogLoggersList()) as XilogLoggerListSchema;
 
   return c.json(loggersList, 200);
 };
@@ -57,4 +60,12 @@ export const getXilogChannelLatestEntries: AppRouteHandler<GetXilogChannelLatest
     .getXilogChannelLatestEntries(serialNumber, channel)) as LoggerChannelEntrySchema;
 
   return c.json(loggerChannelLatestEntries, 200);
+};
+
+export const getMultilogLoggersList: AppRouteHandler<GetMultilogLoggersListRoute> = async (c) => {
+  const multilogLoggersList = (await pmsManager
+    .getLoggersService()
+    .getMultilogLoggersList()) as MultilogLoggerListSchema;
+
+  return c.json(multilogLoggersList, 200);
 };
