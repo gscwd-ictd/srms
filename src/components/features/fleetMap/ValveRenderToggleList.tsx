@@ -18,7 +18,7 @@ import { useQuery } from "@tanstack/react-query";
 import { isEmpty } from "@srms/utils/isEmpty";
 import React from "react";
 import { Spinner } from "@srms/components/ui-custom/Spinner";
-import { Eye, EyeOff } from "lucide-react";
+import { Hexagon } from "lucide-react";
 import { AccordionContent, AccordionTrigger } from "@srms/components/ui/Accordion";
 import ValveDetailsCard from "./ValveDetailsCard";
 
@@ -129,37 +129,34 @@ export const ValveRenderToggleList: FunctionComponent = () => {
 
   return (
     <React.Fragment>
-      <div className="flex">
-        <div className="flex cursor-pointer items-center space-x-2 p-2">
-          <label>
-            <input
-              type="checkbox"
-              className="peer hidden"
-              onChange={(event) => {
-                setLayerVisibility(event.target.checked);
-              }}
-              defaultChecked={false}
-            />
-            <EyeOff className="mr-2 block w-5 text-stone-800 peer-checked:hidden" />
-            <Eye className="mr-2 hidden w-5 text-stone-800 peer-checked:block" />
-          </label>
-
-          <AccordionTrigger className="items-center">
-            <p className="text-md font-bold text-black">Valves</p>
-          </AccordionTrigger>
+      {isLoading ? (
+        <div className="spinner">
+          <Spinner size={"xl"} />
         </div>
+      ) : null}
+      <div className="flex cursor-pointer items-center space-x-2 p-2">
+        <label>
+          <input
+            type="checkbox"
+            className="peer hidden"
+            onChange={(event) => {
+              setLayerVisibility(event.target.checked);
+            }}
+            defaultChecked={false}
+          />
 
-        {isLoading ? (
-          <div className="spinner">
-            <Spinner size={"sm"} className="mt-4" />
-          </div>
-        ) : null}
+          <Hexagon className="mr-2 block w-5 cursor-pointer text-white opacity-30 peer-checked:hidden" />
+          <Hexagon className="mr-2 hidden w-5 cursor-pointer text-white peer-checked:block" />
+        </label>
+        <AccordionTrigger className="w-40 items-center">
+          <p className="text-md font-bold text-white">Valves</p>
+        </AccordionTrigger>
       </div>
       <AccordionContent className="flex flex-col gap-4 text-balance">
-        <ul className="mx-12 text-stone-900">
+        <ul className="pl-3 text-white">
           <li>
             <div className="flex h-6">
-              <div className="mr-3 h-5 w-2 rotate-90 transform bg-blue-500"></div>
+              <div className="mr-3 h-5 w-2 rotate-90 transform bg-blue-600"></div>
               {ValveStatus.OPEN}
             </div>
           </li>
@@ -172,7 +169,7 @@ export const ValveRenderToggleList: FunctionComponent = () => {
           </li>
         </ul>
       </AccordionContent>
-      <ValveDetailsCard open={isModalOpen} onOpenChange={setIsModalOpen} featureData={selectedValve} />;
+      <ValveDetailsCard open={isModalOpen} onOpenChange={setIsModalOpen} featureData={selectedValve} />
     </React.Fragment>
   );
 };
