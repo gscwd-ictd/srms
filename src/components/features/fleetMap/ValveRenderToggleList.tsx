@@ -20,7 +20,7 @@ import React from "react";
 import { Spinner } from "@srms/components/ui-custom/Spinner";
 import { Eye, EyeOff } from "lucide-react";
 import { AccordionContent, AccordionTrigger } from "@srms/components/ui/Accordion";
-import ValveCardDetails from "./ValveCardDetails";
+import ValveDetailsCard from "./ValveDetailsCard";
 
 const featureManager = new FeatureManager();
 
@@ -110,6 +110,7 @@ export const ValveRenderToggleList: FunctionComponent = () => {
           return feature;
         });
         setIsModalOpen(false);
+
         if (!feature) {
           return;
         }
@@ -128,30 +129,34 @@ export const ValveRenderToggleList: FunctionComponent = () => {
 
   return (
     <React.Fragment>
-      {isLoading ? (
-        <div className="spinner">
-          <Spinner size={"xl"} />
+      <div className="flex">
+        <div className="flex cursor-pointer items-center space-x-2 p-2">
+          <label>
+            <input
+              type="checkbox"
+              className="peer hidden"
+              onChange={(event) => {
+                setLayerVisibility(event.target.checked);
+              }}
+              defaultChecked={false}
+            />
+            <EyeOff className="mr-2 block w-5 text-stone-800 peer-checked:hidden" />
+            <Eye className="mr-2 hidden w-5 text-stone-800 peer-checked:block" />
+          </label>
+
+          <AccordionTrigger className="items-center">
+            <p className="text-md font-bold text-black">Valves</p>
+          </AccordionTrigger>
         </div>
-      ) : null}
-      <div className="flex cursor-pointer items-center space-x-2 p-2">
-        <label>
-          <input
-            type="checkbox"
-            className="peer hidden"
-            onChange={(event) => {
-              setLayerVisibility(event.target.checked);
-            }}
-            defaultChecked={false}
-          />
-          <EyeOff className="mr-2 block w-5 text-stone-800 peer-checked:hidden" />
-          <Eye className="mr-2 hidden w-5 text-stone-800 peer-checked:block" />
-        </label>
-        <AccordionTrigger className="items-center">
-          <p className="text-md font-bold text-black">Valves</p>
-        </AccordionTrigger>
+
+        {isLoading ? (
+          <div className="spinner">
+            <Spinner size={"sm"} className="mt-4" />
+          </div>
+        ) : null}
       </div>
       <AccordionContent className="flex flex-col gap-4 text-balance">
-        <ul className="text-stone-900">
+        <ul className="mx-12 text-stone-900">
           <li>
             <div className="flex h-6">
               <div className="mr-3 h-5 w-2 rotate-90 transform bg-blue-500"></div>
@@ -167,7 +172,7 @@ export const ValveRenderToggleList: FunctionComponent = () => {
           </li>
         </ul>
       </AccordionContent>
-      <ValveCardDetails open={isModalOpen} onOpenChange={setIsModalOpen} featureData={selectedValve} />;
+      <ValveDetailsCard open={isModalOpen} onOpenChange={setIsModalOpen} featureData={selectedValve} />;
     </React.Fragment>
   );
 };

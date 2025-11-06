@@ -214,3 +214,55 @@ export const LineStringStylesSchema = z.object({
     .default("solid")
     .optional(),
 });
+
+export const LabelStylesSchema = z.object({
+  font: z
+    .string()
+    .openapi({
+      description: "Font and size to be used.",
+      default: "12px Calibri,sans-serif",
+    })
+    .default("12px Calibri,sans-serif"),
+  overflow: z
+    .boolean()
+    .openapi({
+      description: "Enables content overflow.",
+      default: false,
+    })
+    .default(false),
+  fillColor: z
+    .string()
+    .openapi({
+      description: "Color of font",
+      default: "#000",
+    })
+    .default("#000"),
+  strokeColor: z
+    .string()
+    .openapi({
+      description: "Color of text outline",
+      default: "#fff",
+    })
+    .default("#fff"),
+  width: z
+    .number()
+    .openapi({
+      description: "Width of text outline",
+      default: 2,
+    })
+    .default(2),
+  offsetY: z
+    .number()
+    .openapi({
+      description: "Y axis offset of label",
+      default: 0,
+    })
+    .default(0),
+  text: z
+    .string()
+    .openapi({
+      description: "Text to be used as label.",
+      default: "",
+    })
+    .default(""),
+});

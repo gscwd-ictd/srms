@@ -10,6 +10,9 @@ export type CardState = {
 
   waterMeterDetailsCardOpen: boolean;
   setWaterMeterDetailsCardOpen: (waterMeterDetailsCardOpen: boolean) => void;
+
+  loggerDetailsCardOpen: boolean;
+  setLoggerDetailsCardOpen: (loggerDetailsCardOpen: boolean) => void;
 };
 
 export const useCardStore = create<CardState>()(
@@ -22,5 +25,8 @@ export const useCardStore = create<CardState>()(
 
     waterMeterDetailsCardOpen: false,
     setWaterMeterDetailsCardOpen: (waterMeterDetailsCardOpen) => set({ waterMeterDetailsCardOpen }),
+
+    loggerDetailsCardOpen: false,
+    setLoggerDetailsCardOpen: (loggerDetailsCardOpen) => set({ loggerDetailsCardOpen }),
   })),
 );

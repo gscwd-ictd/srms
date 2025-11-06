@@ -72,7 +72,8 @@ export const LayersCard: FunctionComponent<LayersCardProps> = ({ accessToken }) 
         </CardHeader>
 
         <ScrollArea className="mx-2 h-[95vh]">
-          <CardContent className="mr-1 border-b border-b-stone-400 p-1">
+          <CardContent className="mr-1 p-1">
+            {/* border-b border-b-stone-400 */}
             <Accordion type="single" collapsible className="w-full">
               <AccordionItem value="item-1">
                 <VehicleRenderToggleList accessToken={accessToken} />
