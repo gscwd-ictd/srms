@@ -10,7 +10,7 @@ import { isEmpty } from "@srms/utils/isEmpty";
 import { AccordionContent, AccordionTrigger } from "@srms/components/ui/Accordion";
 import { Eye, EyeOff } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
-import { LoggerDetails } from "@srms/lib/pms/types";
+import { MultilogLogger } from "@srms/lib/pms/types";
 import axios from "axios";
 import { Spinner } from "@srms/components/ui-custom/Spinner";
 import LoggerMarker from "../../../../public/images/logger.svg";
@@ -65,16 +65,17 @@ const MultilogLoggerToggleList: FunctionComponent = ({}) => {
       const vectorLayer = new VectorLayer();
 
       // adminMonitMap.loggers
-      multilogLoggers.forEach((logger: LoggerDetails) => {
-        if (!isEmpty(logger.location)) {
+      multilogLoggers.forEach((logger: MultilogLogger) => {
+        if (!isEmpty(logger.latitude) && !isEmpty(logger.longitude)) {
           const loggerProperties = {
-            serial: logger.serial,
-            name: logger.name,
+            loggerid: logger.loggerid,
+            siteName: logger.siteName,
             channels: logger.channels,
+            source: "Multilog Logger",
           };
 
           const feature = featureManager.createFeature(
-            new Point([logger.location?.longitude, logger.location?.latitude]),
+            new Point([parseFloat(logger.longitude), parseFloat(logger.latitude)]),
             loggerProperties,
           );
           vectorSource.addFeature(feature);
@@ -93,7 +94,7 @@ const MultilogLoggerToggleList: FunctionComponent = ({}) => {
             strokeColor: "#fff",
             width: 3,
             offsetY: 12,
-            text: `${logger.serial}`,
+            text: `${logger.serialNumber}`,
           };
           const featureStyle2 = createLabelStyles(labelStyles as LabelStyles);
 

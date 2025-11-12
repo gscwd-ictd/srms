@@ -39,6 +39,7 @@ export type LatestLoggerEntryFilter = {
 };
 
 // Multilog Data Logger
+// START - Converted from XML
 export type MultilogBody = {
   loggers: {
     children: Array<{ summary: { children: Array<MultilogSummaryChildren> } } | MultilogLoggerBody>;
@@ -136,7 +137,9 @@ export type MultilogLoggerChannelMeasurement = {
     children: Array<{ symbols?: { content: string } | object }>;
   };
 };
+// END - Converted from XML
 
+// START - Mutated from converted JSON_to_XML
 export type MultilogLogger = {
   loggerid: string;
   mobileNumber: string;
@@ -199,3 +202,5 @@ export type MultilogChannel = {
     };
   };
 };
+
+// END - Mutated from converted JSON_to_XML
