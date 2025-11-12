@@ -7,7 +7,7 @@ import {
   LoggerFilterBody,
   SelectLoggerChannelEntry,
   SelectLoggersListData,
-  SelectMultilogBody,
+  SelectMultilogLoggers,
   SelectPipelinesGeoJSONSchema,
   SelectValvesGeoJSONSchema,
 } from "@srms/lib/pms/schemas";
@@ -275,7 +275,7 @@ export const getMultilogLoggersList = createRoute({
     [HttpStatusCodes.OK]: {
       content: {
         "application/json": {
-          schema: SelectMultilogBody,
+          schema: SelectMultilogLoggers,
         },
       },
       description: OpenAPIResponses.OK,

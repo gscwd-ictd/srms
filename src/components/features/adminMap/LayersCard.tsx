@@ -9,8 +9,8 @@ import { Card, CardContent, CardHeader, CardAction } from "@srms/components/ui/C
 import { cn } from "@srms/utils/shadcn";
 import { useCardStore } from "@srms/components/stores/useCardStore";
 import PipelineRenderToggleList from "./PipelineRenderToggleList";
-import LoggerRenderToggleList from "./LoggerRenderToggleList";
-import { motion } from "framer-motion";
+import XilogLoggerToggleList from "./XilogLoggerToggleList";
+import MultilogLoggerToggleList from "./MultilogLoggerToggleList";
 
 export const LayersCard: FunctionComponent = () => {
   const { layerToggleCardOpen, setLayerToggleCardOpen } = useCardStore();
@@ -71,14 +71,14 @@ export const LayersCard: FunctionComponent = () => {
                 </AccordionItem>
 
                 <AccordionItem value="item-2">
-                  <LoggerRenderToggleList />
+                  <XilogLoggerToggleList />
                 </AccordionItem>
 
-                {/* <AccordionItem value="item-3">
-                <WaterMeterRenderToggleList />
-              </AccordionItem>
+                <AccordionItem value="item-3">
+                  <MultilogLoggerToggleList />
+                </AccordionItem>
 
-              <AccordionItem value="item-4">
+                {/* <AccordionItem value="item-4">
                 <ValveRenderToggleList />
               </AccordionItem> */}
               </Accordion>

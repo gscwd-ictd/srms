@@ -41,11 +41,12 @@ export type LatestLoggerEntryFilter = {
 // Multilog Data Logger
 export type MultilogBody = {
   loggers: {
-    children: Array<
-      | { summary: { children: Array<MultilogSummaryChildren> } }
-      | { logger: { children: Array<MultilogLoggerChildren> } }
-    >;
+    children: Array<{ summary: { children: Array<MultilogSummaryChildren> } } | MultilogLoggerBody>;
   };
+};
+
+export type MultilogLoggerBody = {
+  logger: { children: Array<MultilogLoggerChildren> };
 };
 
 export type MultilogSummaryChildren = {
@@ -97,17 +98,17 @@ export type MultilogLoggerChildren = {
   flowPulseFactor2?: { content: string } | object;
   meterRead2Value?: { content: string } | object;
   meterRead2Date?: { content: string } | object;
-  channels?: {
-    children: Array<{
-      channel: {
-        number: string;
-        children: Array<MultilogLoggerChannel>;
-      };
-    }>;
-  };
+  channels?: { children: Array<MultilogLoggerChannel> };
 };
 
 export type MultilogLoggerChannel = {
+  channel: {
+    number: string;
+    children: Array<MultilogLoggerChannelChild>;
+  };
+};
+
+export type MultilogLoggerChannelChild = {
   channelName?: { content: string } | object;
   offset?: { content: string } | object;
   flowPulseFactor?: { content: string } | object;
@@ -133,5 +134,68 @@ export type MultilogLoggerChannelMeasurement = {
   reference?: { content: string } | object;
   units?: {
     children: Array<{ symbols?: { content: string } | object }>;
+  };
+};
+
+export type MultilogLogger = {
+  loggerid: string;
+  mobileNumber: string;
+  dateLastMessageReceived: string;
+  type: string;
+  serialNumber: string;
+  loggerOwner: string;
+  LogRate: string;
+  RST: string;
+  RET: string;
+  gsmDataNumber: string;
+  notes: string;
+  batteryCondition: string;
+  signalStrength: string;
+  lastReportedVersion: string;
+  dateCreated: string;
+  dateUpdated: string;
+  heightAOD: string;
+  startDate: string;
+  endDate: string;
+  maintenanceflag: string;
+  id: string;
+  owner: string;
+  siteId: string;
+  siteName: string;
+  SiteNotes: string;
+  latitude: string;
+  longitude: string;
+  channel1Type: string;
+  flowPulseFactor1: string;
+  meterRead1Value: string;
+  meterRead1Date: string;
+  channel2Type: string;
+  flowPulseFactor2: string;
+  meterRead2Value: string;
+  meterRead2Date: string;
+  channels: Array<MultilogChannel>;
+};
+
+export type MultilogChannel = {
+  channelName: string;
+  offset: string;
+  flowPulseFactor: string;
+  meterReadValue: string;
+  meterReadDate: string;
+  calvalue: string;
+  loggercalvalue: string;
+  loggeroffset: string;
+  ignoreloggervalues: string;
+  is4to20: string;
+  loggerIs4to20: string;
+  invertnegativevalues: string;
+  lastValue: string;
+  lastValueDate: string;
+  measurement: {
+    name: string;
+    reference: string;
+    units: {
+      symbols: string;
+    };
   };
 };

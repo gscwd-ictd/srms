@@ -22,7 +22,7 @@ import { createLabelStyles } from "./utils/createLabelStyles";
 
 const featureManager = new FeatureManager();
 
-const LoggerRenderToggleList: FunctionComponent = ({}) => {
+const XilogLoggerToggleList: FunctionComponent = ({}) => {
   const adminMonitMap = useAdminMonitMap();
 
   const { setLayerToggleCardOpen, loggerDetailsCardOpen, setLoggerDetailsCardOpen } = useCardStore();
@@ -30,8 +30,8 @@ const LoggerRenderToggleList: FunctionComponent = ({}) => {
   // Open modal for viewing logger details
   const [selectedLogger, setSelectedLogger] = useState<LoggerDetails>();
 
-  const { data: loggers, isLoading } = useQuery({
-    queryKey: ["get-all-loggers"],
+  const { data: xilogLoggers, isLoading } = useQuery({
+    queryKey: ["get-all-xilog-loggers"],
     refetchOnReconnect: false,
     refetchOnMount: false,
     refetchOnWindowFocus: false,
@@ -49,22 +49,22 @@ const LoggerRenderToggleList: FunctionComponent = ({}) => {
   // Update openlayers. Visibility status of selected layer.
   const setLayerVisibility = (isChecked: boolean) => {
     if (isChecked) {
-      adminMonitMap.mapManager.getLayerManager().getLayer("loggers")?.setVisible(true);
+      adminMonitMap.mapManager.getLayerManager().getLayer("xilog-loggers")?.setVisible(true);
     } else {
-      adminMonitMap.mapManager.getLayerManager().getLayer("loggers")?.setVisible(false);
+      adminMonitMap.mapManager.getLayerManager().getLayer("xilog-loggers")?.setVisible(false);
     }
   };
 
   useEffect(() => {
     if (!adminMonitMap.mapManager) return;
 
-    if (!isEmpty(loggers)) {
+    if (!isEmpty(xilogLoggers)) {
       const vectorSource = new VectorSource();
 
       const vectorLayer = new VectorLayer();
 
       // adminMonitMap.loggers
-      loggers.forEach((logger: LoggerDetails) => {
+      xilogLoggers.forEach((logger: LoggerDetails) => {
         if (!isEmpty(logger.location)) {
           const loggerProperties = {
             serial: logger.serial,
@@ -106,9 +106,9 @@ const LoggerRenderToggleList: FunctionComponent = ({}) => {
 
       vectorLayer.setZIndex(998);
 
-      vectorLayer.setProperties({ id: "loggers" });
+      vectorLayer.setProperties({ id: "xilog-loggers" });
 
-      adminMonitMap.mapManager.getLayerManager().addLayer("loggers", vectorLayer);
+      adminMonitMap.mapManager.getLayerManager().addLayer("xilog-loggers", vectorLayer);
 
       // Open card modal for valve details
       adminMonitMap.mapManager.getMap().on("click", (e) => {
@@ -134,7 +134,7 @@ const LoggerRenderToggleList: FunctionComponent = ({}) => {
         adminMonitMap.mapManager.getLayerManager().removeLayer("loggers");
       };
     }
-  }, [adminMonitMap.mapManager, loggers]);
+  }, [adminMonitMap.mapManager, xilogLoggers]);
 
   return (
     <React.Fragment>
@@ -152,8 +152,8 @@ const LoggerRenderToggleList: FunctionComponent = ({}) => {
             <Cpu className="mr-2 block w-5 cursor-pointer text-white opacity-30 peer-checked:hidden" />
             <Cpu className="mr-2 hidden w-5 cursor-pointer text-white peer-checked:block" />
           </label>
-          <AccordionTrigger className="w-40 items-center">
-            <p className="text-md font-bold text-white">Data Logger</p>
+          <AccordionTrigger className="items-center">
+            <p className="text-md font-bold text-black">Xilog Data Logger</p>
           </AccordionTrigger>
         </div>
 
@@ -184,4 +184,4 @@ const LoggerRenderToggleList: FunctionComponent = ({}) => {
   );
 };
 
-export default LoggerRenderToggleList;
+export default XilogLoggerToggleList;

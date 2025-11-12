@@ -14,14 +14,14 @@ import {
   SelectValvesGeoJSONSchema,
   SelectLoggersListData,
   SelectLoggerChannelEntry,
-  SelectMultilogBody,
+  SelectMultilogLoggers,
 } from "@srms/lib/pms/schemas";
 
 type ValvesSchema = z.infer<typeof SelectValvesGeoJSONSchema>;
 type PipelinesSchema = z.infer<typeof SelectPipelinesGeoJSONSchema>;
 type XilogLoggerListSchema = z.infer<typeof SelectLoggersListData>;
 type LoggerChannelEntrySchema = z.infer<typeof SelectLoggerChannelEntry>;
-type MultilogLoggerListSchema = z.infer<typeof SelectMultilogBody>;
+type MultilogLoggerListSchema = z.infer<typeof SelectMultilogLoggers>;
 
 export const getValvesGeoJson: AppRouteHandler<GetValvesGeoJsonRoute> = async (c) => {
   const valvesGeoJson = (await pmsManager.getValvesService().getValvesGeoJson()) as ValvesSchema;
