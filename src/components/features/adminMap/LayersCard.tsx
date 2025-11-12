@@ -4,7 +4,7 @@ import { Accordion, AccordionItem } from "@srms/components/ui/Accordion";
 import { Button } from "@srms/components/ui/Button";
 import { ScrollArea } from "@srms/components/ui/ScrollArea";
 import { Layers, X } from "lucide-react";
-import React, { FunctionComponent } from "react";
+import React, { FunctionComponent, useState } from "react";
 import { Card, CardContent, CardHeader, CardAction } from "@srms/components/ui/Card";
 import { cn } from "@srms/utils/shadcn";
 import { useCardStore } from "@srms/components/stores/useCardStore";
@@ -14,17 +14,19 @@ import { motion } from "framer-motion";
 
 export const LayersCard: FunctionComponent = () => {
   const { layerToggleCardOpen, setLayerToggleCardOpen } = useCardStore();
+  const [intialNavAnimation, setIntialNavAnimation] = useState<boolean>(true);
 
   // Open modal for layers card
   const toggleModal = () => {
     setLayerToggleCardOpen(!layerToggleCardOpen);
+    setIntialNavAnimation(false);
   };
 
   return (
     <React.Fragment>
       <Button
         className={cn(
-          "bg-primary-color/40 hover:bg-primary-color/70 absolute z-50 h-18 w-18 rounded-none transition-all transition-discrete duration-100",
+          "bg-primary-color/70 hover:bg-primary-color/40 absolute z-50 h-18 w-18 rounded-none transition-all transition-discrete duration-100",
           layerToggleCardOpen ? "hidden opacity-0" : "intro-animation backdrop-blur",
         )}
         onClick={() => toggleModal()}
@@ -44,7 +46,9 @@ export const LayersCard: FunctionComponent = () => {
             "vehicle-layers bg-primary-color/70 absolute z-20 h-[calc(100vh-80px)] w-[230px] overflow-x-hidden overflow-y-hidden rounded-lg border-none transition-all transition-discrete duration-100",
             layerToggleCardOpen
               ? "nav-intro-animated block backdrop-blur peer-checked:opacity-100"
-              : "nav-outro-animated peer-checked:opacity-0",
+              : intialNavAnimation
+                ? "opacity-0"
+                : "nav-outro-animated peer-checked:opacity-0",
           )}
         >
           <div className="absolute -right-14 -mt-44 h-70 w-70 rounded-full bg-blue-500/20"></div>

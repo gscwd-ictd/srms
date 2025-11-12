@@ -10,7 +10,7 @@ import BaseLayer from "ol/layer/Base";
 
 /* 
     Component for switching between Base Layers
- */
+*/
 
 const BaseLayerPicker: FunctionComponent = ({}) => {
   const adminMonitMap = useAdminMonitMap();

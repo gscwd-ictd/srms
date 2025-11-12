@@ -8,11 +8,21 @@ import { LatestLoggerEntryFilter, LoggerDetails } from "@srms/lib/pms/types";
 import { useMutation } from "@tanstack/react-query";
 import axios, { AxiosError } from "axios";
 import { FunctionComponent, useEffect, useState } from "react";
+import Chart from "chart.js/auto";
+import { CategoryScale } from "chart.js";
+Chart.register(CategoryScale);
+import { Line } from "react-chartjs-2";
+import dayjs from "dayjs";
 
 interface LoggerDetailsCardDrops {
   open: boolean;
   featureData: LoggerDetails | undefined;
 }
+
+type pressureChartLogs = {
+  timestamp: string;
+  value: number;
+};
 
 const LoggerDetailsCard: FunctionComponent<LoggerDetailsCardDrops> = ({ open, featureData }) => {
   const [loadingLatestPressureLog, setLoadingLatestPressureLog] = useState<boolean>(false);
@@ -28,6 +38,36 @@ const LoggerDetailsCard: FunctionComponent<LoggerDetailsCardDrops> = ({ open, fe
   } = useLoggerStore();
 
   const { setLoggerDetailsCardOpen } = useCardStore();
+
+  const [pressureChartLogs, setPressureChartLogs] = useState<pressureChartLogs[]>([]);
+
+  const pressureChartLog = useMutation({
+    mutationKey: ["latest-pressurechart-log"],
+    mutationFn: async (loggerData: LatestLoggerEntryFilter) => {
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_APP_URL}/api/v1/xilog-iot-logger/entries`,
+        {
+          serialNumber: `${loggerData?.serialNumber}`,
+          channel: `${loggerData?.channel}`, // pressure
+          startDateTime: `${dayjs().format("YYYY-MM-DD")} 00:00`,
+          endDateTime: `${dayjs().format("YYYY-MM-DD")} 23:59`,
+        },
+        {},
+      );
+      return response.data;
+    },
+    onMutate: () => {
+      // setLoadingLatestPressureLog(true);
+    },
+    onSuccess: async (data) => {
+      // setLoadingLatestPressureLog(false);
+      setPressureChartLogs(data.data);
+    },
+    onError: (error: AxiosError<{ message: string }>) => {
+      // setLoadingLatestPressureLog(false);
+      console.log(error);
+    },
+  });
 
   const latestPressureLogMutation = useMutation({
     mutationKey: ["latest-pressure-log"],
@@ -100,6 +140,8 @@ const LoggerDetailsCard: FunctionComponent<LoggerDetailsCardDrops> = ({ open, fe
   const latestPressureValue = () => {
     if (latestPressureLog?.data?.length > 0) {
       const entries = latestPressureLog.data;
+      // console.log(latestPressureLog.data);
+      // AddPressure(Math.round(entries[entries.length - 1]!.value * 1000) / 1000);
       return (
         <p className="text-xl font-bold">
           {`${Math.round(entries[entries.length - 1]!.value * 1000) / 1000}`} <br />{" "}
@@ -107,13 +149,16 @@ const LoggerDetailsCard: FunctionComponent<LoggerDetailsCardDrops> = ({ open, fe
         </p>
       );
     } else {
-      return <p className="text-md text-red-400">No Latest Entries</p>;
+      return <p className="text-md text-white">No Latest Entries</p>;
     }
   };
 
   const latestFlowValue = () => {
     if (flowChannelLogs?.data?.length > 0) {
       const entries = flowChannelLogs.data;
+      // console.log(flowChannelLogs.data);
+      // AddFlow(Math.round(entries[entries.length - 1]!.value * 1000) / 1000);
+
       return (
         <p className="text-xl font-bold">
           {`${Math.round(entries[entries.length - 1]!.value * 1000) / 1000}`} <br />{" "}
@@ -123,7 +168,7 @@ const LoggerDetailsCard: FunctionComponent<LoggerDetailsCardDrops> = ({ open, fe
         </p>
       );
     } else {
-      return <p className="text-md text-red-400">No Latest Entries</p>;
+      return <p className="text-md text-white">No Latest Entries</p>;
     }
   };
 
@@ -217,6 +262,7 @@ const LoggerDetailsCard: FunctionComponent<LoggerDetailsCardDrops> = ({ open, fe
           // endDateTime: `${dayjs().format("YYYY-MM-DD")} 23:59`,
         };
 
+        pressureChartLog.mutate(loggerData);
         latestPressureLogMutation.mutate(loggerData);
         // every 10 seconds, fetch data from selected logger
         const intervalId = setInterval(() => {
@@ -256,13 +302,13 @@ const LoggerDetailsCard: FunctionComponent<LoggerDetailsCardDrops> = ({ open, fe
   return (
     <Sheet open={open} onOpenChange={setLoggerDetailsCardOpen} modal={false}>
       <SheetContent
-        className="h-[380px] w-full gap-0 border border-stone-300 bg-white text-black"
+        className="bg-primary-color/70 h-[380px] w-full gap-0 border border-stone-300 text-white backdrop-blur"
         side="bottom"
         onInteractOutside={(e) => e.preventDefault()}
       >
         <SheetHeader className="m-5 p-0">
-          <SheetTitle className="text-black">{featureData?.serial || "--"}</SheetTitle>
-          <SheetDescription className="text-stone-600">{featureData?.name || "--"}</SheetDescription>
+          <SheetTitle className="text-white">{featureData?.serial || "--"}</SheetTitle>
+          <SheetDescription className="text-white">{featureData?.name || "--"}</SheetDescription>
         </SheetHeader>
 
         {/* <div className="mx-3">
@@ -276,7 +322,7 @@ const LoggerDetailsCard: FunctionComponent<LoggerDetailsCardDrops> = ({ open, fe
               <div className="h-[120px] rounded-md border-1 border-stone-200 p-3 shadow-md">
                 <div className="flex flex-col space-x-1.5 text-sm">
                   <Label className="w-full pb-2 text-center">Discharge Pressure</Label>
-                  <hr />
+                  <hr className="h-px border-none bg-white" />
 
                   {loadingLatestPressureLog ? (
                     <div className="pt-4">
@@ -295,7 +341,7 @@ const LoggerDetailsCard: FunctionComponent<LoggerDetailsCardDrops> = ({ open, fe
               <div className="h-[120px] rounded-md border-1 border-stone-200 p-3 shadow-md">
                 <div className="flex flex-col space-x-1.5 text-sm">
                   <Label className="w-full pb-2 text-center">Flow Meter</Label>
-                  <hr />
+                  <hr className="h-px border-none bg-white" />
 
                   {loadingLatestFlowLog ? (
                     <div className="pt-4">
@@ -311,7 +357,19 @@ const LoggerDetailsCard: FunctionComponent<LoggerDetailsCardDrops> = ({ open, fe
             ) : null}
           </div>
 
-          <div className="w-[70%]">This is where chart be</div>
+          <div className="h-[250px] w-[65%] bg-white">
+            <Line
+              data={{
+                labels: pressureChartLogs.map((item) => item.timestamp),
+                datasets: [
+                  {
+                    label: "PSI",
+                    data: pressureChartLogs.map((item) => item.value),
+                  },
+                ],
+              }}
+            />
+          </div>
         </div>
       </SheetContent>
     </Sheet>
