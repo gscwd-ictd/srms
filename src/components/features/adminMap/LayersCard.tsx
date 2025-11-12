@@ -11,6 +11,7 @@ import { useCardStore } from "@srms/components/stores/useCardStore";
 import PipelineRenderToggleList from "./PipelineRenderToggleList";
 import XilogLoggerToggleList from "./XilogLoggerToggleList";
 import MultilogLoggerToggleList from "./MultilogLoggerToggleList";
+import { motion } from "framer-motion";
 
 export const LayersCard: FunctionComponent = () => {
   const { layerToggleCardOpen, setLayerToggleCardOpen } = useCardStore();
