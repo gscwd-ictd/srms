@@ -1,19 +1,14 @@
-import { AccordionContent, AccordionTrigger } from "@radix-ui/react-accordion";
 import { FunctionComponent, useState, useRef, useEffect } from "react";
 import { Button } from "@srms/components/ui/Button";
 import { Input } from "@srms/components/ui/Input";
+import React from "react";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@srms/components/ui/Accordion";
+import PumpingStationCard from "./PumpingStationCard";
+import { useCardStore } from "@srms/components/stores/useCardStore";
+import { PumpData } from "@srms/lib/pumpstation/pumpStationType";
+import { useLoggerStore } from "@srms/components/stores/useLoggerStore";
 
 interface WebSocketTestProps {}
-
-interface PumpData {
-  name: string;
-  waterlevel: number;
-  pressure: number;
-  flowmeter: number;
-  turbidity: number;
-  humidity: number;
-  chlorine: number;
-}
 
 const WebSocketTest: FunctionComponent<WebSocketTestProps> = () => {
   const [wsUrl, setWsUrl] = useState("ws://172.20.10.58:7575");
@@ -21,9 +16,16 @@ const WebSocketTest: FunctionComponent<WebSocketTestProps> = () => {
   const [data, setData] = useState<Record<string, PumpData>>({});
   const wsRef = useRef<WebSocket | null>(null);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
+  const { pumpingStationCardOpen, setPumpingStationCardOpen } = useCardStore();
+  const { pumpData, setPumpData } = useLoggerStore();
 
   const handleConnect = () => {
-    if (isConnected) return;
+    if (isConnected) {
+      setIsConnected(false);
+      console.log("🔴 Disconnected");
+      if (intervalRef.current) clearInterval(intervalRef.current);
+      return;
+    }
     const ws = new WebSocket(wsUrl);
     wsRef.current = ws;
 
@@ -36,16 +38,30 @@ const WebSocketTest: FunctionComponent<WebSocketTestProps> = () => {
         if (ws.readyState === WebSocket.OPEN) {
           ws.send("hello");
         }
-      }, 200);
+      }, 1500);
     };
 
     ws.onmessage = (event) => {
       try {
-        // Try parsing JSON — only update UI if it’s valid JSON
         const jsonData = JSON.parse(event.data);
+        const timestamp = new Date().toISOString();
+
+        // Update local data (for UI)
         setData(jsonData);
-      } catch {
-        // Ignore non-JSON messages
+
+        // ✅ Append new pump readings to store
+        setPumpData((prev) => {
+          const newEntries = Object.values(jsonData) as PumpData[];
+          const entriesWithTimestamp = newEntries.map((entry) => ({
+            ...entry,
+            timestamp,
+          }));
+
+          const updated = [...prev, ...entriesWithTimestamp];
+          return updated.slice(-500);
+        });
+      } catch (err) {
+        console.warn("Non-JSON message ignored:", event.data);
       }
     };
 
@@ -56,6 +72,7 @@ const WebSocketTest: FunctionComponent<WebSocketTestProps> = () => {
     ws.onclose = () => {
       setIsConnected(false);
       console.log("🔴 Disconnected");
+      setData({});
       if (intervalRef.current) clearInterval(intervalRef.current);
     };
   };
@@ -75,44 +92,56 @@ const WebSocketTest: FunctionComponent<WebSocketTestProps> = () => {
           <p className="text-md font-bold text-black">Real-time Water Station Data</p>
         </AccordionTrigger>
       </div>
-
-      <AccordionContent className="flex flex-col gap-4 text-balance p-4">
-        <div className="flex items-center gap-2">
-          <Input
-            type="text"
-            value={wsUrl}
-            onChange={(e) => setWsUrl(e.target.value)}
-            placeholder="Enter WebSocket URL"
-            className="flex-1 text-black placeholder:text-gray-400"
-          />
-          <Button onClick={handleConnect} disabled={isConnected}>
-            {isConnected ? "Connected" : "Connect"}
-          </Button>
-        </div>
-
-        {Object.keys(data).length === 0 ? (
-          <p className="text-gray-500 italic mt-4">Waiting for JSON data...</p>
-        ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
-            {Object.values(data).map((ps) => (
-              <div
-                key={ps.name}
-                className="rounded-lg border p-4 bg-white shadow-sm"
-              >
-                <h2 className="text-lg font-semibold text-blue-700">{ps.name.toUpperCase()}</h2>
-                <div className="text-sm text-gray-700 mt-2 space-y-1">
-                  <p>💧 Water Level: {ps.waterlevel.toFixed(2)}</p>
-                  <p>⚙️ Pressure: {ps.pressure.toFixed(2)}</p>
-                  <p>🌊 Flowmeter: {ps.flowmeter.toFixed(2)}</p>
-                  <p>🔬 Turbidity: {ps.turbidity.toFixed(2)}</p>
-                  <p>💨 Humidity: {ps.humidity.toFixed(2)}</p>
-                  <p>☣️ Chlorine: {ps.chlorine.toFixed(2)}</p>
-                </div>
-              </div>
-            ))}
+      <Accordion className="accordion" type="multiple">
+        <AccordionContent className="flex flex-col gap-4 p-4 text-balance">
+          <div className="flex items-center gap-2">
+            <Input
+              type="text"
+              value={wsUrl}
+              onChange={(e) => setWsUrl(e.target.value)}
+              placeholder="Enter WebSocket URL"
+              className="flex-1 text-black placeholder:text-gray-400"
+            />
+            <Button
+              onClick={handleConnect}
+              className={isConnected ? "bg-green-500 hover:bg-green-600" : "bg-red-500 hover:bg-red-600"}
+            >
+              {isConnected ? "Connected" : "Connect"}
+            </Button>
           </div>
-        )}
-      </AccordionContent>
+
+          {Object.keys(data).length === 0 ? (
+            <p className="mt-4 text-gray-500 italic">Waiting for JSON data...</p>
+          ) : (
+            <div className="overflow-y-auto rounded-xl border bg-white p-4 shadow-md">
+              <h2 className="mb-4 flex items-center text-lg font-bold text-black">PUMPING STATIONS</h2>
+
+              <div className="space-y-4">
+                {Object.values(data).map((ps: PumpData, index: number) => (
+                  <React.Fragment key={ps.name}>
+                    <AccordionItem value={ps.name} key={ps.name}>
+                      <Button
+                        onClick={() => setPumpingStationCardOpen(index + 1)}
+                        className="transition-colors hover:bg-green-500 hover:text-white"
+                      >
+                        <p className="text-md font-bold text-black">
+                          {ps.name.replace(/ps/i, "Pumping Station ").toUpperCase()}
+                        </p>
+                      </Button>
+
+                      {pumpingStationCardOpen == index + 1 ? (
+                        <PumpingStationCard open={pumpingStationCardOpen == index + 1} ps={ps} />
+                      ) : (
+                        ""
+                      )}
+                    </AccordionItem>
+                  </React.Fragment>
+                ))}
+              </div>
+            </div>
+          )}
+        </AccordionContent>
+      </Accordion>
     </>
   );
 };

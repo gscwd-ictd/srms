@@ -1,4 +1,5 @@
 import { LoggerChannelEntry } from "@srms/lib/pms/types";
+import { PumpData } from "@srms/lib/pumpstation/pumpStationType";
 import { create } from "zustand";
 import { devtools } from "zustand/middleware";
 
@@ -14,6 +15,9 @@ export type LoggerState = {
 
   latestFlowLog: LoggerChannelEntry;
   setLatestFlowLog: (latestFlowLog: LoggerChannelEntry) => void;
+
+  pumpData: PumpData[];
+  setPumpData: (updater: PumpData[] | ((prev: PumpData[]) => PumpData[])) => void;
 };
 
 export const useLoggerStore = create<LoggerState>()(
@@ -29,5 +33,11 @@ export const useLoggerStore = create<LoggerState>()(
 
     latestFlowLog: {},
     setLatestFlowLog: (latestFlowLog) => set({ latestFlowLog }),
+
+    pumpData: [],
+    setPumpData: (updater) =>
+      set((state) => ({
+    pumpData: typeof updater === "function" ? updater(state.pumpData) : updater,
+    })),
   })),
 );

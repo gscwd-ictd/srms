@@ -13,6 +13,9 @@ export type CardState = {
 
   loggerDetailsCardOpen: boolean;
   setLoggerDetailsCardOpen: (loggerDetailsCardOpen: boolean) => void;
+
+  pumpingStationCardOpen: number;
+  setPumpingStationCardOpen: (pumpingStationCardOpen: number) => void;
 };
 
 export const useCardStore = create<CardState>()(
@@ -28,5 +31,8 @@ export const useCardStore = create<CardState>()(
 
     loggerDetailsCardOpen: false,
     setLoggerDetailsCardOpen: (loggerDetailsCardOpen) => set({ loggerDetailsCardOpen }),
+
+    pumpingStationCardOpen: 0,
+    setPumpingStationCardOpen: (pumpingStationCardOpen) => set({ pumpingStationCardOpen }),
   })),
 );

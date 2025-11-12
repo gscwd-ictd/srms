@@ -92,7 +92,7 @@ export const LayersCard: FunctionComponent<LayersCardProps> = ({ accessToken }) 
               </AccordionItem>
 
               <AccordionItem value="item-5">
-                <WebSocketTest />
+                <WebSocketTest/>
               </AccordionItem>
             </Accordion>
           </CardContent>
