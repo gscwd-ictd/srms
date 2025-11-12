@@ -1,6 +1,8 @@
-import { LoggerChannelEntry, LoggerDetails, LoggerFilterBody } from "../../types";
+import { LoggerChannelEntry, LoggerDetails, LoggerFilterBody, MultilogLogger } from "../../types";
 
 export interface I_LoggersService {
-  getLoggersList(): Promise<Array<LoggerDetails>>;
-  getLoggerChannelEntries(body: LoggerFilterBody): Promise<LoggerChannelEntry>;
+  getXilogLoggersList(): Promise<Array<LoggerDetails>>;
+  getXilogLoggerChannelEntries(body: LoggerFilterBody): Promise<LoggerChannelEntry>;
+  getXilogChannelLatestEntries(serialNumber: string, channel: string): Promise<LoggerChannelEntry>;
+  getMultilogLoggersList(): Promise<Array<MultilogLogger>>;
 }

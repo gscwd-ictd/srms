@@ -20,7 +20,7 @@ import React from "react";
 import { Spinner } from "@srms/components/ui-custom/Spinner";
 import { Eye, EyeOff } from "lucide-react";
 import { AccordionContent, AccordionTrigger } from "@srms/components/ui/Accordion";
-import ValveCardDetails from "./ValveCardDetails";
+import ValveDetailsCard from "./ValveDetailsCard";
 
 const featureManager = new FeatureManager();
 
@@ -110,6 +110,7 @@ export const ValveRenderToggleList: FunctionComponent = () => {
           return feature;
         });
         setIsModalOpen(false);
+
         if (!feature) {
           return;
         }
@@ -171,7 +172,7 @@ export const ValveRenderToggleList: FunctionComponent = () => {
           </li>
         </ul>
       </AccordionContent>
-      <ValveCardDetails open={isModalOpen} onOpenChange={setIsModalOpen} featureData={selectedValve} />;
+      <ValveDetailsCard open={isModalOpen} onOpenChange={setIsModalOpen} featureData={selectedValve} />;
     </React.Fragment>
   );
 };

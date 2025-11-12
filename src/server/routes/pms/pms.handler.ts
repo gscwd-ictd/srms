@@ -2,8 +2,10 @@ import { AppRouteHandler } from "@srms/server/types/appTypes";
 import {
   GetValvesGeoJsonRoute,
   GetPipelinesGeoJsonRoute,
-  GetLoggersListRoute,
-  GetLoggerChannelEntriesRoute,
+  GetXilogLoggersListRoute,
+  GetXilogLoggerChannelEntriesRoute,
+  GetXilogChannelLatestEntriesRoute,
+  GetMultilogLoggersListRoute,
 } from "./pms.routes";
 import { pmsManager } from "@srms/server/app";
 import { z } from "zod";
@@ -12,12 +14,14 @@ import {
   SelectValvesGeoJSONSchema,
   SelectLoggersListData,
   SelectLoggerChannelEntry,
+  SelectMultilogLoggers,
 } from "@srms/lib/pms/schemas";
 
 type ValvesSchema = z.infer<typeof SelectValvesGeoJSONSchema>;
 type PipelinesSchema = z.infer<typeof SelectPipelinesGeoJSONSchema>;
-type LoggerListSchema = z.infer<typeof SelectLoggersListData>;
+type XilogLoggerListSchema = z.infer<typeof SelectLoggersListData>;
 type LoggerChannelEntrySchema = z.infer<typeof SelectLoggerChannelEntry>;
+type MultilogLoggerListSchema = z.infer<typeof SelectMultilogLoggers>;
 
 export const getValvesGeoJson: AppRouteHandler<GetValvesGeoJsonRoute> = async (c) => {
   const valvesGeoJson = (await pmsManager.getValvesService().getValvesGeoJson()) as ValvesSchema;
@@ -31,18 +35,37 @@ export const getPipelinesGeoJson: AppRouteHandler<GetPipelinesGeoJsonRoute> = as
   return c.json(pipelinesGeoJson, 200);
 };
 
-export const getLoggersList: AppRouteHandler<GetLoggersListRoute> = async (c) => {
-  const loggersList = (await pmsManager.getLoggersService().getLoggersList()) as LoggerListSchema;
+export const getXilogLoggersList: AppRouteHandler<GetXilogLoggersListRoute> = async (c) => {
+  const loggersList = (await pmsManager.getLoggersService().getXilogLoggersList()) as XilogLoggerListSchema;
 
   return c.json(loggersList, 200);
 };
 
-export const getLoggerChannelEntries: AppRouteHandler<GetLoggerChannelEntriesRoute> = async (c) => {
+export const getXilogLoggerChannelEntries: AppRouteHandler<GetXilogLoggerChannelEntriesRoute> = async (c) => {
   const body = c.req.valid("json");
 
   const loggerChannelEntries = (await pmsManager
     .getLoggersService()
-    .getLoggerChannelEntries(body)) as LoggerChannelEntrySchema;
+    .getXilogLoggerChannelEntries(body)) as LoggerChannelEntrySchema;
 
   return c.json(loggerChannelEntries, 200);
+};
+
+export const getXilogChannelLatestEntries: AppRouteHandler<GetXilogChannelLatestEntriesRoute> = async (c) => {
+  const serialNumber = c.req.param("serialNumber");
+  const channel = c.req.param("channel");
+
+  const loggerChannelLatestEntries = (await pmsManager
+    .getLoggersService()
+    .getXilogChannelLatestEntries(serialNumber, channel)) as LoggerChannelEntrySchema;
+
+  return c.json(loggerChannelLatestEntries, 200);
+};
+
+export const getMultilogLoggersList: AppRouteHandler<GetMultilogLoggersListRoute> = async (c) => {
+  const multilogLoggersList = (await pmsManager
+    .getLoggersService()
+    .getMultilogLoggersList()) as MultilogLoggerListSchema;
+
+  return c.json(multilogLoggersList, 200);
 };

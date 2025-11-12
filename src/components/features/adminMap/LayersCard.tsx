@@ -5,37 +5,19 @@ import { Button } from "@srms/components/ui/Button";
 import { ScrollArea } from "@srms/components/ui/ScrollArea";
 import { Layers, X } from "lucide-react";
 import React, { FunctionComponent } from "react";
-// import VehicleRenderToggleList from "./VehicleRenderToggleList";
-// import PipelineRenderToggleList from "./PipelineRenderToggleList";
-// import WaterMeterRenderToggleList from "./WaterMeterRenderToggleList";
-// import { Token } from "@srms/components/types";
 import { Card, CardContent, CardHeader, CardAction } from "@srms/components/ui/Card";
 import { cn } from "@srms/utils/shadcn";
 import { useCardStore } from "@srms/components/stores/useCardStore";
 import PipelineRenderToggleList from "./PipelineRenderToggleList";
-// import { ValveRenderToggleList } from "./ValveRenderToggleList";
+import XilogLoggerToggleList from "./XilogLoggerToggleList";
+import MultilogLoggerToggleList from "./MultilogLoggerToggleList";
 
 export const LayersCard: FunctionComponent = () => {
-  const {
-    layerToggleCardOpen,
-    setLayerToggleCardOpen,
-    waterMeterTableCardOpen,
-    setWaterMeterTableCardOpen,
-    setWaterMeterDetailsCardOpen,
-    waterMeterDetailsCardOpen,
-  } = useCardStore();
+  const { layerToggleCardOpen, setLayerToggleCardOpen } = useCardStore();
 
   // Open modal for layers card
   const toggleModal = () => {
     setLayerToggleCardOpen(!layerToggleCardOpen);
-
-    if (waterMeterTableCardOpen) {
-      setWaterMeterTableCardOpen(!waterMeterTableCardOpen);
-    }
-
-    if (waterMeterDetailsCardOpen) {
-      setWaterMeterDetailsCardOpen(!waterMeterDetailsCardOpen);
-    }
   };
 
   return (
@@ -74,13 +56,15 @@ export const LayersCard: FunctionComponent = () => {
                 <PipelineRenderToggleList />
               </AccordionItem>
 
-              <AccordionItem value="item-2"></AccordionItem>
-
-              {/* <AccordionItem value="item-3">
-                <WaterMeterRenderToggleList />
+              <AccordionItem value="item-2">
+                <XilogLoggerToggleList />
               </AccordionItem>
 
-              <AccordionItem value="item-4">
+              <AccordionItem value="item-3">
+                <MultilogLoggerToggleList />
+              </AccordionItem>
+
+              {/* <AccordionItem value="item-4">
                 <ValveRenderToggleList />
               </AccordionItem> */}
             </Accordion>
