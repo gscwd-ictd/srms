@@ -1,11 +1,11 @@
 import { useCardStore } from "@srms/components/stores/useCardStore";
-import { useLoggerStore } from "@srms/components/stores/useLoggerStore";
+import { usePumpingStationStore } from "@srms/components/stores/usePumpingStationStore";
 import { ChartConfig, ChartContainer } from "@srms/components/ui/Chart";
 // import { ChartContainer, ChartTooltip } from "@srms/components/ui/Chart";
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "@srms/components/ui/Sheet";
 import { PumpData } from "@srms/lib/pumpstation/pumpStationType";
 import { FunctionComponent, useEffect, useState } from "react";
-import { Bar, BarChart, Legend, Line, LineChart, Tooltip, XAxis, YAxis } from "recharts";
+import { Legend, Line, LineChart, Tooltip, XAxis, YAxis } from "recharts";
 // import { Bar, BarChart } from "recharts";
 
 const chartData = [
@@ -45,7 +45,7 @@ interface PumpingStationCardProps {
 const PumpingStationCard: FunctionComponent<PumpingStationCardProps> = ({ ps, open }) => {
   const [openChange, setOpenChange] = useState(open);
   const { layerToggleCardOpen, setLayerToggleCardOpen, setPumpingStationCardOpen } = useCardStore();
-  const { pumpData, setPumpData } = useLoggerStore();
+  const { pumpData, setPumpData } = usePumpingStationStore();
   const [history, setHistory] = useState<PumpData[]>([]);
 
   useEffect(() => {

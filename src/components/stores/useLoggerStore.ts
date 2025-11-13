@@ -15,9 +15,6 @@ export type LoggerState = {
 
   latestFlowLog: LoggerChannelEntry;
   setLatestFlowLog: (latestFlowLog: LoggerChannelEntry) => void;
-
-  pumpData: PumpData[];
-  setPumpData: (updater: PumpData[] | ((prev: PumpData[]) => PumpData[])) => void;
 };
 
 export const useLoggerStore = create<LoggerState>()(
@@ -33,11 +30,5 @@ export const useLoggerStore = create<LoggerState>()(
 
     latestFlowLog: {},
     setLatestFlowLog: (latestFlowLog) => set({ latestFlowLog }),
-
-    pumpData: [],
-    setPumpData: (updater) =>
-      set((state) => ({
-    pumpData: typeof updater === "function" ? updater(state.pumpData) : updater,
-    })),
   })),
 );

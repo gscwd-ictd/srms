@@ -1,4 +1,4 @@
-import { FunctionComponent, useState, useRef, useEffect } from "react";
+import { FunctionComponent, useState, useRef, useEffect} from "react";
 import { Button } from "@srms/components/ui/Button";
 import { Input } from "@srms/components/ui/Input";
 import React from "react";
@@ -6,7 +6,7 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@s
 import PumpingStationCard from "./PumpingStationCard";
 import { useCardStore } from "@srms/components/stores/useCardStore";
 import { PumpData } from "@srms/lib/pumpstation/pumpStationType";
-import { useLoggerStore } from "@srms/components/stores/useLoggerStore";
+import { usePumpingStationStore } from "@srms/components/stores/usePumpingStationStore";
 
 interface WebSocketTestProps {}
 
@@ -17,7 +17,7 @@ const WebSocketTest: FunctionComponent<WebSocketTestProps> = () => {
   const wsRef = useRef<WebSocket | null>(null);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
   const { pumpingStationCardOpen, setPumpingStationCardOpen } = useCardStore();
-  const { pumpData, setPumpData } = useLoggerStore();
+  const { pumpData, setPumpData } = usePumpingStationStore();
 
   const handleConnect = () => {
     if (isConnected) {
