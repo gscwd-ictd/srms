@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useEffect, useState, type FunctionComponent } from "react";
+// import React, { useEffect, useState, type FunctionComponent } from "react";
+import React, { useEffect, type FunctionComponent } from "react";
 import { FeatureManager } from "@srms/lib/mapstudio/featureManager";
 import VectorSource from "ol/source/Vector";
 import VectorLayer from "ol/layer/Vector";
@@ -9,35 +10,35 @@ import { isEmpty } from "@srms/utils/isEmpty";
 import { AccordionContent, AccordionTrigger } from "@srms/components/ui/Accordion";
 import { Eye, EyeOff } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
-import { LoggerDetails } from "@srms/lib/pms/types";
+import { MultilogLogger } from "@srms/lib/pms/types";
 import axios from "axios";
 import { Spinner } from "@srms/components/ui-custom/Spinner";
 import LoggerMarker from "../../../../public/images/logger.svg";
 import { IconStyles, LabelStyles } from "@srms/server/types";
 import { createIconStyles } from "./utils/createIconStyles";
 import { Point } from "ol/geom";
-import LoggerDetailsCard from "./LoggerDetailsCard";
-import { useCardStore } from "@srms/components/stores/useCardStore";
+// import LoggerDetailsCard from "./LoggerDetailsCard";
+// import { useCardStore } from "@srms/components/stores/useCardStore";
 import { createLabelStyles } from "./utils/createLabelStyles";
 
 const featureManager = new FeatureManager();
 
-const LoggerRenderToggleList: FunctionComponent = ({}) => {
+const MultilogLoggerToggleList: FunctionComponent = ({}) => {
   const adminMonitMap = useAdminMonitMap();
 
-  const { setLayerToggleCardOpen, loggerDetailsCardOpen, setLoggerDetailsCardOpen } = useCardStore();
+  // const { setLayerToggleCardOpen, loggerDetailsCardOpen, setLoggerDetailsCardOpen } = useCardStore();
 
   // Open modal for viewing logger details
-  const [selectedLogger, setSelectedLogger] = useState<LoggerDetails>();
+  // const [selectedLogger, setSelectedLogger] = useState<LoggerDetails>();
 
-  const { data: loggers, isLoading } = useQuery({
-    queryKey: ["get-all-loggers"],
+  const { data: multilogLoggers, isLoading } = useQuery({
+    queryKey: ["get-all-multilog-loggers"],
     refetchOnReconnect: false,
     refetchOnMount: false,
     refetchOnWindowFocus: false,
     queryFn: async () => {
       const { data } = await axios.get(
-        `${process.env.NEXT_PUBLIC_APP_URL}/api/v1/layers/xilog-iot-loggers`,
+        `${process.env.NEXT_PUBLIC_APP_URL}/api/v1/layers/multilog-iot-loggers`,
         {},
       );
 
@@ -49,31 +50,32 @@ const LoggerRenderToggleList: FunctionComponent = ({}) => {
   // Update openlayers. Visibility status of selected layer.
   const setLayerVisibility = (isChecked: boolean) => {
     if (isChecked) {
-      adminMonitMap.mapManager.getLayerManager().getLayer("loggers")?.setVisible(true);
+      adminMonitMap.mapManager.getLayerManager().getLayer("multilog-loggers")?.setVisible(true);
     } else {
-      adminMonitMap.mapManager.getLayerManager().getLayer("loggers")?.setVisible(false);
+      adminMonitMap.mapManager.getLayerManager().getLayer("multilog-loggers")?.setVisible(false);
     }
   };
 
   useEffect(() => {
     if (!adminMonitMap.mapManager) return;
 
-    if (!isEmpty(loggers)) {
+    if (!isEmpty(multilogLoggers)) {
       const vectorSource = new VectorSource();
 
       const vectorLayer = new VectorLayer();
 
       // adminMonitMap.loggers
-      loggers.forEach((logger: LoggerDetails) => {
-        if (!isEmpty(logger.location)) {
+      multilogLoggers.forEach((logger: MultilogLogger) => {
+        if (!isEmpty(logger.latitude) && !isEmpty(logger.longitude)) {
           const loggerProperties = {
-            serial: logger.serial,
-            name: logger.name,
+            loggerid: logger.loggerid,
+            siteName: logger.siteName,
             channels: logger.channels,
+            source: "Multilog Logger",
           };
 
           const feature = featureManager.createFeature(
-            new Point([logger.location?.longitude, logger.location?.latitude]),
+            new Point([parseFloat(logger.longitude), parseFloat(logger.latitude)]),
             loggerProperties,
           );
           vectorSource.addFeature(feature);
@@ -92,7 +94,7 @@ const LoggerRenderToggleList: FunctionComponent = ({}) => {
             strokeColor: "#fff",
             width: 3,
             offsetY: 12,
-            text: `${logger.serial}`,
+            text: `${logger.serialNumber}`,
           };
           const featureStyle2 = createLabelStyles(labelStyles as LabelStyles);
 
@@ -106,35 +108,35 @@ const LoggerRenderToggleList: FunctionComponent = ({}) => {
 
       vectorLayer.setZIndex(998);
 
-      vectorLayer.setProperties({ id: "loggers" });
+      vectorLayer.setProperties({ id: "multilog-loggers" });
 
-      adminMonitMap.mapManager.getLayerManager().addLayer("loggers", vectorLayer);
+      adminMonitMap.mapManager.getLayerManager().addLayer("multilog-loggers", vectorLayer);
 
       // Open card modal for valve details
-      adminMonitMap.mapManager.getMap().on("click", (e) => {
-        const feature = adminMonitMap.mapManager.getMap().forEachFeatureAtPixel(e.pixel, (feature) => {
-          return feature;
-        });
-        setLoggerDetailsCardOpen(false);
+      // adminMonitMap.mapManager.getMap().on("click", (e) => {
+      //   const feature = adminMonitMap.mapManager.getMap().forEachFeatureAtPixel(e.pixel, (feature) => {
+      //     return feature;
+      //   });
+      //   setLoggerDetailsCardOpen(false);
 
-        if (!feature) {
-          return;
-        }
+      //   if (!feature) {
+      //     return;
+      //   }
 
-        const props = feature.getProperties() as LoggerDetails | undefined;
+      //   const props = feature.getProperties() as LoggerDetails | undefined;
 
-        setSelectedLogger(props);
+      //   setSelectedLogger(props);
 
-        setLoggerDetailsCardOpen(true);
-        // console.log(layerToggleCardOpen);
-        setLayerToggleCardOpen(false);
-      });
+      //   setLoggerDetailsCardOpen(true);
+      //   // console.log(layerToggleCardOpen);
+      //   setLayerToggleCardOpen(false);
+      // });
 
       return () => {
-        adminMonitMap.mapManager.getLayerManager().removeLayer("loggers");
+        adminMonitMap.mapManager.getLayerManager().removeLayer("multilog-loggers");
       };
     }
-  }, [adminMonitMap.mapManager, loggers]);
+  }, [adminMonitMap.mapManager, multilogLoggers]);
 
   return (
     <React.Fragment>
@@ -153,7 +155,7 @@ const LoggerRenderToggleList: FunctionComponent = ({}) => {
             <Eye className="mr-2 hidden w-5 text-stone-800 peer-checked:block" />
           </label>
           <AccordionTrigger className="items-center">
-            <p className="text-md font-bold text-black">Data Logger</p>
+            <p className="text-md font-bold text-black">Multilog Data Logger</p>
           </AccordionTrigger>
         </div>
 
@@ -175,13 +177,13 @@ const LoggerRenderToggleList: FunctionComponent = ({}) => {
         </ul>
       </AccordionContent>
 
-      <LoggerDetailsCard
+      {/* <LoggerDetailsCard
         open={loggerDetailsCardOpen}
         // onOpenChange={setLoggerDetailsCardOpen}
         featureData={selectedLogger}
-      />
+      /> */}
     </React.Fragment>
   );
 };
 
-export default LoggerRenderToggleList;
+export default MultilogLoggerToggleList;
