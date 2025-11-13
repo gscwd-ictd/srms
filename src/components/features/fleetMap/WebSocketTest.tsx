@@ -44,8 +44,9 @@ const WebSocketTest: FunctionComponent<WebSocketTestProps> = () => {
     ws.onmessage = (event) => {
       try {
         const jsonData = JSON.parse(event.data);
-        const timestamp = new Date().toISOString();
-
+        const timestamp = new Date().toLocaleString("en-PH", {
+          timeZone: "Asia/Manila",
+        });
         // Update local data (for UI)
         setData(jsonData);
 
