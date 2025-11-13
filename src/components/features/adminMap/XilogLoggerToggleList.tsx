@@ -70,6 +70,7 @@ const XilogLoggerToggleList: FunctionComponent = ({}) => {
             serial: logger.serial,
             name: logger.name,
             channels: logger.channels,
+            source: "Xilog Logger",
           };
 
           const feature = featureManager.createFeature(
