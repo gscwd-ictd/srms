@@ -4,6 +4,7 @@ import { create } from "zustand";
 import { devtools } from "zustand/middleware";
 
 export type LoggerState = {
+  // Xilog
   pressureChannelLogs: LoggerChannelEntry;
   setPressureChannelLogs: (pressureChannelLogs: LoggerChannelEntry) => void;
 
@@ -15,10 +16,13 @@ export type LoggerState = {
 
   latestFlowLog: LoggerChannelEntry;
   setLatestFlowLog: (latestFlowLog: LoggerChannelEntry) => void;
+
+  // Multilog
 };
 
 export const useLoggerStore = create<LoggerState>()(
   devtools((set) => ({
+    // Xilog
     pressureChannelLogs: {},
     setPressureChannelLogs: (pressureChannelLogs) => set({ pressureChannelLogs }),
 
@@ -30,5 +34,7 @@ export const useLoggerStore = create<LoggerState>()(
 
     latestFlowLog: {},
     setLatestFlowLog: (latestFlowLog) => set({ latestFlowLog }),
+
+    // Multilog
   })),
 );

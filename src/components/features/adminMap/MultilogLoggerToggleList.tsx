@@ -1,7 +1,6 @@
 "use client";
 
-// import React, { useEffect, useState, type FunctionComponent } from "react";
-import React, { useEffect, type FunctionComponent } from "react";
+import React, { useEffect, useState, type FunctionComponent } from "react";
 import { FeatureManager } from "@srms/lib/mapstudio/featureManager";
 import VectorSource from "ol/source/Vector";
 import VectorLayer from "ol/layer/Vector";
@@ -17,8 +16,8 @@ import LoggerMarker from "../../../../public/images/logger.svg";
 import { IconStyles, LabelStyles } from "@srms/server/types";
 import { createIconStyles } from "./utils/createIconStyles";
 import { Point } from "ol/geom";
-// import LoggerDetailsCard from "./LoggerDetailsCard";
-// import { useCardStore } from "@srms/components/stores/useCardStore";
+import MultilogDetailsCard from "./MultilogDetailsCard";
+import { useCardStore } from "@srms/components/stores/useCardStore";
 import { createLabelStyles } from "./utils/createLabelStyles";
 
 const featureManager = new FeatureManager();
@@ -26,10 +25,10 @@ const featureManager = new FeatureManager();
 const MultilogLoggerToggleList: FunctionComponent = ({}) => {
   const adminMonitMap = useAdminMonitMap();
 
-  // const { setLayerToggleCardOpen, loggerDetailsCardOpen, setLoggerDetailsCardOpen } = useCardStore();
+  const { setLayerToggleCardOpen, multilogDetailsCardOpen, setMultilogDetailsCardOpen } = useCardStore();
 
   // Open modal for viewing logger details
-  // const [selectedLogger, setSelectedLogger] = useState<LoggerDetails>();
+  const [selectedLogger, setSelectedLogger] = useState<MultilogLogger>();
 
   const { data: multilogLoggers, isLoading } = useQuery({
     queryKey: ["get-all-multilog-loggers"],
@@ -69,6 +68,7 @@ const MultilogLoggerToggleList: FunctionComponent = ({}) => {
         if (!isEmpty(logger.latitude) && !isEmpty(logger.longitude)) {
           const loggerProperties = {
             loggerid: logger.loggerid,
+            serialNumber: logger.serialNumber,
             siteName: logger.siteName,
             channels: logger.channels,
             source: "Multilog Logger",
@@ -113,24 +113,24 @@ const MultilogLoggerToggleList: FunctionComponent = ({}) => {
       adminMonitMap.mapManager.getLayerManager().addLayer("multilog-loggers", vectorLayer);
 
       // Open card modal for valve details
-      // adminMonitMap.mapManager.getMap().on("click", (e) => {
-      //   const feature = adminMonitMap.mapManager.getMap().forEachFeatureAtPixel(e.pixel, (feature) => {
-      //     return feature;
-      //   });
-      //   setLoggerDetailsCardOpen(false);
+      adminMonitMap.mapManager.getMap().on("click", (e) => {
+        setMultilogDetailsCardOpen(false);
 
-      //   if (!feature) {
-      //     return;
-      //   }
+        const feature = adminMonitMap.mapManager.getMap().forEachFeatureAtPixel(e.pixel, (feature, layer) => {
+          if (layer.get("id") === "multilog-loggers") {
+            setMultilogDetailsCardOpen(true);
+            setLayerToggleCardOpen(false);
+          }
+          return feature;
+        });
 
-      //   const props = feature.getProperties() as LoggerDetails | undefined;
+        if (!feature) {
+          return;
+        }
 
-      //   setSelectedLogger(props);
-
-      //   setLoggerDetailsCardOpen(true);
-      //   // console.log(layerToggleCardOpen);
-      //   setLayerToggleCardOpen(false);
-      // });
+        const props = feature.getProperties() as MultilogLogger | undefined;
+        setSelectedLogger(props);
+      });
 
       return () => {
         adminMonitMap.mapManager.getLayerManager().removeLayer("multilog-loggers");
@@ -177,11 +177,7 @@ const MultilogLoggerToggleList: FunctionComponent = ({}) => {
         </ul>
       </AccordionContent>
 
-      {/* <LoggerDetailsCard
-        open={loggerDetailsCardOpen}
-        // onOpenChange={setLoggerDetailsCardOpen}
-        featureData={selectedLogger}
-      /> */}
+      <MultilogDetailsCard open={multilogDetailsCardOpen} featureData={selectedLogger} />
     </React.Fragment>
   );
 };
