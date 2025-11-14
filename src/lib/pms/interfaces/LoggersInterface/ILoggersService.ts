@@ -5,4 +5,5 @@ export interface I_LoggersService {
   getXilogLoggerChannelEntries(body: LoggerFilterBody): Promise<LoggerChannelEntry>;
   getXilogChannelLatestEntries(serialNumber: string, channel: string): Promise<LoggerChannelEntry>;
   getMultilogLoggersList(): Promise<Array<MultilogLogger>>;
+  getMultilogChannelLatestEntry(serialNumber: string): Promise<Array<MultilogLogger>>;
 }

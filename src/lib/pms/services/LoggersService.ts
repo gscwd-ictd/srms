@@ -196,4 +196,16 @@ export class LoggersService implements I_LoggersService {
       throw new LoggersDoesNotExistError(`Returned number of loggers: ${responseJson.loggers.logger.length}`);
     }
   }
+
+  async getMultilogChannelLatestEntry(serialNumber: string): Promise<Array<MultilogLogger>> {
+    const multilogLoggersList = await this.getMultilogLoggersList();
+
+    const foundLogger = multilogLoggersList.filter((logger) => logger.serialNumber === serialNumber);
+
+    if (!isEmpty(multilogLoggersList) && !isEmpty(foundLogger)) {
+      return foundLogger;
+    } else {
+      throw new LoggerChannelEntriesDoesNotExistError(`Logger with ID: ${serialNumber} does not exist`);
+    }
+  }
 }
