@@ -17,7 +17,7 @@ const WebSocketTest: FunctionComponent<WebSocketTestProps> = () => {
   const wsRef = useRef<WebSocket | null>(null);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
   const { pumpingStationCardOpen, setPumpingStationCardOpen } = useCardStore();
-  const { pumpData, setPumpData } = usePumpingStationStore();
+  const { setPumpData } = usePumpingStationStore();
 
   const handleConnect = () => {
     if (isConnected) {
