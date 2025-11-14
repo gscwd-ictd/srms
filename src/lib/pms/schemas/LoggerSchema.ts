@@ -107,3 +107,7 @@ export const SelectMultilogLoggers = z.array(
     channels: z.array(MultilogChannel),
   }),
 );
+
+export const LatestMultilogEntryFilterSchema = z.object({
+  serialNumber: z.string(),
+});
