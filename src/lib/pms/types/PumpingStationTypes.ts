@@ -17,7 +17,7 @@ export type PumpingStationData = {
 
 export type PumpingStationCoordinates = {
     type: string;
-    coordinates: number[] | (Coordinate[] | LineString)[];
+    coordinates: Coordinate;
 };
 
 export type PumpingStationProperties = {

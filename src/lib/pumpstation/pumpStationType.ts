@@ -21,7 +21,7 @@ const generateTimestamps = (start: Date, end: Date): string[] => {
 };
 
 // Generate PumpData for one station
-const generatePumpDataForStation = (stationName: string, start: Date, end: Date): PumpData[] => {
+export const generatePumpDataForStation = (stationName: string, start: Date, end: Date): PumpData[] => {
   const timestamps = generateTimestamps(start, end);
 
   // Start with base readings
