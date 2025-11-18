@@ -8,7 +8,7 @@ import VectorLayer from "ol/layer/Vector";
 import { useAdminMonitMap } from "./contexts/useAdminMonitMapContext";
 import { isEmpty } from "@srms/utils/isEmpty";
 import { AccordionContent, AccordionTrigger } from "@srms/components/ui/Accordion";
-import { Eye, EyeOff } from "lucide-react";
+import { Cpu } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { MultilogLogger } from "@srms/lib/pms/types";
 import axios from "axios";
@@ -151,11 +151,12 @@ const MultilogLoggerToggleList: FunctionComponent = ({}) => {
               }}
               defaultChecked={true}
             />
-            <EyeOff className="mr-2 block w-5 text-stone-800 peer-checked:hidden" />
-            <Eye className="mr-2 hidden w-5 text-stone-800 peer-checked:block" />
+
+            <Cpu className="mr-2 block w-5 cursor-pointer text-white opacity-30 peer-checked:hidden" />
+            <Cpu className="mr-2 hidden w-5 cursor-pointer text-white peer-checked:block" />
           </label>
           <AccordionTrigger className="items-center">
-            <p className="text-md font-bold text-black">Multilog Data Logger</p>
+            <p className="text-md font-bold text-white">Multilog Data Logger</p>
           </AccordionTrigger>
         </div>
 

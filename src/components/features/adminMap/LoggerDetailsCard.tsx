@@ -149,7 +149,7 @@ const LoggerDetailsCard: FunctionComponent<LoggerDetailsCardDrops> = ({ open, fe
         </p>
       );
     } else {
-      return <p className="text-md text-white">No Latest Entries</p>;
+      return <p className="text-md text-black">No Latest Entries</p>;
     }
   };
 
@@ -168,7 +168,7 @@ const LoggerDetailsCard: FunctionComponent<LoggerDetailsCardDrops> = ({ open, fe
         </p>
       );
     } else {
-      return <p className="text-md text-white">No Latest Entries</p>;
+      return <p className="text-md text-black">No Latest Entries</p>;
     }
   };
 
@@ -182,43 +182,43 @@ const LoggerDetailsCard: FunctionComponent<LoggerDetailsCardDrops> = ({ open, fe
   // const badgeValveType = (type: string) => {
   //   if (type === ValveCodeTypes.ISO) {
   //     return (
-  //       <Badge variant="secondary" className="bg-red-500 text-white dark:bg-red-600">
+  //       <Badge variant="secondary" className="bg-red-500 text-black dark:bg-red-600">
   //         {ValveNameTypes.ISO}
   //       </Badge>
   //     );
   //   } else if (type === ValveCodeTypes.BOV) {
   //     return (
-  //       <Badge variant="secondary" className="bg-violet-500 text-white dark:bg-violet-600">
+  //       <Badge variant="secondary" className="bg-violet-500 text-black dark:bg-violet-600">
   //         {ValveNameTypes.BOV}
   //       </Badge>
   //     );
   //   } else if (type === ValveCodeTypes.PROD) {
   //     return (
-  //       <Badge variant="secondary" className="bg-yellow-500 text-white dark:bg-yellow-600">
+  //       <Badge variant="secondary" className="bg-yellow-500 text-black dark:bg-yellow-600">
   //         {ValveNameTypes.PROD}
   //       </Badge>
   //     );
   //   } else if (type === ValveCodeTypes.PRV) {
   //     return (
-  //       <Badge variant="secondary" className="bg-blue-500 text-white dark:bg-blue-600">
+  //       <Badge variant="secondary" className="bg-blue-500 text-black dark:bg-blue-600">
   //         {ValveNameTypes.PRV}
   //       </Badge>
   //     );
   //   } else if (type === ValveCodeTypes.SCV) {
   //     return (
-  //       <Badge variant="secondary" className="bg-orange-500 text-white dark:bg-orange-600">
+  //       <Badge variant="secondary" className="bg-orange-500 text-black dark:bg-orange-600">
   //         {ValveNameTypes.SCV}
   //       </Badge>
   //     );
   //   } else if (type === ValveCodeTypes.ARV) {
   //     return (
-  //       <Badge variant="secondary" className="bg-green-500 text-white dark:bg-green-600">
+  //       <Badge variant="secondary" className="bg-green-500 text-black dark:bg-green-600">
   //         {ValveNameTypes.ARV}
   //       </Badge>
   //     );
   //   } else {
   //     return (
-  //       <Badge variant="secondary" className="bg-gray-500 text-white dark:bg-gray-600">
+  //       <Badge variant="secondary" className="bg-gray-500 text-black dark:bg-gray-600">
   //         No Data
   //       </Badge>
   //     );
@@ -229,19 +229,19 @@ const LoggerDetailsCard: FunctionComponent<LoggerDetailsCardDrops> = ({ open, fe
   // const badgeValveStatus = (status: string) => {
   //   if (status === ValveStatus.OPEN) {
   //     return (
-  //       <Badge variant="secondary" className="bg-blue-500 text-white dark:bg-blue-600">
+  //       <Badge variant="secondary" className="bg-blue-500 text-black dark:bg-blue-600">
   //         {ValveStatus.OPEN}
   //       </Badge>
   //     );
   //   } else if (status === ValveStatus.CLOSE) {
   //     return (
-  //       <Badge variant="secondary" className="bg-red-500 text-white dark:bg-red-600">
+  //       <Badge variant="secondary" className="bg-red-500 text-black dark:bg-red-600">
   //         {ValveStatus.CLOSE}
   //       </Badge>
   //     );
   //   } else {
   //     return (
-  //       <Badge variant="secondary" className="bg-violet-500 text-white dark:bg-violet-600">
+  //       <Badge variant="secondary" className="bg-violet-500 text-black dark:bg-violet-600">
   //         No Data
   //       </Badge>
   //     );
@@ -299,16 +299,48 @@ const LoggerDetailsCard: FunctionComponent<LoggerDetailsCardDrops> = ({ open, fe
     }
   }, [open, featureData]);
 
+  // options for line chart design/UI
+  const lineChartOptions = {
+    responsive: true,
+    maintainAspectRatio: false, // key for stretching
+    plugins: {
+      legend: {
+        display: true,
+        labels: {
+          color: "#1a1919ff", // Set the desired color here
+        },
+      },
+    },
+    scales: {
+      x: {
+        ticks: {
+          color: "#000000ff", // color of x labels
+        },
+        grid: {
+          color: "#d1d1d1ff", // color of x grid
+        },
+      },
+      y: {
+        ticks: {
+          color: "#000000ff", // color of y labels
+        },
+        grid: {
+          color: "#d1d1d1ff", // color of y grid
+        },
+      },
+    },
+  };
+
   return (
     <Sheet open={open} onOpenChange={setLoggerDetailsCardOpen} modal={false}>
       <SheetContent
-        className="bg-primary-color/70 h-[380px] w-full gap-0 border border-stone-300 text-white backdrop-blur"
+        className="h-[380px] w-full gap-0 border border-stone-300 bg-white/70 text-black backdrop-blur"
         side="bottom"
         onInteractOutside={(e) => e.preventDefault()}
       >
         <SheetHeader className="m-5 p-0">
-          <SheetTitle className="text-white">{featureData?.serial || "--"}</SheetTitle>
-          <SheetDescription className="text-white">{featureData?.name || "--"}</SheetDescription>
+          <SheetTitle className="text-black">{featureData?.serial || "--"}</SheetTitle>
+          <SheetDescription className="text-black">{featureData?.name || "--"}</SheetDescription>
         </SheetHeader>
 
         {/* <div className="mx-3">
@@ -322,7 +354,7 @@ const LoggerDetailsCard: FunctionComponent<LoggerDetailsCardDrops> = ({ open, fe
               <div className="h-[120px] rounded-md border-1 border-stone-200 p-3 shadow-md">
                 <div className="flex flex-col space-x-1.5 text-sm">
                   <Label className="w-full pb-2 text-center">Discharge Pressure</Label>
-                  <hr className="h-px border-none bg-white" />
+                  <hr className="h-px border-none bg-gray-300" />
 
                   {loadingLatestPressureLog ? (
                     <div className="pt-4">
@@ -341,7 +373,7 @@ const LoggerDetailsCard: FunctionComponent<LoggerDetailsCardDrops> = ({ open, fe
               <div className="h-[120px] rounded-md border-1 border-stone-200 p-3 shadow-md">
                 <div className="flex flex-col space-x-1.5 text-sm">
                   <Label className="w-full pb-2 text-center">Flow Meter</Label>
-                  <hr className="h-px border-none bg-white" />
+                  <hr className="h-px border-none bg-gray-300" />
 
                   {loadingLatestFlowLog ? (
                     <div className="pt-4">
@@ -357,14 +389,17 @@ const LoggerDetailsCard: FunctionComponent<LoggerDetailsCardDrops> = ({ open, fe
             ) : null}
           </div>
 
-          <div className="h-[250px] w-[65%] bg-white">
+          <div className="h-[250px] w-[65%] bg-gray-200/60">
             <Line
+              options={lineChartOptions}
               data={{
                 labels: pressureChartLogs.map((item) => item.timestamp),
                 datasets: [
                   {
                     label: "PSI",
                     data: pressureChartLogs.map((item) => item.value),
+                    borderColor: "#2b85ff", // color of line
+                    backgroundColor: "#2b85ff", // color of dots
                   },
                 ],
               }}
