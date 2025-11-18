@@ -1,7 +1,6 @@
 import { useCardStore } from "@srms/components/stores/useCardStore";
 import { useLoggerStore } from "@srms/components/stores/useLoggerStore";
 import { Label } from "@srms/components/ui/Label";
-// import { ScrollArea } from "@srms/components/ui/ScrollArea";
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "@srms/components/ui/Sheet";
 import { LatestLoggerEntryFilter, LoggerDetails } from "@srms/lib/pms/types";
 import { useMutation } from "@tanstack/react-query";
@@ -73,28 +72,6 @@ const XilogDetailsCard: FunctionComponent<XilogDetailsCardDrops> = ({ open, feat
       console.log(error);
     },
   });
-
-  // const { data: loggerDataForTheDay, isLoading: loadingLoggerDataForTheDay } = useQuery({
-  //   queryKey: ["get-all-pipelines"],
-  //   refetchOnReconnect: false,
-  //   refetchOnMount: false,
-  //   refetchOnWindowFocus: false,
-  //   queryFn: async () => {
-  //     const { data } = await axios.post(
-  //       `${process.env.NEXT_PUBLIC_APP_URL}/api/v1/xilog-/entries`,
-  //       {
-  //         serialNumber: `${featureData?.serial}`,
-  //         channel: `${featureData?.channels[0]?.index}`, // pressure
-  //         startDateTime: `${dayjs().format("YYYY-MM-DD")} 00:00`,
-  //         endDateTime: `${dayjs().format("YYYY-MM-DD")} 23:59`,
-  //       },
-  //       {},
-  //     );
-
-  //     return data;
-  //   },
-  //   throwOnError: true,
-  // });
 
   const latestPressureValue = () => {
     if (latestPressureLog?.data?.length > 0) {
@@ -191,46 +168,45 @@ const XilogDetailsCard: FunctionComponent<XilogDetailsCardDrops> = ({ open, feat
           </SheetDescription>
         </SheetHeader>
 
-        {/* <div className="mx-3">
-            <Alert className="text-center uppercase">
-              <AlertTitle>{selectedWaterMeter.properties?.status || "--"}</AlertTitle>
-            </Alert>
-          </div> */}
         <div className="mx-5 flex gap-5">
           <div className="grid w-[30%] grid-rows-2 gap-4">
-            {channelChecker("A1") ? (
-              <div className="h-[120px] rounded-md border-1 border-stone-200 p-3 shadow-md">
-                <div className="flex flex-col space-x-1.5 text-sm">
-                  <Label className="w-full pb-2 text-center">Discharge Pressure</Label>
-                  <hr />
+            <div className="h-[120px] rounded-md border-1 border-stone-200 p-3 shadow-md">
+              <div className="flex flex-col space-x-1.5 text-sm">
+                <Label className="w-full pb-2 text-center">Discharge Pressure</Label>
+                <hr />
 
-                  {loadingLatestPressureLog ? (
+                {channelChecker("A1") ? (
+                  loadingLatestPressureLog ? (
                     <div className="pt-4 text-center">--</div>
                   ) : (
                     <div id="pressure" className="pt-4 text-center">
                       {latestPressureValue()}
                     </div>
-                  )}
-                </div>
+                  )
+                ) : (
+                  <div className="pt-4 text-center text-red-400">Pressure Channel Not Registered</div>
+                )}
               </div>
-            ) : null}
+            </div>
 
-            {channelChecker("D1a") ? (
-              <div className="h-[120px] rounded-md border-1 border-stone-200 p-3 shadow-md">
-                <div className="flex flex-col space-x-1.5 text-sm">
-                  <Label className="w-full pb-2 text-center">Flow Meter</Label>
-                  <hr />
+            <div className="h-[120px] rounded-md border-1 border-stone-200 p-3 shadow-md">
+              <div className="flex flex-col space-x-1.5 text-sm">
+                <Label className="w-full pb-2 text-center">Flow Meter</Label>
+                <hr />
 
-                  {loadingLatestFlowLog ? (
+                {channelChecker("D1a") ? (
+                  loadingLatestFlowLog ? (
                     <div className="pt-4 text-center">--</div>
                   ) : (
                     <div id="flow" className="pt-4 text-center">
                       {latestFlowValue()}
                     </div>
-                  )}
-                </div>
+                  )
+                ) : (
+                  <div className="pt-4 text-center text-red-400">Flow Channel Not Registered</div>
+                )}
               </div>
-            ) : null}
+            </div>
           </div>
 
           <div className="w-[70%]">This is where chart be</div>
