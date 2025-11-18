@@ -16,7 +16,7 @@ import LoggerMarker from "../../../../public/images/logger.svg";
 import { IconStyles, LabelStyles } from "@srms/server/types";
 import { createIconStyles } from "./utils/createIconStyles";
 import { Point } from "ol/geom";
-import LoggerDetailsCard from "./LoggerDetailsCard";
+import XilogDetailsCard from "./XilogDetailsCard";
 import { useCardStore } from "@srms/components/stores/useCardStore";
 import { createLabelStyles } from "./utils/createLabelStyles";
 
@@ -25,7 +25,7 @@ const featureManager = new FeatureManager();
 const XilogLoggerToggleList: FunctionComponent = ({}) => {
   const adminMonitMap = useAdminMonitMap();
 
-  const { setLayerToggleCardOpen, loggerDetailsCardOpen, setLoggerDetailsCardOpen } = useCardStore();
+  const { setLayerToggleCardOpen, xilogDetailsCardOpen, setXilogDetailsCardOpen } = useCardStore();
 
   // Open modal for viewing logger details
   const [selectedLogger, setSelectedLogger] = useState<LoggerDetails>();
@@ -113,26 +113,27 @@ const XilogLoggerToggleList: FunctionComponent = ({}) => {
 
       // Open card modal for valve details
       adminMonitMap.mapManager.getMap().on("click", (e) => {
-        const feature = adminMonitMap.mapManager.getMap().forEachFeatureAtPixel(e.pixel, (feature) => {
-          return feature;
+        setXilogDetailsCardOpen(false);
+
+        const feature = adminMonitMap.mapManager.getMap().forEachFeatureAtPixel(e.pixel, (feature, layer) => {
+          if (layer.get("id") === "xilog-loggers") {
+            setXilogDetailsCardOpen(true);
+            setLayerToggleCardOpen(false);
+
+            return feature;
+          }
         });
-        setLoggerDetailsCardOpen(false);
 
         if (!feature) {
           return;
         }
 
         const props = feature.getProperties() as LoggerDetails | undefined;
-
         setSelectedLogger(props);
-
-        setLoggerDetailsCardOpen(true);
-        // console.log(layerToggleCardOpen);
-        setLayerToggleCardOpen(false);
       });
 
       return () => {
-        adminMonitMap.mapManager.getLayerManager().removeLayer("loggers");
+        adminMonitMap.mapManager.getLayerManager().removeLayer("xilog-loggers");
       };
     }
   }, [adminMonitMap.mapManager, xilogLoggers]);
@@ -176,11 +177,7 @@ const XilogLoggerToggleList: FunctionComponent = ({}) => {
         </ul>
       </AccordionContent>
 
-      <LoggerDetailsCard
-        open={loggerDetailsCardOpen}
-        // onOpenChange={setLoggerDetailsCardOpen}
-        featureData={selectedLogger}
-      />
+      <XilogDetailsCard open={xilogDetailsCardOpen} featureData={selectedLogger} />
     </React.Fragment>
   );
 };

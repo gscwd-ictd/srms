@@ -1,6 +1,5 @@
 import { useCardStore } from "@srms/components/stores/useCardStore";
 import { useLoggerStore } from "@srms/components/stores/useLoggerStore";
-import { Spinner } from "@srms/components/ui-custom/Spinner";
 import { Label } from "@srms/components/ui/Label";
 // import { ScrollArea } from "@srms/components/ui/ScrollArea";
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "@srms/components/ui/Sheet";
@@ -14,17 +13,21 @@ Chart.register(CategoryScale);
 import { Line } from "react-chartjs-2";
 import dayjs from "dayjs";
 
-interface LoggerDetailsCardDrops {
+interface XilogDetailsCardDrops {
   open: boolean;
   featureData: LoggerDetails | undefined;
 }
 
+<<<<<<< HEAD:src/components/features/adminMap/LoggerDetailsCard.tsx
 type pressureChartLogs = {
   timestamp: string;
   value: number;
 };
 
 const LoggerDetailsCard: FunctionComponent<LoggerDetailsCardDrops> = ({ open, featureData }) => {
+=======
+const XilogDetailsCard: FunctionComponent<XilogDetailsCardDrops> = ({ open, featureData }) => {
+>>>>>>> b99b136e9b58059543e668a4fe9c1d5814eb6d3a:src/components/features/adminMap/XilogDetailsCard.tsx
   const [loadingLatestPressureLog, setLoadingLatestPressureLog] = useState<boolean>(false);
   const [loadingLatestFlowLog, setLoadingLatestFlowLog] = useState<boolean>(false);
 
@@ -37,7 +40,7 @@ const LoggerDetailsCard: FunctionComponent<LoggerDetailsCardDrops> = ({ open, fe
     setFlowChannelLogs,
   } = useLoggerStore();
 
-  const { setLoggerDetailsCardOpen } = useCardStore();
+  const { setXilogDetailsCardOpen } = useCardStore();
 
   const [pressureChartLogs, setPressureChartLogs] = useState<pressureChartLogs[]>([]);
 
@@ -178,6 +181,7 @@ const LoggerDetailsCard: FunctionComponent<LoggerDetailsCardDrops> = ({ open, fe
     return isChannelExist;
   };
 
+<<<<<<< HEAD:src/components/features/adminMap/LoggerDetailsCard.tsx
   // Valve type badge design
   // const badgeValveType = (type: string) => {
   //   if (type === ValveCodeTypes.ISO) {
@@ -248,18 +252,17 @@ const LoggerDetailsCard: FunctionComponent<LoggerDetailsCardDrops> = ({ open, fe
   //   }
   // };
 
+=======
+>>>>>>> b99b136e9b58059543e668a4fe9c1d5814eb6d3a:src/components/features/adminMap/XilogDetailsCard.tsx
   useEffect(() => {
     const intervalSeconds = Number(process.env.NEXT_PUBLIC_INTERVAL_SECONDS);
 
     if (open) {
       // For Pressure
       if (channelChecker("A1")) {
-        // console.log("A1", channelChecker("A1"));
         const loggerData: LatestLoggerEntryFilter = {
           serialNumber: `${featureData?.serial}`,
           channel: "A1", // pressure
-          // startDateTime: `${dayjs().format("YYYY-MM-DD")} 00:00`,
-          // endDateTime: `${dayjs().format("YYYY-MM-DD")} 23:59`,
         };
 
         pressureChartLog.mutate(loggerData);
@@ -283,9 +286,7 @@ const LoggerDetailsCard: FunctionComponent<LoggerDetailsCardDrops> = ({ open, fe
         // console.log("D1a", channelChecker("D1a"));
         const loggerData: LatestLoggerEntryFilter = {
           serialNumber: `${featureData?.serial}`,
-          channel: "D1a", // pressure
-          // startDateTime: `${dayjs().format("YYYY-MM-DD")} 00:00`,
-          // endDateTime: `${dayjs().format("YYYY-MM-DD")} 23:59`,
+          channel: "D1a", // flow
         };
 
         latestFlowLogMutation.mutate(loggerData);
@@ -332,7 +333,7 @@ const LoggerDetailsCard: FunctionComponent<LoggerDetailsCardDrops> = ({ open, fe
   };
 
   return (
-    <Sheet open={open} onOpenChange={setLoggerDetailsCardOpen} modal={false}>
+    <Sheet open={open} onOpenChange={setXilogDetailsCardOpen} modal={false}>
       <SheetContent
         className="h-[380px] w-full gap-0 border border-stone-300 bg-white/70 text-black backdrop-blur"
         side="bottom"
@@ -340,7 +341,13 @@ const LoggerDetailsCard: FunctionComponent<LoggerDetailsCardDrops> = ({ open, fe
       >
         <SheetHeader className="m-5 p-0">
           <SheetTitle className="text-black">{featureData?.serial || "--"}</SheetTitle>
+<<<<<<< HEAD:src/components/features/adminMap/LoggerDetailsCard.tsx
           <SheetDescription className="text-black">{featureData?.name || "--"}</SheetDescription>
+=======
+          <SheetDescription className="text-stone-600">
+            {featureData?.name || "--"} | Xilog Source
+          </SheetDescription>
+>>>>>>> b99b136e9b58059543e668a4fe9c1d5814eb6d3a:src/components/features/adminMap/XilogDetailsCard.tsx
         </SheetHeader>
 
         {/* <div className="mx-3">
@@ -357,9 +364,7 @@ const LoggerDetailsCard: FunctionComponent<LoggerDetailsCardDrops> = ({ open, fe
                   <hr className="h-px border-none bg-gray-300" />
 
                   {loadingLatestPressureLog ? (
-                    <div className="pt-4">
-                      <Spinner size={"sm"} />
-                    </div>
+                    <div className="pt-4 text-center">--</div>
                   ) : (
                     <div id="pressure" className="pt-4 text-center">
                       {latestPressureValue()}
@@ -376,9 +381,7 @@ const LoggerDetailsCard: FunctionComponent<LoggerDetailsCardDrops> = ({ open, fe
                   <hr className="h-px border-none bg-gray-300" />
 
                   {loadingLatestFlowLog ? (
-                    <div className="pt-4">
-                      <Spinner size={"sm"} />
-                    </div>
+                    <div className="pt-4 text-center">--</div>
                   ) : (
                     <div id="flow" className="pt-4 text-center">
                       {latestFlowValue()}
@@ -411,4 +414,4 @@ const LoggerDetailsCard: FunctionComponent<LoggerDetailsCardDrops> = ({ open, fe
   );
 };
 
-export default LoggerDetailsCard;
+export default XilogDetailsCard;
