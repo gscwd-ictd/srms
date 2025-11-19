@@ -8,6 +8,7 @@ import {
   GetMultilogLoggersListRoute,
   GetReservoirsGeoJsonRoute,
   GetPumpingStationsGeoJsonRoute,
+  GetMultilogChannelLatestEntryRoute,
 } from "./pms.routes";
 import { pmsManager } from "@srms/server/app";
 import { z } from "zod";
@@ -74,6 +75,18 @@ export const getMultilogLoggersList: AppRouteHandler<GetMultilogLoggersListRoute
     .getMultilogLoggersList()) as MultilogLoggerListSchema;
 
   return c.json(multilogLoggersList, 200);
+};
+
+export const getMultilogChannelLatestEntry: AppRouteHandler<GetMultilogChannelLatestEntryRoute> = async (
+  c,
+) => {
+  const serialNumber = c.req.param("serialNumber");
+
+  const multilogLoggerDetails = (await pmsManager
+    .getLoggersService()
+    .getMultilogChannelLatestEntry(serialNumber)) as MultilogLoggerListSchema;
+
+  return c.json(multilogLoggerDetails, 200);
 };
 
 export const getReservoirsGeoJson: AppRouteHandler<GetReservoirsGeoJsonRoute> = async (c) => {

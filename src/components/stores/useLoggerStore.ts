@@ -1,4 +1,5 @@
-import { LoggerChannelEntry } from "@srms/lib/pms/types";
+import { LoggerChannelEntry, MultilogLogger } from "@srms/lib/pms/types";
+
 import { PumpData } from "@srms/lib/pumpstation/pumpStationType";
 import { create } from "zustand";
 import { devtools } from "zustand/middleware";
@@ -18,6 +19,8 @@ export type LoggerState = {
   setLatestFlowLog: (latestFlowLog: LoggerChannelEntry) => void;
 
   // Multilog
+  latestMultilogPressureFlowLog: Array<MultilogLogger>;
+  setLatestMultilogPressureFlowLog: (latestMultilogPressureFlowLog: Array<MultilogLogger>) => void;
 };
 
 export const useLoggerStore = create<LoggerState>()(
@@ -36,5 +39,8 @@ export const useLoggerStore = create<LoggerState>()(
     setLatestFlowLog: (latestFlowLog) => set({ latestFlowLog }),
 
     // Multilog
+    latestMultilogPressureFlowLog: [],
+    setLatestMultilogPressureFlowLog: (latestMultilogPressureFlowLog) =>
+      set({ latestMultilogPressureFlowLog }),
   })),
 );

@@ -4,6 +4,7 @@ import * as HttpStatusCodes from "@srms/utils/httpStatusCodes";
 import { ErrorResponseSchema } from "@srms/server/schemas/helperSchemas";
 import {
   LatestLoggerEntryFilterSchema,
+  LatestMultilogEntryFilterSchema,
   LoggerFilterBody,
   SelectLoggerChannelEntry,
   SelectLoggersListData,
@@ -314,6 +315,58 @@ export const getMultilogLoggersList = createRoute({
   },
 });
 
+export const getMultilogChannelLatestEntry = createRoute({
+  tags: TAGS.PRESSURE_MANAGEMENT,
+  description: "Get single multilog logger details.",
+  method: "get",
+  path: "/v1/multilog-iot-loggers/entry/latest/{serialNumber}",
+  operationId: "getMultilogLoggerLatestEntries",
+
+  request: {
+    params: LatestMultilogEntryFilterSchema,
+  },
+
+  responses: {
+    [HttpStatusCodes.OK]: {
+      content: {
+        "application/json": {
+          schema: SelectMultilogLoggers,
+        },
+      },
+      description: OpenAPIResponses.OK,
+    },
+
+    [HttpStatusCodes.NOT_FOUND]: {
+      content: {
+        "application/json": {
+          example: {
+            name: "NotFoundError",
+            status: 404,
+            message: "Logger entries not found",
+          },
+          schema: ErrorResponseSchema,
+        },
+      },
+      description: OpenAPIResponses.NOT_FOUND,
+    },
+
+    [HttpStatusCodes.INTERNAL_SERVER_ERROR]: {
+      content: {
+        "application/json": {
+          example: {
+            name: "ServerError",
+            status: 500,
+            message: "Something went wrong!",
+            stack: "...",
+          },
+          schema: ErrorResponseSchema,
+        },
+      },
+      description: OpenAPIResponses.INTERNAL_SERVER_ERROR,
+    },
+  },
+});
+
 export const getReservoirsGeoJson = createRoute({
   tags: TAGS.PRESSURE_MANAGEMENT,
   description: "Get reservoirs data",
@@ -411,5 +464,6 @@ export type GetXilogLoggersListRoute = typeof getXilogLoggersList;
 export type GetXilogLoggerChannelEntriesRoute = typeof getXilogLoggerChannelEntries;
 export type GetXilogChannelLatestEntriesRoute = typeof getXilogChannelLatestEntries;
 export type GetMultilogLoggersListRoute = typeof getMultilogLoggersList;
+export type GetMultilogChannelLatestEntryRoute = typeof getMultilogChannelLatestEntry;
 export type GetReservoirsGeoJsonRoute = typeof getReservoirsGeoJson;
 export type GetPumpingStationsGeoJsonRoute = typeof getPumpingStationsGeoJson;

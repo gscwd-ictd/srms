@@ -9,6 +9,7 @@ const pms = createOpenAPIRoute()
   .openapi(routes.getXilogLoggerChannelEntries, handlers.getXilogLoggerChannelEntries)
   .openapi(routes.getXilogChannelLatestEntries, handlers.getXilogChannelLatestEntries)
   .openapi(routes.getMultilogLoggersList, handlers.getMultilogLoggersList)
+  .openapi(routes.getMultilogChannelLatestEntry, handlers.getMultilogChannelLatestEntry);
   .openapi(routes.getReservoirsGeoJson, handlers.getReservoirsGeoJson)
   .openapi(routes.getPumpingStationsGeoJson, handlers.getPumpingStationsGeoJson);
 

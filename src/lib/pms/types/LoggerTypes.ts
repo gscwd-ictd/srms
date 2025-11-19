@@ -203,4 +203,8 @@ export type MultilogChannel = {
   };
 };
 
+export type LatestMultilogLoggerEntryFilter = {
+  serialNumber: string;
+};
+
 // END - Mutated from converted JSON_to_XML
