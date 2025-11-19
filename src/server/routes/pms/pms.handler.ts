@@ -6,6 +6,8 @@ import {
   GetXilogLoggerChannelEntriesRoute,
   GetXilogChannelLatestEntriesRoute,
   GetMultilogLoggersListRoute,
+  GetReservoirsGeoJsonRoute,
+  GetPumpingStationsGeoJsonRoute,
   GetMultilogChannelLatestEntryRoute,
 } from "./pms.routes";
 import { pmsManager } from "@srms/server/app";
@@ -17,12 +19,16 @@ import {
   SelectLoggerChannelEntry,
   SelectMultilogLoggers,
 } from "@srms/lib/pms/schemas";
+import { SelectReservoirsGeoJSONSchema } from "@srms/lib/pms/schemas/ReservoirSchema";
+import { SelectPumpingStationsGeoJSONSchema } from "@srms/lib/pms/schemas/PumpingStationsSchema";
 
 type ValvesSchema = z.infer<typeof SelectValvesGeoJSONSchema>;
 type PipelinesSchema = z.infer<typeof SelectPipelinesGeoJSONSchema>;
 type XilogLoggerListSchema = z.infer<typeof SelectLoggersListData>;
 type LoggerChannelEntrySchema = z.infer<typeof SelectLoggerChannelEntry>;
 type MultilogLoggerListSchema = z.infer<typeof SelectMultilogLoggers>;
+type ReservoirSchema = z.infer<typeof SelectReservoirsGeoJSONSchema>;
+type PumpingStationSchema = z.infer<typeof SelectPumpingStationsGeoJSONSchema>;
 
 export const getValvesGeoJson: AppRouteHandler<GetValvesGeoJsonRoute> = async (c) => {
   const valvesGeoJson = (await pmsManager.getValvesService().getValvesGeoJson()) as ValvesSchema;
@@ -81,4 +87,16 @@ export const getMultilogChannelLatestEntry: AppRouteHandler<GetMultilogChannelLa
     .getMultilogChannelLatestEntry(serialNumber)) as MultilogLoggerListSchema;
 
   return c.json(multilogLoggerDetails, 200);
+};
+
+export const getReservoirsGeoJson: AppRouteHandler<GetReservoirsGeoJsonRoute> = async (c) => {
+  const reservoirsGeoJson = (await pmsManager.getReservoirService().getReservoirsGeoJson()) as ReservoirSchema;
+
+  return c.json(reservoirsGeoJson, 200);
+};
+
+export const getPumpingStationsGeoJson: AppRouteHandler<GetPumpingStationsGeoJsonRoute> = async (c) => {
+  const pumpingStationsGeoJson = (await pmsManager.getPumpingStationsService().getPumpingStationsGeoJson()) as PumpingStationSchema;
+
+  return c.json(pumpingStationsGeoJson, 200);
 };

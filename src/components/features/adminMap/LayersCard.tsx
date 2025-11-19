@@ -11,6 +11,7 @@ import { useCardStore } from "@srms/components/stores/useCardStore";
 import PipelineRenderToggleList from "./PipelineRenderToggleList";
 import XilogLoggerToggleList from "./XilogLoggerToggleList";
 import MultilogLoggerToggleList from "./MultilogLoggerToggleList";
+import PumpingStationToggleList from "./PumpingStationToggleList";
 
 export const LayersCard: FunctionComponent = () => {
   const { layerToggleCardOpen, setLayerToggleCardOpen } = useCardStore();
@@ -62,6 +63,10 @@ export const LayersCard: FunctionComponent = () => {
 
               <AccordionItem value="item-3">
                 <MultilogLoggerToggleList />
+              </AccordionItem>
+
+              <AccordionItem value="item-4"> 
+                <PumpingStationToggleList />
               </AccordionItem>
 
               {/* <AccordionItem value="item-4">
