@@ -18,16 +18,12 @@ interface XilogDetailsCardDrops {
   featureData: LoggerDetails | undefined;
 }
 
-<<<<<<< HEAD:src/components/features/adminMap/LoggerDetailsCard.tsx
 type pressureChartLogs = {
   timestamp: string;
   value: number;
 };
 
-const LoggerDetailsCard: FunctionComponent<LoggerDetailsCardDrops> = ({ open, featureData }) => {
-=======
 const XilogDetailsCard: FunctionComponent<XilogDetailsCardDrops> = ({ open, featureData }) => {
->>>>>>> b99b136e9b58059543e668a4fe9c1d5814eb6d3a:src/components/features/adminMap/XilogDetailsCard.tsx
   const [loadingLatestPressureLog, setLoadingLatestPressureLog] = useState<boolean>(false);
   const [loadingLatestFlowLog, setLoadingLatestFlowLog] = useState<boolean>(false);
 
@@ -181,79 +177,6 @@ const XilogDetailsCard: FunctionComponent<XilogDetailsCardDrops> = ({ open, feat
     return isChannelExist;
   };
 
-<<<<<<< HEAD:src/components/features/adminMap/LoggerDetailsCard.tsx
-  // Valve type badge design
-  // const badgeValveType = (type: string) => {
-  //   if (type === ValveCodeTypes.ISO) {
-  //     return (
-  //       <Badge variant="secondary" className="bg-red-500 text-black dark:bg-red-600">
-  //         {ValveNameTypes.ISO}
-  //       </Badge>
-  //     );
-  //   } else if (type === ValveCodeTypes.BOV) {
-  //     return (
-  //       <Badge variant="secondary" className="bg-violet-500 text-black dark:bg-violet-600">
-  //         {ValveNameTypes.BOV}
-  //       </Badge>
-  //     );
-  //   } else if (type === ValveCodeTypes.PROD) {
-  //     return (
-  //       <Badge variant="secondary" className="bg-yellow-500 text-black dark:bg-yellow-600">
-  //         {ValveNameTypes.PROD}
-  //       </Badge>
-  //     );
-  //   } else if (type === ValveCodeTypes.PRV) {
-  //     return (
-  //       <Badge variant="secondary" className="bg-blue-500 text-black dark:bg-blue-600">
-  //         {ValveNameTypes.PRV}
-  //       </Badge>
-  //     );
-  //   } else if (type === ValveCodeTypes.SCV) {
-  //     return (
-  //       <Badge variant="secondary" className="bg-orange-500 text-black dark:bg-orange-600">
-  //         {ValveNameTypes.SCV}
-  //       </Badge>
-  //     );
-  //   } else if (type === ValveCodeTypes.ARV) {
-  //     return (
-  //       <Badge variant="secondary" className="bg-green-500 text-black dark:bg-green-600">
-  //         {ValveNameTypes.ARV}
-  //       </Badge>
-  //     );
-  //   } else {
-  //     return (
-  //       <Badge variant="secondary" className="bg-gray-500 text-black dark:bg-gray-600">
-  //         No Data
-  //       </Badge>
-  //     );
-  //   }
-  // };
-
-  // Valve status badge design
-  // const badgeValveStatus = (status: string) => {
-  //   if (status === ValveStatus.OPEN) {
-  //     return (
-  //       <Badge variant="secondary" className="bg-blue-500 text-black dark:bg-blue-600">
-  //         {ValveStatus.OPEN}
-  //       </Badge>
-  //     );
-  //   } else if (status === ValveStatus.CLOSE) {
-  //     return (
-  //       <Badge variant="secondary" className="bg-red-500 text-black dark:bg-red-600">
-  //         {ValveStatus.CLOSE}
-  //       </Badge>
-  //     );
-  //   } else {
-  //     return (
-  //       <Badge variant="secondary" className="bg-violet-500 text-black dark:bg-violet-600">
-  //         No Data
-  //       </Badge>
-  //     );
-  //   }
-  // };
-
-=======
->>>>>>> b99b136e9b58059543e668a4fe9c1d5814eb6d3a:src/components/features/adminMap/XilogDetailsCard.tsx
   useEffect(() => {
     const intervalSeconds = Number(process.env.NEXT_PUBLIC_INTERVAL_SECONDS);
 
@@ -341,13 +264,9 @@ const XilogDetailsCard: FunctionComponent<XilogDetailsCardDrops> = ({ open, feat
       >
         <SheetHeader className="m-5 p-0">
           <SheetTitle className="text-black">{featureData?.serial || "--"}</SheetTitle>
-<<<<<<< HEAD:src/components/features/adminMap/LoggerDetailsCard.tsx
-          <SheetDescription className="text-black">{featureData?.name || "--"}</SheetDescription>
-=======
           <SheetDescription className="text-stone-600">
             {featureData?.name || "--"} | Xilog Source
           </SheetDescription>
->>>>>>> b99b136e9b58059543e668a4fe9c1d5814eb6d3a:src/components/features/adminMap/XilogDetailsCard.tsx
         </SheetHeader>
 
         {/* <div className="mx-3">

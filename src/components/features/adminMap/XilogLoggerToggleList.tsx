@@ -155,7 +155,7 @@ const XilogLoggerToggleList: FunctionComponent = ({}) => {
             <Cpu className="mr-2 hidden w-5 cursor-pointer text-white peer-checked:block" />
           </label>
           <AccordionTrigger className="items-center">
-            <p className="text-md font-bold text-white">Xilog Data Logger</p>
+            <p className="text-md mr-2 font-bold text-white">Xilog Data Logger</p>
           </AccordionTrigger>
         </div>
 
