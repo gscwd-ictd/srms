@@ -2,9 +2,7 @@ import { FeatureManager } from "@srms/lib/mapstudio/featureManager";
 import { useAdminMonitMap } from "./contexts/useAdminMonitMapContext";
 import { useCardStore } from "@srms/components/stores/useCardStore";
 import {
-  MultilogLogger,
   PumpingStationData,
-  PumpingStationGEOJSON,
   PumpingStationProperties,
 } from "@srms/lib/pms/types";
 import { useState, FunctionComponent, useEffect, useRef } from "react";
@@ -18,20 +16,20 @@ import Point from "ol/geom/Point";
 import { IconStyles, LabelStyles } from "@srms/server/types";
 import { createIconStyles } from "./utils/createIconStyles";
 import { createLabelStyles } from "./utils/createLabelStyles";
-import PumpingStationCard from "../fleetMap/PumpingStationCard";
 import { usePumpingStationStore } from "@srms/components/stores/usePumpingStationStore";
 import { PumpData } from "@srms/lib/pumpstation/pumpStationType";
 import PumpingStationMapCard from "./PumpingStationMapCard";
 import React from "react";
+import { AccordionContent, AccordionTrigger } from "@srms/components/ui/Accordion";
+import { Spinner } from "@srms/components/ui-custom/Spinner";
+import { Eye, EyeOff } from "lucide-react";
 
 const featureManager = new FeatureManager();
 
 export const PumpingStationToggleList: FunctionComponent = ({}) => {
   const adminMonitMap = useAdminMonitMap();
   const { layerToggleCardOpen, setLayerToggleCardOpen, pumpingStationCardOpen, setPumpingStationCardOpen } = useCardStore();
-  const { pumpData, setPumpData } = usePumpingStationStore();
   const [selectedPumpStation, setPumpStation] = useState<PumpingStationProperties>();
-  const [selectedPumpData, setSelectedPumpData] = useState<PumpData>();
 
   const { data: pumpStations, isLoading } = useQuery({
     queryKey: ["get-all-pumping-stations"],
@@ -151,11 +149,53 @@ export const PumpingStationToggleList: FunctionComponent = ({}) => {
     };
   }, [adminMonitMap.mapManager, pumpStations]);
 
+  // Update openlayers. Visibility status of selected layer.
+  const setLayerVisibility = (isChecked: boolean) => {
+    if (isChecked) {
+      adminMonitMap.mapManager.getLayerManager().getLayer("pumping-stations")?.setVisible(true);
+    } else {
+      adminMonitMap.mapManager.getLayerManager().getLayer("pumping-stations")?.setVisible(false);
+    }
+  };
+
   return (
     <React.Fragment>
-      <div>
-        Hello
+      <div className="flex">
+        <div className="flex cursor-pointer items-center space-x-2 p-2">
+          <label>
+            <input
+              type="checkbox"
+              className="peer hidden"
+              onChange={(event) => {
+                setLayerVisibility(event.target.checked);
+              }}
+              defaultChecked={true}
+            />
+            <EyeOff className="mr-2 block w-5 text-stone-800 peer-checked:hidden" />
+            <Eye className="mr-2 hidden w-5 text-stone-800 peer-checked:block" />
+          </label>
+          <AccordionTrigger className="items-center">
+            <p className="text-md font-bold text-black">Pumping Station</p>
+          </AccordionTrigger>
+        </div>
+
+        {isLoading ? (
+          <div className="spinner">
+            <Spinner size={"sm"} className="mt-4" />
+          </div>
+        ) : null}
       </div>
+
+      <AccordionContent className="flex flex-col gap-4 text-balance">
+        <ul className="mx-12 text-stone-900">
+          <li>
+            <div className="flex h-6">
+              <div className="mt-0.5 mr-2 h-4 w-4 rounded-3xl bg-blue-500"></div>
+              PumpStation
+            </div>
+          </li>
+        </ul>
+      </AccordionContent>
       {pumpingStationCardOpen == 1 && selectedPumpStation ? (
         <PumpingStationMapCard open={pumpingStationCardOpen == 1} ps={selectedPumpStation} />
       ) : (
