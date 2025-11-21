@@ -1,11 +1,8 @@
 import { FeatureManager } from "@srms/lib/mapstudio/featureManager";
 import { useAdminMonitMap } from "./contexts/useAdminMonitMapContext";
 import { useCardStore } from "@srms/components/stores/useCardStore";
-import {
-  PumpingStationData,
-  PumpingStationProperties,
-} from "@srms/lib/pms/types";
-import { useState, FunctionComponent, useEffect, useRef } from "react";
+import { PumpingStationData, PumpingStationProperties } from "@srms/lib/pms/types";
+import { useState, FunctionComponent, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import PumpStationMarker from "../../../../public/images/pump-station.svg";
@@ -16,8 +13,8 @@ import Point from "ol/geom/Point";
 import { IconStyles, LabelStyles } from "@srms/server/types";
 import { createIconStyles } from "./utils/createIconStyles";
 import { createLabelStyles } from "./utils/createLabelStyles";
-import { usePumpingStationStore } from "@srms/components/stores/usePumpingStationStore";
-import { PumpData } from "@srms/lib/pumpstation/pumpStationType";
+// import { usePumpingStationStore } from "@srms/components/stores/usePumpingStationStore";
+// import { PumpData } from "@srms/lib/pumpstation/pumpStationType";
 import PumpingStationMapCard from "./PumpingStationMapCard";
 import React from "react";
 import { AccordionContent, AccordionTrigger } from "@srms/components/ui/Accordion";
@@ -28,7 +25,8 @@ const featureManager = new FeatureManager();
 
 export const PumpingStationToggleList: FunctionComponent = ({}) => {
   const adminMonitMap = useAdminMonitMap();
-  const { layerToggleCardOpen, setLayerToggleCardOpen, pumpingStationCardOpen, setPumpingStationCardOpen } = useCardStore();
+  const { layerToggleCardOpen, setLayerToggleCardOpen, pumpingStationCardOpen, setPumpingStationCardOpen } =
+    useCardStore();
   const [selectedPumpStation, setPumpStation] = useState<PumpingStationProperties>();
 
   const { data: pumpStations, isLoading } = useQuery({
@@ -89,6 +87,7 @@ export const PumpingStationToggleList: FunctionComponent = ({}) => {
               src: PumpStationMarker.src!,
               anchor: [0.5, 1],
               scale: 0.18,
+              zIndex: 900,
             };
             const featureStyle = createIconStyles(pumpStationStyles as IconStyles);
 

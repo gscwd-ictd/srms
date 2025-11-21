@@ -9,7 +9,7 @@ export const createIconStyles = (styles: IconStyles) => {
       scale: styles.scale,
       rotation: styles.rotation,
     }),
-    zIndex: 999,
+    zIndex: styles.zIndex,
   });
 
   return { iconStyle };

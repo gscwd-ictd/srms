@@ -54,24 +54,22 @@ export const LayersCard: FunctionComponent = () => {
           <CardContent className="mr-1 p-1">
             <Accordion type="single" collapsible className="w-full">
               <AccordionItem value="item-1">
-                <PipelineRenderToggleList />
-              </AccordionItem>
-
-              <AccordionItem value="item-2">
-                <XilogLoggerToggleList />
-              </AccordionItem>
-
-              <AccordionItem value="item-3">
-                <MultilogLoggerToggleList />
-              </AccordionItem>
-
-              <AccordionItem value="item-4"> 
                 <PumpingStationToggleList />
               </AccordionItem>
 
-              {/* <AccordionItem value="item-4">
-                <ValveRenderToggleList />
-              </AccordionItem> */}
+              <AccordionItem value="item-2">{/* <XilogLoggerToggleList /> */}</AccordionItem>
+
+              <AccordionItem value="item-3">
+                <XilogLoggerToggleList />
+              </AccordionItem>
+
+              <AccordionItem value="item-4">
+                <MultilogLoggerToggleList />
+              </AccordionItem>
+
+              <AccordionItem value="item-5">
+                <PipelineRenderToggleList />
+              </AccordionItem>
             </Accordion>
           </CardContent>
         </ScrollArea>

@@ -3,6 +3,8 @@ export enum BaseLayerOptions {
   OSM_BRIGHT = "osmBright",
   OSM_LIBERTY = "osmLiberty",
   POSITRON = "positron",
-  GOOGLE_MAP = "googleMaps",
+  GOOGLE_MAP_ROAD = "googleMapsRoad",
+  GOOGLE_MAP_SATELLITE = "googleMapsSatellite",
+  GOOGLE_MAP_TERRAIN = "googleMapsTerrain",
   BING_AERIAL = "bingMaps",
 }
