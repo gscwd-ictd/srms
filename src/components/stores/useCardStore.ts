@@ -16,6 +16,9 @@ export type CardState = {
 
   multilogDetailsCardOpen: boolean;
   setMultilogDetailsCardOpen: (multilogDetailsCardOpen: boolean) => void;
+
+  pumpingStationCardOpen: number;
+  setPumpingStationCardOpen: (pumpingStationCardOpen: number) => void;
 };
 
 export const useCardStore = create<CardState>()(
@@ -34,5 +37,8 @@ export const useCardStore = create<CardState>()(
 
     multilogDetailsCardOpen: false,
     setMultilogDetailsCardOpen: (multilogDetailsCardOpen) => set({ multilogDetailsCardOpen }),
+
+   pumpingStationCardOpen: 0,
+    setPumpingStationCardOpen: (pumpingStationCardOpen) => set({ pumpingStationCardOpen }),
   })),
 );

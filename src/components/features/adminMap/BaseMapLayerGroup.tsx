@@ -1,7 +1,7 @@
 import { BaseLayerOptions } from "@srms/components/enums";
 import LayerGroup from "ol/layer/Group";
 import TileLayer from "ol/layer/Tile";
-import { OSM } from "ol/source";
+import { Google, OSM } from "ol/source";
 // import BingMaps from "ol/source/BingMaps.js";
 
 export const BaseMapLayerGroup: LayerGroup = new LayerGroup({
@@ -53,17 +53,50 @@ export const BaseMapLayerGroup: LayerGroup = new LayerGroup({
       },
     }),
 
-    // new TileLayer({
-    //   source: new BingMaps({
-    //     key: `${process.env.NEXT_PUBLIC_BING_KEY}`,
-    //     imagerySet: `AerialWithLabelsOnDemand`,
-    //   }),
-    //   visible: false,
-    //   preload: Infinity,
-    //   className: BaseLayerOptions.BING_AERIAL,
-    //   properties: {
-    //     title: "Bing Aerial",
-    //   },
-    // }),
+    new TileLayer({
+      source: new Google({
+        key: "AIzaSyBZV9OFOavXzB-kM8ASQX4ZjFBXN9TFEwI",
+        scale: "scaleFactor2x",
+        highDpi: true,
+        mapType: "roadmap",
+      }),
+      visible: false,
+      preload: Infinity,
+      className: BaseLayerOptions.GOOGLE_MAP_ROAD,
+      properties: {
+        title: "GM Road",
+      },
+    }),
+
+    new TileLayer({
+      source: new Google({
+        key: "AIzaSyBZV9OFOavXzB-kM8ASQX4ZjFBXN9TFEwI",
+        scale: "scaleFactor2x",
+        highDpi: true,
+        mapType: "satellite",
+      }),
+      visible: false,
+      preload: Infinity,
+      className: BaseLayerOptions.GOOGLE_MAP_SATELLITE,
+      properties: {
+        title: "GM Satellite",
+      },
+    }),
+
+    new TileLayer({
+      source: new Google({
+        key: "AIzaSyBZV9OFOavXzB-kM8ASQX4ZjFBXN9TFEwI",
+        scale: "scaleFactor2x",
+        highDpi: true,
+        mapType: "terrain",
+        layerTypes: ["layerRoadMap"],
+      }),
+      visible: false,
+      preload: Infinity,
+      className: BaseLayerOptions.GOOGLE_MAP_TERRAIN,
+      properties: {
+        title: "GM Terrain",
+      },
+    }),
   ],
 });

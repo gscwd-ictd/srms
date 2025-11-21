@@ -13,6 +13,8 @@ import {
   SelectValvesGeoJSONSchema,
 } from "@srms/lib/pms/schemas";
 import { OpenAPIResponses } from "@srms/server/constants/openApiResponses";
+import { SelectReservoirsGeoJSONSchema } from "@srms/lib/pms/schemas/ReservoirSchema";
+import { SelectPumpingStationsGeoJSONSchema } from "@srms/lib/pms/schemas/PumpingStationsSchema";
 
 export const getValvesGeoJson = createRoute({
   tags: TAGS.PRESSURE_MANAGEMENT,
@@ -365,6 +367,97 @@ export const getMultilogChannelLatestEntry = createRoute({
   },
 });
 
+export const getReservoirsGeoJson = createRoute({
+  tags: TAGS.PRESSURE_MANAGEMENT,
+  description: "Get reservoirs data",
+  method: "get",
+  path: "/v1/layers/reservoirs",
+  operationId: "getReservoirsGeoJson",
+
+  responses: {
+    [HttpStatusCodes.OK]: {
+      content: {
+        "application/json": {
+          schema: SelectReservoirsGeoJSONSchema,
+        },
+      },
+      description: OpenAPIResponses.OK,
+    },
+    [HttpStatusCodes.NOT_FOUND]: {
+      content: {
+        "application/json": {
+          example: {
+            name: "NotFoundError",
+            status: 404,
+            message: "Reservoirs not found",
+          },
+          schema: ErrorResponseSchema,
+        },
+      },
+      description: OpenAPIResponses.NOT_FOUND,
+    },
+    [HttpStatusCodes.INTERNAL_SERVER_ERROR]: {
+      content: {
+        "application/json": {
+          example: {
+            name: "ServerError",
+            status: 500,
+            message: "Something went wrong!",
+            stack: "...",
+          },
+          schema: ErrorResponseSchema,
+        },
+      },
+      description: OpenAPIResponses.INTERNAL_SERVER_ERROR,
+    },
+  },
+});
+
+export const getPumpingStationsGeoJson = createRoute({
+  tags: TAGS.PRESSURE_MANAGEMENT,
+  description: "Get pumping stations data",
+  method: "get",
+  path: "/v1/layers/pumping-stations",
+  operationId: "getPumpingStationsGeoJson",
+  responses: {
+    [HttpStatusCodes.OK]: {
+      content: {
+        "application/json": {
+          schema: SelectPumpingStationsGeoJSONSchema,
+        },
+      },
+      description: OpenAPIResponses.OK,
+    },
+    [HttpStatusCodes.NOT_FOUND]: {
+      content: {
+        "application/json": {
+          example: {
+            name: "NotFoundError",
+            status: 404,
+            message: "Reservoirs not found",
+          },
+          schema: ErrorResponseSchema,
+        },
+      },
+      description: OpenAPIResponses.NOT_FOUND,
+    },
+    [HttpStatusCodes.INTERNAL_SERVER_ERROR]: {
+      content: {
+        "application/json": {
+          example: {
+            name: "ServerError",
+            status: 500,
+            message: "Something went wrong!",
+            stack: "...",
+          },
+          schema: ErrorResponseSchema,
+        },
+      },
+      description: OpenAPIResponses.INTERNAL_SERVER_ERROR,
+    },
+  },
+});
+
 export type GetValvesGeoJsonRoute = typeof getValvesGeoJson;
 export type GetPipelinesGeoJsonRoute = typeof getPipelinesGeoJson;
 export type GetXilogLoggersListRoute = typeof getXilogLoggersList;
@@ -372,3 +465,5 @@ export type GetXilogLoggerChannelEntriesRoute = typeof getXilogLoggerChannelEntr
 export type GetXilogChannelLatestEntriesRoute = typeof getXilogChannelLatestEntries;
 export type GetMultilogLoggersListRoute = typeof getMultilogLoggersList;
 export type GetMultilogChannelLatestEntryRoute = typeof getMultilogChannelLatestEntry;
+export type GetReservoirsGeoJsonRoute = typeof getReservoirsGeoJson;
+export type GetPumpingStationsGeoJsonRoute = typeof getPumpingStationsGeoJson;

@@ -14,6 +14,8 @@ import { cn } from "@srms/utils/shadcn";
 import { useCardStore } from "@srms/components/stores/useCardStore";
 import { ValveRenderToggleList } from "./ValveRenderToggleList";
 import { motion } from "framer-motion";
+import WebSocketTest from "./WebSocketTest";
+import WebSocketMockTest from "./WebSocketMockTest";
 
 interface LayersCardProps {
   accessToken: Token;
@@ -99,10 +101,19 @@ export const LayersCard: FunctionComponent<LayersCardProps> = ({ accessToken }) 
                 <AccordionItem value="item-4">
                   <ValveRenderToggleList />
                 </AccordionItem>
+
+                <AccordionItem value="item-5">
+                  <WebSocketTest />
+                </AccordionItem>
+
+                <AccordionItem value="item-6">
+                  <WebSocketMockTest />
+                </AccordionItem>
               </Accordion>
             </CardContent>
           </ScrollArea>
         </Card>
+
         <div
           className={`absolute z-50 mt-2 ml-2 w-[230px] rounded-lg bg-red-500/30 bg-gradient-to-r from-indigo-500/80 to-blue-500/80 p-1 text-center leading-none text-white backdrop-blur ${layerToggleCardOpen ? "nav-title-intro-animated block" : "nav-title-outro-animated"}`}
         >
