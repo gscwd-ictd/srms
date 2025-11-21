@@ -81,6 +81,7 @@ const XilogDetailsCard: FunctionComponent<XilogDetailsCardDrops> = ({ open, feat
     },
     onSuccess: async (data) => {
       setLoadingLatestPressureLog(false);
+
       setLatestPressureLog(data);
     },
     onError: (error: AxiosError<{ message: string }>) => {
@@ -104,6 +105,7 @@ const XilogDetailsCard: FunctionComponent<XilogDetailsCardDrops> = ({ open, feat
     },
     onSuccess: async (data) => {
       setLoadingLatestFlowLog(false);
+
       setFlowChannelLogs(data);
     },
     onError: (error: AxiosError<{ message: string }>) => {
@@ -198,6 +200,11 @@ const XilogDetailsCard: FunctionComponent<XilogDetailsCardDrops> = ({ open, feat
         return () => clearInterval(intervalId);
       }
     }
+  }, [open, featureData]);
+
+  useEffect(() => {
+    //reset line chart
+    // setPressureChartLogs([]);
   }, [open, featureData]);
 
   // options for line chart design/UI

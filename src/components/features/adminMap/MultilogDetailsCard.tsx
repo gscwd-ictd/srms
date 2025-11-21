@@ -7,11 +7,17 @@ import { FunctionComponent, useEffect, useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import axios, { AxiosError } from "axios";
 import { isEmpty } from "@srms/utils/isEmpty";
+import { Line } from "react-chartjs-2";
 
 interface MultilogDetailsCardDrops {
   open: boolean;
   featureData: MultilogLogger | undefined;
 }
+
+type pressureChartLogs = {
+  timestamp: string;
+  value: number;
+};
 
 const MultilogDetailsCard: FunctionComponent<MultilogDetailsCardDrops> = ({ open, featureData }) => {
   const [loadingLatestLog, setLoadingLatestLog] = useState<boolean>(false);
@@ -19,6 +25,49 @@ const MultilogDetailsCard: FunctionComponent<MultilogDetailsCardDrops> = ({ open
   const { latestMultilogPressureFlowLog, setLatestMultilogPressureFlowLog } = useLoggerStore();
 
   const { setMultilogDetailsCardOpen } = useCardStore();
+
+  const [pressureChartLogs, setPressureChartLogs] = useState<pressureChartLogs[]>([
+    {
+      timestamp: "2025-11-20 00:00:00",
+      value: -0.221,
+    },
+    {
+      timestamp: "2025-11-20 01:00:00",
+      value: -0.132,
+    },
+    {
+      timestamp: "2025-11-20 02:00:00",
+      value: -0.256,
+    },
+    {
+      timestamp: "2025-11-20 03:00:00",
+      value: -0.351,
+    },
+    {
+      timestamp: "2025-11-20 04:00:00",
+      value: -0.187,
+    },
+    {
+      timestamp: "2025-11-20 05:00:00",
+      value: -0.187,
+    },
+    {
+      timestamp: "2025-11-20 06:00:00",
+      value: -0.126,
+    },
+    {
+      timestamp: "2025-11-20 07:00:00",
+      value: -0.156,
+    },
+    {
+      timestamp: "2025-11-20 08:00:00",
+      value: -0.146,
+    },
+    {
+      timestamp: "2025-11-20 09:00:00",
+      value: -0.148,
+    },
+  ]);
 
   const latestFlowPressureLogMutation = useMutation({
     mutationKey: ["latest-pressure-log"],
@@ -107,6 +156,38 @@ const MultilogDetailsCard: FunctionComponent<MultilogDetailsCardDrops> = ({ open
     }
   }, [open, featureData]);
 
+  // options for line chart design/UI
+  const lineChartOptions = {
+    responsive: true,
+    maintainAspectRatio: false, // key for stretching
+    plugins: {
+      legend: {
+        display: true,
+        labels: {
+          color: "#1a1919ff", // Set the desired color here
+        },
+      },
+    },
+    scales: {
+      x: {
+        ticks: {
+          color: "#000000ff", // color of x labels
+        },
+        grid: {
+          color: "#d1d1d1ff", // color of x grid
+        },
+      },
+      y: {
+        ticks: {
+          color: "#000000ff", // color of y labels
+        },
+        grid: {
+          color: "#d1d1d1ff", // color of y grid
+        },
+      },
+    },
+  };
+
   return (
     <Sheet open={open} onOpenChange={setMultilogDetailsCardOpen} modal={false}>
       <SheetContent
@@ -161,7 +242,22 @@ const MultilogDetailsCard: FunctionComponent<MultilogDetailsCardDrops> = ({ open
             </div>
           </div>
 
-          <div className="w-[70%]">This is where chart be</div>
+          <div className="w-[70%]">
+            <Line
+              options={lineChartOptions}
+              data={{
+                labels: pressureChartLogs.map((item) => item.timestamp),
+                datasets: [
+                  {
+                    label: "PSI",
+                    data: pressureChartLogs.map((item) => item.value),
+                    borderColor: "#2b85ff", // color of line
+                    backgroundColor: "#2b85ff", // color of dots
+                  },
+                ],
+              }}
+            />
+          </div>
         </div>
       </SheetContent>
     </Sheet>
