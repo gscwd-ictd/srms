@@ -316,12 +316,12 @@ const PumpingStationMapCard: FunctionComponent<PumpingStationMapCardProps> = ({ 
                 </BarChart> */}
               </ChartContainer>
             </div>
-            {Object.keys(realTime ? data : latestData).length === 0 ? (
+            {Object.keys(realTime ? pumpData : latestData).length === 0 ? (
               <p className="mt-4 text-gray-500 italic">Waiting for JSON data...</p>
             ) : (
               <div className="w-100">
                 <div className="space-y-4 ">
-                  {Object.values(realTime ? data : latestData).map((ps: PumpData, index: number) => (
+                  {Object.values(realTime ? pumpData : latestData).map((ps: PumpData, index: number) => (
                     <div className="h-1/2 w-1/2 px-4">
                       <div key={ps.name} className="rounded-lg border bg-white p-2 shadow-sm">
                         {" "}
