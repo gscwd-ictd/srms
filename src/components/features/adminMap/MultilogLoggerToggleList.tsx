@@ -83,7 +83,8 @@ const MultilogLoggerToggleList: FunctionComponent = ({}) => {
           const loggerStyles = {
             src: LoggerMarker.src!,
             anchor: [0.5, 1],
-            scale: 0.18,
+            scale: 0.16,
+            zIndex: 400,
           };
           const featureStyle = createIconStyles(loggerStyles as IconStyles);
 

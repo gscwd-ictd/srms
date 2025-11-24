@@ -160,6 +160,13 @@ export const IconStylesSchema = z.object({
       default: 0,
     })
     .optional(),
+  zIndex: z
+    .number()
+    .openapi({
+      description: "Z-index hierarchy",
+      default: 500,
+    })
+    .optional(),
 });
 
 export const MarkerStylesSchema = z.object({
