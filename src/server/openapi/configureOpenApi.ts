@@ -26,7 +26,7 @@ export function configureOpenApi(app: AppOpenAPI) {
         description: "Local server 2",
       },
       {
-        url: "http://172.20.10.55:3000",
+        url: "http://172.20.110.84:3000",
         description: "Remote office server.",
       },
     ],

@@ -61,7 +61,7 @@ const PumpingStationMapCard: FunctionComponent<PumpingStationMapCardProps> = ({ 
   const [latestData, setLatestData] = useState<PumpData[]>([]);
   const wsRef = useRef<WebSocket | null>(null);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
-  const [wsUrl, setWsUrl] = useState("ws://172.20.10.58:7575");
+  const [wsUrl, setWsUrl] = useState("ws://172.20.110.84:7575");
   const [isConnected, setIsConnected] = useState(false);
 
   const handleConnect = () => {
