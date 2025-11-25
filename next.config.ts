@@ -6,7 +6,7 @@ const nextConfig: NextConfig = {
   // devIndicators: false,
   assetPrefix: "/docs",
   images: {
-    domains: ["172.20.10.59"],
+    domains: ["172.20.110.84"],
   },
   async rewrites() {
     return [

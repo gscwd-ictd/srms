@@ -11,7 +11,7 @@ import { usePumpingStationStore } from "@srms/components/stores/usePumpingStatio
 interface WebSocketTestProps {}
 
 const WebSocketTest: FunctionComponent<WebSocketTestProps> = () => {
-  const [wsUrl, setWsUrl] = useState("ws://172.20.10.58:7575");
+  const [wsUrl, setWsUrl] = useState("ws://172.20.110.84:7575");
   const [isConnected, setIsConnected] = useState(false);
   const [data, setData] = useState<Record<string, PumpData>>({});
   const wsRef = useRef<WebSocket | null>(null);
