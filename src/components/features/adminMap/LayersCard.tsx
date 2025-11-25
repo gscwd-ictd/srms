@@ -12,6 +12,7 @@ import PipelineRenderToggleList from "./PipelineRenderToggleList";
 import XilogLoggerToggleList from "./XilogLoggerToggleList";
 import MultilogLoggerToggleList from "./MultilogLoggerToggleList";
 import PumpingStationToggleList from "./PumpingStationToggleList";
+import ReservoirToggleList from "./ReservoirToggleList";
 
 export const LayersCard: FunctionComponent = () => {
   const { layerToggleCardOpen, setLayerToggleCardOpen } = useCardStore();
@@ -69,6 +70,10 @@ export const LayersCard: FunctionComponent = () => {
 
               <AccordionItem value="item-5">
                 <PipelineRenderToggleList />
+              </AccordionItem>
+
+              <AccordionItem value="item-6">
+                <ReservoirToggleList />
               </AccordionItem>
             </Accordion>
           </CardContent>

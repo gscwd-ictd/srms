@@ -17,7 +17,7 @@ export type ReservoirData = {
 
 export type ReservoirCoordinates = {
   type: string;
-  coordinates: number[] | (Coordinate[] | LineString)[];
+  coordinates: Coordinate;
 };
 
 export type ReservoirProperties = {
