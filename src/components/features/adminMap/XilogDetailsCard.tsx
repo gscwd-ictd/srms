@@ -16,7 +16,7 @@ import { Legend, Line, LineChart, Tooltip, XAxis, YAxis } from "recharts";
 import { Popover, PopoverContent, PopoverTrigger } from "@srms/components/ui/Popover";
 import { Button } from "@srms/components/ui/Button";
 import { CalendarIcon } from "lucide-react";
-import { addHours, format, isWithinInterval } from "date-fns";
+import { format, isWithinInterval } from "date-fns";
 import { cn } from "@srms/utils/shadcn";
 import { DateRange } from "react-day-picker";
 import { Calendar } from "@srms/components/ui/Calendar";

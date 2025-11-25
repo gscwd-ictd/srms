@@ -8,17 +8,16 @@ import { Popover, PopoverContent, PopoverTrigger } from "@srms/components/ui/Pop
 // import { ChartContainer, ChartTooltip } from "@srms/components/ui/Chart";
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "@srms/components/ui/Sheet";
 import { Switch } from "@srms/components/ui/Switch";
-import { PumpingStationData, PumpingStationProperties } from "@srms/lib/pms/types";
-import { generatePumpDataForStation, mockPumpData, PumpData } from "@srms/lib/pumpstation/pumpStationType";
+import { PumpingStationProperties } from "@srms/lib/pms/types";
+import { generatePumpDataForStation, PumpData } from "@srms/lib/pumpstation/pumpStationType";
 import { cn } from "@srms/utils/shadcn";
 import { addHours, format, isWithinInterval } from "date-fns";
-import { real } from "drizzle-orm/gel-core";
 import { CalendarIcon } from "lucide-react";
 import React from "react";
 import { FunctionComponent, useEffect, useRef, useState } from "react";
 import { DateRange } from "react-day-picker";
 import { Legend, Line, LineChart, Tooltip, XAxis, YAxis } from "recharts";
-import { Line as LineReactChart } from "react-chartjs-2";
+
 // import { Bar, BarChart } from "recharts";
 
 const chartConfig = {
@@ -110,7 +109,7 @@ const PumpingStationMapCard: FunctionComponent<PumpingStationMapCardProps> = ({ 
           return updated.slice(-500);
         });
       } catch (err) {
-        console.warn("Non-JSON message ignored:", event.data);
+        console.warn("Non-JSON message ignored:", event.data, err);
       }
     };
 
@@ -163,38 +162,6 @@ const PumpingStationMapCard: FunctionComponent<PumpingStationMapCardProps> = ({ 
     setPsName(result ?? "");
     loadData(result ?? "ps");
   }, []);
-
-  // options for line chart design/UI
-  const lineChartOptions = {
-    responsive: true,
-    maintainAspectRatio: false, // key for stretching
-    plugins: {
-      legend: {
-        display: true,
-        labels: {
-          color: "#1a1919ff", // Set the desired color here
-        },
-      },
-    },
-    scales: {
-      x: {
-        ticks: {
-          color: "#000000ff", // color of x labels
-        },
-        grid: {
-          color: "#d1d1d1ff", // color of x grid
-        },
-      },
-      y: {
-        ticks: {
-          color: "#000000ff", // color of y labels
-        },
-        grid: {
-          color: "#d1d1d1ff", // color of y grid
-        },
-      },
-    },
-  };
 
   return (
     <>
@@ -295,21 +262,6 @@ const PumpingStationMapCard: FunctionComponent<PumpingStationMapCardProps> = ({ 
                 </div>
 
                 <div className="h-[250px] w-[65%] bg-gray-200/60">
-                  {/* <LineReactChart
-                    options={lineChartOptions}
-                    data={{
-                      labels: pressureChartLogs.map((item) => item.timestamp),
-                      datasets: [
-                        {
-                          label: "PSI",
-                          data: pressureChartLogs.map((item) => item.value),
-                          borderColor: "#2b85ff", // color of line
-                          backgroundColor: "#2b85ff", // color of dots
-                        },
-                      ],
-                    }}
-                  /> */}
-
                   <ChartContainer config={chartConfig} className="h-1/3 min-h-[250px] w-full px-4">
                     <LineChart
                       accessibilityLayer
