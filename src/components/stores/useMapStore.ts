@@ -34,7 +34,7 @@ export const useMapStore = create<MapState>()(
       zoom: 15,
       maxZoom: 25,
       minZoom: 13,
-      extent: [124.96749074170913, 5.999301447074847, 125.30458792609245, 6.2773149261158405], // [minx, miny, maxx, maxy]
+      extent: [124.989222, 5.993127, 125.332908, 6.252108], // [minx, miny, maxx, maxy]
     },
     setViewport: (viewport) => set({ viewport }),
 
