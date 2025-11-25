@@ -19,7 +19,7 @@ import PumpingStationMapCard from "./PumpingStationMapCard";
 import React from "react";
 import { AccordionContent, AccordionTrigger } from "@srms/components/ui/Accordion";
 import { Spinner } from "@srms/components/ui-custom/Spinner";
-import { Eye, EyeOff } from "lucide-react";
+import { House } from "lucide-react";
 
 const featureManager = new FeatureManager();
 
@@ -170,11 +170,12 @@ export const PumpingStationToggleList: FunctionComponent = ({}) => {
               }}
               defaultChecked={true}
             />
-            <EyeOff className="mr-2 block w-5 text-stone-800 peer-checked:hidden" />
-            <Eye className="mr-2 hidden w-5 text-stone-800 peer-checked:block" />
+
+            <House className="mr-2 block w-5 cursor-pointer text-white opacity-30 peer-checked:hidden" />
+            <House className="mr-2 hidden w-5 cursor-pointer text-white peer-checked:block" />
           </label>
-          <AccordionTrigger className="items-center">
-            <p className="text-md font-bold text-black">Pumping Station</p>
+          <AccordionTrigger className="w-40 items-center">
+            <p className="text-md font-bold text-white">Pumping Station</p>
           </AccordionTrigger>
         </div>
 

@@ -165,6 +165,9 @@ const MultilogDetailsCard: FunctionComponent<MultilogDetailsCardDrops> = ({ open
         display: true,
         labels: {
           color: "#1a1919ff", // Set the desired color here
+          font: {
+            size: 14,
+          },
         },
       },
     },
@@ -172,6 +175,9 @@ const MultilogDetailsCard: FunctionComponent<MultilogDetailsCardDrops> = ({ open
       x: {
         ticks: {
           color: "#000000ff", // color of x labels
+          font: {
+            size: 10,
+          },
         },
         grid: {
           color: "#d1d1d1ff", // color of x grid
@@ -191,7 +197,7 @@ const MultilogDetailsCard: FunctionComponent<MultilogDetailsCardDrops> = ({ open
   return (
     <Sheet open={open} onOpenChange={setMultilogDetailsCardOpen} modal={false}>
       <SheetContent
-        className="h-[380px] w-full gap-0 border border-stone-300 bg-white text-black"
+        className="h-[380px] w-full gap-0 border border-stone-300 bg-white/90 text-black backdrop-blur"
         side="bottom"
         onInteractOutside={(e) => e.preventDefault()}
       >

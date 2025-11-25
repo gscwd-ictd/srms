@@ -9,8 +9,17 @@ import { FunctionComponent, useEffect, useState } from "react";
 import Chart from "chart.js/auto";
 import { CategoryScale } from "chart.js";
 Chart.register(CategoryScale);
-import { Line } from "react-chartjs-2";
+// import { Line } from "react-chartjs-2";
 import dayjs from "dayjs";
+import { ChartConfig, ChartContainer } from "@srms/components/ui/Chart";
+import { Legend, Line, LineChart, Tooltip, XAxis, YAxis } from "recharts";
+import { Popover, PopoverContent, PopoverTrigger } from "@srms/components/ui/Popover";
+import { Button } from "@srms/components/ui/Button";
+import { CalendarIcon } from "lucide-react";
+import { addHours, format, isWithinInterval } from "date-fns";
+import { cn } from "@srms/utils/shadcn";
+import { DateRange } from "react-day-picker";
+import { Calendar } from "@srms/components/ui/Calendar";
 
 interface XilogDetailsCardDrops {
   open: boolean;
@@ -22,9 +31,34 @@ type pressureChartLogs = {
   value: number;
 };
 
+const chartConfig = {
+  pressure: {
+    color: "#13e062ff",
+  },
+  waterLevel: {
+    color: "#1613c2ff",
+  },
+  flowMeter: {
+    color: "#1dc2b4ff",
+  },
+  turbidity: {
+    color: "#5f5e5dff",
+  },
+  humidity: {
+    color: "#dfe21fff",
+  },
+  chlorine: {
+    color: "#e93d09ff",
+  },
+} satisfies ChartConfig;
+
 const XilogDetailsCard: FunctionComponent<XilogDetailsCardDrops> = ({ open, featureData }) => {
   const [loadingLatestPressureLog, setLoadingLatestPressureLog] = useState<boolean>(false);
   const [loadingLatestFlowLog, setLoadingLatestFlowLog] = useState<boolean>(false);
+  const [date, setDate] = useState<DateRange | undefined>({
+    from: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000),
+    to: new Date(Date.now()),
+  });
 
   const {
     // pressureChannelLogs,
@@ -47,8 +81,12 @@ const XilogDetailsCard: FunctionComponent<XilogDetailsCardDrops> = ({ open, feat
         {
           serialNumber: `${loggerData?.serialNumber}`,
           channel: `${loggerData?.channel}`, // pressure
-          startDateTime: `${dayjs().format("YYYY-MM-DD")} 00:00`,
-          endDateTime: `${dayjs().format("YYYY-MM-DD")} 23:59`,
+          startDateTime: date?.from
+            ? `${dayjs(date.from).format("YYYY-MM-DD")} 00:00`
+            : `${dayjs().format("YYYY-MM-DD")} 00:00`,
+          endDateTime: date?.to
+            ? `${dayjs(date.to).format("YYYY-MM-DD")} 23:59`
+            : `${dayjs().format("YYYY-MM-DD")} 23:59`,
         },
         {},
       );
@@ -66,6 +104,17 @@ const XilogDetailsCard: FunctionComponent<XilogDetailsCardDrops> = ({ open, feat
       console.log(error);
     },
   });
+
+  useEffect(() => {
+    console.log(
+      `${dayjs(date?.from).format("YYYY-MM-DD")} 00:00`,
+      `${dayjs(date?.to).format("YYYY-MM-DD")} 23:59`,
+    );
+  }, [date]);
+
+  useEffect(() => {
+    console.log(pressureChartLog);
+  }, [pressureChartLog]);
 
   const latestPressureLogMutation = useMutation({
     mutationKey: ["latest-pressure-log"],
@@ -207,49 +256,50 @@ const XilogDetailsCard: FunctionComponent<XilogDetailsCardDrops> = ({ open, feat
     // setPressureChartLogs([]);
   }, [open, featureData]);
 
-  // options for line chart design/UI
-  const lineChartOptions = {
-    responsive: true,
-    maintainAspectRatio: false, // key for stretching
-    plugins: {
-      legend: {
-        display: true,
-        labels: {
-          color: "#1a1919ff", // Set the desired color here
-        },
-      },
-    },
-    scales: {
-      x: {
-        ticks: {
-          color: "#000000ff", // color of x labels
-        },
-        grid: {
-          color: "#d1d1d1ff", // color of x grid
-        },
-      },
-      y: {
-        ticks: {
-          color: "#000000ff", // color of y labels
-        },
-        grid: {
-          color: "#d1d1d1ff", // color of y grid
-        },
-      },
-    },
-  };
-
   return (
     <Sheet open={open} onOpenChange={setXilogDetailsCardOpen} modal={false}>
       <SheetContent
-        className="h-[380px] w-full gap-0 border border-stone-300 bg-white/70 text-black backdrop-blur"
+        className="h-[380px] w-full gap-0 border border-stone-300 bg-white/90 text-black backdrop-blur"
         side="bottom"
         onInteractOutside={(e) => e.preventDefault()}
       >
         <SheetHeader className="m-5 p-0">
           <SheetTitle className="text-black">{featureData?.serial || "--"}</SheetTitle>
-          <SheetDescription className="text-stone-600">
-            {featureData?.name || "--"} | Xilog Source
+          <SheetDescription className="flex flex-row gap-4 text-stone-600">
+            <label className="w-[30%]"> {featureData?.name || "--"} | Xilog Source</label>
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button
+                  variant="outline"
+                  className={cn(
+                    "w-[280px] justify-start text-left font-normal text-white",
+                    !date && "text-muted-foreground",
+                  )}
+                >
+                  <CalendarIcon className="mr-2 h-4 w-4" />
+                  {date?.from ? (
+                    date.to ? (
+                      <>
+                        {format(date.from, "LLL dd, y")} - {format(date.to, "LLL dd, y")}
+                      </>
+                    ) : (
+                      format(date.from, "LLL dd, y")
+                    )
+                  ) : (
+                    <span>Pick a date range</span>
+                  )}
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-auto p-0" align="start">
+                <Calendar
+                  mode="range"
+                  defaultMonth={date?.from}
+                  selected={date}
+                  onSelect={setDate}
+                  numberOfMonths={2}
+                />
+              </PopoverContent>
+            </Popover>
           </SheetDescription>
         </SheetHeader>
 
@@ -295,20 +345,80 @@ const XilogDetailsCard: FunctionComponent<XilogDetailsCardDrops> = ({ open, feat
           </div>
 
           <div className="h-[250px] w-[65%] bg-gray-200/60">
-            <Line
-              options={lineChartOptions}
-              data={{
-                labels: pressureChartLogs.map((item) => item.timestamp),
-                datasets: [
-                  {
-                    label: "PSI",
-                    data: pressureChartLogs.map((item) => item.value),
-                    borderColor: "#2b85ff", // color of line
-                    backgroundColor: "#2b85ff", // color of dots
-                  },
-                ],
-              }}
-            />
+            <ChartContainer config={chartConfig} className="h-1/3 min-h-[250px] w-full px-4">
+              <LineChart
+                accessibilityLayer
+                data={pressureChartLogs.filter((lps) => {
+                  const ts = new Date(lps.timestamp);
+                  const startDate = date?.from
+                    ? `${dayjs(date.from).format("YYYY-MM-DD")} 00:00`
+                    : `${dayjs().format("YYYY-MM-DD")} 00:00`;
+                  const endDate = date?.to
+                    ? `${dayjs(date.to).format("YYYY-MM-DD")} 23:59`
+                    : date?.from
+                      ? `${dayjs(date.from).format("YYYY-MM-DD")} 23:59`
+                      : `${dayjs().format("YYYY-MM-DD")} 23:59`;
+
+                  return isWithinInterval(ts, { start: startDate, end: endDate });
+                })}
+              >
+                <XAxis
+                  dataKey="timestamp"
+                  tickFormatter={(value) => {
+                    // Format ISO to HH:MM:SS or whatever format you like
+                    const date = new Date(value);
+                    // return `${date.getMonth()}/${date.getDate()}`;
+                    return `${dayjs(date).format("MM/DD")}`;
+                  }}
+                  tick={{ fill: "#555", fontSize: 12 }}
+                />
+                <YAxis display="Pressure" tickLine={false} tickMargin={20} axisLine={false} />
+                <Tooltip
+                  content={({ active, payload, label }) => {
+                    if (active && payload && payload.length) {
+                      // sort descending by value
+                      const sorted = [...payload].sort((a, b) => Number(b.value ?? 0) - Number(a.value ?? 0));
+                      let formattedTime = "NAN";
+                      try {
+                        // format time for Philippine timezone
+                        formattedTime = new Intl.DateTimeFormat("en-PH", {
+                          hour: "2-digit",
+                          minute: "2-digit",
+                          second: "2-digit",
+                          timeZone: "Asia/Manila",
+                        }).format(new Date(label));
+                      } catch (e) {
+                        console.log(e);
+                      }
+
+                      return (
+                        <div
+                          className="rounded-md border bg-white p-2 text-sm shadow-md"
+                          style={{ lineHeight: "1.2em" }}
+                        >
+                          <p className="mb-1 font-semibold">{formattedTime}</p>
+                          {sorted.map((entry, index) => (
+                            <p key={index} style={{ color: entry.color }}>
+                              {entry.name} : {Number(entry.value).toFixed(2)}
+                            </p>
+                          ))}
+                        </div>
+                      );
+                    }
+                    return null;
+                  }}
+                />
+
+                {/* 🟩 Add legend here */}
+                <Legend verticalAlign="top" align="center" />
+                <Line dataKey="value" stroke={chartConfig.waterLevel.color} dot={false} />
+                {/* <Line dataKey="pressure" stroke={chartConfig.pressure.color} dot={false} />
+                <Line dataKey="flowmeter" stroke={chartConfig.flowMeter.color} dot={false} />
+                <Line dataKey="turbidity" stroke={chartConfig.turbidity.color} dot={false} />
+                <Line dataKey="humidity" stroke={chartConfig.humidity.color} dot={false} />
+                <Line dataKey="chlorine" stroke={chartConfig.chlorine.color} dot={false} /> */}
+              </LineChart>
+            </ChartContainer>
           </div>
         </div>
       </SheetContent>
