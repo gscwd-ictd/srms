@@ -200,9 +200,9 @@ const PumpingStationMapCard: FunctionComponent<PumpingStationMapCardProps> = ({ 
               <Popover>
                 <PopoverTrigger asChild>
                   <Button
-                    variant="outline"
+                    variant="default"
                     className={cn(
-                      "w-[280px] justify-start text-left font-normal text-white",
+                      "w-[280px] justify-start text-left font-normal text-black",
                       !date && "text-muted-foreground",
                     )}
                   >
@@ -329,7 +329,7 @@ const PumpingStationMapCard: FunctionComponent<PumpingStationMapCardProps> = ({ 
 
                       {/* 🟩 Add legend here */}
                       <Legend verticalAlign="top" align="center" />
-                      <Line dataKey="water level" stroke={chartConfig.waterLevel.color} dot={false} />
+                      <Line dataKey="waterlevel" stroke={chartConfig.waterLevel.color} dot={false} />
                       <Line dataKey="pressure" stroke={chartConfig.pressure.color} dot={false} />
                       <Line dataKey="flowmeter" stroke={chartConfig.flowMeter.color} dot={false} />
                       <Line dataKey="turbidity" stroke={chartConfig.turbidity.color} dot={false} />

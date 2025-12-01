@@ -26,9 +26,14 @@ interface XilogDetailsCardDrops {
   featureData: LoggerDetails | undefined;
 }
 
-type pressureChartLogs = {
+type PressureChartLogs = {
   timestamp: string;
   value: number;
+};
+
+type TransformedPressure = {
+  timestamp: string;
+  Pressure: number;
 };
 
 const chartConfig = {
@@ -71,7 +76,7 @@ const XilogDetailsCard: FunctionComponent<XilogDetailsCardDrops> = ({ open, feat
 
   const { setXilogDetailsCardOpen } = useCardStore();
 
-  const [pressureChartLogs, setPressureChartLogs] = useState<pressureChartLogs[]>([]);
+  const [pressureChartLogs, setPressureChartLogs] = useState<PressureChartLogs[]>([]);
 
   const pressureChartLog = useMutation({
     mutationKey: ["latest-pressurechart-log"],
@@ -105,16 +110,12 @@ const XilogDetailsCard: FunctionComponent<XilogDetailsCardDrops> = ({ open, feat
     },
   });
 
-  useEffect(() => {
-    console.log(
-      `${dayjs(date?.from).format("YYYY-MM-DD")} 00:00`,
-      `${dayjs(date?.to).format("YYYY-MM-DD")} 23:59`,
-    );
-  }, [date]);
-
-  useEffect(() => {
-    console.log(pressureChartLog);
-  }, [pressureChartLog]);
+  function transformPressureData(logs: PressureChartLogs[]): TransformedPressure[] {
+    return logs.map((item) => ({
+      timestamp: item.timestamp,
+      Pressure: item.value, // rename value → Pressure
+    }));
+  }
 
   const latestPressureLogMutation = useMutation({
     mutationKey: ["latest-pressure-log"],
@@ -147,6 +148,7 @@ const XilogDetailsCard: FunctionComponent<XilogDetailsCardDrops> = ({ open, feat
         `${process.env.NEXT_PUBLIC_APP_URL}/api/v1/xilog-iot-logger/entries/latest/${loggerData?.serialNumber}/${loggerData.channel}`,
         {},
       );
+      console.log(response.data);
       return response.data;
     },
     onMutate: () => {
@@ -270,9 +272,9 @@ const XilogDetailsCard: FunctionComponent<XilogDetailsCardDrops> = ({ open, feat
             <Popover>
               <PopoverTrigger asChild>
                 <Button
-                  variant="outline"
+                  variant="default"
                   className={cn(
-                    "w-[280px] justify-start text-left font-normal text-white",
+                    "w-[280px] justify-start text-left font-normal text-black",
                     !date && "text-muted-foreground",
                   )}
                 >
@@ -348,7 +350,7 @@ const XilogDetailsCard: FunctionComponent<XilogDetailsCardDrops> = ({ open, feat
             <ChartContainer config={chartConfig} className="h-1/3 min-h-[250px] w-full px-4">
               <LineChart
                 accessibilityLayer
-                data={pressureChartLogs.filter((lps) => {
+                data={transformPressureData(pressureChartLogs).filter((lps) => {
                   const ts = new Date(lps.timestamp);
                   const startDate = date?.from
                     ? `${dayjs(date.from).format("YYYY-MM-DD")} 00:00`
@@ -411,12 +413,12 @@ const XilogDetailsCard: FunctionComponent<XilogDetailsCardDrops> = ({ open, feat
 
                 {/* 🟩 Add legend here */}
                 <Legend verticalAlign="top" align="center" />
-                <Line dataKey="value" stroke={chartConfig.waterLevel.color} dot={false} />
-                {/* <Line dataKey="pressure" stroke={chartConfig.pressure.color} dot={false} />
-                <Line dataKey="flowmeter" stroke={chartConfig.flowMeter.color} dot={false} />
-                <Line dataKey="turbidity" stroke={chartConfig.turbidity.color} dot={false} />
-                <Line dataKey="humidity" stroke={chartConfig.humidity.color} dot={false} />
-                <Line dataKey="chlorine" stroke={chartConfig.chlorine.color} dot={false} /> */}
+                <Line dataKey="Pressure" stroke={chartConfig.pressure.color} dot={false} />
+                <Line dataKey="FlowMeter" stroke={chartConfig.flowMeter.color} dot={false} />
+                {/* <Line dataKey="flowmeter" stroke={chartConfig.flowMeter.color} dot={false} /> */}
+                {/* <Line dataKey="turbidity" stroke={chartConfig.turbidity.color} dot={false} /> */}
+                {/* <Line dataKey="humidity" stroke={chartConfig.humidity.color} dot={false} /> */}
+                {/* <Line dataKey="chlorine" stroke={chartConfig.chlorine.color} dot={false} /> */}
               </LineChart>
             </ChartContainer>
           </div>
