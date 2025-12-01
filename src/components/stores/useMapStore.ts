@@ -1,7 +1,6 @@
 import { create } from "zustand";
 import { devtools } from "zustand/middleware";
 import { Map } from "ol";
-import { BaseLayerOptions } from "../enums";
 import { TileLayerType, ViewPort } from "../types";
 import { ValveData } from "@srms/lib/pms/types";
 
@@ -13,10 +12,6 @@ export type MapState = {
   // Reference to the OpenLayers Map instance
   mapRef: Map | null;
   setMapRef: (map: Map | null) => void;
-
-  // Map style
-  mapStyle: BaseLayerOptions;
-  setMapStyle: (style: BaseLayerOptions) => void;
 
   selectedBaseMap: string;
   setSelectedBaseMap: (selectedBaseMap: string) => void;
@@ -34,22 +29,18 @@ export const useMapStore = create<MapState>()(
   devtools((set) => ({
     // default map view options
     viewport: {
-      projection: "EPSG:3857",
-      center: [13934048.731470205, 682001.1655557732],
-      zoom: 16,
+      projection: "EPSG:4326",
+      center: [125.17189194375173, 6.113035811082611],
+      zoom: 15,
       maxZoom: 25,
-      minZoom: 12,
-      extent: [13906485.166068409, 662066.9967097231, 13948865.159361392, 706731.4638312651], // bottom-left, bottom-right, top-left, top-right
+      minZoom: 13,
+      extent: [124.989222, 5.993127, 125.332908, 6.252108], // [minx, miny, maxx, maxy]
     },
     setViewport: (viewport) => set({ viewport }),
 
     // Map reference
     mapRef: null,
     setMapRef: (map) => set({ mapRef: map }),
-
-    // Map style (default is Bing Aerial)
-    mapStyle: BaseLayerOptions.OSM,
-    setMapStyle: (style) => set({ mapStyle: style }),
 
     selectedBaseMap: "",
     setSelectedBaseMap: (selectedBaseMap) => set({ selectedBaseMap }),

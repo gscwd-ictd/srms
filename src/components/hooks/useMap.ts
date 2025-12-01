@@ -1,14 +1,13 @@
 "use-client";
 
-// import { ZoomSlider } from "ol/control";
+import { ZoomSlider } from "ol/control";
 import View from "ol/View";
 import { useEffect, useRef, useState } from "react";
 import Map from "ol/Map";
-// import { defaults as defaultControls } from "ol/control.js";
+import { defaults as defaultControls } from "ol/control.js";
 import { useMapStore } from "../stores/useMapStore";
 import TileLayer from "ol/layer/Tile";
 import { OSM } from "ol/source";
-// import { mapStyles } from "../features/fleetMap/BaseMapLayers";
 
 const useMap = () => {
   const [map, setMap] = useState<Map | null>(null);
@@ -19,7 +18,6 @@ const useMap = () => {
 
   useEffect(() => {
     const olMap = new Map({
-      // layers: [mapStyles],
       layers: [
         new TileLayer({
           source: new OSM(),
@@ -36,15 +34,15 @@ const useMap = () => {
       }),
       maxTilesLoading: 16,
       keyboardEventTarget: document,
-      // controls: defaultControls().extend([new ZoomSlider()]),
+      controls: defaultControls().extend([new ZoomSlider()]),
     });
 
     // Get coordinates when clicking on map
-    // olMap.on("click", (e) => {
-    //   const coord = e.coordinate;
+    olMap.on("click", (e) => {
+      const coord = e.coordinate;
 
-    //   console.log(coord);
-    // });
+      console.log(coord);
+    });
 
     // set the map ref in the global store
     // let the map to be used in other components
