@@ -17,12 +17,16 @@ import React from "react";
 import { AccordionContent, AccordionTrigger } from "@radix-ui/react-accordion";
 import { Spinner } from "@srms/components/ui-custom/Spinner";
 import { Eye, EyeOff } from "lucide-react";
+import ReservoirCard from "./ReservoirCard";
+import { useCardStore } from "@srms/components/stores/useCardStore";
 
 const featureManager = new FeatureManager();
 
 export const ReservoirToggleList: FunctionComponent = ({}) => {
   const adminMonitMap = useAdminMonitMap();
   const [reservoirSelected, setReservoirSelected] = useState<ReservoirProperties>();
+  const { layerToggleCardOpen, setLayerToggleCardOpen, reservoirCardOpen, setReservoirCardOpen } =
+      useCardStore();
   
   const { data: reservoirs, isLoading } = useQuery({
     queryKey: ["get-all-reservoirs"],
@@ -121,8 +125,8 @@ export const ReservoirToggleList: FunctionComponent = ({}) => {
             .getMap()
             .forEachFeatureAtPixel(e.pixel, (feature, layer) => {
               if (layer.get("id") === "reservoir-prop") {
-                // setPumpingStationCardOpen(1);
-                // setLayerToggleCardOpen(!layerToggleCardOpen);
+                setReservoirCardOpen(true);
+                setLayerToggleCardOpen(!layerToggleCardOpen);
               }
               return feature;
             });
@@ -180,11 +184,11 @@ export const ReservoirToggleList: FunctionComponent = ({}) => {
             </li>
           </ul>
         </AccordionContent>
-        {/* {pumpingStationCardOpen == 1 && selectedPumpStation ? (
-          <PumpingStationMapCard open={pumpingStationCardOpen == 1} ps={selectedPumpStation} />
+        {reservoirCardOpen && reservoirSelected ? (
+          <ReservoirCard open={reservoirCardOpen} rp={reservoirSelected} />
         ) : (
           ""
-        )} */}
+        )}
       </React.Fragment>
       );
 }

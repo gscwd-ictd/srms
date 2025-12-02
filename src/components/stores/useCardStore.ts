@@ -19,6 +19,9 @@ export type CardState = {
 
   pumpingStationCardOpen: number;
   setPumpingStationCardOpen: (pumpingStationCardOpen: number) => void;
+
+  reservoirCardOpen: boolean;
+  setReservoirCardOpen: (reservoirCardOpen: boolean) => void;
 };
 
 export const useCardStore = create<CardState>()(
@@ -40,5 +43,8 @@ export const useCardStore = create<CardState>()(
 
    pumpingStationCardOpen: 0,
     setPumpingStationCardOpen: (pumpingStationCardOpen) => set({ pumpingStationCardOpen }),
+
+    reservoirCardOpen: false,
+    setReservoirCardOpen: (reservoirCardOpen) => set({ reservoirCardOpen }),
   })),
 );

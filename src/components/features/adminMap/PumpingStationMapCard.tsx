@@ -48,8 +48,8 @@ interface PumpingStationMapCardProps {
 
 const PumpingStationMapCard: FunctionComponent<PumpingStationMapCardProps> = ({ ps, open }) => {
   const [openChange, setOpenChange] = useState(open);
-  const { layerToggleCardOpen, setLayerToggleCardOpen, setPumpingStationCardOpen } = useCardStore();
-  const { pumpData, setPumpData } = usePumpingStationStore();
+  const {layerToggleCardOpen, setLayerToggleCardOpen, setPumpingStationCardOpen } = useCardStore();
+  const {pumpData, setPumpData } = usePumpingStationStore();
   const [psName, setPsName] = useState("");
   const [realTime, setRealTime] = useState(false);
   const [date, setDate] = useState<DateRange | undefined>({
@@ -330,12 +330,12 @@ const PumpingStationMapCard: FunctionComponent<PumpingStationMapCardProps> = ({ 
                         </h2>{" "}
                         <div className="mt-2 space-y-1 text-sm text-gray-700">
                           {" "}
-                          <p>💧 Water Level: {ps.waterlevel.toFixed(2)}</p>{" "}
-                          <p>⚙️ Pressure: {ps.pressure.toFixed(2)}</p>{" "}
-                          <p>🌊 Flowmeter: {ps.flowmeter.toFixed(2)}</p>{" "}
-                          <p>🔬 Turbidity: {ps.turbidity.toFixed(2)}</p>{" "}
-                          <p>💨 Humidity: {ps.humidity.toFixed(2)}</p>{" "}
-                          <p>☣️ Chlorine: {ps.chlorine.toFixed(2)}</p>{" "}
+                          <p>💧 Water Level: {ps.waterlevel.toFixed(2)+" cu.m"}</p>{" "}
+                          <p>⚙️ Pressure: {ps.pressure.toFixed(2)+" psi"}</p>{" "}
+                          <p>🌊 Flowmeter: {ps.flowmeter.toFixed(2)+" m³/h"}</p>{" "}
+                          <p>🔬 Turbidity: {ps.turbidity.toFixed(2)+" NTU"}</p>{" "}
+                          <p>💨 Humidity: {ps.humidity.toFixed(2)+" % RH"}</p>{" "}
+                          <p>☣️ Chlorine: {ps.chlorine.toFixed(2)+" ppm"}</p>{" "}
                         </div>{" "}
                       </div>
                     </div>
