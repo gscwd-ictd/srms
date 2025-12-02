@@ -87,7 +87,7 @@ export class LoggersService implements I_LoggersService {
   }
 
   async getMultilogLoggersList(): Promise<Array<MultilogLogger>> {
-    const urlString = `http://tze-innovations.com/datagate/api/loggerapi.ashx?username=gscwd-online&password=Iamattbellamia26.`;
+    const urlString = `http://tze-innovations.com/datagate/api/loggerapi.ashx?action=getloggers&username=API_GSCWD&password=API@gscwdonline1`;
 
     const responseXml = await axios.get<MultilogBody>(urlString, {
       headers: {

@@ -2,7 +2,6 @@ import { BaseLayerOptions } from "@srms/components/enums";
 import LayerGroup from "ol/layer/Group";
 import TileLayer from "ol/layer/Tile";
 import { Google, OSM } from "ol/source";
-// import BingMaps from "ol/source/BingMaps.js";
 
 export const BaseMapLayerGroup: LayerGroup = new LayerGroup({
   layers: [
@@ -14,30 +13,6 @@ export const BaseMapLayerGroup: LayerGroup = new LayerGroup({
     //   className: BaseLayerOptions.OSM,
     //   properties: {
     //     title: "OpenStreetMap",
-    //   },
-    // }),
-
-    // new TileLayer({
-    //   source: new OSM({
-    //     url: `https://maps.geoapify.com/v1/tile/osm-bright/{z}/{x}/{y}.png?apiKey=${process.env.NEXT_PUBLIC_GEOAPIFY_KEY}`,
-    //   }),
-    //   visible: false,
-    //   preload: Infinity,
-    //   className: BaseLayerOptions.OSM_BRIGHT,
-    //   properties: {
-    //     title: "OsmBright",
-    //   },
-    // }),
-
-    // new TileLayer({
-    //   source: new OSM({
-    //     url: `https://maps.geoapify.com/v1/tile/osm-liberty/{z}/{x}/{y}.png?apiKey=${process.env.NEXT_PUBLIC_GEOAPIFY_KEY}`,
-    //   }),
-    //   visible: false,
-    //   preload: Infinity,
-    //   className: BaseLayerOptions.OSM_LIBERTY,
-    //   properties: {
-    //     title: "OsmLiberty",
     //   },
     // }),
 
