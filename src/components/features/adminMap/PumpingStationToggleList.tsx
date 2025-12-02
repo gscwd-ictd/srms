@@ -127,7 +127,7 @@ export const PumpingStationToggleList: FunctionComponent = ({}) => {
             .forEachFeatureAtPixel(e.pixel, (feature, layer) => {
               if (layer.get("id") === "pumping-stations") {
                 setPumpingStationCardOpen(1);
-                setLayerToggleCardOpen(!layerToggleCardOpen);
+                setLayerToggleCardOpen(!false);
               }
               return feature;
             });

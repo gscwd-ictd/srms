@@ -119,14 +119,14 @@ export const ReservoirToggleList: FunctionComponent = ({}) => {
 
         // Open card modal for valve details
         adminMonitMap.mapManager.getMap().on("click", (e) => {
-        //   setPumpingStationCardOpen(0);
+          setReservoirCardOpen(false);
 
           const feature = adminMonitMap.mapManager
             .getMap()
             .forEachFeatureAtPixel(e.pixel, (feature, layer) => {
               if (layer.get("id") === "reservoir-prop") {
                 setReservoirCardOpen(true);
-                setLayerToggleCardOpen(!layerToggleCardOpen);
+                setLayerToggleCardOpen(false);
               }
               return feature;
             });

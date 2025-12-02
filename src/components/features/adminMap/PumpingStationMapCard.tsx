@@ -159,7 +159,12 @@ const PumpingStationMapCard: FunctionComponent<PumpingStationMapCardProps> = ({ 
     const result = match ? match[1] : "";
     setPsName(result ?? "");
     loadData(result ?? "ps");
-  }, []);
+    if(open){
+      return () => {
+        setPumpData([]);
+      }
+    }
+  }, [open]);
 
   return (
     <>
@@ -322,8 +327,8 @@ const PumpingStationMapCard: FunctionComponent<PumpingStationMapCardProps> = ({ 
               <div className="w-100">
                 <div className="space-y-4 ">
                   {Object.values(realTime ? pumpData : latestData).map((ps: PumpData, index: number) => (
-                    <div className="h-1/2 w-1/2 px-4">
-                      <div key={ps.name} className="rounded-lg border bg-white p-2 shadow-sm">
+                    <div key={ps.name + index} className="h-1/2 w-1/2 px-4">
+                      <div className="rounded-lg border bg-white p-2 shadow-sm">
                         {" "}
                         <h2 className="text-lg font-semibold text-blue-700">
                           {ps.name.replace(/ps/i, "Pumping Station ").toUpperCase()}

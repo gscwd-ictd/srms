@@ -54,6 +54,31 @@ export const generatePumpDataForStation = (stationName: string, start: Date, end
   });
 };
 
+// Generate ReservoirData
+export const generateReservoirData = (reservoirName: string, start: Date, end: Date): ReservoirWSData[] => {
+  const timestamps = generateTimestamps(start, end);
+
+  // Start with base readings
+  let waterlevel = randomInRange(30, 80);
+  let flowmeter = randomInRange(2, 8);
+  let volume = randomInRange(500, 2000);
+
+  return timestamps.map((ts) => {
+    // Gradually change values over time
+    waterlevel = fluctuate(waterlevel, 20, 100, 2);
+    flowmeter = fluctuate(flowmeter, 1, 10, 0.2);
+    volume = fluctuate(flowmeter, 1, 10, 0.2);
+
+    return {
+      name: reservoirName,
+      waterlevel,
+      flowmeter,
+      volume,
+      timestamp: ts,
+    };
+  });
+};
+
 // Define your date range (GMT+8 for PH)
 const startDate = new Date("2025-10-01T00:00:00+08:00");
 const endDate = new Date("2025-11-13T23:00:00+08:00");
@@ -66,6 +91,14 @@ export const mockPumpData: PumpData[] = [
   ...generatePumpDataForStation("ps4", startDate, endDate),
   ...generatePumpDataForStation("ps5", startDate, endDate),
 ];
+
+export interface ReservoirWSData {
+  name: string;
+  waterlevel: number;
+  flowmeter: number;
+  volume: number;
+  timestamp: string;
+}
 
 export interface PumpData {
   name: string;
