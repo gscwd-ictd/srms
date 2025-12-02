@@ -6,6 +6,7 @@ import { useGeographic } from "ol/proj";
 import View from "ol/View";
 import { BaseMapLayerGroup } from "./BaseMapLayerGroup";
 import { useAdminMonitMap } from "./contexts/useAdminMonitMapContext";
+import { useMapStore } from "@srms/components/stores/useMapStore";
 // import { useSidebar } from "@srms/components/ui/Sidebar";
 
 export const AdminMonitMap: FunctionComponent<PropsWithChildren> = ({ children }) => {
@@ -23,6 +24,8 @@ export const AdminMonitMap: FunctionComponent<PropsWithChildren> = ({ children }
 
   const mapRef = useRef<HTMLDivElement>(null);
 
+  const { viewport } = useMapStore();
+
   useEffect(() => {
     // // By default in this page, sidebar is closed
     // setOpen(false);
@@ -33,14 +36,19 @@ export const AdminMonitMap: FunctionComponent<PropsWithChildren> = ({ children }
       layers: [BaseMapLayerGroup],
       target: mapRef.current,
       view: new View({
-        projection: "EPSG:4326",
-        center: [125.17189194375173, 6.113035811082611],
-        zoom: 16,
-        maxZoom: 25,
-        minZoom: 12,
-        showFullExtent: true,
+        projection: viewport.projection,
+        center: viewport.center,
+        zoom: viewport.zoom,
+        extent: viewport.extent,
+        maxZoom: viewport.maxZoom,
+        minZoom: viewport.minZoom,
       }),
     });
+
+    // adminMonitMap.mapManager.getMap().on("click", (e) => {
+    //   const coord = e.coordinate;
+    //   console.log(coord);
+    // });
 
     return () => {
       adminMonitMap.mapManager.destroy();
