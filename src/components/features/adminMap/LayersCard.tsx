@@ -78,9 +78,9 @@ export const LayersCard: FunctionComponent = () => {
                   <XilogLoggerToggleList />
                 </AccordionItem>
 
-                <AccordionItem value="item-4">
+                {/* <AccordionItem value="item-4">
                   <MultilogLoggerToggleList />
-                </AccordionItem>
+                </AccordionItem> */}
 
                 <AccordionItem value="item-5">
                   <PipelineRenderToggleList />

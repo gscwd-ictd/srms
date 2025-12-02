@@ -294,3 +294,38 @@
 .nav-title-outro-animated {
   animation: navTitleOutro 0.2s ease-out forwards;
 }
+
+/* framer motion for tilemap nav */
+@keyframes tileMapIntro {
+  from {
+    height: 72px;
+    width: 72px;
+    margin-top: 0px;
+    margin-right: 0px;
+  }
+  to {
+    margin-top: 0px;
+    margin-left: 0px;
+  }
+}
+
+@keyframes tileMapOutro {
+  from {
+    margin-top: 0px;
+    margin-right: 0px;
+  }
+  to {
+    height: 72px;
+    width: 72px;
+    margin-top: 0px;
+    margin-left: 0px;
+  }
+}
+
+.tilemap-intro-animated {
+  animation: navIntro 0.2s ease-out forwards;
+}
+
+.tilemap-outro-animated {
+  animation: navOutro 0.2s ease-out forwards;
+}

@@ -55,19 +55,11 @@ const BaseLayerPicker: FunctionComponent = ({}) => {
       <div
         className={cn(
           "absolute top-[0px] right-[0px] z-20 flex items-center justify-end gap-4 shadow-sm backdrop-blur",
-          layerToggleCardOpen ? "bg-primary-color/70 h-18 w-auto pr-4" : "bg-primary-color/0 h-18 w-18",
+          layerToggleCardOpen ? "bg-primary-color/70 h-18 w-auto pr-0 pl-4" : "bg-primary-color/0 h-18 w-18",
         )}
       >
         {/* <p className="text-md pb-2 font-bold text-black">Base Layers</p> */}
-        <Button
-          className={cn(
-            "bg-primary-color/70 hover:bg-primary-color/40 z-50 h-18 w-18 rounded-none transition-all transition-discrete duration-100",
-            layerToggleCardOpen ? "shadow-none" : "intro-animation",
-          )}
-          onClick={() => toggleModal()}
-        >
-          <Map className="size-8 text-white" />
-        </Button>
+
         {/* <Layers className="size-8 text-white" /> */}
         {layerToggleCardOpen ? (
           <>
@@ -131,6 +123,15 @@ const BaseLayerPicker: FunctionComponent = ({}) => {
         ) : (
           ""
         )}
+        <Button
+          className={cn(
+            "bg-primary-color/70 hover:bg-primary-color/40 z-50 h-18 w-18 rounded-none transition-all transition-discrete duration-100",
+            layerToggleCardOpen ? "shadow-none" : "intro-animation",
+          )}
+          onClick={() => toggleModal()}
+        >
+          <Map className="size-8 text-white" />
+        </Button>
       </div>
     </>
   );
