@@ -169,7 +169,7 @@ const MultilogLoggerToggleList: FunctionComponent = ({}) => {
       </div>
 
       <AccordionContent className="flex flex-col gap-4 text-balance">
-        <ul className="mx-12 text-stone-900">
+        <ul className="mx-12 text-white">
           <li>
             <div className="flex h-6">
               <div className="mt-0.5 mr-2 h-4 w-4 rounded-3xl bg-blue-500"></div>

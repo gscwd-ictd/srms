@@ -244,16 +244,60 @@ const PumpingStationMapCard: FunctionComponent<PumpingStationMapCardProps> = ({ 
                     ) : (
                       <>
                         {Object.values(realTime ? data : latestData).map((ps: PumpData, index: number) => (
-                          <div key={index} className="h-1/2 w-1/2 px-4">
-                            <div className="mt-2 space-y-1 text-sm text-gray-700">
-                              {" "}
-                              <p>💧 Water Level: {ps.waterlevel.toFixed(2)}</p>{" "}
-                              <p>⚙️ Pressure: {ps.pressure.toFixed(2)}</p>{" "}
-                              <p>🌊 Flowmeter: {ps.flowmeter.toFixed(2)}</p>{" "}
-                              <p>🔬 Turbidity: {ps.turbidity.toFixed(2)}</p>{" "}
-                              <p>💨 Humidity: {ps.humidity.toFixed(2)}</p>{" "}
-                              <p>☣️ Chlorine: {ps.chlorine.toFixed(2)}</p>{" "}
-                            </div>{" "}
+                          <div
+                            key={index}
+                            className="flex h-full w-full flex-wrap items-center justify-center gap-4 text-sm text-gray-700"
+                          >
+                            <div className="flex h-24 w-[30%] flex-col justify-center rounded-md border-1 border-stone-200 p-3 text-sm shadow-md">
+                              <Label className="w-full pb-2 text-center">💧 Water Level</Label>
+                              <hr />
+
+                              <div className="pt-1 text-center">
+                                <p>{ps.waterlevel.toFixed(2)}</p>{" "}
+                              </div>
+                            </div>
+                            <div className="flex h-24 w-[30%] flex-col justify-center rounded-md border-1 border-stone-200 p-3 text-sm shadow-md">
+                              <Label className="w-full pb-2 text-center">⚙️ Pressure</Label>
+                              <hr />
+
+                              <div className="pt-1 text-center">
+                                <p>{ps.pressure.toFixed(2)}</p>{" "}
+                              </div>
+                            </div>
+
+                            <div className="flex h-24 w-[30%] flex-col justify-center rounded-md border-1 border-stone-200 p-3 text-sm shadow-md">
+                              <Label className="w-full pb-2 text-center">🌊 Flowmeter</Label>
+                              <hr />
+
+                              <div className="pt-1 text-center">
+                                <p>{ps.flowmeter.toFixed(2)}</p>{" "}
+                              </div>
+                            </div>
+                            <div className="flex h-24 w-[30%] flex-col justify-center rounded-md border-1 border-stone-200 p-3 text-sm shadow-md">
+                              <Label className="w-full pb-2 text-center">🔬 Turbidity</Label>
+                              <hr />
+
+                              <div className="pt-1 text-center">
+                                <p>{ps.turbidity.toFixed(2)}</p>{" "}
+                              </div>
+                            </div>
+
+                            <div className="flex h-24 w-[30%] flex-col justify-center rounded-md border-1 border-stone-200 p-3 text-sm shadow-md">
+                              <Label className="w-full pb-2 text-center">💨 Humidity</Label>
+                              <hr />
+
+                              <div className="pt-1 text-center">
+                                <p>{ps.humidity.toFixed(2)}</p>{" "}
+                              </div>
+                            </div>
+                            <div className="flex h-24 w-[30%] flex-col justify-center rounded-md border-1 border-stone-200 p-3 text-sm shadow-md">
+                              <Label className="w-full pb-2 text-center">☣️ Chlorine</Label>
+                              <hr />
+
+                              <div className="pt-1 text-center">
+                                <p>{ps.chlorine.toFixed(2)}</p>{" "}
+                              </div>
+                            </div>
                           </div>
                         ))}
                       </>

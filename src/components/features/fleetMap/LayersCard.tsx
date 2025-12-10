@@ -4,7 +4,7 @@ import { Accordion, AccordionItem } from "@srms/components/ui/Accordion";
 import { Button } from "@srms/components/ui/Button";
 import { ScrollArea } from "@srms/components/ui/ScrollArea";
 import { Layers, X } from "lucide-react";
-import React, { FunctionComponent } from "react";
+import React, { FunctionComponent, useState } from "react";
 import VehicleRenderToggleList from "./VehicleRenderToggleList";
 import PipelineRenderToggleList from "./PipelineRenderToggleList";
 import WaterMeterRenderToggleList from "./WaterMeterRenderToggleList";
@@ -31,10 +31,12 @@ export const LayersCard: FunctionComponent<LayersCardProps> = ({ accessToken }) 
     waterMeterDetailsCardOpen,
   } = useCardStore();
 
+  const [initialNavAnimation, setInitialNavAnimation] = useState<boolean>(true);
+
   // Open modal for layers card
   const toggleModal = () => {
     setLayerToggleCardOpen(!layerToggleCardOpen);
-
+    setInitialNavAnimation(false);
     if (waterMeterTableCardOpen) {
       setWaterMeterTableCardOpen(!waterMeterTableCardOpen);
     }
@@ -48,8 +50,8 @@ export const LayersCard: FunctionComponent<LayersCardProps> = ({ accessToken }) 
     <React.Fragment>
       <Button
         className={cn(
-          "absolute z-50 h-18 w-18 rounded-none bg-gradient-to-r from-indigo-500/70 to-blue-500/70 backdrop-blur transition-all transition-discrete duration-100 hover:bg-cyan-500",
-          layerToggleCardOpen ? "hidden opacity-0" : "intro-animation",
+          "hover:bg-gradient-to-tr/50 absolute z-50 h-18 w-18 rounded-none rounded-br-lg bg-gradient-to-tr from-blue-600/90 via-blue-400/90 to-sky-300/90 transition-all transition-discrete duration-100 hover:from-blue-600/50 hover:via-blue-400/50 hover:to-sky-300/50",
+          layerToggleCardOpen ? "hidden opacity-0" : "intro-animation backdrop-blur",
         )}
         onClick={() => toggleModal()}
       >
@@ -65,10 +67,12 @@ export const LayersCard: FunctionComponent<LayersCardProps> = ({ accessToken }) 
       >
         <Card
           className={cn(
-            "vehicle-layers absolute z-20 h-[calc(100vh-80px)] w-[230px] overflow-x-hidden overflow-y-hidden rounded-lg border-none bg-gradient-to-r from-indigo-500/70 to-blue-500/80 transition-all transition-discrete duration-100",
+            "vehicle-layers absolute z-20 h-[calc(100vh-80px)] w-[230px] overflow-x-hidden overflow-y-hidden rounded-lg border-none bg-gradient-to-tr from-blue-600/80 via-blue-400/80 to-sky-300/80 transition-all duration-100",
             layerToggleCardOpen
               ? "nav-intro-animated block backdrop-blur peer-checked:opacity-100"
-              : "nav-outro-animated peer-checked:opacity-0",
+              : initialNavAnimation
+                ? "opacity-0"
+                : "nav-outro-animated peer-checked:opacity-0",
           )}
         >
           <div className="absolute -right-14 -mt-44 h-70 w-70 rounded-full bg-blue-500/20"></div>
@@ -89,11 +93,9 @@ export const LayersCard: FunctionComponent<LayersCardProps> = ({ accessToken }) 
                 <AccordionItem value="item-1">
                   <VehicleRenderToggleList accessToken={accessToken} />
                 </AccordionItem>
-
                 <AccordionItem value="item-2">
                   <PipelineRenderToggleList />
                 </AccordionItem>
-
                 <AccordionItem value="item-3">
                   <WaterMeterRenderToggleList />
                 </AccordionItem>
@@ -101,11 +103,9 @@ export const LayersCard: FunctionComponent<LayersCardProps> = ({ accessToken }) 
                 <AccordionItem value="item-4">
                   <ValveRenderToggleList />
                 </AccordionItem>
-
                 <AccordionItem value="item-5">
                   <WebSocketTest />
                 </AccordionItem>
-
                 <AccordionItem value="item-6">
                   <WebSocketMockTest />
                 </AccordionItem>
@@ -115,7 +115,13 @@ export const LayersCard: FunctionComponent<LayersCardProps> = ({ accessToken }) 
         </Card>
 
         <div
-          className={`absolute z-50 mt-2 ml-2 w-[230px] rounded-lg bg-red-500/30 bg-gradient-to-r from-indigo-500/80 to-blue-500/80 p-1 text-center leading-none text-white backdrop-blur ${layerToggleCardOpen ? "nav-title-intro-animated block" : "nav-title-outro-animated"}`}
+          className={`absolute z-50 mt-2 ml-2 w-[230px] rounded-lg bg-gradient-to-tr from-blue-500/90 via-blue-400/90 to-sky-500/90 p-1 text-center leading-none text-white backdrop-blur ${
+            layerToggleCardOpen
+              ? "nav-title-intro-animated block"
+              : initialNavAnimation
+                ? "hidden"
+                : "nav-title-outro-animated"
+          }`}
         >
           OPERATIONS MONITORING & MANAGEMENT SYSTEM
         </div>

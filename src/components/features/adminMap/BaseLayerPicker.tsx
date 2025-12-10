@@ -11,6 +11,7 @@ import { Button } from "@srms/components/ui/Button";
 import { cn } from "@srms/utils/shadcn";
 import { Map } from "lucide-react";
 import Image from "next/image";
+import { motion } from "framer-motion";
 /* 
     Component for switching between Base Layers
 */
@@ -40,62 +41,50 @@ const BaseLayerPicker: FunctionComponent = ({}) => {
   }, [adminMonitMap.mapManager, baseMap]);
 
   const [layerToggleCardOpen, setLayerToggleCardOpen] = useState<boolean>(false);
-  // const [intialNavAnimation, setIntialNavAnimation] = useState<boolean>(true);
+  const [initialNavAnimation, setInitialNavAnimation] = useState<boolean>(true);
 
   // Open modal for layers card
   const toggleModal = () => {
     setLayerToggleCardOpen(!layerToggleCardOpen);
-    // setIntialNavAnimation(false);
+    setInitialNavAnimation(false);
   };
 
   return (
-    <>
-      {/* <div className={`${  }''}`> */}
-
-      <div
+    <div
+      className={cn(
+        "absolute right-[0px] z-20 flex items-center justify-end backdrop-blur",
+        layerToggleCardOpen ? "" : "",
+      )}
+    >
+      <motion.div
+        transition={{ duration: 0.8, ease: "easeOut" }} // Animation properties
         className={cn(
-          "absolute top-[0px] right-[0px] z-20 flex items-center justify-end gap-4 shadow-sm backdrop-blur",
-          layerToggleCardOpen ? "bg-primary-color/70 h-18 w-auto pr-0 pl-4" : "bg-primary-color/0 h-18 w-18",
-        )}
+          "flex h-18 w-full items-center justify-evenly rounded-bl-lg bg-gradient-to-t from-blue-600/60 via-blue-500/60 to-sky-400/60",
+          layerToggleCardOpen
+            ? "tilemap-intro-animated"
+            : initialNavAnimation
+              ? "w-0"
+              : "tilemap-outro-animated",
+        )} // Add your CSS classes for styling
       >
-        {/* <p className="text-md pb-2 font-bold text-black">Base Layers</p> */}
-
-        {/* <Layers className="size-8 text-white" /> */}
         {layerToggleCardOpen ? (
           <>
             {BaseMapLayerGroup.getLayers()
               .getArray()
-              .map((baseMapLayer) => (
-                // <label
-                //   htmlFor="field-osm"
-                //   className="item-center mr-2 flex text-sm font-bold text-white"
-                //   key={index}
-                // >
-                //   <input
-                //     name="baseMap"
-                //     type="radio"
-                //     value={baseMapLayer.getClassName()}
-                //     className="mr-1"
-                //     onChange={() => setBaseMap(baseMapLayer.getClassName())}
-                //     defaultChecked={baseMapLayer.getClassName() === BaseLayerOptions.POSITRON} // set default selected base layer
-                //   />
-                //   {baseMapLayer.getProperties()["title"]}
-                // </label>
-
+              .map((baseMapLayer, index) => (
                 <label key={baseMapLayer.getClassName()} className="cursor-pointer" htmlFor="field-osm">
-                  {/* <input
-                    type="radio"
-                    id={baseMapLayer.getClassName()}
-                    name="baseMap"
-                    value={baseMapLayer.getClassName()}
-                    className="peer hidden"
-                    onChange={() => setBaseMap(baseMapLayer.getClassName())}
-                    defaultChecked={baseMapLayer.getClassName() === BaseLayerOptions.POSITRON} // set default selected base layer
-                  /> */}
-
                   {/* Square with image */}
                   <div
-                    className="h-10 w-10 overflow-hidden rounded-xl shadow-xs transition peer-checked:border-blue-500 hover:shadow-lg"
+                    className={cn(
+                      layerToggleCardOpen ? "basemap-intro-animated" : "basemap-outro-animated",
+                      "overflow-hidden rounded-lg shadow-xs transition transition-all peer-checked:border-blue-500 hover:shadow-lg",
+                      !baseMap && index == 0
+                        ? "h-11 w-11 shadow-lg"
+                        : baseMap === baseMapLayer.getClassName()
+                          ? "h-11 w-11 shadow-lg" // selected (bigger)
+                          : "h-10 w-10 shadow-xs hover:h-11 hover:w-11", // normal
+                      "overflow-hidden rounded-lg transition-all peer-checked:border-blue-500",
+                    )}
                     onClick={() => setBaseMap(baseMapLayer.getClassName())}
                   >
                     <Image
@@ -111,8 +100,8 @@ const BaseLayerPicker: FunctionComponent = ({}) => {
                                 : "/images/positron.jpg"
                       }
                       alt="preview"
-                      height={150}
-                      width={150}
+                      height={100}
+                      width={100}
                       priority
                       className="w-full object-cover select-none"
                     />
@@ -121,19 +110,21 @@ const BaseLayerPicker: FunctionComponent = ({}) => {
               ))}
           </>
         ) : (
-          ""
+          <></>
         )}
-        <Button
-          className={cn(
-            "bg-primary-color/70 hover:bg-primary-color/40 z-50 h-18 w-18 rounded-none transition-all transition-discrete duration-100",
-            layerToggleCardOpen ? "shadow-none" : "intro-animation",
-          )}
-          onClick={() => toggleModal()}
-        >
-          <Map className="size-8 text-white" />
-        </Button>
-      </div>
-    </>
+      </motion.div>
+      <Button
+        className={cn(
+          "z-50 h-18 w-[72px] rounded-none transition-all transition-discrete duration-100 hover:bg-gradient-to-tr hover:from-blue-600/50 hover:via-blue-400/50 hover:to-sky-300/50",
+          layerToggleCardOpen
+            ? "bg-gradient-to-t from-blue-600/60 via-blue-500/60 to-sky-400/60 shadow-none"
+            : "rounded-bl-lg bg-gradient-to-tr from-blue-600/90 via-blue-400/90 to-sky-300/90",
+        )}
+        onClick={() => toggleModal()}
+      >
+        <Map className="size-8 text-white" />
+      </Button>
+    </div>
   );
 };
 

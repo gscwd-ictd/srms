@@ -153,7 +153,7 @@ export const ValveRenderToggleList: FunctionComponent = () => {
         </AccordionTrigger>
       </div>
       <AccordionContent className="flex flex-col gap-4 text-balance">
-        <ul className="pl-3 text-white">
+        <ul className="mx-12 text-white">
           <li>
             <div className="flex h-6">
               <div className="mr-3 h-5 w-2 rotate-90 transform bg-blue-600"></div>

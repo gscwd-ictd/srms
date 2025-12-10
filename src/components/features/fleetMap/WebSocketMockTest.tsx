@@ -1,8 +1,7 @@
 import { AccordionTrigger } from "@radix-ui/react-accordion";
 import { Accordion, AccordionContent, AccordionItem } from "@srms/components/ui/Accordion";
 import { Button } from "@srms/components/ui/Button";
-import { Input } from "@srms/components/ui/Input";
-import React, { use, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FunctionComponent } from "react";
 import PumpingStationCard from "./PumpingStationCard";
 import { mockPumpData, PumpData } from "@srms/lib/pumpstation/pumpStationType";
@@ -30,10 +29,13 @@ const WebSocketMockTest: FunctionComponent<WebSocketMockTestProps> = () => {
             .filter((d) => d.name === station)
             .sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
           return stationData[0] ?? mockPumpData[0]; // The latest one
-        }).filter((d): d is PumpData => d !== undefined); // ✅ removes undefined safely
+        })
+        .filter((d): d is PumpData => d !== undefined); // ✅ removes undefined safely
 
       setLatestData(latestPerStation);
-      console.log(`✅ Loaded mock pump data for WebSocketMockTest component. ${latestPerStation.length} stations loaded.`);
+      console.log(
+        `✅ Loaded mock pump data for WebSocketMockTest component. ${latestPerStation.length} stations loaded.`,
+      );
     };
     loadData();
   }, []);
@@ -41,13 +43,13 @@ const WebSocketMockTest: FunctionComponent<WebSocketMockTestProps> = () => {
     <>
       <div className="flex cursor-pointer items-center space-x-2 p-2">
         <AccordionTrigger className="items-center">
-          <p className="text-md font-bold text-black">Mock Water Station Data</p>
+          <p className="text-md font-bold text-white">Mock Water Station Data</p>
         </AccordionTrigger>
       </div>
       <Accordion className="accordion" type="multiple">
         <AccordionContent className="flex flex-col gap-4 p-4 text-balance">
           {Object.keys(latestData).length === 0 ? (
-            <p className="mt-4 text-gray-500 italic">Waiting for JSON data...</p>
+            <p className="mt-4 text-white italic">Waiting for JSON data...</p>
           ) : (
             <div className="overflow-y-auto rounded-xl border bg-white p-4 shadow-md">
               <h2 className="mb-4 flex items-center text-lg font-bold text-black">PUMPING STATIONS</h2>

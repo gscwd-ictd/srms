@@ -34,7 +34,7 @@ const WaterMeterDetailsCard: FunctionComponent<WaterMeterDetailsCardProps> = ({ 
   return (
     <Sheet open={open} onOpenChange={onOpenChange} modal={false}>
       <SheetContent
-        className="m-1.5 h-[98vh] w-[400px] gap-0 rounded-lg border-0 bg-gradient-to-r from-indigo-500/70 to-blue-500/70 text-white backdrop-blur"
+        className="m-1.5 h-[98vh] w-[400px] gap-0 rounded-lg border-0 bg-gradient-to-tr from-blue-600/80 via-blue-400/80 to-sky-300/80 text-white backdrop-blur"
         onInteractOutside={(e) => e.preventDefault()}
         side="right"
       >

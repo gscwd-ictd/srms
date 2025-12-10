@@ -89,12 +89,12 @@ const ValveDetailsCard: FunctionComponent<ValveDetailsCardDrops> = ({ open, onOp
   return (
     <Sheet key="right" open={open} onOpenChange={onOpenChange} modal={false}>
       <SheetContent
-        className="m-1.5 h-[98.5vh] w-[400px] gap-0 rounded-lg border-none bg-gradient-to-r from-indigo-500/70 to-blue-500 to-blue-500/70 text-white backdrop-blur"
+        className="m-1.5 h-[98.5vh] w-[400px] gap-0 rounded-lg border-none bg-gradient-to-tr from-blue-500/90 via-blue-400/90 to-sky-500/90 text-white backdrop-blur"
         onInteractOutside={(e) => e.preventDefault()}
       >
         <SheetHeader className="m-6 mb-2 p-0">
-          <SheetTitle className="text-black">{}</SheetTitle>
-          <SheetDescription className="text-stone-600">{}</SheetDescription>
+          <SheetTitle className="text-white">{}</SheetTitle>
+          <SheetDescription className="text-white">{}</SheetDescription>
         </SheetHeader>
 
         <ScrollArea className="h-[90vh]">

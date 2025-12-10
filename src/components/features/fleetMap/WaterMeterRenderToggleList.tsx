@@ -156,7 +156,7 @@ const WaterMeterRenderToggleList: FunctionComponent = ({}) => {
       </div>
 
       <AccordionContent className="flex flex-col gap-4 text-balance">
-        <ul className="pl-3 text-white">
+        <ul className="mx-11 text-white">
           <li>
             <div className="flex h-6">
               <div className="mt-0.5 mr-2 h-4 w-4 rounded-3xl bg-[#1458FC]"></div>

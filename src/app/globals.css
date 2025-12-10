@@ -156,6 +156,7 @@
   /*
   ---break---
 */
+
   @keyframes accordion-down {
     from {
       height: 0;
@@ -286,7 +287,6 @@
     transform: translateY(-50px);
   }
 }
-
 .nav-title-intro-animated {
   animation: navTitleIntro 0.2s ease-out forwards;
 }
@@ -298,34 +298,53 @@
 /* framer motion for tilemap nav */
 @keyframes tileMapIntro {
   from {
-    height: 72px;
-    width: 72px;
-    margin-top: 0px;
-    margin-right: 0px;
+    width: 0px;
   }
   to {
-    margin-top: 0px;
-    margin-left: 0px;
+    width: 300px;
   }
 }
 
 @keyframes tileMapOutro {
   from {
-    margin-top: 0px;
-    margin-right: 0px;
+    width: 300px;
   }
   to {
-    height: 72px;
-    width: 72px;
-    margin-top: 0px;
-    margin-left: 0px;
+    width: 0px;
   }
 }
 
 .tilemap-intro-animated {
-  animation: navIntro 0.2s ease-out forwards;
+  animation: tileMapIntro 0.2s ease-out forwards;
 }
 
 .tilemap-outro-animated {
-  animation: navOutro 0.2s ease-out forwards;
+  animation: tileMapOutro 0.2s ease-out forwards;
+}
+
+/* framer motion for baseMapLayer nav */
+@keyframes baseMapLayerIntro {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes baseMapLayerOutro {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+.basemap-intro-animated {
+  animation: baseMapLayerIntro 0.2s ease-out forwards;
+}
+
+.basemap-outro-animated {
+  animation: baseMapLayerOutro 0.2s ease-out forwards;
 }

@@ -1,4 +1,4 @@
-import { FunctionComponent, useState, useRef, useEffect} from "react";
+import { FunctionComponent, useState, useRef, useEffect } from "react";
 import { Button } from "@srms/components/ui/Button";
 import { Input } from "@srms/components/ui/Input";
 import React from "react";
@@ -7,6 +7,7 @@ import PumpingStationCard from "./PumpingStationCard";
 import { useCardStore } from "@srms/components/stores/useCardStore";
 import { PumpData } from "@srms/lib/pumpstation/pumpStationType";
 import { usePumpingStationStore } from "@srms/components/stores/usePumpingStationStore";
+import { HardDrive } from "lucide-react";
 
 interface WebSocketTestProps {}
 
@@ -89,8 +90,11 @@ const WebSocketTest: FunctionComponent<WebSocketTestProps> = () => {
   return (
     <>
       <div className="flex cursor-pointer items-center space-x-2 p-2">
+        <label>
+          <HardDrive className="mr-2 block w-5 cursor-pointer text-white peer-checked:hidden" />
+        </label>
         <AccordionTrigger className="items-center">
-          <p className="text-md font-bold text-black">Real-time Water Station Data</p>
+          <p className="text-md font-bold text-white">Real-time Water Station Data</p>
         </AccordionTrigger>
       </div>
       <Accordion className="accordion" type="multiple">
@@ -112,7 +116,7 @@ const WebSocketTest: FunctionComponent<WebSocketTestProps> = () => {
           </div>
 
           {Object.keys(data).length === 0 ? (
-            <p className="mt-4 text-gray-500 italic">Waiting for JSON data...</p>
+            <p className="mt-4 text-white italic">Waiting for JSON data...</p>
           ) : (
             <div className="overflow-y-auto rounded-xl border bg-white p-4 shadow-md">
               <h2 className="mb-4 flex items-center text-lg font-bold text-black">PUMPING STATIONS</h2>
