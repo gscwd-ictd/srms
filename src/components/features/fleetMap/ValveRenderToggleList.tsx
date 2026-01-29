@@ -129,28 +129,30 @@ export const ValveRenderToggleList: FunctionComponent = () => {
 
   return (
     <React.Fragment>
-      {isLoading ? (
-        <div className="spinner">
-          <Spinner size={"xl"} />
-        </div>
-      ) : null}
-      <div className="flex cursor-pointer items-center space-x-2 p-2">
-        <label>
-          <input
-            type="checkbox"
-            className="peer hidden"
-            onChange={(event) => {
-              setLayerVisibility(event.target.checked);
-            }}
-            defaultChecked={false}
-          />
+      <div className="flex">
+        <div className="flex cursor-pointer items-center space-x-2 p-2">
+          <label>
+            <input
+              type="checkbox"
+              className="peer hidden"
+              onChange={(event) => {
+                setLayerVisibility(event.target.checked);
+              }}
+              defaultChecked={false}
+            />
 
-          <Hexagon className="mr-2 block w-5 cursor-pointer text-white opacity-30 peer-checked:hidden" />
-          <Hexagon className="mr-2 hidden w-5 cursor-pointer text-white peer-checked:block" />
-        </label>
-        <AccordionTrigger className="w-40 items-center">
-          <p className="text-md font-bold text-white">Valves</p>
-        </AccordionTrigger>
+            <Hexagon className="mr-2 block w-5 cursor-pointer text-white opacity-30 peer-checked:hidden" />
+            <Hexagon className="mr-2 hidden w-5 cursor-pointer text-white peer-checked:block" />
+          </label>
+          <AccordionTrigger className={`${isLoading ? "w-30" : "w-40"} items-center`}>
+            <p className="text-md mr-2 font-bold text-white">Valves</p>
+          </AccordionTrigger>
+        </div>
+        {isLoading ? (
+          <div className="spinner">
+            <Spinner size={"sm"} className="mt-2" />
+          </div>
+        ) : null}
       </div>
       <AccordionContent className="flex flex-col gap-4 text-balance">
         <ul className="mx-12 text-white">

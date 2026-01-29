@@ -17,6 +17,8 @@ import React from "react";
 import { FunctionComponent, useEffect, useRef, useState } from "react";
 import { DateRange } from "react-day-picker";
 import { Legend, Line, LineChart, Tooltip, XAxis, YAxis } from "recharts";
+import { usePositionStore } from "@srms/components/stores/usePositionStore";
+import StreetView from "../streetView/StreetView";
 
 // import { Bar, BarChart } from "recharts";
 
@@ -63,6 +65,18 @@ const PumpingStationMapCard: FunctionComponent<PumpingStationMapCardProps> = ({ 
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
   const [wsUrl, setWsUrl] = useState("ws://172.20.110.84:7575");
   const [isConnected, setIsConnected] = useState(false);
+
+  const [isStreetView, setIsStreetView] = useState(false);
+  const selectedLat = usePositionStore((state) => state.lat);
+  const selectedLng = usePositionStore((state) => state.lng);
+
+  const handleStreetView = () => {
+    if (isStreetView) {
+      setIsStreetView(false);
+    } else {
+      setIsStreetView(true);
+    }
+  };
 
   const handleConnect = () => {
     if (isConnected) {
@@ -193,6 +207,16 @@ const PumpingStationMapCard: FunctionComponent<PumpingStationMapCardProps> = ({ 
 
                   <Label htmlFor="data-mode">{!realTime ? "Mock Data Mode" : "Real-time Data Mode"}</Label>
                 </div>
+                <div className="flex items-center space-x-2 px-4">
+                  <Switch
+                    id="data-mode"
+                    checked={isStreetView}
+                    onCheckedChange={handleStreetView}
+                    className="data-[state=checked]:bg-lime-400 data-[state=unchecked]:bg-slate-300"
+                  />
+
+                  <Label htmlFor="data-mode">{!isStreetView ? "Street View" : "Street View"}</Label>
+                </div>
               </div>
             </SheetTitle>
             <SheetDescription className="flex flex-row gap-4 text-stone-600">
@@ -232,165 +256,177 @@ const PumpingStationMapCard: FunctionComponent<PumpingStationMapCardProps> = ({ 
               </Popover>
             </SheetDescription>
           </SheetHeader>
-          {realTime ? (
-            <></>
-          ) : (
-            <>
-              <div className="mx-5 flex gap-5">
-                <div className="grid w-[30%] grid-rows-2 gap-4">
-                  <div className="h-[250px] rounded-md border-1 border-stone-200 p-3 shadow-md">
-                    {Object.keys(realTime ? data : latestData).length === 0 ? (
-                      <p className="mt-4 text-gray-500 italic">Waiting for JSON data...</p>
-                    ) : (
-                      <>
-                        {Object.values(realTime ? data : latestData).map((ps: PumpData, index: number) => (
-                          <div
-                            key={index}
-                            className="flex h-full w-full flex-wrap items-center justify-center gap-4 text-sm text-gray-700"
-                          >
-                            <div className="flex h-24 w-[30%] flex-col justify-center rounded-md border-1 border-stone-200 p-3 text-sm shadow-md">
-                              <Label className="w-full pb-2 text-center">💧 Water Level</Label>
-                              <hr />
 
-                              <div className="pt-1 text-center">
-                                <p>{ps.waterlevel.toFixed(2)}</p>{" "}
-                              </div>
-                            </div>
-                            <div className="flex h-24 w-[30%] flex-col justify-center rounded-md border-1 border-stone-200 p-3 text-sm shadow-md">
-                              <Label className="w-full pb-2 text-center">⚙️ Pressure</Label>
-                              <hr />
+          <>
+            <div className="mx-5 flex gap-5">
+              <div className="grid w-[30%] grid-rows-2 gap-4">
+                <div className="h-[250px] rounded-md border-1 border-stone-200 p-3 shadow-md">
+                  {realTime ? (
+                    <></>
+                  ) : Object.keys(realTime ? data : latestData).length === 0 ? (
+                    <p className="mt-4 text-gray-500 italic">Waiting for JSON data...</p>
+                  ) : (
+                    <>
+                      {Object.values(realTime ? data : latestData).map((ps: PumpData, index: number) => (
+                        <div
+                          key={index}
+                          className="flex h-full w-full flex-wrap items-center justify-center gap-4 text-sm text-gray-700"
+                        >
+                          <div className="flex h-24 w-[30%] flex-col justify-center rounded-md border-1 border-stone-200 p-3 text-sm shadow-md">
+                            <Label className="w-full pb-2 text-center">💧 Water Level</Label>
+                            <hr />
 
-                              <div className="pt-1 text-center">
-                                <p>{ps.pressure.toFixed(2)}</p>{" "}
-                              </div>
-                            </div>
-
-                            <div className="flex h-24 w-[30%] flex-col justify-center rounded-md border-1 border-stone-200 p-3 text-sm shadow-md">
-                              <Label className="w-full pb-2 text-center">🌊 Flowmeter</Label>
-                              <hr />
-
-                              <div className="pt-1 text-center">
-                                <p>{ps.flowmeter.toFixed(2)}</p>{" "}
-                              </div>
-                            </div>
-                            <div className="flex h-24 w-[30%] flex-col justify-center rounded-md border-1 border-stone-200 p-3 text-sm shadow-md">
-                              <Label className="w-full pb-2 text-center">🔬 Turbidity</Label>
-                              <hr />
-
-                              <div className="pt-1 text-center">
-                                <p>{ps.turbidity.toFixed(2)}</p>{" "}
-                              </div>
-                            </div>
-
-                            <div className="flex h-24 w-[30%] flex-col justify-center rounded-md border-1 border-stone-200 p-3 text-sm shadow-md">
-                              <Label className="w-full pb-2 text-center">💨 Humidity</Label>
-                              <hr />
-
-                              <div className="pt-1 text-center">
-                                <p>{ps.humidity.toFixed(2)}</p>{" "}
-                              </div>
-                            </div>
-                            <div className="flex h-24 w-[30%] flex-col justify-center rounded-md border-1 border-stone-200 p-3 text-sm shadow-md">
-                              <Label className="w-full pb-2 text-center">☣️ Chlorine</Label>
-                              <hr />
-
-                              <div className="pt-1 text-center">
-                                <p>{ps.chlorine.toFixed(2)}</p>{" "}
-                              </div>
+                            <div className="pt-1 text-center">
+                              <p>{ps.waterlevel.toFixed(2)}</p>{" "}
                             </div>
                           </div>
-                        ))}
-                      </>
-                    )}
-                  </div>
-                </div>
+                          <div className="flex h-24 w-[30%] flex-col justify-center rounded-md border-1 border-stone-200 p-3 text-sm shadow-md">
+                            <Label className="w-full pb-2 text-center">⚙️ Pressure</Label>
+                            <hr />
 
-                <div className="h-[250px] w-[65%] bg-gray-200/60">
-                  <ChartContainer config={chartConfig} className="h-1/3 min-h-[250px] w-full px-4">
-                    <LineChart
-                      accessibilityLayer
-                      data={pumpData.filter((lps) => {
-                        if (lps.name.toLowerCase() === psName.toLowerCase()) {
-                          const ts = new Date(lps.timestamp);
+                            <div className="pt-1 text-center">
+                              <p>{ps.pressure.toFixed(2)}</p>{" "}
+                            </div>
+                          </div>
 
-                          const startDate = date?.from ? date.from : new Date(2025, 9, 1);
+                          <div className="flex h-24 w-[30%] flex-col justify-center rounded-md border-1 border-stone-200 p-3 text-sm shadow-md">
+                            <Label className="w-full pb-2 text-center">🌊 Flowmeter</Label>
+                            <hr />
 
-                          const endDate = date?.to
-                            ? addHours(date.to, 24)
-                            : addHours(new Date(2025, 10, 13), 24);
+                            <div className="pt-1 text-center">
+                              <p>{ps.flowmeter.toFixed(2)}</p>{" "}
+                            </div>
+                          </div>
+                          <div className="flex h-24 w-[30%] flex-col justify-center rounded-md border-1 border-stone-200 p-3 text-sm shadow-md">
+                            <Label className="w-full pb-2 text-center">🔬 Turbidity</Label>
+                            <hr />
 
-                          return isWithinInterval(ts, { start: startDate, end: endDate });
-                        }
-                      })}
-                    >
-                      <XAxis
-                        dataKey="timestamp"
-                        tickFormatter={(value) => {
-                          // Format ISO to HH:MM:SS or whatever format you like
-                          const date = new Date(value);
-                          return `${date.getMonth()}/${date.getDate()}`;
-                        }}
-                        tick={{ fill: "#555", fontSize: 12 }}
-                      />
-                      <YAxis display="Pressure" tickLine={false} tickMargin={20} axisLine={false} />
-                      <Tooltip
-                        content={({ active, payload, label }) => {
-                          if (active && payload && payload.length) {
-                            // sort descending by value
-                            const sorted = [...payload].sort(
-                              (a, b) => Number(b.value ?? 0) - Number(a.value ?? 0),
-                            );
-                            let formattedTime = "NAN";
-                            try {
-                              // format time for Philippine timezone
-                              formattedTime = new Intl.DateTimeFormat("en-PH", {
-                                hour: "2-digit",
-                                minute: "2-digit",
-                                second: "2-digit",
-                                timeZone: "Asia/Manila",
-                              }).format(new Date(label));
-                            } catch (e) {
-                              console.log(e);
-                            }
+                            <div className="pt-1 text-center">
+                              <p>{ps.turbidity.toFixed(2)}</p>{" "}
+                            </div>
+                          </div>
 
-                            return (
-                              <div
-                                className="rounded-md border bg-white p-2 text-sm shadow-md"
-                                style={{ lineHeight: "1.2em" }}
-                              >
-                                <p className="mb-1 font-semibold">{formattedTime}</p>
-                                {sorted.map((entry, index) => (
-                                  <p key={index} style={{ color: entry.color }}>
-                                    {entry.name} : {Number(entry.value).toFixed(2)}
-                                  </p>
-                                ))}
-                              </div>
-                            );
-                          }
-                          return null;
-                        }}
-                      />
+                          <div className="flex h-24 w-[30%] flex-col justify-center rounded-md border-1 border-stone-200 p-3 text-sm shadow-md">
+                            <Label className="w-full pb-2 text-center">💨 Humidity</Label>
+                            <hr />
 
-                      {/* 🟩 Add legend here */}
-                      <Legend verticalAlign="top" align="center" />
-                      <Line dataKey="waterlevel" stroke={chartConfig.waterLevel.color} dot={false} />
-                      <Line dataKey="pressure" stroke={chartConfig.pressure.color} dot={false} />
-                      <Line dataKey="flowmeter" stroke={chartConfig.flowMeter.color} dot={false} />
-                      <Line dataKey="turbidity" stroke={chartConfig.turbidity.color} dot={false} />
-                      <Line dataKey="humidity" stroke={chartConfig.humidity.color} dot={false} />
-                      <Line dataKey="chlorine" stroke={chartConfig.chlorine.color} dot={false} />
-                    </LineChart>
-                    {/* <BarChart accessibilityLayer data={chartData}>
-                  <Bar dataKey="desktop" fill="var(--color-desktop)" radius={4} />
-                  <Bar dataKey="mobile" fill="var(--color-mobile)" radius={4} />
-                </BarChart> */}
-                  </ChartContainer>
+                            <div className="pt-1 text-center">
+                              <p>{ps.humidity.toFixed(2)}</p>{" "}
+                            </div>
+                          </div>
+                          <div className="flex h-24 w-[30%] flex-col justify-center rounded-md border-1 border-stone-200 p-3 text-sm shadow-md">
+                            <Label className="w-full pb-2 text-center">☣️ Chlorine</Label>
+                            <hr />
+
+                            <div className="pt-1 text-center">
+                              <p>{ps.chlorine.toFixed(2)}</p>{" "}
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </>
+                  )}
                 </div>
               </div>
 
-              <div className="mb-4 flex px-30"></div>
-            </>
-          )}
+              <div className="h-[250px] w-[65%] bg-gray-200/60">
+                {isStreetView ? (
+                  <div className="flex h-full w-full items-center justify-center bg-stone-300 text-black">
+                    <StreetView lat={selectedLat} lng={selectedLng} />
+                  </div>
+                ) : (
+                  <>
+                    {realTime ? (
+                      <>{/* nothing to show yet */}</>
+                    ) : (
+                      <ChartContainer config={chartConfig} className="h-1/3 min-h-[250px] w-full px-4">
+                        <LineChart
+                          accessibilityLayer
+                          data={pumpData.filter((lps) => {
+                            if (lps.name.toLowerCase() === psName.toLowerCase()) {
+                              const ts = new Date(lps.timestamp);
+
+                              const startDate = date?.from ? date.from : new Date(2025, 9, 1);
+
+                              const endDate = date?.to
+                                ? addHours(date.to, 24)
+                                : addHours(new Date(2025, 10, 13), 24);
+
+                              return isWithinInterval(ts, { start: startDate, end: endDate });
+                            }
+                          })}
+                        >
+                          <XAxis
+                            dataKey="timestamp"
+                            tickFormatter={(value) => {
+                              // Format ISO to HH:MM:SS or whatever format you like
+                              const date = new Date(value);
+                              return `${date.getMonth() + 1}/${date.getDate()}`;
+                            }}
+                            tick={{ fill: "#555", fontSize: 12 }}
+                          />
+                          <YAxis display="Pressure" tickLine={false} tickMargin={20} axisLine={false} />
+                          <Tooltip
+                            content={({ active, payload, label }) => {
+                              if (active && payload && payload.length) {
+                                // sort descending by value
+                                const sorted = [...payload].sort(
+                                  (a, b) => Number(b.value ?? 0) - Number(a.value ?? 0),
+                                );
+                                let formattedTime = "NAN";
+                                try {
+                                  // format time for Philippine timezone
+                                  formattedTime = new Intl.DateTimeFormat("en-PH", {
+                                    hour: "2-digit",
+                                    minute: "2-digit",
+                                    second: "2-digit",
+                                    timeZone: "Asia/Manila",
+                                  }).format(new Date(label));
+                                } catch (e) {
+                                  console.log(e);
+                                }
+
+                                return (
+                                  <div
+                                    className="rounded-md border bg-white p-2 text-sm shadow-md"
+                                    style={{ lineHeight: "1.2em" }}
+                                  >
+                                    <p className="mb-1 font-semibold">{formattedTime}</p>
+                                    {sorted.map((entry, index) => (
+                                      <p key={index} style={{ color: entry.color }}>
+                                        {entry.name} : {Number(entry.value).toFixed(2)}
+                                      </p>
+                                    ))}
+                                  </div>
+                                );
+                              }
+                              return null;
+                            }}
+                          />
+
+                          {/* 🟩 Add legend here */}
+                          <Legend verticalAlign="top" align="center" />
+                          <Line dataKey="waterlevel" stroke={chartConfig.waterLevel.color} dot={false} />
+                          <Line dataKey="pressure" stroke={chartConfig.pressure.color} dot={false} />
+                          <Line dataKey="flowmeter" stroke={chartConfig.flowMeter.color} dot={false} />
+                          <Line dataKey="turbidity" stroke={chartConfig.turbidity.color} dot={false} />
+                          <Line dataKey="humidity" stroke={chartConfig.humidity.color} dot={false} />
+                          <Line dataKey="chlorine" stroke={chartConfig.chlorine.color} dot={false} />
+                        </LineChart>
+                        {/* <BarChart accessibilityLayer data={chartData}>
+                  <Bar dataKey="desktop" fill="var(--color-desktop)" radius={4} />
+                  <Bar dataKey="mobile" fill="var(--color-mobile)" radius={4} />
+                </BarChart> */}
+                      </ChartContainer>
+                    )}
+                  </>
+                )}
+              </div>
+            </div>
+
+            <div className="mb-4 flex px-30"></div>
+          </>
+
           <div className="flex flex-row">
             <div className="flex h-1/3 min-h-[200px] w-1/2 flex-col px-4"></div>
           </div>

@@ -17,6 +17,9 @@ import { format, isWithinInterval } from "date-fns";
 import { Legend, Line, LineChart, Tooltip, XAxis, YAxis } from "recharts";
 import { ChartConfig, ChartContainer } from "@srms/components/ui/Chart";
 import dayjs from "dayjs";
+import { Switch } from "@srms/components/ui/Switch";
+import StreetView from "../streetView/StreetView";
+import { usePositionStore } from "@srms/components/stores/usePositionStore";
 
 interface MultilogDetailsCardDrops {
   open: boolean;
@@ -38,12 +41,17 @@ const MultilogDetailsCard: FunctionComponent<MultilogDetailsCardDrops> = ({ open
   const [loadingLatestLog, setLoadingLatestLog] = useState<boolean>(false);
 
   const { latestMultilogPressureFlowLog, setLatestMultilogPressureFlowLog } = useLoggerStore();
-
+  const [isStreetView, setIsStreetView] = useState(false);
   const { setMultilogDetailsCardOpen } = useCardStore();
   const [date, setDate] = useState<DateRange | undefined>({
     from: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000),
     to: new Date(Date.now()),
   });
+
+  // const setLat = usePositionStore((state) => state.setLat);
+  // const setLng = usePositionStore((state) => state.setLng);
+  const selectedLat = usePositionStore((state) => state.lat);
+  const selectedLng = usePositionStore((state) => state.lng);
 
   const pressureChartLogs: TransformedPressure[] = [
     {
@@ -210,6 +218,14 @@ const MultilogDetailsCard: FunctionComponent<MultilogDetailsCardDrops> = ({ open
         latestFlowPressureLogMutation.mutate(featureData!.serialNumber);
       }, intervalSeconds);
 
+      // if (featureData?.latitude && featureData?.longitude) {
+      //   setLat(Number(featureData.latitude));
+      //   setLng(Number(featureData.longitude));
+      // } else {
+      //   setLat(0);
+      //   setLng(0);
+      // }
+
       return () => clearInterval(intervalId);
     }
   }, [open, featureData]);
@@ -252,6 +268,14 @@ const MultilogDetailsCard: FunctionComponent<MultilogDetailsCardDrops> = ({ open
   //   },
   // };
 
+  const handleStreetView = () => {
+    if (isStreetView) {
+      setIsStreetView(false);
+    } else {
+      setIsStreetView(true);
+    }
+  };
+
   return (
     <Sheet open={open} onOpenChange={setMultilogDetailsCardOpen} modal={false}>
       <SheetContent
@@ -260,7 +284,21 @@ const MultilogDetailsCard: FunctionComponent<MultilogDetailsCardDrops> = ({ open
         onInteractOutside={(e) => e.preventDefault()}
       >
         <SheetHeader className="m-5 p-0">
-          <SheetTitle className="text-black">{featureData?.serialNumber || "--"}</SheetTitle>
+          <SheetTitle className="text-black">
+            <div className="flex flex-row">
+              <div>{featureData?.serialNumber || "--"}</div>
+              <div className="flex items-center space-x-2 px-4">
+                <Switch
+                  id="data-mode"
+                  checked={isStreetView}
+                  onCheckedChange={handleStreetView}
+                  className="data-[state=checked]:bg-lime-400 data-[state=unchecked]:bg-slate-300"
+                />
+
+                <Label htmlFor="data-mode">{!isStreetView ? "Street View" : "Street View"}</Label>
+              </div>
+            </div>
+          </SheetTitle>
           <SheetDescription className="flex flex-row gap-4 text-stone-600">
             <label className="w-[30%]"> {featureData?.siteName || "--"} | Multilog Source</label>
 
@@ -341,76 +379,84 @@ const MultilogDetailsCard: FunctionComponent<MultilogDetailsCardDrops> = ({ open
           </div>
 
           <div className="h-[250px] w-[65%] bg-gray-200/60">
-            <ChartContainer config={chartConfig} className="h-1/3 min-h-[250px] w-full px-4">
-              <LineChart
-                accessibilityLayer
-                data={pressureChartLogs.filter((lps) => {
-                  const ts = new Date(lps.timestamp);
-                  const startDate = date?.from
-                    ? `${dayjs(date.from).format("YYYY-MM-DD")} 00:00`
-                    : `${dayjs().format("YYYY-MM-DD")} 00:00`;
-                  const endDate = date?.to
-                    ? `${dayjs(date.to).format("YYYY-MM-DD")} 23:59`
-                    : date?.from
-                      ? `${dayjs(date.from).format("YYYY-MM-DD")} 23:59`
-                      : `${dayjs().format("YYYY-MM-DD")} 23:59`;
+            {isStreetView ? (
+              <div className="flex h-full w-full items-center justify-center bg-stone-300 text-black">
+                <StreetView lat={selectedLat} lng={selectedLng} />
+              </div>
+            ) : (
+              <ChartContainer config={chartConfig} className="h-1/3 min-h-[250px] w-full px-4">
+                <LineChart
+                  accessibilityLayer
+                  data={pressureChartLogs.filter((lps) => {
+                    const ts = new Date(lps.timestamp);
+                    const startDate = date?.from
+                      ? `${dayjs(date.from).format("YYYY-MM-DD")} 00:00`
+                      : `${dayjs().format("YYYY-MM-DD")} 00:00`;
+                    const endDate = date?.to
+                      ? `${dayjs(date.to).format("YYYY-MM-DD")} 23:59`
+                      : date?.from
+                        ? `${dayjs(date.from).format("YYYY-MM-DD")} 23:59`
+                        : `${dayjs().format("YYYY-MM-DD")} 23:59`;
 
-                  return isWithinInterval(ts, { start: startDate, end: endDate });
-                })}
-              >
-                <XAxis
-                  dataKey="timestamp"
-                  tickFormatter={(value) => {
-                    // Format ISO to HH:MM:SS or whatever format you like
-                    const date = new Date(value);
-                    // return `${date.getMonth()}/${date.getDate()}`;
-                    return `${dayjs(date).format("MM/DD")}`;
-                  }}
-                  tick={{ fill: "#555", fontSize: 12 }}
-                />
-                <YAxis display="Pressure" tickLine={false} tickMargin={20} axisLine={false} />
-                <Tooltip
-                  content={({ active, payload, label }) => {
-                    if (active && payload && payload.length) {
-                      // sort descending by value
-                      const sorted = [...payload].sort((a, b) => Number(b.value ?? 0) - Number(a.value ?? 0));
-                      let formattedTime = "NAN";
-                      try {
-                        // format time for Philippine timezone
-                        formattedTime = new Intl.DateTimeFormat("en-PH", {
-                          hour: "2-digit",
-                          minute: "2-digit",
-                          second: "2-digit",
-                          timeZone: "Asia/Manila",
-                        }).format(new Date(label));
-                      } catch (e) {
-                        console.log(e);
+                    return isWithinInterval(ts, { start: startDate, end: endDate });
+                  })}
+                >
+                  <XAxis
+                    dataKey="timestamp"
+                    tickFormatter={(value) => {
+                      // Format ISO to HH:MM:SS or whatever format you like
+                      const date = new Date(value);
+                      // return `${date.getMonth()}/${date.getDate()}`;
+                      return `${dayjs(date).format("MM/DD")}`;
+                    }}
+                    tick={{ fill: "#555", fontSize: 12 }}
+                  />
+                  <YAxis display="Pressure" tickLine={false} tickMargin={20} axisLine={false} />
+                  <Tooltip
+                    content={({ active, payload, label }) => {
+                      if (active && payload && payload.length) {
+                        // sort descending by value
+                        const sorted = [...payload].sort(
+                          (a, b) => Number(b.value ?? 0) - Number(a.value ?? 0),
+                        );
+                        let formattedTime = "NAN";
+                        try {
+                          // format time for Philippine timezone
+                          formattedTime = new Intl.DateTimeFormat("en-PH", {
+                            hour: "2-digit",
+                            minute: "2-digit",
+                            second: "2-digit",
+                            timeZone: "Asia/Manila",
+                          }).format(new Date(label));
+                        } catch (e) {
+                          console.log(e);
+                        }
+
+                        return (
+                          <div
+                            className="rounded-md border bg-white p-2 text-sm shadow-md"
+                            style={{ lineHeight: "1.2em" }}
+                          >
+                            <p className="mb-1 font-semibold">{formattedTime}</p>
+                            {sorted.map((entry, index) => (
+                              <p key={index} style={{ color: entry.color }}>
+                                {entry.name} : {Number(entry.value).toFixed(2)}
+                              </p>
+                            ))}
+                          </div>
+                        );
                       }
+                      return null;
+                    }}
+                  />
 
-                      return (
-                        <div
-                          className="rounded-md border bg-white p-2 text-sm shadow-md"
-                          style={{ lineHeight: "1.2em" }}
-                        >
-                          <p className="mb-1 font-semibold">{formattedTime}</p>
-                          {sorted.map((entry, index) => (
-                            <p key={index} style={{ color: entry.color }}>
-                              {entry.name} : {Number(entry.value).toFixed(2)}
-                            </p>
-                          ))}
-                        </div>
-                      );
-                    }
-                    return null;
-                  }}
-                />
-
-                {/* 🟩 Add legend here */}
-                <Legend verticalAlign="top" align="center" />
-                <Line dataKey="Pressure" stroke={chartConfig.pressure.color} dot={false} />
-                <Line dataKey="FlowMeter" stroke={chartConfig.flowMeter.color} dot={false} />
-              </LineChart>
-            </ChartContainer>
+                  {/* 🟩 Add legend here */}
+                  <Legend verticalAlign="top" align="center" />
+                  <Line dataKey="Pressure" stroke={chartConfig.pressure.color} dot={false} />
+                  <Line dataKey="FlowMeter" stroke={chartConfig.flowMeter.color} dot={false} />
+                </LineChart>
+              </ChartContainer>
+            )}
           </div>
         </div>
       </SheetContent>

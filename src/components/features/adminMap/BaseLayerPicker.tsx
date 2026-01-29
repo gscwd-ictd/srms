@@ -89,9 +89,27 @@ const BaseLayerPicker: FunctionComponent = ({}) => {
                   >
                     <Image
                       src={
+                        baseMapLayer.getClassName() === BaseLayerOptions.GOOGLE_MAP_ROAD
+                          ? "/images/gmroad.jpg"
+                          : baseMapLayer.getClassName() === BaseLayerOptions.GOOGLE_MAP_SATELLITE
+                            ? "/images/gmsatellite.jpg"
+                            : baseMapLayer.getClassName() === BaseLayerOptions.GOOGLE_MAP_TERRAIN
+                              ? "/images/gmterrain.jpg"
+                              : "/images/positron.jpg"
+                      }
+                      alt="preview"
+                      height={100}
+                      width={100}
+                      priority
+                      className="w-full object-cover select-none"
+                    />
+
+                    {/* <Image
+                      src={
                         baseMapLayer.getClassName() === BaseLayerOptions.POSITRON
                           ? "/images/positron.jpg"
-                          : baseMapLayer.getClassName() === BaseLayerOptions.GOOGLE_MAP_ROAD
+                          :
+                           baseMapLayer.getClassName() === BaseLayerOptions.GOOGLE_MAP_ROAD
                             ? "/images/gmroad.jpg"
                             : baseMapLayer.getClassName() === BaseLayerOptions.GOOGLE_MAP_SATELLITE
                               ? "/images/gmsatellite.jpg"
@@ -104,7 +122,7 @@ const BaseLayerPicker: FunctionComponent = ({}) => {
                       width={100}
                       priority
                       className="w-full object-cover select-none"
-                    />
+                    /> */}
                   </div>
                 </label>
               ))}

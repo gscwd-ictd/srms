@@ -10,6 +10,9 @@ export type LoggerDetails = {
   serial: number;
   name: string;
   channels: Array<LoggerChannel>;
+  geometry?: {
+    flateCoordinates: Array<number>;
+  };
   location: {
     latitude: number;
     longitude: number;

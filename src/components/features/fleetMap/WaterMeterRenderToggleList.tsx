@@ -128,31 +128,36 @@ const WaterMeterRenderToggleList: FunctionComponent = ({}) => {
 
   return (
     <React.Fragment>
-      {isLoading ? (
-        <div className="spinner">
-          <Spinner size={"xl"} />
+      <div className="flex">
+        {/* <div className="spinner">
+          <Spinner size={"sm"} className="mt-4" />
+        </div> */}
+        <div className="flex cursor-pointer items-center space-x-2 p-2">
+          <label>
+            <input
+              type="checkbox"
+              className="peer hidden"
+              onChange={(event) => {
+                setLayerVisibility(event.target.checked);
+              }}
+              defaultChecked={false}
+            />
+            <CircleGauge className="mr-2 block w-5 cursor-pointer text-white opacity-30 peer-checked:hidden" />
+            <CircleGauge className="mr-2 hidden w-5 cursor-pointer text-white peer-checked:block" />
+          </label>
+          <AccordionTrigger className={`${isLoading ? "" : "w-40"} items-center`}>
+            <p className="text-md mr-2 font-bold text-white">Water Meters</p>
+            <div>
+              <Table className="w-5 text-white" onClick={toggleTableModal} />
+            </div>
+          </AccordionTrigger>
         </div>
-      ) : null}
 
-      <div className="flex cursor-pointer items-center space-x-2 p-2">
-        <label>
-          <input
-            type="checkbox"
-            className="peer hidden"
-            onChange={(event) => {
-              setLayerVisibility(event.target.checked);
-            }}
-            defaultChecked={false}
-          />
-          <CircleGauge className="mr-2 block w-5 cursor-pointer text-white opacity-30 peer-checked:hidden" />
-          <CircleGauge className="mr-2 hidden w-5 cursor-pointer text-white peer-checked:block" />
-        </label>
-        <AccordionTrigger className="w-40 items-center">
-          <p className="text-md font-bold text-white">Water Meters</p>
-          <div>
-            <Table className="w-5 text-white" onClick={toggleTableModal} />
+        {isLoading ? (
+          <div className="spinner">
+            <Spinner size={"sm"} className="mt-4" />
           </div>
-        </AccordionTrigger>
+        ) : null}
       </div>
 
       <AccordionContent className="flex flex-col gap-4 text-balance">

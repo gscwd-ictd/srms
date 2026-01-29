@@ -4,7 +4,7 @@ import Logo2BigSvg from "@srms/components/ui-custom/Svg/logo2Big/logo2BigSvg";
 import MapBackgroundSvg from "@srms/components/ui-custom/Svg/mapBackground/mapBackgroundSvg";
 import React, { useState } from "react";
 
-export default function GisLoginPage() {
+export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -51,8 +51,8 @@ export default function GisLoginPage() {
               Sign in to access GSCWD data loggers, vehicles, and pipelines.
             </p>
 
-            <ul className="mt-8 space-y-3 text-sm whitespace-nowrap text-[#0b2340]/70">
-              <li>• Data loggers discharge pressure and flow meter</li>
+            <ul className="mt-4 space-y-3 text-sm whitespace-nowrap text-[#0b2340]/70">
+              <li>• Data loggers</li>
               <li>• Vehicle locations</li>
               <li>• Pipeline layout</li>
             </ul>
@@ -89,7 +89,7 @@ export default function GisLoginPage() {
                 />
               </div>
 
-              <div className="flex items-center justify-between text-sm">
+              {/* <div className="flex items-center justify-between text-sm">
                 <label className="inline-flex items-center gap-2 text-[#0b2340]/70">
                   <input type="checkbox" className="h-4 w-4 rounded border-gray-300 text-[#2b85ff]" />
                   Remember me
@@ -97,18 +97,18 @@ export default function GisLoginPage() {
                 <a href="#" className="text-[#2b85ff]">
                   Forgot password?
                 </a>
-              </div>
+              </div> */}
 
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full rounded-lg bg-gradient-to-r from-[#2b85ff] to-[#1b6df0] py-3 font-semibold text-white disabled:cursor-not-allowed disabled:opacity-60"
+                className="mt-1 w-full rounded-lg bg-gradient-to-tr from-blue-600/80 via-blue-400/80 to-sky-400/80 py-3 font-semibold text-white transition-all duration-100 disabled:cursor-not-allowed disabled:opacity-60"
               >
                 {loading ? "Logging in..." : "Log in"}
               </button>
             </form>
 
-            <p className="mt-6 text-xs text-[#0b2340]/60">
+            {/* <p className="mt-6 text-xs text-[#0b2340]/60">
               By signing in you agree to our{" "}
               <a href="#" className="text-[#2b85ff]">
                 Terms
@@ -118,7 +118,7 @@ export default function GisLoginPage() {
                 Privacy
               </a>
               .
-            </p>
+            </p> */}
           </section>
         </div>
       </main>

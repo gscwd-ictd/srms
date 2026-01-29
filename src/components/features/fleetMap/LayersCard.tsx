@@ -99,7 +99,6 @@ export const LayersCard: FunctionComponent<LayersCardProps> = ({ accessToken }) 
                 <AccordionItem value="item-3">
                   <WaterMeterRenderToggleList />
                 </AccordionItem>
-
                 <AccordionItem value="item-4">
                   <ValveRenderToggleList />
                 </AccordionItem>
