@@ -8,8 +8,8 @@ import { BaseMapLayerGroup } from "./BaseMapLayerGroup";
 import { useAdminMonitMap } from "./contexts/useAdminMonitMapContext";
 import { useMapStore } from "@srms/components/stores/useMapStore";
 import { usePositionStore } from "@srms/components/stores/usePositionStore";
-import { createStreetViewCoverageLayer } from "../streetView/StreetViewCoverageLayer";
-import Point from "ol/geom/Point";
+// import { createStreetViewCoverageLayer } from "../streetView/StreetViewCoverageLayer";
+// import Point from "ol/geom/Point";
 
 export const AdminMonitMap: FunctionComponent<PropsWithChildren> = ({ children }) => {
   useGeographic(); // make map use geographic coordinates
@@ -39,11 +39,11 @@ export const AdminMonitMap: FunctionComponent<PropsWithChildren> = ({ children }
 
     const map = adminMonitMap.mapManager.getMap();
 
-    const coverageExtent = [125.1702897537338, 6.116382615753177, 125.17597661702084, 6.118696370373137]; //street view coverage extent around oval plaza
-    const coverageLayer = createStreetViewCoverageLayer(coverageExtent);
+    // const coverageExtent = [125.1702897537338, 6.116382615753177, 125.17597661702084, 6.118696370373137]; //street view coverage extent around oval plaza
+    // const coverageLayer = createStreetViewCoverageLayer(coverageExtent);
 
     // ADD THE LAYER
-    map.addLayer(coverageLayer);
+    // map.addLayer(coverageLayer);
 
     // Optional
     // map.getView().fit(coverageExtent, {
@@ -60,13 +60,13 @@ export const AdminMonitMap: FunctionComponent<PropsWithChildren> = ({ children }
     });
 
     // add feature HANDLER
-    coverageLayer.getSource()?.on("addfeature", (e) => {
-      const geom = e.feature!.getGeometry();
+    // coverageLayer.getSource()?.on("addfeature", (e) => {
+    //   const geom = e.feature!.getGeometry();
 
-      if (geom instanceof Point) {
-        console.log("Feature added:", geom.getCoordinates());
-      }
-    });
+    //   if (geom instanceof Point) {
+    //     console.log("Feature added:", geom.getCoordinates());
+    //   }
+    // });
 
     return () => {
       adminMonitMap.mapManager.destroy();
