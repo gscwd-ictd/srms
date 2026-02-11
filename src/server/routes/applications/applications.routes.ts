@@ -1,10 +1,12 @@
 import { createRoute, z } from "@hono/zod-openapi";
+import { CreateApplicationSchema, SelectApplicationSchema } from "@srms/lib/nsa/schemas/ApplicationSchema";
 import { ErrorResponseSchema, IdParamsSchema, QueryParamsSchema } from "@srms/server/schemas/helperSchemas";
+import { TAGS } from "@srms/utils/constants";
 
 import * as HttpStatusCodes from "@srms/utils/httpStatusCodes";
 
 export const createNewApplication = createRoute({
-  tags: ["Applications"],
+  tags: TAGS.APPLICATIONS,
   description: "Create an application for new service connection.",
   method: "post",
   path: "/v1/applications",
@@ -13,7 +15,7 @@ export const createNewApplication = createRoute({
     body: {
       content: {
         "application/json": {
-          schema: z.object({}),
+          schema: CreateApplicationSchema,
         },
       },
       required: true,
@@ -24,7 +26,7 @@ export const createNewApplication = createRoute({
     [HttpStatusCodes.OK]: {
       content: {
         "application/json": {
-          schema: z.object({}),
+          schema: SelectApplicationSchema,
         },
       },
       description: "",

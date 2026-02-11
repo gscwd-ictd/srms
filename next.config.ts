@@ -3,8 +3,12 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   /* config options here */
-  devIndicators: false,
+  // devIndicators: false,
+  reactStrictMode: false, // Turn this off temporarily to test
   assetPrefix: "/docs",
+  images: {
+    domains: ["172.20.110.84"],
+  },
   async rewrites() {
     return [
       {

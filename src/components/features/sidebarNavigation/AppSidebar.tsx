@@ -7,6 +7,7 @@ import {
   CircleHelp,
   Command,
   Droplets,
+  Car,
   Frame,
   GalleryVerticalEnd,
   LayoutDashboard,
@@ -15,7 +16,7 @@ import {
   PieChart,
   Send,
   Settings,
-  // SquareDashedMousePointer,
+  ShipWheel,
 } from "lucide-react";
 
 import { NavMain } from "./NavMain";
@@ -80,6 +81,16 @@ const data = {
       title: "Operations",
       url: "/operations",
       icon: Droplets,
+    },
+    {
+      title: "Fleet",
+      url: "/fleet",
+      icon: Car,
+    },
+    {
+      title: "Valves",
+      url: "/valve",
+      icon: ShipWheel,
     },
     {
       title: "Settings",

@@ -29,6 +29,23 @@ export const HealthCheckResponseSchema = z.object({
   }),
 });
 
+export const yearSchema = z.object({
+  year: z.coerce
+    .number()
+    .min(1000)
+    .max(9999)
+    .openapi({
+      description: "Query the year ( where a column of an entity is applicable )",
+      param: {
+        name: "year",
+        in: "path",
+        required: true,
+      },
+      example: 2025,
+      required: ["year"],
+    }),
+});
+
 export const IdParamsSchema = z.object({
   id: z.string().openapi({
     param: {
@@ -40,6 +57,10 @@ export const IdParamsSchema = z.object({
     description: "The unique identifier of an entity you intend to operate on.",
     example: "cm6p7d5og0jbx7s65qcu",
   }),
+});
+
+export const FileFormSchema = z.object({
+  file: z.instanceof(File).openapi({ description: "File to be uploaded" }),
 });
 
 export const QueryParamsSchema = z.object({

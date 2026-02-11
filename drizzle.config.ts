@@ -5,6 +5,12 @@ export default defineConfig({
   dialect: "postgresql",
   schema: "./src/server/db/schemas/*.ts",
   out: "./src/server/db/migrations",
+  extensionsFilters: ["postgis"],
+  schemaFilter: ["public"],
+  tablesFilter: ["*"],
+  breakpoints: true,
+  strict: true,
+  verbose: true,
   dbCredentials: {
     host: env.DB_HOST,
     port: env.DB_PORT,
