@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 
-import { type PropsWithChildren, type FunctionComponent, useRef, useEffect } from "react";
+import { type PropsWithChildren, type FunctionComponent, useRef, useEffect, useState } from "react";
 import { useGeographic } from "ol/proj";
 import View from "ol/View";
 import { BaseMapLayerGroup } from "./BaseMapLayerGroup";
@@ -21,6 +21,24 @@ export const AdminMonitMap: FunctionComponent<PropsWithChildren> = ({ children }
   const setLat = usePositionStore((state) => state.setLat);
   const setLng = usePositionStore((state) => state.setLng);
 
+  const [profile, setProfile] = useState<any>(null);
+  useEffect(() => {
+    async function getProfile() {
+      const token = localStorage.getItem("token");
+
+      const res = await fetch("/api/profile", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      const data = await res.json();
+      setProfile(data);
+    }
+
+    getProfile();
+  }, []);
+
   useEffect(() => {
     if (!mapRef.current) return;
 
@@ -39,7 +57,7 @@ export const AdminMonitMap: FunctionComponent<PropsWithChildren> = ({ children }
 
     const map = adminMonitMap.mapManager.getMap();
 
-    // const coverageExtent = [125.1702897537338, 6.116382615753177, 125.17597661702084, 6.118696370373137]; //street view coverage extent around oval plaza
+    // const coverageExtent = [125.17028, 6.116382, 125.17597, 6.1186]; //street view coverage extent around oval plaza
     // const coverageLayer = createStreetViewCoverageLayer(coverageExtent);
 
     // ADD THE LAYER

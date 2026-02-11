@@ -1,5 +1,5 @@
 import { Label } from "@radix-ui/react-label";
-import { ScrollArea } from "@radix-ui/react-scroll-area";
+import { ScrollArea } from "@srms/components/ui/ScrollArea";
 import { AccStatus, GPSSignal } from "@srms/components/enums";
 import { useTsDeviceStore } from "@srms/components/stores/useTsDeviceStore";
 import { Token } from "@srms/components/types";
@@ -131,16 +131,16 @@ const VehicleDetailsCard: FunctionComponent<VehicleDetailsCardProps> = ({
   return (
     <Sheet open={open} onOpenChange={onOpenChange} modal={false}>
       <SheetContent
-        className="m-1.5 h-[98vh] w-[400px] gap-0 rounded-lg border-0 bg-gradient-to-r from-indigo-500/70 to-blue-500 to-blue-500/70 text-white backdrop-blur"
+        className="ui-color-base primary-text-color m-1.5 h-[98vh] w-[400px] gap-0 rounded-lg border-0 backdrop-blur"
         onInteractOutside={(e) => e.preventDefault()}
         side="right"
       >
         <SheetHeader className="m-6 mb-2 p-0">
-          <SheetTitle className="text-white">{selectedDevice.deviceName}</SheetTitle>
-          <SheetDescription className="text-white">{selectedDevice.imei}</SheetDescription>
+          <SheetTitle className="primary-text-color">{selectedDevice.deviceName}</SheetTitle>
+          <SheetDescription className="primary-text-color">{selectedDevice.imei}</SheetDescription>
         </SheetHeader>
 
-        <ScrollArea className="h-full">
+        <ScrollArea className="h-[82vh]">
           {/* {loadingDeviceDetails || loadingDeviceLocation ? <Spinner size={"lg"} /> : null} */}
           {fStatusDeviceDetails === "fetching" || fStatusDeviceLocation === "fetching" ? (
             <Spinner size={"lg"} />
@@ -152,7 +152,7 @@ const VehicleDetailsCard: FunctionComponent<VehicleDetailsCardProps> = ({
                 <div className="flex space-x-1.5">
                   <p className="w-[50%]">
                     <span className="font-bold">{checkAccStatus()}</span>{" "}
-                    <span className="text-white">
+                    <span className="primary-text-color">
                       (ACC:{tsDeviceLocation?.accStatus === "0" ? "OFF" : "ON"})
                     </span>
                   </p>
@@ -240,7 +240,7 @@ const VehicleDetailsCard: FunctionComponent<VehicleDetailsCardProps> = ({
                 </div>
               </div>
 
-              <div className="m-4 rounded-md border-1 border-indigo-400 p-3 shadow">
+              <div className="m-4 h-full overflow-y-auto rounded-md border-1 border-indigo-400 p-3 shadow">
                 <h3 className="pb-2 font-bold">Vehicle</h3>
 
                 <div className="grid gap-2">

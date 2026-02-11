@@ -43,21 +43,21 @@ const WebSocketMockTest: FunctionComponent<WebSocketMockTestProps> = () => {
     <>
       <div className="flex cursor-pointer items-center space-x-2 p-2">
         <label>
-          <HardDrive className="mr-2 block w-5 cursor-pointer text-white peer-checked:hidden" />
+          <HardDrive className="primary-text-color mr-2 block w-5 cursor-pointer peer-checked:hidden" />
         </label>
         <AccordionTrigger className="items-center">
-          <p className="text-md font-bold text-white">Mock Water Station Data</p>
+          <p className="text-md primary-text-color font-bold">Mock Water Station Data</p>
         </AccordionTrigger>
       </div>
       <AccordionContent className="flex flex-col gap-4 text-balance">
         {Object.keys(latestData).length === 0 ? (
-          <p className="mt-4 text-white italic">Waiting for JSON data...</p>
+          <p className="primary-text-color mt-4 italic">Waiting for JSON data...</p>
         ) : (
-          <ul className="ml-12 text-white">
+          <ul className="primary-text-color ml-12">
             {Object.values(latestData).map((ps: PumpData, index: number) => (
               <li key={ps.name} className="mb-1">
                 <div
-                  className="flex h-6 cursor-pointer text-white transition-all hover:font-bold"
+                  className="primary-text-color flex h-6 cursor-pointer transition-all hover:font-bold"
                   onClick={() => setPumpingStationCardOpen(index + 1)}
                 >
                   {ps.name.replace(/ps/i, "Pumping Station ").toUpperCase()}
@@ -65,7 +65,7 @@ const WebSocketMockTest: FunctionComponent<WebSocketMockTestProps> = () => {
 
                 {/* <Button
                   onClick={() => setPumpingStationCardOpen(index + 1)}
-                  className="mt-0.5 mr-2 mr-3 h-4 w-4 hover:bg-green-500 hover:text-white"
+                  className="mt-0.5 mr-2 mr-3 h-4 w-4 hover:bg-green-500 hover:primary-text-color"
                 >
                   <p className="text-xs font-bold text-black">
                     {ps.name.replace(/ps/i, "Pumping Station ").toUpperCase()}
@@ -86,7 +86,7 @@ const WebSocketMockTest: FunctionComponent<WebSocketMockTestProps> = () => {
       {/* <Accordion className="accordion" type="multiple">
         <AccordionContent className="flex flex-col gap-4 p-4 text-balance">
           {Object.keys(latestData).length === 0 ? (
-            <p className="mt-4 text-white italic">Waiting for JSON data...</p>
+            <p className="mt-4 primary-text-color italic">Waiting for JSON data...</p>
           ) : (
             <div className="overflow-y-auto rounded-xl border bg-white p-4 shadow-md">
               <h2 className="text-md mb-4 flex items-center font-bold text-black">PUMPING STATIONS</h2>
@@ -97,7 +97,7 @@ const WebSocketMockTest: FunctionComponent<WebSocketMockTestProps> = () => {
                     <AccordionItem value={ps.name} key={ps.name}>
                       <Button
                         onClick={() => setPumpingStationCardOpen(index + 1)}
-                        className="transition-colors hover:bg-green-500 hover:text-white"
+                        className="transition-colors hover:bg-green-500 hover:primary-text-color"
                       >
                         <p className="text-sm font-bold text-black">
                           {ps.name.replace(/ps/i, "Pumping Station ").toUpperCase()}

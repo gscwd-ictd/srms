@@ -25,8 +25,7 @@ const featureManager = new FeatureManager();
 
 export const PumpingStationToggleList: FunctionComponent = ({}) => {
   const adminMonitMap = useAdminMonitMap();
-  const { layerToggleCardOpen, setLayerToggleCardOpen, pumpingStationCardOpen, setPumpingStationCardOpen } =
-    useCardStore();
+  const { setLayerToggleCardOpen, pumpingStationCardOpen, setPumpingStationCardOpen } = useCardStore();
   const [selectedPumpStation, setPumpStation] = useState<PumpingStationProperties>();
 
   const { data: pumpStations, isLoading } = useQuery({
@@ -120,14 +119,15 @@ export const PumpingStationToggleList: FunctionComponent = ({}) => {
 
         // Open card modal for valve details
         adminMonitMap.mapManager.getMap().on("click", (e) => {
+          setPumpStation({} as PumpingStationProperties);
           setPumpingStationCardOpen(0);
 
           const feature = adminMonitMap.mapManager
             .getMap()
             .forEachFeatureAtPixel(e.pixel, (feature, layer) => {
               if (layer.get("id") === "pumping-stations") {
-                setPumpingStationCardOpen(1);
-                setLayerToggleCardOpen(!layerToggleCardOpen);
+                setPumpingStationCardOpen(1); //open pumping station card modal
+                setLayerToggleCardOpen(false); //close layers card nav
               }
               return feature;
             });
@@ -137,7 +137,6 @@ export const PumpingStationToggleList: FunctionComponent = ({}) => {
           }
 
           const props = feature.getProperties() as PumpingStationProperties | undefined;
-
           setPumpStation(props);
         });
       }
@@ -171,11 +170,11 @@ export const PumpingStationToggleList: FunctionComponent = ({}) => {
               defaultChecked={true}
             />
 
-            <House className="mr-2 block w-5 cursor-pointer text-white opacity-30 peer-checked:hidden" />
-            <House className="mr-2 hidden w-5 cursor-pointer text-white peer-checked:block" />
+            <House className="primary-text-color mr-2 block w-5 cursor-pointer opacity-30 peer-checked:hidden" />
+            <House className="primary-text-color mr-2 hidden w-5 cursor-pointer peer-checked:block" />
           </label>
           <AccordionTrigger className="w-40 items-center">
-            <p className="text-md font-bold text-white">Pumping Station</p>
+            <p className="text-md primary-text-color font-bold">Pumping Station</p>
           </AccordionTrigger>
         </div>
 
@@ -187,7 +186,7 @@ export const PumpingStationToggleList: FunctionComponent = ({}) => {
       </div>
 
       <AccordionContent className="flex flex-col gap-4 text-balance">
-        <ul className="mx-12 text-white">
+        <ul className="primary-text-color mx-12">
           <li>
             <div className="flex h-6">
               <div className="mt-0.5 mr-2 h-4 w-4 rounded-3xl bg-blue-500"></div>

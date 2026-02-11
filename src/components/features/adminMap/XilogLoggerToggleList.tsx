@@ -152,11 +152,11 @@ const XilogLoggerToggleList: FunctionComponent = ({}) => {
               }}
               defaultChecked={true}
             />
-            <Cpu className="mr-2 block w-5 cursor-pointer text-white opacity-30 peer-checked:hidden" />
-            <Cpu className="mr-2 hidden w-5 cursor-pointer text-white peer-checked:block" />
+            <Cpu className="primary-text-color mr-2 block w-5 cursor-pointer opacity-30 peer-checked:hidden" />
+            <Cpu className="primary-text-color mr-2 hidden w-5 cursor-pointer peer-checked:block" />
           </label>
           <AccordionTrigger className="items-center">
-            <p className="text-md mr-2 font-bold text-white">Xilog Data Logger</p>
+            <p className="text-md primary-text-color mr-2 font-bold">Xilog Data Logger</p>
           </AccordionTrigger>
         </div>
 
@@ -168,7 +168,7 @@ const XilogLoggerToggleList: FunctionComponent = ({}) => {
       </div>
 
       <AccordionContent className="flex flex-col gap-4 text-balance">
-        <ul className="mx-11 text-white">
+        <ul className="primary-text-color mx-11">
           <li>
             <div className="flex h-6">
               <div className="mt-0.5 mr-2 h-4 w-4 rounded-3xl bg-blue-600"></div>

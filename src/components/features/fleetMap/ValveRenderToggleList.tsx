@@ -141,11 +141,11 @@ export const ValveRenderToggleList: FunctionComponent = () => {
               defaultChecked={false}
             />
 
-            <Hexagon className="mr-2 block w-5 cursor-pointer text-white opacity-30 peer-checked:hidden" />
-            <Hexagon className="mr-2 hidden w-5 cursor-pointer text-white peer-checked:block" />
+            <Hexagon className="primary-text-color mr-2 block w-5 cursor-pointer opacity-30 peer-checked:hidden" />
+            <Hexagon className="primary-text-color mr-2 hidden w-5 cursor-pointer peer-checked:block" />
           </label>
           <AccordionTrigger className={`${isLoading ? "w-30" : "w-40"} items-center`}>
-            <p className="text-md mr-2 font-bold text-white">Valves</p>
+            <p className="text-md primary-text-color mr-2 font-bold">Valves</p>
           </AccordionTrigger>
         </div>
         {isLoading ? (
@@ -155,7 +155,7 @@ export const ValveRenderToggleList: FunctionComponent = () => {
         ) : null}
       </div>
       <AccordionContent className="flex flex-col gap-4 text-balance">
-        <ul className="mx-12 text-white">
+        <ul className="primary-text-color mx-12">
           <li>
             <div className="flex h-6">
               <div className="mr-3 h-5 w-2 rotate-90 transform bg-blue-600"></div>

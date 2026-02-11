@@ -28,7 +28,7 @@ export const LayersCard: FunctionComponent = () => {
     <React.Fragment>
       <Button
         className={cn(
-          "hover:bg-gradient-to-tr/50 absolute z-50 h-18 w-18 rounded-none rounded-br-lg bg-gradient-to-tr from-blue-600/90 via-blue-400/90 to-sky-300/90 transition-all transition-discrete duration-100 hover:from-blue-600/50 hover:via-blue-400/50 hover:to-sky-300/50",
+          "ui-color-button absolute z-70 h-18 w-18 rounded-none rounded-br-lg transition-all transition-discrete duration-100",
           layerToggleCardOpen ? "hidden opacity-0" : "intro-animation backdrop-blur",
         )}
         onClick={() => toggleModal()}
@@ -45,7 +45,7 @@ export const LayersCard: FunctionComponent = () => {
         {/* Layer Sidebar */}
         <Card
           className={cn(
-            "vehicle-layers absolute z-20 h-[calc(100vh-80px)] w-[230px] overflow-x-hidden overflow-y-hidden rounded-lg border-none bg-gradient-to-tr from-blue-600/80 via-blue-400/80 to-sky-300/80 transition-all duration-100",
+            "vehicle-layers ui-color-base absolute z-60 h-[calc(100vh-65px)] w-[230px] overflow-x-hidden overflow-y-hidden rounded-lg border-none transition-all duration-100",
             layerToggleCardOpen
               ? "nav-intro-animated block backdrop-blur peer-checked:opacity-100"
               : initialNavAnimation
@@ -53,19 +53,19 @@ export const LayersCard: FunctionComponent = () => {
                 : "nav-outro-animated peer-checked:opacity-0",
           )}
         >
-          <div className="absolute -right-14 -mt-44 h-70 w-70 rounded-full bg-blue-500/10"></div>
-          <div className="absolute -right-40 -mt-42 h-80 w-70 rounded-full bg-blue-500/10"></div>
-          <div className="absolute -bottom-54 -left-20 h-80 w-80 rounded-full bg-blue-500/10"></div>
+          <div className="absolute -right-14 -mt-44 h-70 w-70 rounded-full bg-blue-200/10"></div>
+          <div className="absolute -right-40 -mt-42 h-80 w-70 rounded-full bg-blue-200/10"></div>
+          <div className="absolute -bottom-54 -left-20 h-80 w-80 rounded-full bg-blue-400/10"></div>
           <label className="absolute bottom-0 left-0 p-4 text-xs">OMMS Version 1.0.2</label>
           <CardHeader className="flex p-0">
             <CardAction className="z-40 self-end">
               <Button variant="link" onClick={() => toggleModal()}>
-                <X className="size-5 text-white" />
+                <X className="primary-text-color size-5" />
               </Button>
             </CardAction>
           </CardHeader>
 
-          <ScrollArea className="mx-2 h-[95vh]">
+          <ScrollArea className="mx-2 h-[78vh]">
             <CardContent className="mr-1 p-1">
               <Accordion type="single" collapsible className="w-full">
                 <AccordionItem value="item-1">
@@ -90,7 +90,7 @@ export const LayersCard: FunctionComponent = () => {
           </ScrollArea>
         </Card>
         <div
-          className={`absolute z-50 mt-2 ml-2 w-[230px] rounded-lg bg-gradient-to-tr from-blue-500/90 via-blue-400/90 to-sky-500/90 p-1 text-center leading-none text-white backdrop-blur ${
+          className={`ui-color-base primary-text-color absolute z-50 mt-2 ml-2 w-[230px] rounded-lg p-1 text-center leading-none backdrop-blur ${
             layerToggleCardOpen
               ? "nav-title-intro-animated block"
               : initialNavAnimation

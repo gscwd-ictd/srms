@@ -59,7 +59,7 @@ const BaseLayerPicker: FunctionComponent = ({}) => {
       <motion.div
         transition={{ duration: 0.8, ease: "easeOut" }} // Animation properties
         className={cn(
-          "flex h-18 w-full items-center justify-evenly rounded-bl-lg bg-gradient-to-t from-blue-600/60 via-blue-500/60 to-sky-400/60",
+          "ui-color-base flex h-18 w-full items-center justify-evenly rounded-bl-lg",
           layerToggleCardOpen
             ? "tilemap-intro-animated"
             : initialNavAnimation
@@ -133,10 +133,8 @@ const BaseLayerPicker: FunctionComponent = ({}) => {
       </motion.div>
       <Button
         className={cn(
-          "z-50 h-18 w-[72px] rounded-none transition-all transition-discrete duration-100 hover:bg-gradient-to-tr hover:from-blue-600/50 hover:via-blue-400/50 hover:to-sky-300/50",
-          layerToggleCardOpen
-            ? "bg-gradient-to-t from-blue-600/60 via-blue-500/60 to-sky-400/60 shadow-none"
-            : "rounded-bl-lg bg-gradient-to-tr from-blue-600/90 via-blue-400/90 to-sky-300/90",
+          "ui-color-button z-50 h-18 w-[72px] rounded-none transition-all transition-discrete duration-100",
+          layerToggleCardOpen ? "ui-color-button shadow-none" : "ui-color-button rounded-bl-lg",
         )}
         onClick={() => toggleModal()}
       >

@@ -89,12 +89,12 @@ const ValveDetailsCard: FunctionComponent<ValveDetailsCardDrops> = ({ open, onOp
   return (
     <Sheet key="right" open={open} onOpenChange={onOpenChange} modal={false}>
       <SheetContent
-        className="m-1.5 h-[98.5vh] w-[400px] gap-0 rounded-lg border-none bg-gradient-to-tr from-blue-500/90 via-blue-400/90 to-sky-500/90 text-white backdrop-blur"
+        className="ui-color-base primary-text-color m-1.5 h-[98.5vh] w-[400px] gap-0 rounded-lg border-none backdrop-blur"
         onInteractOutside={(e) => e.preventDefault()}
       >
         <SheetHeader className="m-6 mb-2 p-0">
-          <SheetTitle className="text-white">{}</SheetTitle>
-          <SheetDescription className="text-white">{}</SheetDescription>
+          <SheetTitle className="primary-text-color">{}</SheetTitle>
+          <SheetDescription className="primary-text-color">{}</SheetDescription>
         </SheetHeader>
 
         <ScrollArea className="h-[90vh]">
@@ -191,7 +191,7 @@ const ValveDetailsCard: FunctionComponent<ValveDetailsCardDrops> = ({ open, onOp
           <div className="m-4 rounded-md border-1 border-indigo-300 p-5 shadow">
             <h3 className="pb-3 font-bold">History</h3>
 
-            <Accordion type="single" collapsible className="w-full text-white">
+            <Accordion type="single" collapsible className="primary-text-color w-full">
               <AccordionItem value="id-1">
                 <AccordionTrigger className="rounded-none bg-indigo-500/50 p-3">
                   May 15, 2025 - June 01, 2025

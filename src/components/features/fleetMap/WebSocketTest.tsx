@@ -91,10 +91,10 @@ const WebSocketTest: FunctionComponent<WebSocketTestProps> = () => {
     <>
       <div className="flex cursor-pointer items-center space-x-2 p-2">
         <label>
-          <HardDrive className="mr-2 block w-5 cursor-pointer text-white peer-checked:hidden" />
+          <HardDrive className="primary-text-color mr-2 block w-5 cursor-pointer peer-checked:hidden" />
         </label>
         <AccordionTrigger className="items-center">
-          <p className="text-md font-bold text-white">Real-time Water Station Data</p>
+          <p className="text-md primary-text-color font-bold">Real-time Water Station Data</p>
         </AccordionTrigger>
       </div>
       <Accordion className="accordion" type="multiple">
@@ -116,7 +116,7 @@ const WebSocketTest: FunctionComponent<WebSocketTestProps> = () => {
           </div>
 
           {Object.keys(data).length === 0 ? (
-            <p className="mt-4 text-white italic">Waiting for JSON data...</p>
+            <p className="primary-text-color mt-4 italic">Waiting for JSON data...</p>
           ) : (
             // <div className="overflow-y-auto rounded-xl border bg-white p-4 shadow-md">
             //   <h2 className="mb-4 flex items-center text-lg font-bold text-black">PUMPING STATIONS</h2>
@@ -127,7 +127,7 @@ const WebSocketTest: FunctionComponent<WebSocketTestProps> = () => {
             //         <AccordionItem value={ps.name} key={ps.name}>
             //           <Button
             //             onClick={() => setPumpingStationCardOpen(index + 1)}
-            //             className="transition-colors hover:bg-green-500 hover:text-white"
+            //             className="transition-colors hover:bg-green-500 hover:primary-text-color"
             //           >
             //             <p className="text-md font-bold text-black">
             //               {ps.name.replace(/ps/i, "Pumping Station ").toUpperCase()}
@@ -145,11 +145,11 @@ const WebSocketTest: FunctionComponent<WebSocketTestProps> = () => {
             //   </div>
             // </div>
 
-            <ul className="ml-12 text-white">
+            <ul className="primary-text-color ml-12">
               {Object.values(data).map((ps: PumpData, index: number) => (
                 <li key={ps.name} className="mb-1">
                   <div
-                    className="flex h-6 cursor-pointer text-white transition-all hover:font-bold"
+                    className="primary-text-color flex h-6 cursor-pointer transition-all hover:font-bold"
                     onClick={() => setPumpingStationCardOpen(index + 1)}
                   >
                     {ps.name.replace(/ps/i, "Pumping Station ").toUpperCase()}
@@ -157,7 +157,7 @@ const WebSocketTest: FunctionComponent<WebSocketTestProps> = () => {
 
                   {/* <Button
                   onClick={() => setPumpingStationCardOpen(index + 1)}
-                  className="mt-0.5 mr-2 mr-3 h-4 w-4 hover:bg-green-500 hover:text-white"
+                  className="mt-0.5 mr-2 mr-3 h-4 w-4 hover:bg-green-500 hover:primary-text-color"
                 >
                   <p className="text-xs font-bold text-black">
                     {ps.name.replace(/ps/i, "Pumping Station ").toUpperCase()}

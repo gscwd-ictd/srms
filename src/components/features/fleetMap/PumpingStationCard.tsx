@@ -84,7 +84,7 @@ const PumpingStationCard: FunctionComponent<PumpingStationCardProps> = ({ ps, op
         modal={false}
       >
         <SheetContent
-          className="h-[380px] w-full gap-0 border border-stone-300 bg-white text-black"
+          className="ui-color-base h-[380px] w-full gap-0 border border-stone-300 bg-white text-black"
           side="bottom"
           onInteractOutside={(e) => e.preventDefault()}
         >
@@ -98,9 +98,9 @@ const PumpingStationCard: FunctionComponent<PumpingStationCardProps> = ({ ps, op
               <Popover>
                 <PopoverTrigger asChild>
                   <Button
-                    variant="outline"
+                    variant="default"
                     className={cn(
-                      "w-[280px] justify-start text-left font-normal text-white",
+                      "primary-text-color w-[280px] justify-start text-left font-normal",
                       !date && "text-muted-foreground",
                     )}
                   >

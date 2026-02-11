@@ -24,7 +24,7 @@ import StreetView from "../streetView/StreetView";
 
 const chartConfig = {
   pressure: {
-    color: "#13e062ff",
+    color: "rgb(33, 180, 90)",
   },
   waterLevel: {
     color: "#1613c2ff",
@@ -36,7 +36,7 @@ const chartConfig = {
     color: "#5f5e5dff",
   },
   humidity: {
-    color: "#dfe21fff",
+    color: "rgb(149, 151, 41)",
   },
   chlorine: {
     color: "#e93d09ff",
@@ -50,7 +50,7 @@ interface PumpingStationMapCardProps {
 
 const PumpingStationMapCard: FunctionComponent<PumpingStationMapCardProps> = ({ ps, open }) => {
   const [openChange, setOpenChange] = useState(open);
-  const { layerToggleCardOpen, setLayerToggleCardOpen, setPumpingStationCardOpen } = useCardStore();
+  const { layerToggleCardOpen, setPumpingStationCardOpen } = useCardStore();
   const { pumpData, setPumpData } = usePumpingStationStore();
   const [psName, setPsName] = useState("");
   const [realTime, setRealTime] = useState(false);
@@ -63,7 +63,7 @@ const PumpingStationMapCard: FunctionComponent<PumpingStationMapCardProps> = ({ 
   const [latestData, setLatestData] = useState<PumpData[]>([]);
   const wsRef = useRef<WebSocket | null>(null);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
-  const [wsUrl, setWsUrl] = useState("ws://172.20.110.84:7575");
+  const wsUrl = "ws://172.20.110.84:7575";
   const [isConnected, setIsConnected] = useState(false);
 
   const [isStreetView, setIsStreetView] = useState(false);
@@ -110,7 +110,7 @@ const PumpingStationMapCard: FunctionComponent<PumpingStationMapCardProps> = ({ 
         });
         // Update local data (for UI)
         setData(jsonData);
-
+        console.log("✅ Received data:", jsonData);
         // ✅ Append new pump readings to store
         setPumpData((prev) => {
           const newEntries = Object.values(jsonData) as PumpData[];
@@ -169,34 +169,42 @@ const PumpingStationMapCard: FunctionComponent<PumpingStationMapCardProps> = ({ 
   };
 
   useEffect(() => {
-    setLayerToggleCardOpen(!layerToggleCardOpen);
+    // setLayerToggleCardOpen(!layerToggleCardOpen);
     const str = ps.ps_name;
     const match = str.match(/\((.*?)\)/);
     const result = match ? match[1] : "";
     setPsName(result ?? "");
     loadData(result ?? "ps");
-  }, []);
+  }, [ps]);
+
+  useEffect(() => {
+    console.log("Layer Toggle Card Open changed:", layerToggleCardOpen);
+  }, [layerToggleCardOpen]);
+
+  useEffect(() => {
+    console.log("Pumping Station prop changed:", ps);
+  }, [ps]);
 
   return (
     <>
       <Sheet
         open={openChange}
         onOpenChange={(o: boolean) => {
-          setLayerToggleCardOpen(!layerToggleCardOpen);
+          // setLayerToggleCardOpen(!layerToggleCardOpen);
           setPumpingStationCardOpen(0);
           setOpenChange(o);
         }}
         modal={false}
       >
         <SheetContent
-          className="h-[380px] w-full gap-0 border border-stone-300 bg-white/90 text-black backdrop-blur"
+          className="ui-color-base h-[380px] w-full gap-0 border border-stone-300 text-black backdrop-blur"
           side="bottom"
           onInteractOutside={(e) => e.preventDefault()}
         >
           <SheetHeader className="m-5 p-0">
             <SheetTitle className="text-black">
               <div className="flex flex-row">
-                <div>{psName.replace(/ps/i, "Pumping Station ").toUpperCase()}</div>
+                <div className="w-[12%]">{psName.replace(/ps/i, "Pumping Station ").toUpperCase()}</div>
                 <div className="flex items-center space-x-2 px-4">
                   <Switch
                     id="data-mode"
@@ -261,9 +269,7 @@ const PumpingStationMapCard: FunctionComponent<PumpingStationMapCardProps> = ({ 
             <div className="mx-5 flex gap-5">
               <div className="grid w-[30%] grid-rows-2 gap-4">
                 <div className="h-[250px] rounded-md border-1 border-stone-200 p-3 shadow-md">
-                  {realTime ? (
-                    <></>
-                  ) : Object.keys(realTime ? data : latestData).length === 0 ? (
+                  {Object.keys(realTime ? data : latestData).length === 0 ? (
                     <p className="mt-4 text-gray-500 italic">Waiting for JSON data...</p>
                   ) : (
                     <>
@@ -336,89 +342,85 @@ const PumpingStationMapCard: FunctionComponent<PumpingStationMapCardProps> = ({ 
                   </div>
                 ) : (
                   <>
-                    {realTime ? (
-                      <>{/* nothing to show yet */}</>
-                    ) : (
-                      <ChartContainer config={chartConfig} className="h-1/3 min-h-[250px] w-full px-4">
-                        <LineChart
-                          accessibilityLayer
-                          data={pumpData.filter((lps) => {
-                            if (lps.name.toLowerCase() === psName.toLowerCase()) {
-                              const ts = new Date(lps.timestamp);
+                    <ChartContainer config={chartConfig} className="h-1/3 min-h-[250px] w-full px-4">
+                      <LineChart
+                        accessibilityLayer
+                        data={pumpData.filter((lps) => {
+                          if (lps.name.toLowerCase() === psName.toLowerCase()) {
+                            const ts = new Date(lps.timestamp);
 
-                              const startDate = date?.from ? date.from : new Date(2025, 9, 1);
+                            const startDate = date?.from ? date.from : new Date(2025, 9, 1);
 
-                              const endDate = date?.to
-                                ? addHours(date.to, 24)
-                                : addHours(new Date(2025, 10, 13), 24);
+                            const endDate = date?.to
+                              ? addHours(date.to, 24)
+                              : addHours(new Date(2025, 10, 13), 24);
 
-                              return isWithinInterval(ts, { start: startDate, end: endDate });
-                            }
-                          })}
-                        >
-                          <XAxis
-                            dataKey="timestamp"
-                            tickFormatter={(value) => {
-                              // Format ISO to HH:MM:SS or whatever format you like
-                              const date = new Date(value);
-                              return `${date.getMonth() + 1}/${date.getDate()}`;
-                            }}
-                            tick={{ fill: "#555", fontSize: 12 }}
-                          />
-                          <YAxis display="Pressure" tickLine={false} tickMargin={20} axisLine={false} />
-                          <Tooltip
-                            content={({ active, payload, label }) => {
-                              if (active && payload && payload.length) {
-                                // sort descending by value
-                                const sorted = [...payload].sort(
-                                  (a, b) => Number(b.value ?? 0) - Number(a.value ?? 0),
-                                );
-                                let formattedTime = "NAN";
-                                try {
-                                  // format time for Philippine timezone
-                                  formattedTime = new Intl.DateTimeFormat("en-PH", {
-                                    hour: "2-digit",
-                                    minute: "2-digit",
-                                    second: "2-digit",
-                                    timeZone: "Asia/Manila",
-                                  }).format(new Date(label));
-                                } catch (e) {
-                                  console.log(e);
-                                }
-
-                                return (
-                                  <div
-                                    className="rounded-md border bg-white p-2 text-sm shadow-md"
-                                    style={{ lineHeight: "1.2em" }}
-                                  >
-                                    <p className="mb-1 font-semibold">{formattedTime}</p>
-                                    {sorted.map((entry, index) => (
-                                      <p key={index} style={{ color: entry.color }}>
-                                        {entry.name} : {Number(entry.value).toFixed(2)}
-                                      </p>
-                                    ))}
-                                  </div>
-                                );
+                            return isWithinInterval(ts, { start: startDate, end: endDate });
+                          }
+                        })}
+                      >
+                        <XAxis
+                          dataKey="timestamp"
+                          tickFormatter={(value) => {
+                            // Format ISO to HH:MM:SS or whatever format you like
+                            const date = new Date(value);
+                            return `${date.getMonth() + 1}/${date.getDate()}`;
+                          }}
+                          tick={{ fill: "#0f0f0f", fontSize: 12 }}
+                        />
+                        <YAxis display="Pressure" tickLine={false} tickMargin={20} axisLine={false} />
+                        <Tooltip
+                          content={({ active, payload, label }) => {
+                            if (active && payload && payload.length) {
+                              // sort descending by value
+                              const sorted = [...payload].sort(
+                                (a, b) => Number(b.value ?? 0) - Number(a.value ?? 0),
+                              );
+                              let formattedTime = "NAN";
+                              try {
+                                // format time for Philippine timezone
+                                formattedTime = new Intl.DateTimeFormat("en-PH", {
+                                  hour: "2-digit",
+                                  minute: "2-digit",
+                                  second: "2-digit",
+                                  timeZone: "Asia/Manila",
+                                }).format(new Date(label));
+                              } catch (e) {
+                                console.log(e);
                               }
-                              return null;
-                            }}
-                          />
 
-                          {/* 🟩 Add legend here */}
-                          <Legend verticalAlign="top" align="center" />
-                          <Line dataKey="waterlevel" stroke={chartConfig.waterLevel.color} dot={false} />
-                          <Line dataKey="pressure" stroke={chartConfig.pressure.color} dot={false} />
-                          <Line dataKey="flowmeter" stroke={chartConfig.flowMeter.color} dot={false} />
-                          <Line dataKey="turbidity" stroke={chartConfig.turbidity.color} dot={false} />
-                          <Line dataKey="humidity" stroke={chartConfig.humidity.color} dot={false} />
-                          <Line dataKey="chlorine" stroke={chartConfig.chlorine.color} dot={false} />
-                        </LineChart>
-                        {/* <BarChart accessibilityLayer data={chartData}>
+                              return (
+                                <div
+                                  className="rounded-md border bg-white p-2 text-sm shadow-md"
+                                  style={{ lineHeight: "1.2em" }}
+                                >
+                                  <p className="mb-1 font-semibold">{formattedTime}</p>
+                                  {sorted.map((entry, index) => (
+                                    <p key={index} style={{ color: entry.color }}>
+                                      {entry.name} : {Number(entry.value).toFixed(2)}
+                                    </p>
+                                  ))}
+                                </div>
+                              );
+                            }
+                            return null;
+                          }}
+                        />
+
+                        {/* 🟩 Add legend here */}
+                        <Legend verticalAlign="top" align="center" />
+                        <Line dataKey="waterlevel" stroke={chartConfig.waterLevel.color} dot={false} />
+                        <Line dataKey="pressure" stroke={chartConfig.pressure.color} dot={false} />
+                        <Line dataKey="flowmeter" stroke={chartConfig.flowMeter.color} dot={false} />
+                        <Line dataKey="turbidity" stroke={chartConfig.turbidity.color} dot={false} />
+                        <Line dataKey="humidity" stroke={chartConfig.humidity.color} dot={false} />
+                        <Line dataKey="chlorine" stroke={chartConfig.chlorine.color} dot={false} />
+                      </LineChart>
+                      {/* <BarChart accessibilityLayer data={chartData}>
                   <Bar dataKey="desktop" fill="var(--color-desktop)" radius={4} />
                   <Bar dataKey="mobile" fill="var(--color-mobile)" radius={4} />
                 </BarChart> */}
-                      </ChartContainer>
-                    )}
+                    </ChartContainer>
                   </>
                 )}
               </div>

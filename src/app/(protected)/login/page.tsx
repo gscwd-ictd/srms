@@ -2,18 +2,36 @@
 
 import Logo2BigSvg from "@srms/components/ui-custom/Svg/logo2Big/logo2BigSvg";
 import MapBackgroundSvg from "@srms/components/ui-custom/Svg/mapBackground/mapBackgroundSvg";
+import { Eye, EyeClosed } from "lucide-react";
 import React, { useState } from "react";
 
 export default function LoginPage() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("ricardovicentenarvaiza@gscwd.com");
+  const [password, setPassword] = useState("123456");
   const [loading, setLoading] = useState(false);
+  const [isShowPassword, setIsShowPassword] = useState(false);
 
-  function handleSubmit(e: { preventDefault: () => void }) {
+  async function handleSubmit(e: { preventDefault: () => void }) {
     e.preventDefault();
     setLoading(true);
-    // simulate login
-    setTimeout(() => setLoading(false), 800);
+
+    const res = await fetch("/api/auth/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, password }),
+    });
+
+    const data = await res.json();
+
+    if (data.token) {
+      console.log("Login successful, token:", data.token);
+      localStorage.setItem("token", data.token);
+      alert("Login successful");
+      setLoading(false);
+    } else {
+      alert("Login failed");
+      setLoading(false);
+    }
   }
 
   return (
@@ -79,14 +97,29 @@ export default function LoginPage() {
 
               <div>
                 <label className="mb-1 block text-sm font-medium text-[#0b2340]/80">Password</label>
-                <input
-                  required
-                  type="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="w-full rounded-lg border border-[#2b85ff]/20 px-4 py-3 text-black focus:ring-2 focus:ring-[#2b85ff]/30 focus:outline-none"
-                  placeholder="Enter your password"
-                />
+                <div className="relative">
+                  <input
+                    required
+                    type={`${isShowPassword ? "text" : "password"}`}
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    className="w-full rounded-lg border border-[#2b85ff]/20 px-4 py-3 text-black focus:ring-2 focus:ring-[#2b85ff]/30 focus:outline-none"
+                    placeholder="Enter your password"
+                  ></input>
+                  <label className="absolute inset-y-0 right-3 flex cursor-pointer items-center">
+                    <input
+                      type="checkbox"
+                      className="peer hidden"
+                      onChange={() => {
+                        setIsShowPassword(!isShowPassword);
+                      }}
+                      defaultChecked={true}
+                    />
+
+                    <Eye className="primary-text-color mr-2 block w-5 cursor-pointer peer-checked:hidden" />
+                    <EyeClosed className="primary-text-color mr-2 hidden w-5 cursor-pointer peer-checked:block" />
+                  </label>
+                </div>
               </div>
 
               {/* <div className="flex items-center justify-between text-sm">

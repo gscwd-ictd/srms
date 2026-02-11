@@ -164,7 +164,6 @@ const XilogDetailsCard: FunctionComponent<XilogDetailsCardDrops> = ({ open, feat
         `${process.env.NEXT_PUBLIC_APP_URL}/api/v1/xilog-iot-logger/entries/latest/${loggerData?.serialNumber}/${loggerData.channel}`,
         {},
       );
-      console.log(response.data);
       return response.data;
     },
     onMutate: () => {
@@ -248,7 +247,6 @@ const XilogDetailsCard: FunctionComponent<XilogDetailsCardDrops> = ({ open, feat
 
   useEffect(() => {
     const intervalSeconds = Number(process.env.NEXT_PUBLIC_INTERVAL_SECONDS);
-    console.log(featureData);
     if (open) {
       // if (featureData?.geometry?.flateCoordinates) {
       //   setLat(Number(featureData?.geometry?.flateCoordinates[0]));
@@ -285,14 +283,14 @@ const XilogDetailsCard: FunctionComponent<XilogDetailsCardDrops> = ({ open, feat
   return (
     <Sheet open={open} onOpenChange={setXilogDetailsCardOpen} modal={false}>
       <SheetContent
-        className="h-[380px] w-full gap-0 border border-stone-300 bg-white/90 text-black backdrop-blur"
+        className="ui-color-base h-[380px] w-full gap-0 border border-stone-300 text-black backdrop-blur"
         side="bottom"
         onInteractOutside={(e) => e.preventDefault()}
       >
         <SheetHeader className="m-5 p-0">
           <SheetTitle className="text-black">
             <div className="flex flex-row">
-              <div>{featureData?.serial || "--"}</div>
+              <div className="w-[5%]">{featureData?.serial || "--"}</div>
               <div className="flex items-center space-x-2 px-4">
                 <Switch
                   id="data-mode"
@@ -359,7 +357,7 @@ const XilogDetailsCard: FunctionComponent<XilogDetailsCardDrops> = ({ open, feat
                     </div>
                   )
                 ) : (
-                  <div className="pt-4 text-center text-red-400">Pressure Channel Not Registered</div>
+                  <div className="pt-4 text-center text-red-600">Pressure Channel Not Registered</div>
                 )}
               </div>
             </div>
@@ -378,7 +376,7 @@ const XilogDetailsCard: FunctionComponent<XilogDetailsCardDrops> = ({ open, feat
                     </div>
                   )
                 ) : (
-                  <div className="pt-4 text-center text-red-400">Flow Channel Not Registered</div>
+                  <div className="pt-4 text-center text-red-600">Flow Channel Not Registered</div>
                 )}
               </div>
             </div>
@@ -386,7 +384,7 @@ const XilogDetailsCard: FunctionComponent<XilogDetailsCardDrops> = ({ open, feat
 
           <div className="h-[250px] w-[65%] bg-gray-200/60">
             {isStreetView ? (
-              <div className="flex h-full w-full items-center justify-center bg-stone-300 text-black">
+              <div className="flex h-full w-full items-center justify-center text-black">
                 <StreetView lat={selectedLat} lng={selectedLng} />
               </div>
             ) : (

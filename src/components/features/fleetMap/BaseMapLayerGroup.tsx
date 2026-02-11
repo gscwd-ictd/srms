@@ -33,21 +33,6 @@ export const BaseMapLayerGroup: LayerGroup = new LayerGroup({
         key: "AIzaSyBZV9OFOavXzB-kM8ASQX4ZjFBXN9TFEwI",
         scale: "scaleFactor2x",
         highDpi: true,
-        mapType: "roadmap",
-      }),
-      visible: false,
-      preload: Infinity,
-      className: BaseLayerOptions.GOOGLE_MAP_ROAD,
-      properties: {
-        title: "GM Road",
-      },
-    }),
-
-    new TileLayer({
-      source: new Google({
-        key: "AIzaSyBZV9OFOavXzB-kM8ASQX4ZjFBXN9TFEwI",
-        scale: "scaleFactor2x",
-        highDpi: true,
         mapType: "satellite",
       }),
       visible: false,
@@ -71,6 +56,21 @@ export const BaseMapLayerGroup: LayerGroup = new LayerGroup({
       className: BaseLayerOptions.GOOGLE_MAP_TERRAIN,
       properties: {
         title: "GM Terrain",
+      },
+    }),
+
+    new TileLayer({
+      source: new Google({
+        key: "AIzaSyBZV9OFOavXzB-kM8ASQX4ZjFBXN9TFEwI",
+        scale: "scaleFactor2x",
+        highDpi: true,
+        mapType: "roadmap",
+      }),
+      visible: false,
+      preload: Infinity,
+      className: BaseLayerOptions.GOOGLE_MAP_ROAD,
+      properties: {
+        title: "GM Road",
       },
     }),
   ],

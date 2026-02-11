@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { importLibrary } from "@googlemaps/js-api-loader";
 import { initGoogleMaps } from "./InitializeMap";
 
@@ -11,6 +11,7 @@ interface StreetViewProps {
 
 export default function StreetView({ lat, lng }: StreetViewProps) {
   const containerRef = useRef<HTMLDivElement>(null);
+  const [streetViewFound, setStreetViewFound] = useState<boolean>(false);
 
   initGoogleMaps();
 
@@ -18,33 +19,45 @@ export default function StreetView({ lat, lng }: StreetViewProps) {
     let cancelled = false;
     let panorama: google.maps.StreetViewPanorama | null = null;
 
-    async function initStreetView() {
-      // Ensure API key is set - separated to another file to avoid multiple initializations
-      // setOptions({
-      //   key: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY!,
-      // });
+    console.log("Initializing Street View at", lat, lng);
 
-      // Load Maps library
+    async function initStreetView() {
+      setStreetViewFound(true);
       await importLibrary("maps");
 
-      if (cancelled || !containerRef.current) {
-        console.log("CANCELLED STREET VIEW");
-        return;
-      } else {
-        // Create Street View panorama
-        panorama = new google.maps.StreetViewPanorama(containerRef.current, {
-          position: { lat, lng },
-          pov: { heading: 165, pitch: 0 },
-          zoom: 1,
-          addressControl: true,
-          showRoadLabels: false,
-        });
+      if (cancelled || !containerRef.current) return;
 
-        // Optional: log when tiles are loaded
-        google.maps.event.addListenerOnce(panorama, "tilesloaded", () => {
-          console.log("Street View loaded!");
-        });
-      }
+      const streetViewService = new google.maps.StreetViewService();
+
+      streetViewService.getPanorama(
+        {
+          location: { lat, lng },
+          radius: 50, // meters — adjust if needed
+        },
+        (data, status) => {
+          if (cancelled) return;
+
+          if (status !== google.maps.StreetViewStatus.OK || !data) {
+            setStreetViewFound(false);
+            console.log("❌ No Street View available at", lat, lng);
+            return;
+          }
+          setStreetViewFound(true);
+          console.log("✅ Street View found");
+
+          panorama = new google.maps.StreetViewPanorama(containerRef.current!, {
+            pano: data.location!.pano,
+            pov: { heading: 165, pitch: 0 },
+            zoom: 1,
+            addressControl: true,
+            showRoadLabels: false,
+          });
+
+          google.maps.event.addListenerOnce(panorama, "tilesloaded", () => {
+            console.log("🧩 Street View tiles loaded");
+          });
+        },
+      );
     }
 
     initStreetView();
@@ -52,7 +65,6 @@ export default function StreetView({ lat, lng }: StreetViewProps) {
     return () => {
       cancelled = true;
       if (panorama) {
-        // Clear panorama to prevent memory leaks
         panorama.setVisible(false);
         panorama = null;
       }
@@ -61,7 +73,13 @@ export default function StreetView({ lat, lng }: StreetViewProps) {
 
   return (
     <div className="h-full w-full">
-      <div ref={containerRef} className="h-full w-full" />
+      <div ref={containerRef} className="relative flex h-full w-full items-center justify-center">
+        {!streetViewFound && (
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-md bg-white/80 p-4 shadow-md">
+            <p className="text-center text-gray-800">No Street View available at this location.</p>
+          </div>
+        )}
+      </div>
     </div>
   );
 }

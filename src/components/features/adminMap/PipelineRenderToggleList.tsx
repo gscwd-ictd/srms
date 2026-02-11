@@ -160,11 +160,11 @@ const PipelineRenderToggleList: FunctionComponent = ({}) => {
               }}
               defaultChecked={false}
             />
-            <Cog className="mr-2 block w-5 cursor-pointer text-white opacity-30 peer-checked:hidden" />
-            <Cog className="mr-2 hidden w-5 cursor-pointer text-white peer-checked:block" />
+            <Cog className="primary-text-color mr-2 block w-5 cursor-pointer opacity-30 peer-checked:hidden" />
+            <Cog className="primary-text-color mr-2 hidden w-5 cursor-pointer peer-checked:block" />
           </label>
           <AccordionTrigger className="w-40 items-center">
-            <p className="text-md font-bold text-white">Pipeline</p>
+            <p className="text-md primary-text-color font-bold">Pipeline</p>
           </AccordionTrigger>
         </div>
 
@@ -176,7 +176,7 @@ const PipelineRenderToggleList: FunctionComponent = ({}) => {
       </div>
 
       <AccordionContent className="flex flex-col gap-4 text-balance">
-        <ul className="mx-12 text-white">
+        <ul className="primary-text-color mx-12">
           <li>
             <div className="flex h-6">
               <div className="mr-3 h-5 w-2 rotate-90 transform bg-[#745945]"></div>

@@ -142,13 +142,13 @@ const WaterMeterRenderToggleList: FunctionComponent = ({}) => {
               }}
               defaultChecked={false}
             />
-            <CircleGauge className="mr-2 block w-5 cursor-pointer text-white opacity-30 peer-checked:hidden" />
-            <CircleGauge className="mr-2 hidden w-5 cursor-pointer text-white peer-checked:block" />
+            <CircleGauge className="primary-text-color mr-2 block w-5 cursor-pointer opacity-30 peer-checked:hidden" />
+            <CircleGauge className="primary-text-color mr-2 hidden w-5 cursor-pointer peer-checked:block" />
           </label>
           <AccordionTrigger className={`${isLoading ? "" : "w-40"} items-center`}>
-            <p className="text-md mr-2 font-bold text-white">Water Meters</p>
+            <p className="text-md primary-text-color mr-2 font-bold">Water Meters</p>
             <div>
-              <Table className="w-5 text-white" onClick={toggleTableModal} />
+              <Table className="primary-text-color w-5" onClick={toggleTableModal} />
             </div>
           </AccordionTrigger>
         </div>
@@ -161,7 +161,7 @@ const WaterMeterRenderToggleList: FunctionComponent = ({}) => {
       </div>
 
       <AccordionContent className="flex flex-col gap-4 text-balance">
-        <ul className="mx-11 text-white">
+        <ul className="primary-text-color mx-11">
           <li>
             <div className="flex h-6">
               <div className="mt-0.5 mr-2 h-4 w-4 rounded-3xl bg-[#1458FC]"></div>

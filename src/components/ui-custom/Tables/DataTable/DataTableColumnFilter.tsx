@@ -28,11 +28,7 @@ export function DataTableColumnFilter<TData, TValue>({
       {column.getCanFilter() ? (
         <Popover>
           <PopoverTrigger asChild>
-            <Button
-              variant="outline"
-              size="sm"
-              className="h-8 border-none bg-transparent hover:bg-gradient-to-r hover:from-indigo-600 hover:to-blue-600"
-            >
+            <Button variant="outline" size="sm" className="h-8 border-none bg-transparent hover:bg-blue-500">
               <>{title}</>
             </Button>
           </PopoverTrigger>
