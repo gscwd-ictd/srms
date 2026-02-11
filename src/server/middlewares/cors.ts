@@ -7,11 +7,8 @@ export const crossOrigin = createMiddleware(async (c, next) => {
     origin: [
       env.NEXT_PUBLIC_APP_URL,
       "http://localhost:3000",
-      "http://172.20.10.57:3000",
-      "http://172.20.10.63:3000",
-      "http://172.20.10.59:3000",
-      "http://172.20.10.84:3000",
-      "ws://172.20.10.58:7575"
+      "http://172.20.110.84:3000",
+      "ws://172.20.110.84:7575"
     ],
     allowHeaders: ["Content-Type", "Authorization", "User-Agent", "X-Response-Time", "Content-Length"],
     allowMethods: ["POST", "GET", "PATCH", "PUT", "DELETE", "OPTIONS"],

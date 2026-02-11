@@ -21,7 +21,7 @@ import BaseLayer from "ol/layer/Base";
 import { isEmpty } from "@srms/utils/isEmpty";
 import React from "react";
 import { AccordionContent, AccordionTrigger } from "@srms/components/ui/Accordion";
-import { Eye, EyeOff } from "lucide-react";
+import { Eye, EyeOff, CarFront } from "lucide-react";
 import VehicleDetailsCard from "./VehicleDetailsCard";
 
 interface TsTokensProps {
@@ -287,11 +287,11 @@ const VehicleRenderToggleList: FunctionComponent<TsTokensProps> = ({ accessToken
             }}
             defaultChecked={true}
           />
-          <EyeOff className="mr-2 block w-5 text-stone-800 peer-checked:hidden" />
-          <Eye className="mr-2 hidden w-5 text-stone-800 peer-checked:block" />
+          <CarFront className="primary-text-color mr-2 block w-5 cursor-pointer opacity-30 peer-checked:hidden" />
+          <CarFront className="primary-text-color mr-2 hidden w-5 cursor-pointer peer-checked:block" />
         </label>
-        <AccordionTrigger>
-          <p className="text-md font-bold text-black">Vehicles</p>
+        <AccordionTrigger className="w-40 items-center">
+          <p className="text-md primary-text-color font-bold">Vehicles</p>
         </AccordionTrigger>
       </div>
 
@@ -313,12 +313,12 @@ const VehicleRenderToggleList: FunctionComponent<TsTokensProps> = ({ accessToken
                         }}
                         checked={device.visible}
                       />
-                      <EyeOff className="mr-2 block w-5 text-stone-800 peer-checked:hidden" />
-                      <Eye className="mr-2 hidden w-5 text-stone-800 peer-checked:block" />
+                      <EyeOff className="primary-text-color mr-2 block w-5 peer-checked:hidden" />
+                      <Eye className="primary-text-color mr-2 hidden w-5 peer-checked:block" />
                     </label>
 
                     <div
-                      className="font-small w-full cursor-pointer text-sm leading-none text-black peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                      className="font-small primary-text-color w-full cursor-pointer text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                       onClick={() => toggleModal(device)}
                     >
                       <p>Plate No./Driver: {device.deviceName}</p>
@@ -326,7 +326,7 @@ const VehicleRenderToggleList: FunctionComponent<TsTokensProps> = ({ accessToken
                       <p>Vehicle Type: {device.mcType}</p>
                     </div>
                   </div>
-                  <hr className="my-1 last:hidden" />
+                  <hr className="my-1 bg-white last:hidden" />
                 </React.Fragment>
               ))}
             </>

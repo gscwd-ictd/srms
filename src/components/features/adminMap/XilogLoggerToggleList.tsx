@@ -7,7 +7,7 @@ import VectorLayer from "ol/layer/Vector";
 import { useAdminMonitMap } from "./contexts/useAdminMonitMapContext";
 import { isEmpty } from "@srms/utils/isEmpty";
 import { AccordionContent, AccordionTrigger } from "@srms/components/ui/Accordion";
-import { Eye, EyeOff } from "lucide-react";
+import { Cpu } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { LoggerDetails } from "@srms/lib/pms/types";
 import axios from "axios";
@@ -152,11 +152,11 @@ const XilogLoggerToggleList: FunctionComponent = ({}) => {
               }}
               defaultChecked={true}
             />
-            <EyeOff className="mr-2 block w-5 text-stone-800 peer-checked:hidden" />
-            <Eye className="mr-2 hidden w-5 text-stone-800 peer-checked:block" />
+            <Cpu className="primary-text-color mr-2 block w-5 cursor-pointer opacity-30 peer-checked:hidden" />
+            <Cpu className="primary-text-color mr-2 hidden w-5 cursor-pointer peer-checked:block" />
           </label>
           <AccordionTrigger className="items-center">
-            <p className="text-md font-bold text-black">Xilog Data Logger</p>
+            <p className="text-md primary-text-color mr-2 font-bold">Xilog Data Logger</p>
           </AccordionTrigger>
         </div>
 
@@ -168,10 +168,10 @@ const XilogLoggerToggleList: FunctionComponent = ({}) => {
       </div>
 
       <AccordionContent className="flex flex-col gap-4 text-balance">
-        <ul className="mx-12 text-stone-900">
+        <ul className="primary-text-color mx-11">
           <li>
             <div className="flex h-6">
-              <div className="mt-0.5 mr-2 h-4 w-4 rounded-3xl bg-blue-500"></div>
+              <div className="mt-0.5 mr-2 h-4 w-4 rounded-3xl bg-blue-600"></div>
               Data Logger
             </div>
           </li>

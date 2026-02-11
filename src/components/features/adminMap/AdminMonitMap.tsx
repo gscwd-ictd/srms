@@ -1,35 +1,45 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 
-import { type PropsWithChildren, type FunctionComponent, useRef, useEffect } from "react";
+import { type PropsWithChildren, type FunctionComponent, useRef, useEffect, useState } from "react";
 import { useGeographic } from "ol/proj";
 import View from "ol/View";
 import { BaseMapLayerGroup } from "./BaseMapLayerGroup";
 import { useAdminMonitMap } from "./contexts/useAdminMonitMapContext";
 import { useMapStore } from "@srms/components/stores/useMapStore";
-// import { useSidebar } from "@srms/components/ui/Sidebar";
+import { usePositionStore } from "@srms/components/stores/usePositionStore";
+// import { createStreetViewCoverageLayer } from "../streetView/StreetViewCoverageLayer";
+// import Point from "ol/geom/Point";
 
 export const AdminMonitMap: FunctionComponent<PropsWithChildren> = ({ children }) => {
-  // const { setOpen } = useSidebar();
-
-  /**
-   * Calling the useGeographic function makes it so the map view uses
-   * geographic coordinates (even if the view projection is not geographic).
-   *
-   * See more at: https://openlayers.org/en/latest/apidoc/module-ol_proj.html#.useGeographic
-   */
-  useGeographic();
+  useGeographic(); // make map use geographic coordinates
 
   const adminMonitMap = useAdminMonitMap();
-
   const mapRef = useRef<HTMLDivElement>(null);
 
   const { viewport } = useMapStore();
+  const setLat = usePositionStore((state) => state.setLat);
+  const setLng = usePositionStore((state) => state.setLng);
+
+  const [profile, setProfile] = useState<any>(null);
+  useEffect(() => {
+    async function getProfile() {
+      const token = localStorage.getItem("token");
+
+      const res = await fetch("/api/profile", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      const data = await res.json();
+      setProfile(data);
+    }
+
+    getProfile();
+  }, []);
 
   useEffect(() => {
-    // // By default in this page, sidebar is closed
-    // setOpen(false);
-
     if (!mapRef.current) return;
 
     adminMonitMap.mapManager.init({
@@ -45,9 +55,35 @@ export const AdminMonitMap: FunctionComponent<PropsWithChildren> = ({ children }
       }),
     });
 
-    // adminMonitMap.mapManager.getMap().on("click", (e) => {
-    //   const coord = e.coordinate;
-    //   console.log(coord);
+    const map = adminMonitMap.mapManager.getMap();
+
+    // const coverageExtent = [125.17028, 6.116382, 125.17597, 6.1186]; //street view coverage extent around oval plaza
+    // const coverageLayer = createStreetViewCoverageLayer(coverageExtent);
+
+    // ADD THE LAYER
+    // map.addLayer(coverageLayer);
+
+    // Optional
+    // map.getView().fit(coverageExtent, {
+    //   padding: [20, 20, 20, 20],
+    //   duration: 500,
+    // });
+
+    // Click handler
+    map.on("click", (e) => {
+      const [lng, lat] = e.coordinate;
+      setLng(lng!);
+      setLat(lat!);
+      console.log(`Map clicked at lng: ${lng}, lat: ${lat}`);
+    });
+
+    // add feature HANDLER
+    // coverageLayer.getSource()?.on("addfeature", (e) => {
+    //   const geom = e.feature!.getGeometry();
+
+    //   if (geom instanceof Point) {
+    //     console.log("Feature added:", geom.getCoordinates());
+    //   }
     // });
 
     return () => {

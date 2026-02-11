@@ -89,12 +89,12 @@ const ValveDetailsCard: FunctionComponent<ValveDetailsCardDrops> = ({ open, onOp
   return (
     <Sheet key="right" open={open} onOpenChange={onOpenChange} modal={false}>
       <SheetContent
-        className="m-1.5 h-[98.5vh] w-[400px] gap-0 rounded-lg border-0 bg-white text-zinc-800"
+        className="ui-color-base primary-text-color m-1.5 h-[98.5vh] w-[400px] gap-0 rounded-lg border-none backdrop-blur"
         onInteractOutside={(e) => e.preventDefault()}
       >
         <SheetHeader className="m-6 mb-2 p-0">
-          <SheetTitle className="text-black">{}</SheetTitle>
-          <SheetDescription className="text-stone-600">{}</SheetDescription>
+          <SheetTitle className="primary-text-color">{}</SheetTitle>
+          <SheetDescription className="primary-text-color">{}</SheetDescription>
         </SheetHeader>
 
         <ScrollArea className="h-[90vh]">
@@ -102,7 +102,7 @@ const ValveDetailsCard: FunctionComponent<ValveDetailsCardDrops> = ({ open, onOp
             <Spinner size={"lg"} />
           ) : (
             <>
-              <div className="m-4 rounded-md border-1 border-stone-300 p-5">
+              <div className="m-4 rounded-md border-1 border-indigo-300 p-5 shadow">
                 <h3 className="pb-3 font-bold">{featureData?.id}</h3>
 
                 <div className="grid gap-2">
@@ -155,7 +155,7 @@ const ValveDetailsCard: FunctionComponent<ValveDetailsCardDrops> = ({ open, onOp
             </>
           )}
 
-          <div className="m-4 rounded-md border-1 border-stone-300 p-5">
+          <div className="m-4 rounded-md border-1 border-indigo-300 p-5 shadow">
             <h3 className="pb-3 font-bold">Current Settings</h3>
 
             <div className="grid gap-2">
@@ -188,12 +188,12 @@ const ValveDetailsCard: FunctionComponent<ValveDetailsCardDrops> = ({ open, onOp
             </div>
           </div>
 
-          <div className="m-4 rounded-md border-1 border-stone-300 p-5">
+          <div className="m-4 rounded-md border-1 border-indigo-300 p-5 shadow">
             <h3 className="pb-3 font-bold">History</h3>
 
-            <Accordion type="single" collapsible className="w-full">
+            <Accordion type="single" collapsible className="primary-text-color w-full">
               <AccordionItem value="id-1">
-                <AccordionTrigger className="rounded-none bg-gray-100 p-3">
+                <AccordionTrigger className="rounded-none bg-indigo-500/50 p-3">
                   May 15, 2025 - June 01, 2025
                 </AccordionTrigger>
                 <AccordionContent className="flex flex-col gap-4 p-3 text-balance">
@@ -238,7 +238,7 @@ const ValveDetailsCard: FunctionComponent<ValveDetailsCardDrops> = ({ open, onOp
               </AccordionItem>
 
               <AccordionItem value="id-2">
-                <AccordionTrigger className="rounded-none bg-gray-100 p-3">
+                <AccordionTrigger className="rounded-none bg-indigo-500/50 p-3">
                   February 21, 2025 - May 15, 2025
                 </AccordionTrigger>
                 <AccordionContent className="flex flex-col gap-4 p-3 text-balance">
@@ -283,21 +283,21 @@ const ValveDetailsCard: FunctionComponent<ValveDetailsCardDrops> = ({ open, onOp
               </AccordionItem>
 
               <AccordionItem value="id-3">
-                <AccordionTrigger className="rounded-none bg-gray-100 p-3">
+                <AccordionTrigger className="rounded-none bg-indigo-500/50 p-3">
                   Month XX, XXXX - Month XX, XXXX
                 </AccordionTrigger>
                 <AccordionContent className="flex flex-col gap-4 p-3 text-balance"></AccordionContent>
               </AccordionItem>
 
               <AccordionItem value="id-4">
-                <AccordionTrigger className="rounded-none bg-gray-100 p-3">
+                <AccordionTrigger className="rounded-none bg-indigo-500/50 p-3">
                   Month XX, XXXX - Month XX, XXXX
                 </AccordionTrigger>
                 <AccordionContent className="flex flex-col gap-4 p-3 text-balance"></AccordionContent>
               </AccordionItem>
 
               <AccordionItem value="id-5">
-                <AccordionTrigger className="rounded-none bg-gray-100 p-3">
+                <AccordionTrigger className="rounded-none bg-indigo-500/50 p-3">
                   Month XX, XXXX - Month XX, XXXX
                 </AccordionTrigger>
                 <AccordionContent className="flex flex-col gap-4 p-3 text-balance"></AccordionContent>

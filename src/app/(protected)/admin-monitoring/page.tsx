@@ -17,9 +17,7 @@ export default async function AdminMonitoringPage() {
   return (
     <AdminMonitMapProvider>
       <AdminMonitMap />
-
       <BaseLayerPicker />
-
       <LayersCard />
     </AdminMonitMapProvider>
   );

@@ -166,10 +166,7 @@ export function DataTable<T>({
             <Table className="min-w-full [&_td]:px-4 [&_th]:px-4">
               <TableHeader className={cn(sticky ? "sticky top-0 z-10" : "")}>
                 {table.getHeaderGroups().map((headerGroup) => (
-                  <TableRow
-                    key={headerGroup.id}
-                    className="sticky bg-cyan-600 text-amber-50 hover:bg-cyan-600"
-                  >
+                  <TableRow key={headerGroup.id} className="ui-color-base sticky text-amber-50 backdrop-blur">
                     {headerGroup.headers.map((header) => (
                       <TableHead key={header.id}>
                         <div className="flex items-center py-1">
@@ -182,7 +179,7 @@ export function DataTable<T>({
                               onClick={() =>
                                 header.column.toggleSorting(header.column.getIsSorted() === "asc")
                               }
-                              className="rounded-none hover:bg-cyan-600"
+                              className="h-8 rounded-md hover:bg-blue-500"
                             >
                               {header.column.getIsSorted() === "desc" ? (
                                 <ArrowDownIcon className="ml-1 h-4 w-4" />

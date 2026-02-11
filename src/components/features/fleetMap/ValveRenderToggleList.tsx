@@ -18,7 +18,7 @@ import { useQuery } from "@tanstack/react-query";
 import { isEmpty } from "@srms/utils/isEmpty";
 import React from "react";
 import { Spinner } from "@srms/components/ui-custom/Spinner";
-import { Eye, EyeOff } from "lucide-react";
+import { Hexagon } from "lucide-react";
 import { AccordionContent, AccordionTrigger } from "@srms/components/ui/Accordion";
 import ValveDetailsCard from "./ValveDetailsCard";
 
@@ -140,26 +140,25 @@ export const ValveRenderToggleList: FunctionComponent = () => {
               }}
               defaultChecked={false}
             />
-            <EyeOff className="mr-2 block w-5 text-stone-800 peer-checked:hidden" />
-            <Eye className="mr-2 hidden w-5 text-stone-800 peer-checked:block" />
-          </label>
 
-          <AccordionTrigger className="items-center">
-            <p className="text-md font-bold text-black">Valves</p>
+            <Hexagon className="primary-text-color mr-2 block w-5 cursor-pointer opacity-30 peer-checked:hidden" />
+            <Hexagon className="primary-text-color mr-2 hidden w-5 cursor-pointer peer-checked:block" />
+          </label>
+          <AccordionTrigger className={`${isLoading ? "w-30" : "w-40"} items-center`}>
+            <p className="text-md primary-text-color mr-2 font-bold">Valves</p>
           </AccordionTrigger>
         </div>
-
         {isLoading ? (
           <div className="spinner">
-            <Spinner size={"sm"} className="mt-4" />
+            <Spinner size={"sm"} className="mt-2" />
           </div>
         ) : null}
       </div>
       <AccordionContent className="flex flex-col gap-4 text-balance">
-        <ul className="mx-12 text-stone-900">
+        <ul className="primary-text-color mx-12">
           <li>
             <div className="flex h-6">
-              <div className="mr-3 h-5 w-2 rotate-90 transform bg-blue-500"></div>
+              <div className="mr-3 h-5 w-2 rotate-90 transform bg-blue-600"></div>
               {ValveStatus.OPEN}
             </div>
           </li>
@@ -172,7 +171,7 @@ export const ValveRenderToggleList: FunctionComponent = () => {
           </li>
         </ul>
       </AccordionContent>
-      <ValveDetailsCard open={isModalOpen} onOpenChange={setIsModalOpen} featureData={selectedValve} />;
+      <ValveDetailsCard open={isModalOpen} onOpenChange={setIsModalOpen} featureData={selectedValve} />
     </React.Fragment>
   );
 };

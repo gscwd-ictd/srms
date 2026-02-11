@@ -34,13 +34,15 @@ const WaterMeterDetailsCard: FunctionComponent<WaterMeterDetailsCardProps> = ({ 
   return (
     <Sheet open={open} onOpenChange={onOpenChange} modal={false}>
       <SheetContent
-        className="m-1.5 h-[98vh] w-[400px] gap-0 rounded-lg border-0 bg-white text-black"
+        className="ui-color-base primary-text-color m-1.5 h-[98vh] w-[400px] gap-0 rounded-lg border-0 backdrop-blur"
         onInteractOutside={(e) => e.preventDefault()}
         side="right"
       >
         <SheetHeader className="m-6 p-0">
-          <SheetTitle className="text-black">{selectedWaterMeter.properties?.consumern || "--"}</SheetTitle>
-          <SheetDescription className="text-stone-600">
+          <SheetTitle className="primary-text-color">
+            {selectedWaterMeter.properties?.consumern || "--"}
+          </SheetTitle>
+          <SheetDescription className="primary-text-color">
             Account No: {selectedWaterMeter.properties?.accountno || "--"} | Meter No:{" "}
             {selectedWaterMeter.properties?.meterno || "--"}
           </SheetDescription>
@@ -48,12 +50,14 @@ const WaterMeterDetailsCard: FunctionComponent<WaterMeterDetailsCardProps> = ({ 
 
         <ScrollArea className="h-full">
           <div className="mx-3">
-            <Alert className="text-center uppercase">
+            <Alert
+              className={`${selectedWaterMeter.properties?.status === "Connected" ? "bg-green-500" : "bg-red-600"} border-none text-center uppercase shadow`}
+            >
               <AlertTitle>{selectedWaterMeter.properties?.status || "--"}</AlertTitle>
             </Alert>
           </div>
 
-          <div className="m-4 rounded-md border-1 border-stone-400 p-3">
+          <div className="m-4 rounded-md border-1 border-indigo-400 p-3 shadow">
             {/* <h3 className="pb-2 font-bold">Device</h3> */}
             <div className="grid gap-2">
               <div className="flex space-x-1.5 text-sm">

@@ -8,7 +8,7 @@ import VectorLayer from "ol/layer/Vector";
 import { useFleetMap } from "./contexts/useFleetMapContext";
 import { isEmpty } from "@srms/utils/isEmpty";
 import { AccordionContent, AccordionTrigger } from "@srms/components/ui/Accordion";
-import { Eye, EyeOff, Table } from "lucide-react";
+import { Table, CircleGauge } from "lucide-react";
 import { MarkerStyles } from "@srms/server/types";
 import { createMarkerStyles } from "./utils/createMarkerStyles";
 import { Spinner } from "@srms/components/ui-custom/Spinner";
@@ -129,6 +129,9 @@ const WaterMeterRenderToggleList: FunctionComponent = ({}) => {
   return (
     <React.Fragment>
       <div className="flex">
+        {/* <div className="spinner">
+          <Spinner size={"sm"} className="mt-4" />
+        </div> */}
         <div className="flex cursor-pointer items-center space-x-2 p-2">
           <label>
             <input
@@ -139,16 +142,15 @@ const WaterMeterRenderToggleList: FunctionComponent = ({}) => {
               }}
               defaultChecked={false}
             />
-            <EyeOff className="mr-2 block w-5 text-stone-800 peer-checked:hidden" />
-            <Eye className="mr-2 hidden w-5 text-stone-800 peer-checked:block" />
+            <CircleGauge className="primary-text-color mr-2 block w-5 cursor-pointer opacity-30 peer-checked:hidden" />
+            <CircleGauge className="primary-text-color mr-2 hidden w-5 cursor-pointer peer-checked:block" />
           </label>
-
-          <AccordionTrigger className="items-center">
-            <p className="text-md font-bold text-black">Water Meters</p>
+          <AccordionTrigger className={`${isLoading ? "" : "w-40"} items-center`}>
+            <p className="text-md primary-text-color mr-2 font-bold">Water Meters</p>
+            <div>
+              <Table className="primary-text-color w-5" onClick={toggleTableModal} />
+            </div>
           </AccordionTrigger>
-          <div>
-            <Table className="mr-2 w-5 text-stone-800" onClick={toggleTableModal} />
-          </div>
         </div>
 
         {isLoading ? (
@@ -159,7 +161,7 @@ const WaterMeterRenderToggleList: FunctionComponent = ({}) => {
       </div>
 
       <AccordionContent className="flex flex-col gap-4 text-balance">
-        <ul className="mx-12 text-stone-900">
+        <ul className="primary-text-color mx-11">
           <li>
             <div className="flex h-6">
               <div className="mt-0.5 mr-2 h-4 w-4 rounded-3xl bg-[#1458FC]"></div>

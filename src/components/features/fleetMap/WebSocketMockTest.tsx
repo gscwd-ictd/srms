@@ -1,13 +1,12 @@
-import { AccordionTrigger } from "@radix-ui/react-accordion";
-import { Accordion, AccordionContent, AccordionItem } from "@srms/components/ui/Accordion";
+import { AccordionContent, AccordionTrigger } from "@srms/components/ui/Accordion";
 import { Button } from "@srms/components/ui/Button";
-import { Input } from "@srms/components/ui/Input";
-import React, { use, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FunctionComponent } from "react";
 import PumpingStationCard from "./PumpingStationCard";
 import { mockPumpData, PumpData } from "@srms/lib/pumpstation/pumpStationType";
 import { useCardStore } from "@srms/components/stores/useCardStore";
 import { usePumpingStationStore } from "@srms/components/stores/usePumpingStationStore";
+import { HardDrive } from "lucide-react";
 
 interface WebSocketMockTestProps {}
 
@@ -30,27 +29,67 @@ const WebSocketMockTest: FunctionComponent<WebSocketMockTestProps> = () => {
             .filter((d) => d.name === station)
             .sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
           return stationData[0] ?? mockPumpData[0]; // The latest one
-        }).filter((d): d is PumpData => d !== undefined); // ✅ removes undefined safely
+        })
+        .filter((d): d is PumpData => d !== undefined); // ✅ removes undefined safely
 
       setLatestData(latestPerStation);
-      console.log(`✅ Loaded mock pump data for WebSocketMockTest component. ${latestPerStation.length} stations loaded.`);
+      console.log(
+        `✅ Loaded mock pump data for WebSocketMockTest component. ${latestPerStation.length} stations loaded.`,
+      );
     };
     loadData();
   }, []);
   return (
     <>
       <div className="flex cursor-pointer items-center space-x-2 p-2">
+        <label>
+          <HardDrive className="primary-text-color mr-2 block w-5 cursor-pointer peer-checked:hidden" />
+        </label>
         <AccordionTrigger className="items-center">
-          <p className="text-md font-bold text-black">Mock Water Station Data</p>
+          <p className="text-md primary-text-color font-bold">Mock Water Station Data</p>
         </AccordionTrigger>
       </div>
-      <Accordion className="accordion" type="multiple">
+      <AccordionContent className="flex flex-col gap-4 text-balance">
+        {Object.keys(latestData).length === 0 ? (
+          <p className="primary-text-color mt-4 italic">Waiting for JSON data...</p>
+        ) : (
+          <ul className="primary-text-color ml-12">
+            {Object.values(latestData).map((ps: PumpData, index: number) => (
+              <li key={ps.name} className="mb-1">
+                <div
+                  className="primary-text-color flex h-6 cursor-pointer transition-all hover:font-bold"
+                  onClick={() => setPumpingStationCardOpen(index + 1)}
+                >
+                  {ps.name.replace(/ps/i, "Pumping Station ").toUpperCase()}
+                </div>
+
+                {/* <Button
+                  onClick={() => setPumpingStationCardOpen(index + 1)}
+                  className="mt-0.5 mr-2 mr-3 h-4 w-4 hover:bg-green-500 hover:primary-text-color"
+                >
+                  <p className="text-xs font-bold text-black">
+                    {ps.name.replace(/ps/i, "Pumping Station ").toUpperCase()}
+                  </p>
+                </Button> */}
+
+                {pumpingStationCardOpen == index + 1 ? (
+                  <PumpingStationCard open={pumpingStationCardOpen == index + 1} ps={ps} />
+                ) : (
+                  ""
+                )}
+              </li>
+            ))}
+          </ul>
+        )}
+      </AccordionContent>
+
+      {/* <Accordion className="accordion" type="multiple">
         <AccordionContent className="flex flex-col gap-4 p-4 text-balance">
           {Object.keys(latestData).length === 0 ? (
-            <p className="mt-4 text-gray-500 italic">Waiting for JSON data...</p>
+            <p className="mt-4 primary-text-color italic">Waiting for JSON data...</p>
           ) : (
             <div className="overflow-y-auto rounded-xl border bg-white p-4 shadow-md">
-              <h2 className="mb-4 flex items-center text-lg font-bold text-black">PUMPING STATIONS</h2>
+              <h2 className="text-md mb-4 flex items-center font-bold text-black">PUMPING STATIONS</h2>
 
               <div className="space-y-4">
                 {Object.values(latestData).map((ps: PumpData, index: number) => (
@@ -58,9 +97,9 @@ const WebSocketMockTest: FunctionComponent<WebSocketMockTestProps> = () => {
                     <AccordionItem value={ps.name} key={ps.name}>
                       <Button
                         onClick={() => setPumpingStationCardOpen(index + 1)}
-                        className="transition-colors hover:bg-green-500 hover:text-white"
+                        className="transition-colors hover:bg-green-500 hover:primary-text-color"
                       >
-                        <p className="text-md font-bold text-black">
+                        <p className="text-sm font-bold text-black">
                           {ps.name.replace(/ps/i, "Pumping Station ").toUpperCase()}
                         </p>
                       </Button>
@@ -77,7 +116,7 @@ const WebSocketMockTest: FunctionComponent<WebSocketMockTestProps> = () => {
             </div>
           )}
         </AccordionContent>
-      </Accordion>
+      </Accordion> */}
     </>
   );
 };
