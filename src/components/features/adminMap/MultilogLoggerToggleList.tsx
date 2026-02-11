@@ -8,9 +8,9 @@ import { useAdminMonitMap } from "./contexts/useAdminMonitMapContext";
 import { isEmpty } from "@srms/utils/isEmpty";
 import { AccordionContent, AccordionTrigger } from "@srms/components/ui/Accordion";
 import { Eye, EyeOff } from "lucide-react";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { MultilogLogger } from "@srms/lib/pms/types";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { Spinner } from "@srms/components/ui-custom/Spinner";
 import LoggerMarker from "../../../../public/images/logger.svg";
 import { IconStyles, LabelStyles } from "@srms/server/types";
@@ -29,6 +29,33 @@ const MultilogLoggerToggleList: FunctionComponent = ({}) => {
 
   // Open modal for viewing logger details
   const [selectedLogger, setSelectedLogger] = useState<MultilogLogger>();
+
+  const { mutateAsync: latestPressureLogMutation } = useMutation({
+    mutationKey: ["latest-pressure-log-map"],
+    mutationFn: async (serialNumber: string) => {
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_APP_URL}/api/v1/multilog-iot-loggers/entry/latest/${serialNumber}`,
+        {},
+      );
+
+      if (response.data[0]?.channels !== undefined && response.data[0]?.channels?.length > 0) {
+        const entry = response.data[0]?.channels.find(
+          (channel: { measurement: { name: string } }) => channel.measurement.name === "Pressure",
+        );
+
+        return entry.lastValue;
+      } else {
+        return "0.0";
+      }
+      // return response.data;
+    },
+    // onSuccess: async (data) => {
+    //   console.log(data);
+    // },
+    onError: (error: AxiosError<{ message: string }>) => {
+      console.log(error);
+    },
+  });
 
   const { data: multilogLoggers, isLoading } = useQuery({
     queryKey: ["get-all-multilog-loggers"],
@@ -88,6 +115,12 @@ const MultilogLoggerToggleList: FunctionComponent = ({}) => {
           };
           const featureStyle = createIconStyles(loggerStyles as IconStyles);
 
+          const pressureData = latestPressureLogMutation(logger.serialNumber);
+
+          // const {pressureData} = latestPressureLogMutation(logger.serialNumber).then((data) => {
+          //   console.log(data);
+          // });
+
           const labelStyles = {
             font: "13px Calibri,sans-serif",
             overflow: true,
@@ -95,7 +128,8 @@ const MultilogLoggerToggleList: FunctionComponent = ({}) => {
             strokeColor: "#fff",
             width: 3,
             offsetY: 12,
-            text: `${logger.serialNumber}`,
+            // text: `${logger.serialNumber}`,
+            text: `${pressureData}`,
           };
           const featureStyle2 = createLabelStyles(labelStyles as LabelStyles);
 
