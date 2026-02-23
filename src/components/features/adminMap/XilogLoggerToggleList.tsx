@@ -104,7 +104,7 @@ const XilogLoggerToggleList: FunctionComponent = ({}) => {
 
       vectorLayer.setSource(vectorSource);
 
-      vectorLayer.setVisible(true); // set default visibility
+      vectorLayer.setVisible(false); // set default visibility
 
       vectorLayer.setZIndex(998);
 

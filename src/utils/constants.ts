@@ -23,6 +23,7 @@ export const TAGS = {
   TRACKSOLID: ["Tracksolid"],
   PRESSURE_MANAGEMENT: ["Pressure Management"],
   WATER_METERS: ["Water Meters"],
+  CONSUMER: ["Consumer"],
 };
 
 export const fixtureUnitType = ["private", "public"] as const;
