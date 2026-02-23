@@ -62,7 +62,7 @@
     "drizzle-orm": "^1.0.0-beta.12-a5629fb",
     "drizzle-zod": "^0.7.0",
     "embla-carousel-react": "^8.5.2",
-    "framer-motion": "^12.23.22",
+    "framer-motion": "^12.34.0",
     "hono": "^4.7.4",
     "hono-pino": "^0.7.2",
     "hono-rate-limiter": "^0.4.2",

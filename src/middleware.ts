@@ -33,8 +33,6 @@ export default async function middleware(req: NextRequest) {
       // cookieStore.set("refreshToken", response?.data?.result?.refreshToken);
 
       return NextResponse.redirect(new URL("/fleet", req.url));
-
-      return;
     } catch (error) {
       console.log(error);
       throw error;
