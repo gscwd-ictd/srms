@@ -352,22 +352,22 @@
 
 /* nav color scheme */
 .ui-color-base {
-  /* background-color: rgba(33, 142, 245, 0.8); */
-  background: #bde8f5;
-  background: linear-gradient(180deg, #b5eaf8 0%, #368fe0 100%);
+  background-color: rgb(251, 253, 255);
+  /* background: #bde8f5;
+  background: linear-gradient(180deg, #b5eaf8 0%, #368fe0 100%); */
   transition: all 0.2s ease-in-out;
 }
 
 .ui-color-button {
-  /* background-color: rgba(73, 136, 196, 1); */
-  background: #b5eaf8;
-  background: linear-gradient(180deg, #b5eaf8 0%, #368fe0 100%);
+  background-color: rgb(61, 152, 236);
+  /* background: #b5eaf8; */
+  /* background: linear-gradient(180deg, #b5eaf8 0%, #368fe0 100%); */
   transition: all 0.5s ease-in-out;
 }
 
 .ui-color-button:hover {
-  /* background-color: rgba(73, 136, 196, 1); */
-  background: linear-gradient(180deg, rgba(156, 223, 243, 0.8) 0%, rgba(73, 136, 196, 0.8) 100%);
+  background-color: rgba(61, 152, 236, 0.8);
+  /* background: linear-gradient(180deg, rgba(156, 223, 243, 0.8) 0%, rgba(73, 136, 196, 0.8) 100%); */
   transition: all 0.5s ease-in-out;
 }
 

@@ -145,30 +145,30 @@ const WaterMeterRenderToggleList: FunctionComponent = ({}) => {
             <CircleGauge className="primary-text-color mr-2 block w-5 cursor-pointer opacity-30 peer-checked:hidden" />
             <CircleGauge className="primary-text-color mr-2 hidden w-5 cursor-pointer peer-checked:block" />
           </label>
-          <AccordionTrigger className={`${isLoading ? "" : "w-40"} items-center`}>
+          <AccordionTrigger className={`w-50 items-center`}>
             <p className="text-md primary-text-color mr-2 font-bold">Water Meters</p>
             <div>
               <Table className="primary-text-color w-5" onClick={toggleTableModal} />
             </div>
           </AccordionTrigger>
         </div>
+      </div>
 
+      <AccordionContent className="flex flex-col gap-4 text-balance">
         {isLoading ? (
           <div className="spinner">
             <Spinner size={"sm"} className="mt-4" />
           </div>
-        ) : null}
-      </div>
-
-      <AccordionContent className="flex flex-col gap-4 text-balance">
-        <ul className="primary-text-color mx-11">
-          <li>
-            <div className="flex h-6">
-              <div className="mt-0.5 mr-2 h-4 w-4 rounded-3xl bg-[#1458FC]"></div>
-              Water Meter
-            </div>
-          </li>
-        </ul>
+        ) : (
+          <ul className="primary-text-color mx-11">
+            <li>
+              <div className="flex h-6">
+                <div className="mt-0.5 mr-2 h-4 w-4 rounded-3xl bg-[#1458FC]"></div>
+                Water Meter
+              </div>
+            </li>
+          </ul>
+        )}
       </AccordionContent>
 
       <WaterMeterCard open={waterMeterTableCardOpen} onOpenChange={setWaterMeterTableCardOpen} />
