@@ -178,7 +178,7 @@ const WaterMeterTable: FunctionComponent<WaterMeterTableProps> = ({ open }) => {
     },
     {
       accessorKey: "properties.status",
-      header: ({ column }) => <DataTableColumnFilter column={column} title="Address" />,
+      header: ({ column }) => <DataTableColumnFilter column={column} title="Status" />,
     },
     {
       accessorKey: "properties.consumert",
