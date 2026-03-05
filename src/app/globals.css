@@ -371,6 +371,13 @@
   transition: all 0.5s ease-in-out;
 }
 
+.ui-color-button-no-hover {
+  background-color: rgb(61, 152, 236);
+  /* background: #b5eaf8; */
+  /* background: linear-gradient(180deg, #b5eaf8 0%, #368fe0 100%); */
+  transition: all 0.5s ease-in-out;
+}
+
 /* text color in nav and side modals */
 .primary-text-color {
   color: #1b1b1b;

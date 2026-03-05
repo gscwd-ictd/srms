@@ -17,7 +17,8 @@ import { useCardStore } from "@srms/components/stores/useCardStore";
 import WaterMeterDetailsCard from "./WaterMeterDetailsCard";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
-import { WaterMeterData } from "@srms/lib/watermeters/types";
+import { WaterMeterData, WaterMeterFeatureData } from "@srms/lib/watermeters/types";
+import { useWaterMeterStore } from "@srms/components/stores/useWaterMeterStore";
 
 const featureManager = new FeatureManager();
 
@@ -54,8 +55,10 @@ const WaterMeterRenderToggleList: FunctionComponent = ({}) => {
     setWaterMeterTableCardOpen,
     waterMeterDetailsCardOpen,
     setWaterMeterDetailsCardOpen,
+    setValveDetailsCardOpen,
+    setVehicleDetailsCardOpen,
   } = useCardStore();
-
+  const { setSelectedWaterMeter } = useWaterMeterStore();
   const toggleTableModal = () => {
     setLayerToggleCardOpen(!layerToggleCardOpen);
     setWaterMeterTableCardOpen(!waterMeterTableCardOpen);
@@ -119,6 +122,55 @@ const WaterMeterRenderToggleList: FunctionComponent = ({}) => {
       vectorLayer.setProperties({ id: "water-meter" });
 
       fleetMap.mapManager.getLayerManager().addLayer("water-meters", vectorLayer);
+
+      // Open card modal for valve details
+      fleetMap.mapManager.getMap().on("click", (e) => {
+        const feature = fleetMap.mapManager.getMap().forEachFeatureAtPixel(e.pixel, (feature) => {
+          return feature;
+        });
+        setWaterMeterDetailsCardOpen(false);
+
+        if (!feature) {
+          return;
+        }
+
+        const props = feature.getProperties() as WaterMeterFeatureData;
+        setSelectedWaterMeter({
+          type: "Feature",
+          id: props.id,
+          geometry: {
+            type: "Point",
+            coordinates: props.geometry.flatCoordinates,
+          },
+          geometry_name: "",
+          properties: {
+            accountno: props.accountno,
+            address: props.address,
+            aveusage: props.aveusage,
+            billed: props.billed,
+            billedvol: props.billedvol,
+            bookcode: props.bookcode,
+            consumern: props.consumern,
+            consumert: props.consumert,
+            contactno: props.contactno,
+            datecon: props.datecon,
+            datediscon: props.datediscon,
+            m3perhr: props.m3perhr,
+            meterbrnd: props.meterbrnd,
+            meterno: props.meterno,
+            metersize: props.metersize,
+            status: props.status,
+            zonecode: props.zonecode,
+          },
+        });
+
+        if (props.accountno) {
+          //if water meter account number exists, open details card
+          setValveDetailsCardOpen(false); //close valve details card if open
+          setVehicleDetailsCardOpen(false); //close vehicle details card if open
+          setWaterMeterDetailsCardOpen(true);
+        }
+      });
 
       return () => {
         fleetMap.mapManager.getLayerManager().removeLayer("water-meters");

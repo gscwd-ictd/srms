@@ -35,6 +35,7 @@ import {
 import VehicleDetailsCard from "./VehicleDetailsCard";
 import { FaCarSide, FaShuttleVan, FaTruck } from "react-icons/fa";
 import { ScrollArea } from "@srms/components/ui/ScrollArea";
+import { useCardStore } from "@srms/components/stores/useCardStore";
 
 interface TsTokensProps {
   accessToken: Token;
@@ -48,9 +49,18 @@ const VehicleRenderToggleList: FunctionComponent<TsTokensProps> = ({ accessToken
   const [isDeviceListFetched, setIsDeviceListFetched] = useState<boolean>(true);
   const [isDeviceLocated, setIsDeviceLLocated] = useState<boolean>(false); // state to determine whether the locate action is triggered. This is to determine whether to move the screen view to the vehicle location as center when the marker is toggled on.
   const [isDeviceListAlphabetical, setIsDeviceListAlphabetical] = useState<boolean>(false); // state to determine whether the device list is sorted in alphabetical order. This is to determine the sorting order when the device list is initially fetched and when the search query is empty.
+  const [isDeviceListVisible, setIsDeviceListVisible] = useState<boolean>(false); //state to determine whether all the devices in the device list are visible. This is to determine whether to show all the markers of the devices in the map when the "show all" action is triggered.
 
   // zustand initialization
   const { tsDeviceList, setTsDeviceList, setSelectedDevice } = useTsDeviceStore();
+
+  const {
+    setWaterMeterTableCardOpen,
+    setWaterMeterDetailsCardOpen,
+    setValveDetailsCardOpen,
+    vehicleDetailsCardOpen,
+    setVehicleDetailsCardOpen,
+  } = useCardStore();
 
   // Get vehicle list and add to zustand store
   const { data: deviceList, isLoading } = useQuery({
@@ -116,6 +126,27 @@ const VehicleRenderToggleList: FunctionComponent<TsTokensProps> = ({ accessToken
 
       vectorLayer.setProperties({ imei: variables.imei, vehicleName: variables.deviceName });
 
+      // Open card modal for valve details
+      fleetMap.mapManager.getMap().on("click", (e) => {
+        const feature = fleetMap.mapManager.getMap().forEachFeatureAtPixel(e.pixel, (feature) => {
+          return feature;
+        });
+
+        if (!feature) {
+          return;
+        }
+
+        const props = feature.getProperties();
+
+        if (props.id && variables) {
+          if (variables.imei === props.id) {
+            toggleModal(variables);
+          }
+        }
+      });
+
+      if (selectedVehicleImei === variables.imei) {
+      }
       // add vehicle vector layer to layer group
       vehicleLayerGroup?.getLayers().push(vectorLayer);
 
@@ -203,16 +234,16 @@ const VehicleRenderToggleList: FunctionComponent<TsTokensProps> = ({ accessToken
   // Update openlayers. Visibility status of selected layer.
   const setVehicleMarkerVisibility = (
     deviceDetails: TrackSolidDevice,
-    isChecked: boolean,
+    isVisible: boolean,
     isLocate: boolean,
   ) => {
-    updateStoreDeviceVisibility(deviceDetails.imei, isChecked);
+    updateStoreDeviceVisibility(deviceDetails.imei, isVisible);
     setIsDeviceLLocated(isLocate);
 
-    if (isChecked && !isLocate) {
+    if (isVisible && !isLocate) {
       // call mutation function to add VectorLayer to LayerGroup('vehicle-map-layer')
       deviceLocationMutation.mutate(deviceDetails);
-    } else if (isChecked && isLocate) {
+    } else if (isVisible && isLocate) {
       // first remove vector layer from the vehicle layer group
       vehicleLayerGroup
         ?.getLayers()
@@ -253,9 +284,7 @@ const VehicleRenderToggleList: FunctionComponent<TsTokensProps> = ({ accessToken
     filterVehicleList(search, sortedList); // update the filtered vehicle list based on the search query after updating visibility
   };
 
-  // Open modal for viewing vehicle details
-  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-  const [search, setSearch] = useState("");
+  const [search, setSearch] = useState(""); //search bar state
   const [filteredVehicle, setFilteredVehicle] = useState<TrackSolidDevice[]>([]); //main filtered vehicle list for search functionality
   const [selectedVehicleImei, setSelectedVehicleImei] = useState<string>("");
 
@@ -263,14 +292,10 @@ const VehicleRenderToggleList: FunctionComponent<TsTokensProps> = ({ accessToken
     filterVehicleList(search, tsDeviceList);
   }, [search]);
 
-  useEffect(() => {
-    console.log("vehicles:", filteredVehicle);
-  }, [filteredVehicle]);
-
   const filterVehicleList = (search: string, deviceList: TrackSolidDevice[]) => {
     if (isEmpty(search)) {
       setFilteredVehicle(deviceList);
-      setIsDeviceListAlphabetical(true);
+
       return;
     } else {
       const filtered = deviceList?.filter(
@@ -292,16 +317,19 @@ const VehicleRenderToggleList: FunctionComponent<TsTokensProps> = ({ accessToken
     // setSelectedDevice(device);
     // setIsModalOpen(!isModalOpen);
     setSelectedVehicleImei(device.imei);
+    setWaterMeterTableCardOpen(false); //close water meter table card
+    setWaterMeterDetailsCardOpen(false); //close water meter details card if its open
+    setValveDetailsCardOpen(false); //close valve details card if its open
 
-    if (isModalOpen) {
-      setIsModalOpen(false);
+    if (vehicleDetailsCardOpen) {
+      setVehicleDetailsCardOpen(false);
 
       setTimeout(function () {
-        setIsModalOpen(true);
+        setVehicleDetailsCardOpen(true);
         setSelectedDevice(device);
       }, 500);
     } else {
-      setIsModalOpen(true);
+      setVehicleDetailsCardOpen(true);
       setSelectedDevice(device);
     }
   };
@@ -309,11 +337,15 @@ const VehicleRenderToggleList: FunctionComponent<TsTokensProps> = ({ accessToken
   const toggleAlphabeticalOrder = (isAlphabetical: boolean, filteredVehicle: TrackSolidDevice[]) => {
     if (!isEmpty(filteredVehicle)) {
       if (isAlphabetical) {
-        const sortedList = [...filteredVehicle].sort((a, b) => a.deviceName.localeCompare(b.deviceName));
+        const sortedList = [...filteredVehicle].sort((a, b) =>
+          a.deviceName.trimStart().localeCompare(b.deviceName.trimStart()),
+        );
         return sortedList;
         // setFilteredVehicle(sortedList);
       } else {
-        const sortedList = [...filteredVehicle].sort((a, b) => b.deviceName.localeCompare(a.deviceName));
+        const sortedList = [...filteredVehicle].sort((a, b) =>
+          b.deviceName.trimStart().localeCompare(a.deviceName.trimStart()),
+        );
         return sortedList;
         // setFilteredVehicle(sortedList);
       }
@@ -367,6 +399,36 @@ const VehicleRenderToggleList: FunctionComponent<TsTokensProps> = ({ accessToken
     // console.log(fleetMap.mapManager.getLayerManager().getGroupIds());
   }, [fleetMap.mapManager.getLayerManager().getGroupIds()]);
 
+  const toggleAllDeviceVisibility = (visibility: boolean) => {
+    setIsDeviceListVisible(visibility);
+    if (visibility) {
+      tsDeviceList.forEach((device: TrackSolidDevice) => {
+        setVehicleMarkerVisibility(device, true, false); // set all markers to visible without moving the screen view to the vehicle location as center
+      });
+
+      const newDeviceList = tsDeviceList.map((device) => ({ ...device, visible: true })); //set all devices to visible
+      const sortedList = toggleAlphabeticalOrder(isDeviceListAlphabetical, newDeviceList);
+      setTsDeviceList(sortedList);
+      filterVehicleList(search, sortedList);
+    } else {
+      tsDeviceList.forEach((device: TrackSolidDevice) => {
+        setVehicleMarkerVisibility(device, false, false); // set all markers to invisible without moving the screen view to the vehicle location as center
+      });
+      const newDeviceList = tsDeviceList.map((device) => ({ ...device, visible: false })); //set all devices to visible
+      const sortedList = toggleAlphabeticalOrder(isDeviceListAlphabetical, newDeviceList);
+      setTsDeviceList(sortedList);
+      filterVehicleList(search, sortedList);
+
+      //forcibly remove all vector layer from the vehicle layer group
+      vehicleLayerGroup
+        ?.getLayers()
+        .getArray()
+        .forEach((layer: BaseLayer) => {
+          vehicleLayerGroup?.getLayers().remove(layer);
+        });
+    }
+  };
+
   return (
     <React.Fragment>
       <div className="flex cursor-pointer items-center space-x-2 p-2">
@@ -389,45 +451,62 @@ const VehicleRenderToggleList: FunctionComponent<TsTokensProps> = ({ accessToken
 
       <AccordionContent className="flex flex-col gap-4 text-balance">
         <form className="mx-3 flex flex-col gap-1">
-          <label className="primary-text-color absolute relative mt-2 flex w-full items-center justify-between border border-slate-400 text-sm">
-            <input
-              type="text"
-              placeholder="Search device name..."
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              className="p-2 text-slate-500 outline-none"
-            />
-            <Search className="absolute right-2 w-5 text-slate-500" />
-          </label>
+          {!isLoading && !isEmpty(filteredVehicle) ? (
+            <>
+              <label className="primary-text-color absolute relative mt-2 flex w-full items-center justify-between border border-slate-400 text-sm">
+                <input
+                  type="text"
+                  placeholder="Search device name..."
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                  className="p-2 text-slate-500 outline-none"
+                />
+                <Search className="absolute right-2 w-5 text-slate-500" />
+              </label>
 
-          {/* main buttons */}
-          <div className="flex items-center justify-end gap-1">
-            <label className="cursor-pointer text-gray-800 hover:text-gray-500">
-              <input
-                id={`devicealphabeticalorder`}
-                type="checkbox"
-                className="peer hidden"
-                onChange={(event) => {
-                  setIsDeviceListAlphabetical(event.target.checked);
-                }}
-                checked={isDeviceListAlphabetical}
-              />
-              {isDeviceListAlphabetical ? (
-                <ArrowDownAzIcon className="mr-2 w-4 cursor-pointer text-gray-800 hover:text-gray-500" />
-              ) : (
-                <ArrowUpZaIcon className="mr-2 w-4 cursor-pointer text-gray-800 hover:text-gray-500" />
-              )}
-            </label>
-            <RefreshCcwIcon
-              className="mr-2 w-4 cursor-pointer text-gray-800 hover:text-gray-500"
-              onClick={() => {
-                // setTsDeviceList(deviceList);
-                // setIsDeviceListFetched(false);
-                // setFilteredVehicle(deviceList);
-                setSearch("");
-              }}
-            />
-          </div>
+              {/* main buttons */}
+              <div className="flex items-center justify-end gap-1">
+                <label className="cursor-pointer text-gray-800 hover:text-gray-500">
+                  <input
+                    id={`devicealphabeticalorder`}
+                    type="checkbox"
+                    className="peer hidden"
+                    onChange={(event) => {
+                      setIsDeviceListAlphabetical(event.target.checked);
+                    }}
+                    checked={isDeviceListAlphabetical}
+                  />
+                  {isDeviceListAlphabetical ? (
+                    <ArrowDownAzIcon className="mr-2 w-4 cursor-pointer text-gray-800 hover:text-gray-500" />
+                  ) : (
+                    <ArrowUpZaIcon className="mr-2 w-4 cursor-pointer text-gray-800 hover:text-gray-500" />
+                  )}
+                </label>
+                <label className="cursor-pointer text-gray-800 hover:text-gray-500">
+                  <input
+                    id={`deviceshowall`}
+                    type="checkbox"
+                    className="peer hidden"
+                    onChange={(event) => {
+                      toggleAllDeviceVisibility(event.target.checked);
+                    }}
+                    checked={isDeviceListVisible}
+                  />
+                  {isDeviceListVisible ? (
+                    <Eye className={`mr-2 w-4 cursor-pointer text-gray-800 hover:text-gray-500`} />
+                  ) : (
+                    <EyeClosed className={`mr-2 w-4 cursor-pointer text-gray-800 hover:text-gray-500`} />
+                  )}
+                </label>
+                <RefreshCcwIcon
+                  className="mr-2 w-4 cursor-pointer text-gray-800 hover:text-gray-500"
+                  onClick={() => {
+                    setSearch("");
+                  }}
+                />
+              </div>
+            </>
+          ) : null}
 
           {isLoading ? <Spinner size={"md"} /> : null}
 
@@ -438,8 +517,8 @@ const VehicleRenderToggleList: FunctionComponent<TsTokensProps> = ({ accessToken
                   {filteredVehicle.map((device: TrackSolidDevice) => (
                     <React.Fragment key={device.imei}>
                       <div
-                        className={`primary-text-color w-full cursor-pointer items-center space-x-2 pt-1 pr-2 pb-2 transition-all ${selectedVehicleImei === device.imei ? "bg-blue-100 hover:bg-blue-300" : "bg-slate-100 hover:bg-slate-200"}`}
-                        onClick={() => toggleModal(device)}
+                        className={`${device.activationTime ? "cursor-pointer" : "cursor-not-allowed opacity-50"} primary-text-color w-full items-center space-x-2 pt-1 pr-2 pb-2 transition-all ${selectedVehicleImei === device.imei ? "bg-blue-100 hover:bg-blue-300" : "bg-slate-100 hover:bg-slate-200"}`}
+                        onClick={() => (device.activationTime ? toggleModal(device) : null)}
                       >
                         <div className="flex w-full flex-row items-center justify-between gap-2">
                           <div className="flex items-center gap-1">
@@ -447,13 +526,13 @@ const VehicleRenderToggleList: FunctionComponent<TsTokensProps> = ({ accessToken
                               className={`m-2 flex h-8 w-11 items-center justify-center rounded-full ${device.visible ? "bg-blue-800" : "bg-gray-800"}`}
                             >
                               {device.vehicleIcon === "truck" ? (
-                                <FaTruck className="block w-5 text-white" />
+                                <FaTruck className="block w-4 text-white" />
                               ) : device.vehicleIcon === "car" ? (
-                                <FaCarSide className="block w-5 text-white" />
+                                <FaCarSide className="block w-4 text-white" />
                               ) : device.vehicleIcon === "bus" ? (
-                                <FaShuttleVan className="block w-5 text-white" />
+                                <FaShuttleVan className="block w-4 text-white" />
                               ) : (
-                                <FaCarSide className="block w-5 text-white" />
+                                <FaCarSide className="block w-4 text-white" />
                               )}
                             </div>
 
@@ -482,6 +561,7 @@ const VehicleRenderToggleList: FunctionComponent<TsTokensProps> = ({ accessToken
                         <div className="flex w-full items-end justify-end gap-2">
                           <label className="cursor-pointer text-gray-800 hover:text-gray-500">
                             <input
+                              disabled={device.activationTime ? false : true}
                               id={`devicelocate-${device.imei}`}
                               type="checkbox"
                               className="peer hidden"
@@ -495,6 +575,7 @@ const VehicleRenderToggleList: FunctionComponent<TsTokensProps> = ({ accessToken
 
                           <label className="cursor-pointer text-gray-800 hover:text-gray-500">
                             <input
+                              disabled={device.activationTime ? false : true}
                               id={`device-${device.imei}`}
                               type="checkbox"
                               className="peer hidden"
@@ -519,7 +600,11 @@ const VehicleRenderToggleList: FunctionComponent<TsTokensProps> = ({ accessToken
           )}
         </form>
 
-        <VehicleDetailsCard accessToken={accessToken} open={isModalOpen} onOpenChange={setIsModalOpen} />
+        <VehicleDetailsCard
+          accessToken={accessToken}
+          open={vehicleDetailsCardOpen}
+          onOpenChange={setVehicleDetailsCardOpen}
+        />
       </AccordionContent>
     </React.Fragment>
   );

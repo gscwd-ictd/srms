@@ -10,13 +10,13 @@ import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import dayjs from "dayjs";
 import { SignalHigh, SignalLow, SignalMedium, SignalZero } from "lucide-react";
-import { Dispatch, FunctionComponent, SetStateAction, useEffect } from "react";
+import { FunctionComponent, useEffect } from "react";
 import { isEmpty } from "@srms/utils/isEmpty";
 
 interface VehicleDetailsCardProps {
   accessToken: Token;
   open: boolean;
-  onOpenChange: Dispatch<SetStateAction<boolean>>;
+  onOpenChange?(open: boolean): void;
 }
 
 const VehicleDetailsCard: FunctionComponent<VehicleDetailsCardProps> = ({
