@@ -67,7 +67,7 @@ export const LayersCard: FunctionComponent<LayersCardProps> = ({ accessToken }) 
       >
         <Card
           className={cn(
-            "vehicle-layers ui-color-base absolute z-60 h-[calc(100vh-65px)] w-[230px] overflow-x-hidden overflow-y-hidden rounded-lg border-none transition-all duration-100",
+            "vehicle-layers ui-color-base absolute z-60 h-[calc(100vh-65px)] w-[280px] overflow-x-hidden overflow-y-hidden rounded-lg border-none transition-all duration-100",
             layerToggleCardOpen
               ? "nav-intro-animated block backdrop-blur peer-checked:opacity-100"
               : initialNavAnimation
@@ -78,7 +78,9 @@ export const LayersCard: FunctionComponent<LayersCardProps> = ({ accessToken }) 
           <div className="absolute -right-14 -mt-44 h-70 w-70 rounded-full bg-blue-300/10"></div>
           <div className="absolute -right-40 -mt-42 h-80 w-70 rounded-full bg-blue-300/10"></div>
           <div className="absolute -bottom-54 -left-20 h-80 w-80 rounded-full bg-blue-400/10"></div>
-          <label className="absolute bottom-0 left-0 p-4 text-xs">OMMS Version 1.0.2</label>
+          <label className="primary-text-color absolute bottom-0 left-0 p-4 text-xs">
+            OMMS Version 1.0.2
+          </label>
           <CardHeader className="flex p-0">
             <CardAction className="z-40 self-end">
               <Button variant="link" onClick={() => toggleModal()}>
@@ -87,7 +89,7 @@ export const LayersCard: FunctionComponent<LayersCardProps> = ({ accessToken }) 
             </CardAction>
           </CardHeader>
 
-          <ScrollArea className="mx-2 h-[78vh]">
+          <ScrollArea className="mx-2 h-[78vh] overflow-y-hidden">
             <CardContent className="mr-1 p-1 text-white">
               <Accordion type="single" collapsible className="w-full">
                 <AccordionItem value="item-1">
@@ -114,7 +116,7 @@ export const LayersCard: FunctionComponent<LayersCardProps> = ({ accessToken }) 
         </Card>
 
         <div
-          className={`ui-color-base primary-text-color absolute z-50 mt-2 ml-2 w-[230px] rounded-lg p-1 text-center leading-none backdrop-blur ${
+          className={`ui-color-button-no-hover absolute z-50 mt-2 ml-2 w-[280px] rounded-lg p-1 text-center leading-none text-white backdrop-blur ${
             layerToggleCardOpen
               ? "nav-title-intro-animated block"
               : initialNavAnimation

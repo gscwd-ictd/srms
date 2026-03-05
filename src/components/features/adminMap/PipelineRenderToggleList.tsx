@@ -163,93 +163,93 @@ const PipelineRenderToggleList: FunctionComponent = ({}) => {
             <Cog className="primary-text-color mr-2 block w-5 cursor-pointer opacity-30 peer-checked:hidden" />
             <Cog className="primary-text-color mr-2 hidden w-5 cursor-pointer peer-checked:block" />
           </label>
-          <AccordionTrigger className="w-40 items-center">
+          <AccordionTrigger className="w-50 items-center">
             <p className="text-md primary-text-color font-bold">Pipeline</p>
           </AccordionTrigger>
         </div>
+      </div>
 
+      <AccordionContent className="flex flex-col gap-4 text-balance">
         {isLoading ? (
           <div className="spinner">
             <Spinner size={"sm"} className="mt-4" />
           </div>
-        ) : null}
-      </div>
-
-      <AccordionContent className="flex flex-col gap-4 text-balance">
-        <ul className="primary-text-color mx-12">
-          <li>
-            <div className="flex h-6">
-              <div className="mr-3 h-5 w-2 rotate-90 transform bg-[#745945]"></div>
-              {PipeSize.SIZE_500MM}
-            </div>
-          </li>
-          <li>
-            <div className="flex h-6">
-              <div className="mr-3 h-5 w-2 rotate-90 transform bg-[#F787E1]"></div>
-              {PipeSize.SIZE_400MM}
-            </div>
-          </li>
-          <li>
-            <div className="flex h-6">
-              <div className="mr-3 h-5 w-2 rotate-90 transform bg-[#FAE334]"></div>
-              {PipeSize.SIZE_300MM}
-            </div>
-          </li>
-          <li>
-            <div className="flex h-6">
-              <div className="mr-3 h-5 w-2 rotate-90 transform bg-[#3EFB29]"></div>
-              {PipeSize.SIZE_250MM}
-            </div>
-          </li>
-          <li>
-            <div className="flex h-6">
-              <div className="mr-3 h-5 w-2 rotate-90 transform bg-[#0768F1]"></div>
-              {PipeSize.SIZE_200MM}
-            </div>
-          </li>
-          <li>
-            <div className="flex h-6">
-              <div className="mr-3 h-5 w-2 rotate-90 transform bg-[#AD0EF6]"></div>
-              {PipeSize.SIZE_150MM}
-            </div>
-          </li>
-          <li>
-            <div className="flex h-6">
-              <div className="mr-3 h-5 w-2 rotate-90 transform bg-[#2DF0FE]"></div>
-              {PipeSize.SIZE_100MM}
-            </div>
-          </li>
-          <li>
-            <div className="flex h-6">
-              <div className="mr-3 h-5 w-2 rotate-90 transform bg-[#EF9E07]"></div>
-              {PipeSize.SIZE_75MM}
-            </div>
-          </li>
-          <li>
-            <div className="flex h-6">
-              <div className="mr-3 h-5 w-2 rotate-90 transform bg-[#F01E07]"></div>
-              {PipeSize.SIZE_50MM}
-            </div>
-          </li>
-          <li>
-            <div className="flex h-6">
-              <div className="mr-3 h-5 w-2 rotate-90 transform bg-[#F01E07]"></div>
-              {PipeSize.SIZE_64MM_HDPE}
-            </div>
-          </li>
-          <li>
-            <div className="flex h-6">
-              <div className="mr-3 h-5 w-2 rotate-90 transform bg-[#F01E07]"></div>
-              {PipeSize.SIZE_50MM_HDPE}
-            </div>
-          </li>
-          <li>
-            <div className="flex h-6">
-              <div className="mr-3 h-5 w-2 rotate-90 transform bg-[#070606]"></div>
-              {PipeSize.SIZE_32MM_HDPE}
-            </div>
-          </li>
-        </ul>
+        ) : (
+          <ul className="primary-text-color mx-12">
+            <li>
+              <div className="flex h-6">
+                <div className="mr-3 h-5 w-2 rotate-90 transform bg-[#745945]"></div>
+                {PipeSize.SIZE_500MM}
+              </div>
+            </li>
+            <li>
+              <div className="flex h-6">
+                <div className="mr-3 h-5 w-2 rotate-90 transform bg-[#F787E1]"></div>
+                {PipeSize.SIZE_400MM}
+              </div>
+            </li>
+            <li>
+              <div className="flex h-6">
+                <div className="mr-3 h-5 w-2 rotate-90 transform bg-[#FAE334]"></div>
+                {PipeSize.SIZE_300MM}
+              </div>
+            </li>
+            <li>
+              <div className="flex h-6">
+                <div className="mr-3 h-5 w-2 rotate-90 transform bg-[#3EFB29]"></div>
+                {PipeSize.SIZE_250MM}
+              </div>
+            </li>
+            <li>
+              <div className="flex h-6">
+                <div className="mr-3 h-5 w-2 rotate-90 transform bg-[#0768F1]"></div>
+                {PipeSize.SIZE_200MM}
+              </div>
+            </li>
+            <li>
+              <div className="flex h-6">
+                <div className="mr-3 h-5 w-2 rotate-90 transform bg-[#AD0EF6]"></div>
+                {PipeSize.SIZE_150MM}
+              </div>
+            </li>
+            <li>
+              <div className="flex h-6">
+                <div className="mr-3 h-5 w-2 rotate-90 transform bg-[#2DF0FE]"></div>
+                {PipeSize.SIZE_100MM}
+              </div>
+            </li>
+            <li>
+              <div className="flex h-6">
+                <div className="mr-3 h-5 w-2 rotate-90 transform bg-[#EF9E07]"></div>
+                {PipeSize.SIZE_75MM}
+              </div>
+            </li>
+            <li>
+              <div className="flex h-6">
+                <div className="mr-3 h-5 w-2 rotate-90 transform bg-[#F01E07]"></div>
+                {PipeSize.SIZE_50MM}
+              </div>
+            </li>
+            <li>
+              <div className="flex h-6">
+                <div className="mr-3 h-5 w-2 rotate-90 transform bg-[#F01E07]"></div>
+                {PipeSize.SIZE_64MM_HDPE}
+              </div>
+            </li>
+            <li>
+              <div className="flex h-6">
+                <div className="mr-3 h-5 w-2 rotate-90 transform bg-[#F01E07]"></div>
+                {PipeSize.SIZE_50MM_HDPE}
+              </div>
+            </li>
+            <li>
+              <div className="flex h-6">
+                <div className="mr-3 h-5 w-2 rotate-90 transform bg-[#070606]"></div>
+                {PipeSize.SIZE_32MM_HDPE}
+              </div>
+            </li>
+          </ul>
+        )}
       </AccordionContent>
     </React.Fragment>
   );

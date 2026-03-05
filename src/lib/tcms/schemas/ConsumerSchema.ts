@@ -56,3 +56,8 @@ export const AccountYearParam = z.object({
   accountNo: z.string(),
   year: z.string().optional(),
 });
+
+export const AccountYearParam2 = z.object({
+  accountNo: z.string(),
+  year: z.string(),
+});

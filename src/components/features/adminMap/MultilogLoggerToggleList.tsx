@@ -190,27 +190,27 @@ const MultilogLoggerToggleList: FunctionComponent = ({}) => {
             <Cpu className="primary-text-color mr-2 block w-5 cursor-pointer opacity-30 peer-checked:hidden" />
             <Cpu className="primary-text-color mr-2 hidden w-5 cursor-pointer peer-checked:block" />
           </label>
-          <AccordionTrigger className="items-center">
+          <AccordionTrigger className="w-50 items-center">
             <p className="text-md primary-text-color font-bold">Multilog Data Logger</p>
           </AccordionTrigger>
         </div>
+      </div>
 
+      <AccordionContent className="flex flex-col gap-4 text-balance">
         {isLoading ? (
           <div className="spinner">
             <Spinner size={"sm"} className="mt-4" />
           </div>
-        ) : null}
-      </div>
-
-      <AccordionContent className="flex flex-col gap-4 text-balance">
-        <ul className="primary-text-color mx-12">
-          <li>
-            <div className="flex h-6">
-              <div className="mt-0.5 mr-2 h-4 w-4 rounded-3xl bg-blue-500"></div>
-              Data Logger
-            </div>
-          </li>
-        </ul>
+        ) : (
+          <ul className="primary-text-color mx-12">
+            <li>
+              <div className="flex h-6">
+                <div className="mt-0.5 mr-2 h-4 w-4 rounded-3xl bg-blue-500"></div>
+                Data Logger
+              </div>
+            </li>
+          </ul>
+        )}
       </AccordionContent>
 
       <MultilogDetailsCard open={multilogDetailsCardOpen} featureData={selectedLogger} />

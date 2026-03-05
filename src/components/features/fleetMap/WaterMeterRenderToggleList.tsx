@@ -17,7 +17,8 @@ import { useCardStore } from "@srms/components/stores/useCardStore";
 import WaterMeterDetailsCard from "./WaterMeterDetailsCard";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
-import { WaterMeterData } from "@srms/lib/watermeters/types";
+import { WaterMeterData, WaterMeterFeatureData } from "@srms/lib/watermeters/types";
+import { useWaterMeterStore } from "@srms/components/stores/useWaterMeterStore";
 
 const featureManager = new FeatureManager();
 
@@ -54,8 +55,10 @@ const WaterMeterRenderToggleList: FunctionComponent = ({}) => {
     setWaterMeterTableCardOpen,
     waterMeterDetailsCardOpen,
     setWaterMeterDetailsCardOpen,
+    setValveDetailsCardOpen,
+    setVehicleDetailsCardOpen,
   } = useCardStore();
-
+  const { setSelectedWaterMeter } = useWaterMeterStore();
   const toggleTableModal = () => {
     setLayerToggleCardOpen(!layerToggleCardOpen);
     setWaterMeterTableCardOpen(!waterMeterTableCardOpen);
@@ -120,6 +123,55 @@ const WaterMeterRenderToggleList: FunctionComponent = ({}) => {
 
       fleetMap.mapManager.getLayerManager().addLayer("water-meters", vectorLayer);
 
+      // Open card modal for valve details
+      fleetMap.mapManager.getMap().on("click", (e) => {
+        const feature = fleetMap.mapManager.getMap().forEachFeatureAtPixel(e.pixel, (feature) => {
+          return feature;
+        });
+        setWaterMeterDetailsCardOpen(false);
+
+        if (!feature) {
+          return;
+        }
+
+        const props = feature.getProperties() as WaterMeterFeatureData;
+        setSelectedWaterMeter({
+          type: "Feature",
+          id: props.id,
+          geometry: {
+            type: "Point",
+            coordinates: props.geometry.flatCoordinates,
+          },
+          geometry_name: "",
+          properties: {
+            accountno: props.accountno,
+            address: props.address,
+            aveusage: props.aveusage,
+            billed: props.billed,
+            billedvol: props.billedvol,
+            bookcode: props.bookcode,
+            consumern: props.consumern,
+            consumert: props.consumert,
+            contactno: props.contactno,
+            datecon: props.datecon,
+            datediscon: props.datediscon,
+            m3perhr: props.m3perhr,
+            meterbrnd: props.meterbrnd,
+            meterno: props.meterno,
+            metersize: props.metersize,
+            status: props.status,
+            zonecode: props.zonecode,
+          },
+        });
+
+        if (props.accountno) {
+          //if water meter account number exists, open details card
+          setValveDetailsCardOpen(false); //close valve details card if open
+          setVehicleDetailsCardOpen(false); //close vehicle details card if open
+          setWaterMeterDetailsCardOpen(true);
+        }
+      });
+
       return () => {
         fleetMap.mapManager.getLayerManager().removeLayer("water-meters");
       };
@@ -145,30 +197,30 @@ const WaterMeterRenderToggleList: FunctionComponent = ({}) => {
             <CircleGauge className="primary-text-color mr-2 block w-5 cursor-pointer opacity-30 peer-checked:hidden" />
             <CircleGauge className="primary-text-color mr-2 hidden w-5 cursor-pointer peer-checked:block" />
           </label>
-          <AccordionTrigger className={`${isLoading ? "" : "w-40"} items-center`}>
+          <AccordionTrigger className={`w-50 items-center`}>
             <p className="text-md primary-text-color mr-2 font-bold">Water Meters</p>
             <div>
               <Table className="primary-text-color w-5" onClick={toggleTableModal} />
             </div>
           </AccordionTrigger>
         </div>
+      </div>
 
+      <AccordionContent className="flex flex-col gap-4 text-balance">
         {isLoading ? (
           <div className="spinner">
             <Spinner size={"sm"} className="mt-4" />
           </div>
-        ) : null}
-      </div>
-
-      <AccordionContent className="flex flex-col gap-4 text-balance">
-        <ul className="primary-text-color mx-11">
-          <li>
-            <div className="flex h-6">
-              <div className="mt-0.5 mr-2 h-4 w-4 rounded-3xl bg-[#1458FC]"></div>
-              Water Meter
-            </div>
-          </li>
-        </ul>
+        ) : (
+          <ul className="primary-text-color mx-11">
+            <li>
+              <div className="flex h-6">
+                <div className="mt-0.5 mr-2 h-4 w-4 rounded-3xl bg-[#1458FC]"></div>
+                Water Meter
+              </div>
+            </li>
+          </ul>
+        )}
       </AccordionContent>
 
       <WaterMeterCard open={waterMeterTableCardOpen} onOpenChange={setWaterMeterTableCardOpen} />

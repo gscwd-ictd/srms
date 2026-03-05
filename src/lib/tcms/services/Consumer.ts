@@ -1,6 +1,6 @@
 import { I_ConsumerService } from "../interfaces";
 import { ConsumerRepository } from "../repositories";
-import { Consumer, ConsumerLedger, ConsumerServiceRequests } from "../types";
+import { Consumer, ConsumerLedger, ConsumerLedgerEntry, ConsumerServiceRequests } from "../types";
 
 export class ConsumerService implements I_ConsumerService {
   constructor(private readonly repository: ConsumerRepository) {}
@@ -15,5 +15,9 @@ export class ConsumerService implements I_ConsumerService {
 
   async getAllConsumerLedger(accountNo: string, year?: string): Promise<ConsumerLedger> {
     return await this.repository.getAllConsumerLedger(accountNo, year);
+  }
+
+  async getConsumerLedgerLastEntry(accountNo: string, year: string): Promise<ConsumerLedgerEntry> {
+    return await this.repository.getConsumerLedgerLastEntry(accountNo, year);
   }
 }

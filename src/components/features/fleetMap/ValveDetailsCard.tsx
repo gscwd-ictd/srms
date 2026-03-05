@@ -7,11 +7,11 @@ import { ScrollArea } from "@srms/components/ui/ScrollArea";
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "@srms/components/ui/Sheet";
 import { MapValveData } from "@srms/lib/pms/types";
 import { isEmpty } from "@srms/utils/isEmpty";
-import { Dispatch, FunctionComponent, SetStateAction } from "react";
+import { FunctionComponent } from "react";
 
 interface ValveDetailsCardDrops {
   open: boolean;
-  onOpenChange: Dispatch<SetStateAction<boolean>>;
+  onOpenChange?(open: boolean): void;
   featureData: MapValveData | undefined;
 }
 

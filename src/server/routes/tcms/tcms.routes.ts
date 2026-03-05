@@ -5,8 +5,10 @@ import { ErrorResponseSchema } from "@srms/server/schemas/helperSchemas";
 import {
   AccountParam,
   AccountYearParam,
+  AccountYearParam2,
   SelectConsumer,
   SelectConsumerLedger,
+  SelectConsumerLedgerEntry,
   SelectConsumerServiceRequests,
 } from "@srms/lib/tcms/schemas";
 import { OpenAPIResponses } from "@srms/server/constants/openApiResponses";
@@ -167,6 +169,59 @@ export const getAllConsumerLedger = createRoute({
   },
 });
 
+export const getConsumerLedgerLastEntry = createRoute({
+  tags: TAGS.CONSUMER,
+  description: "GET CONSUMER'S LAST LEDGER ENTRY FOR A SPECIFIC YEAR",
+  method: "get",
+  path: "/v1/consumer/last-ledger-entry",
+  operationId: "getConsumerLedgerLastEntry",
+
+  request: {
+    query: AccountYearParam2,
+  },
+
+  responses: {
+    [HttpStatusCodes.OK]: {
+      content: {
+        "application/json": {
+          schema: SelectConsumerLedgerEntry,
+        },
+      },
+      description: OpenAPIResponses.OK,
+    },
+
+    [HttpStatusCodes.NOT_FOUND]: {
+      content: {
+        "application/json": {
+          example: {
+            name: "NotFoundError",
+            status: 404,
+            message: "Consumer ledger last entry not found",
+          },
+          schema: ErrorResponseSchema,
+        },
+      },
+      description: OpenAPIResponses.NOT_FOUND,
+    },
+
+    [HttpStatusCodes.INTERNAL_SERVER_ERROR]: {
+      content: {
+        "application/json": {
+          example: {
+            name: "ServerError",
+            status: 500,
+            message: "Something went wrong!",
+            stack: "...",
+          },
+          schema: ErrorResponseSchema,
+        },
+      },
+      description: OpenAPIResponses.INTERNAL_SERVER_ERROR,
+    },
+  },
+});
+
 export type GetConsumerRoute = typeof getConsumer;
 export type GetAllConsumerServiceRequestRoute = typeof getAllConsumerServiceRequest;
 export type GetAllConsumerLedgerRoute = typeof getAllConsumerLedger;
+export type GetConsumerLedgerLastEntryRoute = typeof getConsumerLedgerLastEntry;
