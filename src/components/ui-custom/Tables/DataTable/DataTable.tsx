@@ -166,7 +166,10 @@ export function DataTable<T>({
             <Table className="min-w-full [&_td]:px-4 [&_th]:px-4">
               <TableHeader className={cn(sticky ? "sticky top-0 z-10" : "")}>
                 {table.getHeaderGroups().map((headerGroup) => (
-                  <TableRow key={headerGroup.id} className="ui-color-base sticky text-amber-50 backdrop-blur">
+                  <TableRow
+                    key={headerGroup.id}
+                    className="ui-color-button-no-hover sticky text-amber-50 backdrop-blur"
+                  >
                     {headerGroup.headers.map((header) => (
                       <TableHead key={header.id}>
                         <div className="flex items-center py-1">

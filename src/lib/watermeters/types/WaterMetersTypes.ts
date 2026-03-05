@@ -1,3 +1,4 @@
+
 import { Coordinate } from "ol/coordinate";
 
 export type WaterMeterCoordinates = {
@@ -45,4 +46,30 @@ export type WaterMetersGeoJSON = {
 export type WaterMeterFilter = {
   id: string;
   value: string;
+};
+
+//data received from clicking blue dot on map
+export type WaterMeterFeatureData = {
+  accountno: string;
+  address: string;
+  aveusage: string;
+  billed: string;
+  billedvol: string;
+  bookcode: string; 
+  consumern: string;
+  consumert: string;
+  contactno: string;
+  geometry: {
+    type: string;
+    flatCoordinates: Coordinate;
+  };
+  id:string;
+  datecon: string;
+  datediscon: string | null;
+  m3perhr: string | null;
+  meterbrnd: string | null;
+  meterno: string;
+  metersize: string | null;
+  status: string;
+  zonecode: string;
 };

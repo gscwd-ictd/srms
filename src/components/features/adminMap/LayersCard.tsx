@@ -45,7 +45,7 @@ export const LayersCard: FunctionComponent = () => {
         {/* Layer Sidebar */}
         <Card
           className={cn(
-            "vehicle-layers ui-color-base absolute z-60 h-[calc(100vh-65px)] w-[230px] overflow-x-hidden overflow-y-hidden rounded-lg border-none transition-all duration-100",
+            "vehicle-layers ui-color-base absolute z-60 h-[calc(100vh-65px)] w-[280px] overflow-x-hidden overflow-y-hidden rounded-lg border-none transition-all duration-100",
             layerToggleCardOpen
               ? "nav-intro-animated block backdrop-blur peer-checked:opacity-100"
               : initialNavAnimation
@@ -90,7 +90,7 @@ export const LayersCard: FunctionComponent = () => {
           </ScrollArea>
         </Card>
         <div
-          className={`ui-color-base primary-text-color absolute z-50 mt-2 ml-2 w-[230px] rounded-lg p-1 text-center leading-none backdrop-blur ${
+          className={`ui-color-button-no-hover absolute z-50 mt-2 ml-2 w-[280px] rounded-lg p-1 text-center leading-none text-white backdrop-blur ${
             layerToggleCardOpen
               ? "nav-title-intro-animated block"
               : initialNavAnimation

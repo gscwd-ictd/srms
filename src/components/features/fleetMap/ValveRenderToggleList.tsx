@@ -21,6 +21,7 @@ import { Spinner } from "@srms/components/ui-custom/Spinner";
 import { Hexagon } from "lucide-react";
 import { AccordionContent, AccordionTrigger } from "@srms/components/ui/Accordion";
 import ValveDetailsCard from "./ValveDetailsCard";
+import { useCardStore } from "@srms/components/stores/useCardStore";
 
 const featureManager = new FeatureManager();
 
@@ -40,8 +41,15 @@ export const ValveRenderToggleList: FunctionComponent = () => {
     throwOnError: true,
   });
 
-  // Open modal for viewing vehicle details
-  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const {
+    valveDetailsCardOpen,
+    setValveDetailsCardOpen,
+    setVehicleDetailsCardOpen,
+    setWaterMeterDetailsCardOpen,
+    setWaterMeterTableCardOpen,
+  } = useCardStore();
+
+  // Open modal for viewing valve details
   const [selectedValve, setSelectedValve] = useState<MapValveData>();
 
   // Update openlayers. Visibility status of selected layer.
@@ -109,16 +117,21 @@ export const ValveRenderToggleList: FunctionComponent = () => {
         const feature = fleetMap.mapManager.getMap().forEachFeatureAtPixel(e.pixel, (feature) => {
           return feature;
         });
-        setIsModalOpen(false);
+        setValveDetailsCardOpen(false);
 
         if (!feature) {
           return;
         }
 
-        const props = feature.getProperties() as MapValveData | undefined;
+        const props = feature.getProperties() as MapValveData;
         setSelectedValve(props);
-
-        setIsModalOpen(true);
+        if (props.diameter) {
+          setWaterMeterDetailsCardOpen(false); //close water meter details card if open
+          setWaterMeterTableCardOpen(false); //close water meter table card if open
+          setVehicleDetailsCardOpen(false); //close vehicle details card if open
+          //if valve diameter exists, open details card
+          setValveDetailsCardOpen(true);
+        }
       });
 
       return () => {
@@ -144,34 +157,39 @@ export const ValveRenderToggleList: FunctionComponent = () => {
             <Hexagon className="primary-text-color mr-2 block w-5 cursor-pointer opacity-30 peer-checked:hidden" />
             <Hexagon className="primary-text-color mr-2 hidden w-5 cursor-pointer peer-checked:block" />
           </label>
-          <AccordionTrigger className={`${isLoading ? "w-30" : "w-40"} items-center`}>
+          <AccordionTrigger className={`w-50 items-center`}>
             <p className="text-md primary-text-color mr-2 font-bold">Valves</p>
           </AccordionTrigger>
         </div>
+      </div>
+      <AccordionContent className="flex flex-col gap-4 text-balance">
         {isLoading ? (
           <div className="spinner">
             <Spinner size={"sm"} className="mt-2" />
           </div>
-        ) : null}
-      </div>
-      <AccordionContent className="flex flex-col gap-4 text-balance">
-        <ul className="primary-text-color mx-12">
-          <li>
-            <div className="flex h-6">
-              <div className="mr-3 h-5 w-2 rotate-90 transform bg-blue-600"></div>
-              {ValveStatus.OPEN}
-            </div>
-          </li>
+        ) : (
+          <ul className="primary-text-color mx-12">
+            <li>
+              <div className="flex h-6">
+                <div className="mr-3 h-5 w-2 rotate-90 transform bg-blue-600"></div>
+                {ValveStatus.OPEN}
+              </div>
+            </li>
 
-          <li>
-            <div className="flex h-6">
-              <div className="mr-3 h-5 w-2 rotate-90 transform bg-red-500"></div>
-              {ValveStatus.CLOSE}
-            </div>
-          </li>
-        </ul>
+            <li>
+              <div className="flex h-6">
+                <div className="mr-3 h-5 w-2 rotate-90 transform bg-red-500"></div>
+                {ValveStatus.CLOSE}
+              </div>
+            </li>
+          </ul>
+        )}
       </AccordionContent>
-      <ValveDetailsCard open={isModalOpen} onOpenChange={setIsModalOpen} featureData={selectedValve} />
+      <ValveDetailsCard
+        open={valveDetailsCardOpen}
+        onOpenChange={setValveDetailsCardOpen}
+        featureData={selectedValve}
+      />
     </React.Fragment>
   );
 };
