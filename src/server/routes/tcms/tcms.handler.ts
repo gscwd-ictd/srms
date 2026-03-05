@@ -2,6 +2,7 @@ import { AppRouteHandler } from "@srms/server/types";
 import {
   GetAllConsumerLedgerRoute,
   GetAllConsumerServiceRequestRoute,
+  GetConsumerLedgerLastEntryRoute,
   GetConsumerRoute,
 } from "./tcms.routes";
 import { tcmsManager } from "@srms/server/app";
@@ -30,4 +31,14 @@ export const getAllConsumerLedger: AppRouteHandler<GetAllConsumerLedgerRoute> = 
   const consumerLedger = await tcmsManager.getConsumerService().getAllConsumerLedger(accountNo, year);
 
   return c.json(consumerLedger, 200);
+};
+
+export const getConsumerLedgerLastEntry: AppRouteHandler<GetConsumerLedgerLastEntryRoute> = async (c) => {
+  const { accountNo, year } = c.req.valid("query");
+
+  const consumerLedgerLastEntry = await tcmsManager
+    .getConsumerService()
+    .getConsumerLedgerLastEntry(accountNo, year);
+
+  return c.json(consumerLedgerLastEntry, 200);
 };
