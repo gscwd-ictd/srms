@@ -15,6 +15,7 @@ import { Button } from "@srms/components/ui/Button";
 import { Consumer } from "@srms/lib/tcms/types";
 import { ReceiptText, Wrench } from "lucide-react";
 import ConsumerLedgerCard from "./ConsumerLedgerCard";
+import ConsumerServiceRequestCard from "./ConsumerServiceRequestCard";
 
 interface WaterMeterDetailsCardProps {
   open: boolean;
@@ -30,6 +31,8 @@ const WaterMeterDetailsCard: FunctionComponent<WaterMeterDetailsCardProps> = ({ 
     waterMeterTableCardOpen,
     ledgerCardOpen,
     setLedgerCardOpen,
+    serviceRequestCardOpen,
+    setServiceRequestCardOpen,
   } = useCardStore();
   const { setConsumerInformation, consumerInformation } = useConsumerStore();
 
@@ -72,32 +75,32 @@ const WaterMeterDetailsCard: FunctionComponent<WaterMeterDetailsCardProps> = ({ 
     <>
       <Sheet open={open} onOpenChange={onOpenChange} modal={false}>
         <SheetContent
-          className="ui-color-base primary-text-color m-1.5 h-[98vh] w-[400px] gap-0 rounded-lg border-0 backdrop-blur"
+          className="ui-color-base primary-text-color m-1.5 h-[98vh] w-127.5 gap-0 rounded-lg border-0 backdrop-blur"
           onInteractOutside={(e) => e.preventDefault()}
           side="right"
         >
           <SheetHeader className="m-6 p-0">
-            <SheetTitle className="primary-text-color">
+            <SheetTitle className="primary-text-color text-lg">
               {consumerInformation.consumer_name || "--"}
             </SheetTitle>
-            <SheetDescription className="primary-text-color">
+            <SheetDescription className="primary-text-color text-lg">
               Account No: {consumerInformation.account_no || "--"} | Meter No:{" "}
               {consumerInformation.meter_no || "--"}
             </SheetDescription>
           </SheetHeader>
 
-          <ScrollArea className="h-full">
+          <ScrollArea className="text-md h-full">
             <div className="mx-3">
               <Alert
                 className={`${consumerInformation.status === "ACTIVE" ? "bg-green-500" : consumerInformation.status === "WRITE-OFF" ? "bg-yellow-600" : "bg-red-600"} border-none text-center uppercase shadow`}
               >
-                <AlertTitle>{consumerInformation.status || "--"}</AlertTitle>
+                <AlertTitle className="text-md">{consumerInformation.status || "--"}</AlertTitle>
               </Alert>
             </div>
 
-            <div className="m-4 rounded-md border-1 border-indigo-400 p-3 shadow">
-              <div className="grid gap-2">
-                <div className="flex space-x-1.5 text-sm">
+            <div className="m-4 rounded-md border border-indigo-400 p-3 shadow">
+              <div className="grid gap-2 gap-y-4">
+                <div className="flex space-x-1.5">
                   <Label htmlFor="gps-time" className="w-[50%]">
                     Consumer Type
                   </Label>
@@ -106,7 +109,7 @@ const WaterMeterDetailsCard: FunctionComponent<WaterMeterDetailsCardProps> = ({ 
                   </p>
                 </div>
 
-                <div className="flex space-x-1.5 text-sm">
+                <div className="flex space-x-1.5">
                   <Label htmlFor="gnss" className="w-[50%]">
                     Address
                   </Label>
@@ -115,7 +118,7 @@ const WaterMeterDetailsCard: FunctionComponent<WaterMeterDetailsCardProps> = ({ 
                   </p>
                 </div>
 
-                <div className="flex space-x-1.5 text-sm">
+                <div className="flex space-x-1.5">
                   <Label htmlFor="gps-time" className="w-[50%]">
                     Contact No.
                   </Label>
@@ -124,7 +127,16 @@ const WaterMeterDetailsCard: FunctionComponent<WaterMeterDetailsCardProps> = ({ 
                   </p>
                 </div>
 
-                <div className="flex space-x-1.5 text-sm">
+                <div className="flex space-x-1.5">
+                  <Label htmlFor="gps-time" className="w-[50%]">
+                    Senior
+                  </Label>
+                  <p id="gps-time" className="w-[50%] text-right font-bold">
+                    {consumerInformation.IsSenior ? "Yes" : "No"}
+                  </p>
+                </div>
+
+                <div className="flex space-x-1.5">
                   <Label htmlFor="gpsNum" className="w-[50%]">
                     Date Connected
                   </Label>
@@ -133,7 +145,7 @@ const WaterMeterDetailsCard: FunctionComponent<WaterMeterDetailsCardProps> = ({ 
                   </p>
                 </div>
 
-                <div className="flex space-x-1.5 text-sm">
+                <div className="flex space-x-1.5">
                   <Label htmlFor="gpsSignal" className="w-[50%]">
                     Date Disconnected
                   </Label>
@@ -142,7 +154,7 @@ const WaterMeterDetailsCard: FunctionComponent<WaterMeterDetailsCardProps> = ({ 
                   </div>
                 </div>
 
-                <div className="flex space-x-1.5 text-sm">
+                <div className="flex space-x-1.5">
                   <Label htmlFor="last-online" className="w-[50%]">
                     Zone Code | Book Code
                   </Label>
@@ -151,7 +163,7 @@ const WaterMeterDetailsCard: FunctionComponent<WaterMeterDetailsCardProps> = ({ 
                   </p>
                 </div>
 
-                <div className="flex space-x-1.5 text-sm">
+                <div className="flex space-x-1.5">
                   <Label htmlFor="gps-time" className="w-[50%]">
                     Meter Brand | Meter Size
                   </Label>
@@ -161,7 +173,7 @@ const WaterMeterDetailsCard: FunctionComponent<WaterMeterDetailsCardProps> = ({ 
                   </p>
                 </div>
 
-                {/* <div className="flex space-x-1.5 text-sm">
+                {/* <div className="flex space-x-1.5 ">
                 <Label htmlFor="gps-time" className="w-[50%]">
                   Cubic Meter/Hour
                 </Label>
@@ -170,7 +182,7 @@ const WaterMeterDetailsCard: FunctionComponent<WaterMeterDetailsCardProps> = ({ 
                 </p>
               </div> */}
 
-                <div className="flex space-x-1.5 text-sm">
+                <div className="flex space-x-1.5">
                   <Label htmlFor="gps-time" className="w-[50%]">
                     Average Usage
                   </Label>
@@ -179,7 +191,7 @@ const WaterMeterDetailsCard: FunctionComponent<WaterMeterDetailsCardProps> = ({ 
                   </p>
                 </div>
 
-                <div className="flex space-x-1.5 text-sm">
+                <div className="flex space-x-1.5">
                   <Label htmlFor="gps-time" className="w-[50%]">
                     Billed Volume
                   </Label>
@@ -188,7 +200,7 @@ const WaterMeterDetailsCard: FunctionComponent<WaterMeterDetailsCardProps> = ({ 
                   </p>
                 </div>
 
-                <div className="flex space-x-1.5 text-sm">
+                <div className="flex space-x-1.5">
                   <Label htmlFor="gps-time" className="w-[50%]">
                     Billed Amount
                   </Label>
@@ -204,7 +216,7 @@ const WaterMeterDetailsCard: FunctionComponent<WaterMeterDetailsCardProps> = ({ 
                 <ReceiptText /> Ledger
               </Button>
 
-              <Button className="solid w-full">
+              <Button className="solid w-full" onClick={() => setServiceRequestCardOpen(true)}>
                 <Wrench /> Service Request
               </Button>
             </div>
@@ -213,6 +225,8 @@ const WaterMeterDetailsCard: FunctionComponent<WaterMeterDetailsCardProps> = ({ 
       </Sheet>
 
       <ConsumerLedgerCard open={ledgerCardOpen} onOpenChange={setLedgerCardOpen} />
+
+      <ConsumerServiceRequestCard open={serviceRequestCardOpen} onOpenChange={setServiceRequestCardOpen} />
     </>
   );
 };

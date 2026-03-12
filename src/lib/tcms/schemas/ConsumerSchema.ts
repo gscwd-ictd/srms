@@ -11,14 +11,14 @@ export const SelectConsumer = z.object({
   AverageUsage: z.number(),
   date_connected: z.string(),
   meter_code: z.number().nullable(),
-  meter_size: z.string().nullable(),
   consumer_type: z.number().nullable(),
-  isSenior: z.boolean(),
+  IsSenior: z.boolean(),
   zone_code: z.string().nullable(),
   book_code: z.number().nullable(),
   contact_no: z.string().nullable(),
-  bill_amount: z.string().nullable(),
   usage: z.string().nullable(),
+  bill_amount: z.string().nullable(),
+  meter_size: z.string().nullable(),
 });
 
 export const SelectConsumerServiceRequest = z.object({

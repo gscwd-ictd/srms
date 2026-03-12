@@ -1,4 +1,4 @@
-import { Consumer, ConsumerLedger, ConsumerServiceRequests } from "@srms/lib/tcms/types";
+import { Consumer, ConsumerLedger, ConsumerLedgerEntry, ConsumerServiceRequests } from "@srms/lib/tcms/types";
 import { create } from "zustand";
 import { devtools } from "zustand/middleware";
 
@@ -8,6 +8,9 @@ export type ConsumerState = {
 
   consumerLedger: ConsumerLedger;
   setConsumerLedger: (consumerLedger: ConsumerLedger) => void;
+
+  ledgerPrevYearLastEntry: ConsumerLedgerEntry;
+  setLedgerPrevYearLastEntry: (ledgerPrevYearLastEntry: ConsumerLedgerEntry) => void;
 
   consumerServiceRequests: ConsumerServiceRequests;
   setConsumerServiceRequests: (consumerServiceRequests: ConsumerServiceRequests) => void;
@@ -20,6 +23,10 @@ export const useConsumerStore = create<ConsumerState>()(
 
     consumerLedger: [] as ConsumerLedger,
     setConsumerLedger: (consumerLedger: ConsumerLedger) => set({ consumerLedger }),
+
+    ledgerPrevYearLastEntry: {} as ConsumerLedgerEntry,
+    setLedgerPrevYearLastEntry: (ledgerPrevYearLastEntry: ConsumerLedgerEntry) =>
+      set({ ledgerPrevYearLastEntry }),
 
     consumerServiceRequests: [] as ConsumerServiceRequests,
     setConsumerServiceRequests: (consumerServiceRequests: ConsumerServiceRequests) =>

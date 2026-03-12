@@ -38,6 +38,6 @@ export class ConsumerRepository implements I_ConsumerRepository {
       sql`SELECT TOP 1 * FROM ViewConsumer_Ledger WHERE account_no = ${accountNo} AND billing_year = ${year} ORDER BY billing_month DESC`,
     );
 
-    return (await query).recordset as unknown as ConsumerLedgerEntry;
+    return (await query).recordset[0] as unknown as ConsumerLedgerEntry;
   }
 }
