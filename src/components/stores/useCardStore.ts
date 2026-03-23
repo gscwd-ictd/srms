@@ -11,11 +11,11 @@ export type CardState = {
   valveDetailsCardOpen: boolean;
   setValveDetailsCardOpen: (valveDetailsCardOpen: boolean) => void;
 
-  waterMeterTableCardOpen: boolean;
-  setWaterMeterTableCardOpen: (waterMeterTableCardOpen: boolean) => void;
+  consumersTableCardOpen: boolean;
+  setConsumersTableCardOpen: (consumersTableCardOpen: boolean) => void;
 
-  waterMeterDetailsCardOpen: boolean;
-  setWaterMeterDetailsCardOpen: (waterMeterDetailsCardOpen: boolean) => void;
+  consumerDetailsCardOpen: boolean;
+  setConsumerDetailsCardOpen: (consumerDetailsCardOpen: boolean) => void;
 
   xilogDetailsCardOpen: boolean;
   setXilogDetailsCardOpen: (xilogDetailsCardOpen: boolean) => void;
@@ -25,6 +25,12 @@ export type CardState = {
 
   pumpingStationCardOpen: number;
   setPumpingStationCardOpen: (pumpingStationCardOpen: number) => void;
+
+  ledgerCardOpen: boolean;
+  setLedgerCardOpen: (ledgerCardOpen: boolean) => void;
+
+  serviceRequestCardOpen: boolean;
+  setServiceRequestCardOpen: (serviceRequestCardOpen: boolean) => void;
 };
 
 export const useCardStore = create<CardState>()(
@@ -38,11 +44,11 @@ export const useCardStore = create<CardState>()(
     valveDetailsCardOpen: false,
     setValveDetailsCardOpen: (valveDetailsCardOpen) => set({ valveDetailsCardOpen }),
 
-    waterMeterTableCardOpen: false,
-    setWaterMeterTableCardOpen: (waterMeterTableCardOpen) => set({ waterMeterTableCardOpen }),
+    consumersTableCardOpen: false,
+    setConsumersTableCardOpen: (consumersTableCardOpen) => set({ consumersTableCardOpen }),
 
-    waterMeterDetailsCardOpen: false,
-    setWaterMeterDetailsCardOpen: (waterMeterDetailsCardOpen) => set({ waterMeterDetailsCardOpen }),
+    consumerDetailsCardOpen: false,
+    setConsumerDetailsCardOpen: (consumerDetailsCardOpen) => set({ consumerDetailsCardOpen }),
 
     xilogDetailsCardOpen: false,
     setXilogDetailsCardOpen: (xilogDetailsCardOpen) => set({ xilogDetailsCardOpen }),
@@ -52,5 +58,11 @@ export const useCardStore = create<CardState>()(
 
     pumpingStationCardOpen: 0,
     setPumpingStationCardOpen: (pumpingStationCardOpen) => set({ pumpingStationCardOpen }),
+
+    ledgerCardOpen: false,
+    setLedgerCardOpen: (ledgerCardOpen) => set({ ledgerCardOpen }),
+
+    serviceRequestCardOpen: false,
+    setServiceRequestCardOpen: (serviceRequestCardOpen) => set({ serviceRequestCardOpen }),
   })),
 );

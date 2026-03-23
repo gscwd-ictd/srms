@@ -24,7 +24,7 @@ export const svgClass = ({ size, className }: SpinnerProps) => {
 
 export const Spinner: FunctionComponent<SpinnerProps> = (props) => {
   return (
-    <div role="status" className="flex h-full justify-center overflow-hidden">
+    <div role="status" className="flex h-full items-center justify-center overflow-hidden">
       <svg
         aria-hidden="true"
         className={svgClass(props)}

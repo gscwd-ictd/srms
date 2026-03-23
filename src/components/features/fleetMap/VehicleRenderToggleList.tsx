@@ -55,8 +55,8 @@ const VehicleRenderToggleList: FunctionComponent<TsTokensProps> = ({ accessToken
   const { tsDeviceList, setTsDeviceList, setSelectedDevice } = useTsDeviceStore();
 
   const {
-    setWaterMeterTableCardOpen,
-    setWaterMeterDetailsCardOpen,
+    setConsumersTableCardOpen,
+    setConsumerDetailsCardOpen,
     setValveDetailsCardOpen,
     vehicleDetailsCardOpen,
     setVehicleDetailsCardOpen,
@@ -317,8 +317,8 @@ const VehicleRenderToggleList: FunctionComponent<TsTokensProps> = ({ accessToken
     // setSelectedDevice(device);
     // setIsModalOpen(!isModalOpen);
     setSelectedVehicleImei(device.imei);
-    setWaterMeterTableCardOpen(false); //close water meter table card
-    setWaterMeterDetailsCardOpen(false); //close water meter details card if its open
+    setConsumersTableCardOpen(false); //close water meter table card
+    setConsumerDetailsCardOpen(false); //close water meter details card if its open
     setValveDetailsCardOpen(false); //close valve details card if its open
 
     if (vehicleDetailsCardOpen) {

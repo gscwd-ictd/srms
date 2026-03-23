@@ -6,6 +6,7 @@ import { useGeographic } from "ol/proj";
 import View from "ol/View";
 import { BaseMapLayerGroup } from "./BaseMapLayerGroup";
 import { useFleetMap } from "./contexts/useFleetMapContext";
+import { useMapStore } from "@srms/components/stores/useMapStore";
 // import { useSidebar } from "@srms/components/ui/Sidebar";
 
 export const FleetMap: FunctionComponent<PropsWithChildren> = ({ children }) => {
@@ -21,6 +22,8 @@ export const FleetMap: FunctionComponent<PropsWithChildren> = ({ children }) => 
 
   const fleetMap = useFleetMap();
 
+  const { viewport } = useMapStore();
+
   const mapRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -33,12 +36,12 @@ export const FleetMap: FunctionComponent<PropsWithChildren> = ({ children }) => 
       layers: [BaseMapLayerGroup],
       target: mapRef.current,
       view: new View({
-        projection: "EPSG:4326",
-        center: [125.17189194375173, 6.113035811082611],
-        zoom: 16,
-        maxZoom: 25,
-        minZoom: 12,
-        showFullExtent: true,
+        projection: viewport.projection,
+        center: viewport.center,
+        zoom: viewport.zoom,
+        extent: viewport.extent,
+        maxZoom: viewport.maxZoom,
+        minZoom: viewport.minZoom,
       }),
     });
 

@@ -12,10 +12,28 @@ export const SelectConsumer = z.object({
   date_connected: z.string(),
   meter_code: z.number().nullable(),
   consumer_type: z.number().nullable(),
-  isSenior: z.boolean(),
+  IsSenior: z.boolean(),
   zone_code: z.string().nullable(),
   book_code: z.number().nullable(),
   contact_no: z.string().nullable(),
+  usage: z.string().nullable(),
+  bill_amount: z.string().nullable(),
+  meter_size: z.string().nullable(),
+});
+
+export const SelectConsumerTcms = z.object({
+  account_no: z.string(),
+  meter_no: z.string().nullable(),
+  consumer_name: z.string(),
+  address: z.string().nullable(),
+  date_connected: z.string(),
+  status: z.string(),
+  description: z.string().nullable(),
+});
+
+export const SelectConsumers = z.object({
+  consumers: z.array(SelectConsumerTcms),
+  totalPages: z.number(),
 });
 
 export const SelectConsumerServiceRequest = z.object({
@@ -57,4 +75,21 @@ export const AccountYearParam = z.object({
 export const AccountYearParam2 = z.object({
   accountNo: z.string(),
   year: z.string(),
+});
+
+export const TablePaginationParamsSchema = z.object({
+  pageIndex: z.string(),
+  pageSize: z.string(),
+});
+
+export const TableFilter = z.array(
+  z.object({
+    id: z.string(),
+    value: z.string(),
+  }),
+);
+
+export const CustomerTableFilter = z.object({
+  id: z.string(),
+  value: z.string(),
 });

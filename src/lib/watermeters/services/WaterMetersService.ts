@@ -87,7 +87,7 @@ export class WaterMetersService implements I_WaterMetersService {
       filters.map((filter, index) => {
         const colName = filter.id.replace("properties_", "");
 
-        if (index === filters.length - 1) {
+        if (index === 0 || index === filters.length - 1) {
           filterStr = filterStr + `${colName} ILIKE '%25${filter.value}%25'`;
         } else {
           filterStr = filterStr + `${colName} ILIKE '%25${filter.value}%25' AND `;

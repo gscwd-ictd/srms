@@ -42,6 +42,7 @@ type DataTableProps<T> = {
   rowCount?: number;
   sticky?: boolean;
   fixedHeight?: string;
+  autoResetPageIndex?: boolean;
 };
 
 export function DataTable<T>({
@@ -58,6 +59,7 @@ export function DataTable<T>({
   rowCount = 0,
   sticky = false,
   fixedHeight,
+  autoResetPageIndex = true,
 }: DataTableProps<T>) {
   const { setPaginationState, setColumnFiltersState } = useTableStore();
 
@@ -101,6 +103,7 @@ export function DataTable<T>({
     manualPagination: manualPagination,
     manualFiltering: manualFiltering,
     rowCount: rowCount,
+    autoResetPageIndex: autoResetPageIndex,
     state: {
       sorting,
       rowSelection,
@@ -158,7 +161,9 @@ export function DataTable<T>({
 
       <div className="mb-0 flex min-h-0 flex-1 flex-col overflow-auto border">
         {loading ? (
-          <Spinner className="text-primary my-4 size-20" size={"lg"} />
+          <div className={cn("w-full items-center", !isEmpty(fixedHeight) ? fixedHeight : "h-full")}>
+            <Spinner className="text-primary my-4 size-20" size={"xl"} />
+          </div>
         ) : (
           // !isEmpty(fixedHeight) ? "h-[" + fixedHeight + "]" : "h-full",
           <div className={cn("w-full overflow-x-auto", !isEmpty(fixedHeight) ? fixedHeight : "h-full")}>
