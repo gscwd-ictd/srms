@@ -43,15 +43,6 @@ export const FleetMap: FunctionComponent<PropsWithChildren> = ({ children }) => 
         maxZoom: viewport.maxZoom,
         minZoom: viewport.minZoom,
       }),
-      // view: new View({
-      //   projection: "EPSG:4326",
-      //   center: [125.17189194375173, 6.113035811082611],
-      //   zoom: 16,
-      //   maxZoom: 25,
-      //   minZoom: 12,
-      //   showFullExtent: true,
-      //   extent: viewport.extent,
-      // }),
     });
 
     return () => {
