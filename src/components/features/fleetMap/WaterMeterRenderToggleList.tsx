@@ -135,6 +135,11 @@ const WaterMeterRenderToggleList: FunctionComponent = ({}) => {
         }
 
         const props = feature.getProperties() as WaterMeterFeatureData;
+
+        if (props.accountno === undefined) {
+          return;
+        }
+
         setSelectedWaterMeter({
           type: "Feature",
           id: props.id,

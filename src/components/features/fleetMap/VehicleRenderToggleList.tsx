@@ -52,7 +52,6 @@ const VehicleRenderToggleList: FunctionComponent<TsTokensProps> = ({ accessToken
   const [isDeviceListAlphabetical, setIsDeviceListAlphabetical] = useState<boolean>(false); // state to determine whether the device list is sorted in alphabetical order. This is to determine the sorting order when the device list is initially fetched and when the search query is empty.
   const [isDeviceListVisible, setIsDeviceListVisible] = useState<boolean>(false); //state to determine whether all the devices in the device list are visible. This is to determine whether to show all the markers of the devices in the map when the "show all" action is triggered.
   const [isToggleVisibilityLoading, setIsToggleVisibilityLoading] = useState<boolean>(false); //state to determine whether the device list is loading. This is to show the loading spinner when the device list is being fetched and when the "show all" action is triggered.
-  const [visibleDevicesCounter, setVisibleDevicesCounter] = useState<number>(0);
 
   // zustand initialization
   const { tsDeviceList, setTsDeviceList, setSelectedDevice } = useTsDeviceStore();
@@ -155,7 +154,7 @@ const VehicleRenderToggleList: FunctionComponent<TsTokensProps> = ({ accessToken
           return;
         } else {
           const props = clickedFeature.getProperties();
-
+          console.log(props);
           if (props.id && variables) {
             if (variables.imei === props.id) {
               toggleModal(variables);
@@ -167,9 +166,9 @@ const VehicleRenderToggleList: FunctionComponent<TsTokensProps> = ({ accessToken
       // add vehicle vector layer to layer group
       vehicleLayerGroup?.getLayers().push(vectorLayer);
 
-      //if
-      setVisibleDevicesCounter((prev) => prev + 1);
-      if (visibleDevicesCounter >= tsDeviceList.length - 2) {
+      // If all filteredVehicleList are visible, set loading to false to remove the loading spinner when toggling visibility of all devices.
+      const count = filteredVehicleList.filter((item) => item.visible === true).length;
+      if (count >= filteredVehicleList.length - 1) {
         setIsToggleVisibilityLoading(false);
       }
 
@@ -282,24 +281,6 @@ const VehicleRenderToggleList: FunctionComponent<TsTokensProps> = ({ accessToken
     updateStoreDeviceVisibility(deviceDetails.imei, isVisible);
     setIsDeviceLocated(isLocate);
 
-    // Iterate through the layer group of vehicles and add the feature to SelectedVehicleFeature array
-    // vehicleLayerGroup
-    //   ?.getLayers()
-    //   .getArray()
-    //   .forEach((layer: BaseLayer) => {
-    //     if (layer instanceof VectorLayer) {
-    //       const source = layer.getSource().getFeatures();
-
-    //       // Iterate through the geom of each layer/feature
-    //       source.forEach((feature: Feature) => {
-    //         if (feature.getProperties().id === deviceDetails.imei) {
-    //           console.log('updating feature array');
-    //           highlightSelectedVehicle(feature);
-    //         }
-    //       });
-    //     }
-    //   });
-
     if (isVisible && !isLocate) {
       // call mutation function to add VectorLayer to LayerGroup('vehicle-map-layer')
       deviceLocationMutation.mutate(deviceDetails);
@@ -372,7 +353,6 @@ const VehicleRenderToggleList: FunctionComponent<TsTokensProps> = ({ accessToken
   };
 
   const toggleModal = (device: TrackSolidDevice) => {
-    console.log("toggleModal opened");
     // Iterate through the layer group of vehicles and add the feature to SelectedVehicleFeature array
     vehicleLayerGroup
       ?.getLayers()
@@ -474,21 +454,19 @@ const VehicleRenderToggleList: FunctionComponent<TsTokensProps> = ({ accessToken
   }, [selectedVehicleFeature]);
 
   const highlightSelectedVehicle = (newVehicle: Feature) => {
-    const newSelected = newVehicle; // snapshot of the new selected feature
     setSelectedVehicleFeature((prev) => {
-      const updated = [...prev, newSelected];
-
-      return updated.slice(-2);
+      const updated = [...prev, newVehicle];
+      return updated.slice(-2); //always make sure there are 2 or less features in the array
     });
   };
 
-  useEffect(() => {
-    console.log(
-      "Selected Vehicle Feature: ",
-      selectedVehicleFeature[0]?.getProperties().id,
-      selectedVehicleFeature[1]?.getProperties().id,
-    );
-  }, [selectedVehicleFeature]);
+  // useEffect(() => {
+  //   console.log(
+  //     "Selected Vehicle Feature: ",
+  //     selectedVehicleFeature[0]?.getProperties().id,
+  //     selectedVehicleFeature[1]?.getProperties().id,
+  //   );
+  // }, [selectedVehicleFeature]);
 
   // Toggle alphabetical order of the device list
   useEffect(() => {
@@ -538,7 +516,6 @@ const VehicleRenderToggleList: FunctionComponent<TsTokensProps> = ({ accessToken
   }, [fleetMap.mapManager.getLayerManager().getGroupIds()]);
 
   const toggleAllDeviceVisibility = (visibility: boolean) => {
-    setVisibleDevicesCounter(0); // reset counter to 0 every time toggle all visibility is triggered
     setIsToggleVisibilityLoading(true); // set loading to true when toggling visibility of all devices/vehicles to avoid multiple clicks while the device list is still being updated which may cause performance issues. The loading spinner will be removed when the last device in the list is updated which is determined by the visibleDevicesCounter state.
 
     setIsDeviceListVisible(visibility); // set the state of whether all devices are visible or not which is used to determine the checked status of the "show all" checkbox and to show the loading spinner when toggling visibility of all devices

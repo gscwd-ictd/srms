@@ -114,6 +114,7 @@ const ConsumerDetailsCard: FunctionComponent<ConsumerDetailsCardProps> = ({ open
     if (!isEmpty(selectedWaterMeter)) {
       // Pan map view to water meter location
       panToMeterLocation();
+      console.log("clicked selectedWaterMeter:", selectedWaterMeter);
     }
   }, [selectedWaterMeter]);
 
