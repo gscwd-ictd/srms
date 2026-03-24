@@ -8,12 +8,13 @@ type Props = {
 };
 
 export type SpinnerProps = Props & {
-  size: "xs" | "sm" | "md" | "lg" | "xl";
+  size: "xs" | "sm" | "md" | "lg" | "xl" | "xxs";
 };
 
 export const svgClass = ({ size, className }: SpinnerProps) => {
   return cls(className, {
     "mr-2 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600": true,
+    "w-4 h-4": size === "xxs",
     "w-5 h-5": size === "xs",
     "w-8 h-8": size === "sm",
     "w-10 h-10": size === "md",

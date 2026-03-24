@@ -106,7 +106,7 @@ export const ValveRenderToggleList: FunctionComponent = () => {
 
       vectorLayer.setVisible(false);
 
-      vectorLayer.setZIndex(999);
+      vectorLayer.setZIndex(996);
 
       vectorLayer.setProperties({ id: "valves" });
 

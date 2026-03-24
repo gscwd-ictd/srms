@@ -49,7 +49,7 @@ export const FleetMap: FunctionComponent<PropsWithChildren> = ({ children }) => 
   }, [fleetMap.mapManager]);
 
   return (
-    <div ref={mapRef} className="relative z-20 h-full w-full">
+    <div ref={mapRef} className="h-full w-full">
       {children}
     </div>
   );

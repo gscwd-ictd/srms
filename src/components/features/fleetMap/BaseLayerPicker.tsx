@@ -4,40 +4,55 @@ import { BaseLayerOptions } from "@srms/components/enums";
 import { FunctionComponent, useEffect, useState } from "react";
 import { useFleetMap } from "./contexts/useFleetMapContext";
 import { BaseMapLayerGroup } from "./BaseMapLayerGroup";
-import { isEmpty } from "@srms/utils/isEmpty";
-import LayerGroup from "ol/layer/Group";
-import BaseLayer from "ol/layer/Base";
+// import { isEmpty } from "@srms/utils/isEmpty";
+// import LayerGroup from "ol/layer/Group";
+// import BaseLayer from "ol/layer/Base";
 import { Button } from "@srms/components/ui/Button";
 import { motion } from "framer-motion";
 import { cn } from "@srms/utils/shadcn";
 import { Map } from "lucide-react";
 import Image from "next/image";
+import { useMapStore } from "@srms/components/stores/useMapStore";
+import TileLayer from "ol/layer/Tile";
 /* 
     Component for switching between Base Layers
  */
 
 const BaseLayerPicker: FunctionComponent = ({}) => {
   const fleetMap = useFleetMap();
-  const [baseMap, setBaseMap] = useState<string>();
+
+  const { baseMap, setBaseMap } = useMapStore(); // changed to store for fleetMap vehicle re rending purposes
 
   useEffect(() => {
-    if (!isEmpty(baseMap)) {
-      const mapBaseTileLayers = fleetMap.mapManager.getMap().getLayers().getArray();
+    if (!fleetMap?.mapManager || !baseMap) return;
 
-      mapBaseTileLayers?.map((layer: BaseLayer) => {
-        if (layer instanceof LayerGroup) {
-          const groupLayers = layer.getLayers().getArray();
+    // Just get the map
+    const map = fleetMap.mapManager.getMap();
 
-          groupLayers.map((groupLayer: BaseLayer) => {
-            if (groupLayer.getClassName() === baseMap) {
-              groupLayer.setVisible(true);
-            } else {
-              groupLayer.setVisible(false);
-            }
-          });
-        }
-      });
+    // Ensure the basemap group is added once
+    if (!map.getLayers().getArray().includes(BaseMapLayerGroup)) {
+      map.addLayer(BaseMapLayerGroup);
     }
+
+    // Toggle visibility of basemap layers
+    BaseMapLayerGroup.getLayers().forEach((layer) => {
+      const tileLayer = layer as TileLayer; // assert it’s a TileLayer
+      const isActive = tileLayer.getClassName() === baseMap;
+      tileLayer.setVisible(isActive);
+      tileLayer.setZIndex(10); // optional
+
+      // Special handling for GOOGLE_MAP_SATELLITE to also show GOOGLE_MAP_STREET_LABELS
+      if (baseMap === BaseLayerOptions.GOOGLE_MAP_SATELLITE) {
+        BaseMapLayerGroup.getLayers().forEach((layer) => {
+          const tileLayer2 = layer as TileLayer; // assert it’s a TileLayer
+          const isActive =
+            tileLayer2.getClassName() === BaseLayerOptions.GOOGLE_MAP_STREET_LABELS ||
+            tileLayer2.getClassName() === BaseLayerOptions.GOOGLE_MAP_SATELLITE;
+          tileLayer2.setVisible(isActive); //set both satellite and labels to visible
+          tileLayer2.setZIndex(20); // optional
+        });
+      }
+    });
   }, [fleetMap.mapManager, baseMap]);
 
   const [layerToggleCardOpen, setLayerToggleCardOpen] = useState<boolean>(false);
@@ -50,30 +65,6 @@ const BaseLayerPicker: FunctionComponent = ({}) => {
   };
 
   return (
-    // <div className="absolute top-[10px] right-[10px] z-20 flex h-10 w-auto items-center gap-4 rounded-lg bg-gradient-to-r from-indigo-500/70 to-blue-500/70 p-2 backdrop-blur-xs">
-    //   {/* <p className="text-md pb-2 font-bold text-black">Base Layers</p> */}
-
-    //   {BaseMapLayerGroup.getLayers()
-    //     .getArray()
-    //     .map((baseMapLayer, index) => (
-    //       <label
-    //         htmlFor="field-osm"
-    //         className="item-center mr-2 flex text-sm font-bold text-white"
-    //         key={index}
-    //       >
-    //         <input
-    //           name="baseMap"
-    //           type="radio"
-    //           value={baseMapLayer.getClassName()}
-    //           className="mr-1"
-    //           onChange={() => setBaseMap(baseMapLayer.getClassName())}
-    //           defaultChecked={baseMapLayer.getClassName() === BaseLayerOptions.OSM}
-    //         />
-
-    //         <label className="mb-1">{baseMapLayer.getProperties()["title"]}</label>
-    //       </label>
-    //     ))}
-    // </div>
     <div
       className={cn(
         "absolute right-[0px] z-20 flex items-center justify-end backdrop-blur",
@@ -95,43 +86,45 @@ const BaseLayerPicker: FunctionComponent = ({}) => {
           <>
             {BaseMapLayerGroup.getLayers()
               .getArray()
-              .map((baseMapLayer, index) => (
-                <label key={baseMapLayer.getClassName()} className="cursor-pointer" htmlFor="field-osm">
-                  {/* Square with image */}
-                  <div
-                    className={cn(
-                      layerToggleCardOpen ? "basemap-intro-animated" : "basemap-outro-animated",
-                      "overflow-hidden rounded-lg shadow-xs transition transition-all peer-checked:border-blue-500 hover:shadow-lg",
-                      !baseMap && index == 0
-                        ? "h-11 w-11 shadow-lg"
-                        : baseMap === baseMapLayer.getClassName()
-                          ? "h-11 w-11 shadow-lg" // selected (bigger)
-                          : "h-10 w-10 shadow-xs hover:h-11 hover:w-11", // normal
-                      "overflow-hidden rounded-lg transition-all peer-checked:border-blue-500",
-                    )}
-                    onClick={() => setBaseMap(baseMapLayer.getClassName())}
-                  >
-                    <Image
-                      src={
-                        baseMapLayer.getClassName() === BaseLayerOptions.POSITRON
-                          ? "/images/positron.jpg"
-                          : baseMapLayer.getClassName() === BaseLayerOptions.GOOGLE_MAP_ROAD
-                            ? "/images/gmroad.jpg"
-                            : baseMapLayer.getClassName() === BaseLayerOptions.GOOGLE_MAP_SATELLITE
-                              ? "/images/gmsatellite.jpg"
-                              : baseMapLayer.getClassName() === BaseLayerOptions.GOOGLE_MAP_TERRAIN
-                                ? "/images/gmterrain.jpg"
-                                : "/images/positron.jpg"
-                      }
-                      alt="preview"
-                      height={100}
-                      width={100}
-                      priority
-                      className="w-full object-cover select-none"
-                    />
-                  </div>
-                </label>
-              ))}
+              .map((baseMapLayer, index) =>
+                baseMapLayer.getClassName() === BaseLayerOptions.GOOGLE_MAP_STREET_LABELS ? null : (
+                  <label key={baseMapLayer.getClassName()} className="cursor-pointer" htmlFor="field-osm">
+                    {/* Square with image */}
+                    <div
+                      className={cn(
+                        layerToggleCardOpen ? "basemap-intro-animated" : "basemap-outro-animated",
+                        "overflow-hidden rounded-lg shadow-xs transition transition-all peer-checked:border-blue-500 hover:shadow-lg",
+                        !baseMap && index == 0
+                          ? "h-11 w-11 shadow-lg"
+                          : baseMap === baseMapLayer.getClassName()
+                            ? "h-11 w-11 shadow-lg" // selected (bigger)
+                            : "h-10 w-10 shadow-xs hover:h-11 hover:w-11", // normal
+                        "overflow-hidden rounded-lg transition-all peer-checked:border-blue-500",
+                      )}
+                      onClick={() => setBaseMap(baseMapLayer.getClassName())}
+                    >
+                      <Image
+                        src={
+                          baseMapLayer.getClassName() === BaseLayerOptions.POSITRON
+                            ? "/images/positron.jpg"
+                            : baseMapLayer.getClassName() === BaseLayerOptions.GOOGLE_MAP_ROAD
+                              ? "/images/gmroad.jpg"
+                              : baseMapLayer.getClassName() === BaseLayerOptions.GOOGLE_MAP_SATELLITE
+                                ? "/images/gmsatellite.jpg"
+                                : baseMapLayer.getClassName() === BaseLayerOptions.GOOGLE_MAP_TERRAIN
+                                  ? "/images/gmterrain.jpg"
+                                  : "/images/positron.jpg"
+                        }
+                        alt="preview"
+                        height={100}
+                        width={100}
+                        priority
+                        className="w-full object-cover select-none"
+                      />
+                    </div>
+                  </label>
+                ),
+              )}
           </>
         ) : (
           <></>

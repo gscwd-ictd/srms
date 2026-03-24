@@ -122,7 +122,7 @@ const BaseLayerPicker: FunctionComponent = ({}) => {
       <motion.div
         transition={{ duration: 0.8, ease: "easeOut" }} // Animation properties
         className={cn(
-          "ui-color-base flex h-18 w-full items-center justify-evenly rounded-bl-lg",
+          "ui-color-button-no-hover flex h-18 w-full items-center justify-evenly rounded-bl-lg",
           layerToggleCardOpen
             ? "tilemap-intro-animated"
             : initialNavAnimation

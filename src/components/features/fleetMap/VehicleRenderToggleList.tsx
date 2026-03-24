@@ -7,11 +7,12 @@ import { Spinner } from "@srms/components/ui-custom/Spinner";
 import { TrackSolidDevice, TrackSolidDeviceLocation } from "@srms/lib/tracksolid/types";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import axios, { AxiosError } from "axios";
-import { Feature, View } from "ol";
+import { Feature } from "ol";
 import VectorLayer from "ol/layer/Vector";
 import VectorSource from "ol/source/Vector";
 import { FunctionComponent, useEffect, useState } from "react";
 import CarMarker from "../../../../public/images/car_icon.svg";
+import CarMarkerHighlight from "../../../../public/images/car_icon_highlight.svg";
 import { Point } from "ol/geom";
 import { useFleetMap } from "./contexts/useFleetMapContext";
 import { FeatureManager } from "@srms/lib/mapstudio/featureManager";
@@ -47,12 +48,21 @@ const VehicleRenderToggleList: FunctionComponent<TsTokensProps> = ({ accessToken
   const vehicleLayerGroup = fleetMap.mapManager.getLayerManager().getLayerGroup("vehicle-map-layer");
 
   const [isDeviceListFetched, setIsDeviceListFetched] = useState<boolean>(true);
-  const [isDeviceLocated, setIsDeviceLLocated] = useState<boolean>(false); // state to determine whether the locate action is triggered. This is to determine whether to move the screen view to the vehicle location as center when the marker is toggled on.
+  const [isDeviceLocated, setIsDeviceLocated] = useState<boolean>(false); // state to determine whether the locate action is triggered. This is to determine whether to move the screen view to the vehicle location as center when the marker is toggled on.
   const [isDeviceListAlphabetical, setIsDeviceListAlphabetical] = useState<boolean>(false); // state to determine whether the device list is sorted in alphabetical order. This is to determine the sorting order when the device list is initially fetched and when the search query is empty.
   const [isDeviceListVisible, setIsDeviceListVisible] = useState<boolean>(false); //state to determine whether all the devices in the device list are visible. This is to determine whether to show all the markers of the devices in the map when the "show all" action is triggered.
+  const [isToggleVisibilityLoading, setIsToggleVisibilityLoading] = useState<boolean>(false); //state to determine whether the device list is loading. This is to show the loading spinner when the device list is being fetched and when the "show all" action is triggered.
+  const [visibleDevicesCounter, setVisibleDevicesCounter] = useState<number>(0);
 
   // zustand initialization
   const { tsDeviceList, setTsDeviceList, setSelectedDevice } = useTsDeviceStore();
+
+  // const [previousVehicleFeature, setPreviousVehicleFeature] = useState<Feature>();
+  const [selectedVehicleFeature, setSelectedVehicleFeature] = useState<Feature[]>([]);
+
+  const [search, setSearch] = useState(""); //search bar state
+  const [filteredVehicleList, setFilteredVehicleList] = useState<TrackSolidDevice[]>([]); //main filtered vehicle list for search functionality
+  const [selectedVehicleImei, setSelectedVehicleImei] = useState<string>("");
 
   const {
     setWaterMeterTableCardOpen,
@@ -107,14 +117,24 @@ const VehicleRenderToggleList: FunctionComponent<TsTokensProps> = ({ accessToken
 
       const carProperties = {
         id: data.imei,
+        direction: data.direction,
       };
 
       const feature = featureManager.createFeature(new Point([data.lng, data.lat]), carProperties);
 
-      const vehicleStyles = { src: CarMarker.src!, anchor: [0.5, 1], scale: 0.55, rotation: data.direction };
+      //automatically set marker to highlighted version
+      const vehicleStyles = {
+        src: CarMarkerHighlight.src!,
+        anchor: [0.5, 1],
+        scale: 0.3,
+        rotation: parseInt(data.direction),
+      };
 
       const featureStyle = createIconStyles(vehicleStyles as IconStyles);
       feature.setStyle(featureStyle.iconStyle);
+
+      //add vehicle to selectedVehicleFeature state which is used to determine which vehicle marker should be highlighted.
+      highlightSelectedVehicle(feature);
 
       vectorSource.addFeature(feature);
 
@@ -126,37 +146,43 @@ const VehicleRenderToggleList: FunctionComponent<TsTokensProps> = ({ accessToken
 
       vectorLayer.setProperties({ imei: variables.imei, vehicleName: variables.deviceName });
 
-      // Open card modal for valve details
+      // // Open card modal for vehicle details
       fleetMap.mapManager.getMap().on("click", (e) => {
-        const feature = fleetMap.mapManager.getMap().forEachFeatureAtPixel(e.pixel, (feature) => {
-          return feature;
-        });
+        const map = fleetMap.mapManager.getMap();
+        const clickedFeature = map.forEachFeatureAtPixel(e.pixel, (f) => f) as Feature;
 
-        if (!feature) {
+        if (!clickedFeature) {
           return;
-        }
+        } else {
+          const props = clickedFeature.getProperties();
 
-        const props = feature.getProperties();
-
-        if (props.id && variables) {
-          if (variables.imei === props.id) {
-            toggleModal(variables);
+          if (props.id && variables) {
+            if (variables.imei === props.id) {
+              toggleModal(variables);
+            }
           }
         }
       });
 
-      if (selectedVehicleImei === variables.imei) {
-      }
       // add vehicle vector layer to layer group
       vehicleLayerGroup?.getLayers().push(vectorLayer);
 
+      //if
+      setVisibleDevicesCounter((prev) => prev + 1);
+      if (visibleDevicesCounter >= tsDeviceList.length - 2) {
+        setIsToggleVisibilityLoading(false);
+      }
+
       // move the screen view to the vehicle location as center
       if (isDeviceLocated) {
-        const vehicleCoordinates = new View({
+        const map = fleetMap.mapManager.getMap();
+        const view = map.getView();
+
+        view.animate({
           center: [data.lng, data.lat],
           zoom: 18,
+          duration: 500,
         });
-        fleetMap.mapManager.getMap().setView(vehicleCoordinates);
       }
     },
     onError: (error: AxiosError<{ message: string }>) => {
@@ -200,12 +226,28 @@ const VehicleRenderToggleList: FunctionComponent<TsTokensProps> = ({ accessToken
             if (currVehicleGeom instanceof Point) {
               data.data.forEach((device: TrackSolidDeviceLocation) => {
                 if (device.imei === feature.get("id")) {
-                  const vehicleStyles = {
-                    src: CarMarker.src!,
-                    anchor: [0.5, 1],
-                    scale: 0.55,
-                    rotation: parseInt(device.direction),
-                  };
+                  //change vehicle marker to hightelight version if it is the selected vehicle in the vehicle details card
+                  let vehicleStyles;
+                  if (
+                    selectedVehicleFeature.length > 1
+                      ? device.imei === selectedVehicleFeature[1]?.getProperties().id
+                      : device.imei === selectedVehicleFeature[0]?.getProperties().id
+                  ) {
+                    vehicleStyles = {
+                      src: CarMarkerHighlight.src!,
+                      anchor: [0.5, 1],
+                      scale: 0.3,
+                      rotation: parseInt(device.direction),
+                    };
+                  } else {
+                    vehicleStyles = {
+                      src: CarMarker.src!,
+                      anchor: [0.5, 1],
+                      scale: 0.3,
+                      rotation: parseInt(device.direction),
+                    };
+                  }
+
                   const featureStyle = createIconStyles(vehicleStyles as IconStyles);
                   feature.setStyle(featureStyle.iconStyle);
 
@@ -238,7 +280,25 @@ const VehicleRenderToggleList: FunctionComponent<TsTokensProps> = ({ accessToken
     isLocate: boolean,
   ) => {
     updateStoreDeviceVisibility(deviceDetails.imei, isVisible);
-    setIsDeviceLLocated(isLocate);
+    setIsDeviceLocated(isLocate);
+
+    // Iterate through the layer group of vehicles and add the feature to SelectedVehicleFeature array
+    // vehicleLayerGroup
+    //   ?.getLayers()
+    //   .getArray()
+    //   .forEach((layer: BaseLayer) => {
+    //     if (layer instanceof VectorLayer) {
+    //       const source = layer.getSource().getFeatures();
+
+    //       // Iterate through the geom of each layer/feature
+    //       source.forEach((feature: Feature) => {
+    //         if (feature.getProperties().id === deviceDetails.imei) {
+    //           console.log('updating feature array');
+    //           highlightSelectedVehicle(feature);
+    //         }
+    //       });
+    //     }
+    //   });
 
     if (isVisible && !isLocate) {
       // call mutation function to add VectorLayer to LayerGroup('vehicle-map-layer')
@@ -284,17 +344,14 @@ const VehicleRenderToggleList: FunctionComponent<TsTokensProps> = ({ accessToken
     filterVehicleList(search, sortedList); // update the filtered vehicle list based on the search query after updating visibility
   };
 
-  const [search, setSearch] = useState(""); //search bar state
-  const [filteredVehicle, setFilteredVehicle] = useState<TrackSolidDevice[]>([]); //main filtered vehicle list for search functionality
-  const [selectedVehicleImei, setSelectedVehicleImei] = useState<string>("");
-
   useEffect(() => {
     filterVehicleList(search, tsDeviceList);
   }, [search]);
 
   const filterVehicleList = (search: string, deviceList: TrackSolidDevice[]) => {
     if (isEmpty(search)) {
-      setFilteredVehicle(deviceList);
+      const sortedList = toggleAlphabeticalOrder(isDeviceListAlphabetical, deviceList); //sort based on current alphabetical order state
+      setFilteredVehicleList(sortedList);
 
       return;
     } else {
@@ -309,13 +366,30 @@ const VehicleRenderToggleList: FunctionComponent<TsTokensProps> = ({ accessToken
           (typeof device.deviceGroup === "string" &&
             device.deviceGroup.toLowerCase().includes(search.toLowerCase())),
       );
-      setFilteredVehicle(filtered);
+      const sortedList = toggleAlphabeticalOrder(isDeviceListAlphabetical, filtered); //sort based on current alphabetical order state
+      setFilteredVehicleList(sortedList);
     }
   };
 
   const toggleModal = (device: TrackSolidDevice) => {
-    // setSelectedDevice(device);
-    // setIsModalOpen(!isModalOpen);
+    console.log("toggleModal opened");
+    // Iterate through the layer group of vehicles and add the feature to SelectedVehicleFeature array
+    vehicleLayerGroup
+      ?.getLayers()
+      .getArray()
+      .forEach((layer: BaseLayer) => {
+        if (layer instanceof VectorLayer) {
+          const source = layer.getSource().getFeatures();
+
+          // Iterate through the geom of each layer/feature
+          source.forEach((feature: Feature) => {
+            if (feature.getProperties().id === device.imei) {
+              highlightSelectedVehicle(feature);
+            }
+          });
+        }
+      });
+
     setSelectedVehicleImei(device.imei);
     setWaterMeterTableCardOpen(false); //close water meter table card
     setWaterMeterDetailsCardOpen(false); //close water meter details card if its open
@@ -334,28 +408,92 @@ const VehicleRenderToggleList: FunctionComponent<TsTokensProps> = ({ accessToken
     }
   };
 
-  const toggleAlphabeticalOrder = (isAlphabetical: boolean, filteredVehicle: TrackSolidDevice[]) => {
-    if (!isEmpty(filteredVehicle)) {
+  const toggleAlphabeticalOrder = (isAlphabetical: boolean, filteredVehicleList: TrackSolidDevice[]) => {
+    if (!isEmpty(filteredVehicleList)) {
       if (isAlphabetical) {
-        const sortedList = [...filteredVehicle].sort((a, b) =>
+        const sortedList = [...filteredVehicleList].sort((a, b) =>
           a.deviceName.trimStart().localeCompare(b.deviceName.trimStart()),
         );
         return sortedList;
-        // setFilteredVehicle(sortedList);
+        // setFilteredVehicleList(sortedList);
       } else {
-        const sortedList = [...filteredVehicle].sort((a, b) =>
+        const sortedList = [...filteredVehicleList].sort((a, b) =>
           b.deviceName.trimStart().localeCompare(a.deviceName.trimStart()),
         );
         return sortedList;
-        // setFilteredVehicle(sortedList);
+        // setFilteredVehicleList(sortedList);
       }
     }
     return [];
   };
 
+  //update highlighted vehicle marker whenever selectedVehicleFeature changes which is triggered when a new vehicle is selected.
   useEffect(() => {
-    const sortedList = toggleAlphabeticalOrder(isDeviceListAlphabetical, filteredVehicle);
-    setFilteredVehicle(sortedList);
+    //reset all markers to normal vehicle style first
+    vehicleLayerGroup
+      ?.getLayers()
+      .getArray()
+      .forEach((layer: BaseLayer) => {
+        if (layer instanceof VectorLayer) {
+          const source = layer.getSource().getFeatures();
+
+          // Iterate through the geom of each layer/feature
+          source.forEach((feature: Feature) => {
+            const normalStyle = createIconStyles({
+              src: CarMarker.src!,
+              anchor: [0.5, 1],
+              scale: 0.3,
+              rotation: parseInt(feature?.getProperties().direction),
+            });
+            feature?.setStyle(normalStyle.iconStyle);
+          });
+        }
+      });
+
+    if (selectedVehicleFeature.length > 1) {
+      //index 1 is the newly selected vehicle feature which will be set to the highlighted style
+      const highlightStyle = createIconStyles({
+        src: CarMarkerHighlight.src!,
+        anchor: [0.5, 1],
+        scale: 0.3,
+        rotation: parseInt(selectedVehicleFeature[1]?.getProperties().direction),
+      });
+
+      selectedVehicleFeature[1]?.setStyle(highlightStyle.iconStyle);
+    } else {
+      //index 0 is the newly selected vehicle feature which will be set to the highlighted style
+      const highlightStyle = createIconStyles({
+        src: CarMarkerHighlight.src!,
+        anchor: [0.5, 1],
+        scale: 0.3,
+        rotation: parseInt(selectedVehicleFeature[0]?.getProperties().direction),
+      });
+
+      selectedVehicleFeature[0]?.setStyle(highlightStyle.iconStyle);
+    }
+  }, [selectedVehicleFeature]);
+
+  const highlightSelectedVehicle = (newVehicle: Feature) => {
+    const newSelected = newVehicle; // snapshot of the new selected feature
+    setSelectedVehicleFeature((prev) => {
+      const updated = [...prev, newSelected];
+
+      return updated.slice(-2);
+    });
+  };
+
+  useEffect(() => {
+    console.log(
+      "Selected Vehicle Feature: ",
+      selectedVehicleFeature[0]?.getProperties().id,
+      selectedVehicleFeature[1]?.getProperties().id,
+    );
+  }, [selectedVehicleFeature]);
+
+  // Toggle alphabetical order of the device list
+  useEffect(() => {
+    const sortedList = toggleAlphabeticalOrder(isDeviceListAlphabetical, filteredVehicleList);
+    setFilteredVehicleList(sortedList);
   }, [isDeviceListAlphabetical]);
 
   // Set initial data
@@ -365,10 +503,10 @@ const VehicleRenderToggleList: FunctionComponent<TsTokensProps> = ({ accessToken
       setTsDeviceList(deviceList);
       setIsDeviceListFetched(false);
       setIsDeviceListAlphabetical(true);
-      setFilteredVehicle([...deviceList].sort((a, b) => a.deviceName.localeCompare(b.deviceName))); //sort alphabetically by default
+      setFilteredVehicleList([...deviceList].sort((a, b) => a.deviceName.localeCompare(b.deviceName))); //sort alphabetically by default
 
       // Create vehicle map layer group
-      fleetMap.mapManager.getLayerManager().createLayerGroup("vehicle-map-layer");
+      fleetMap.mapManager.getLayerManager().createLayerGroup("vehicle-map-layer").setZIndex(900);
     }
   }, [deviceList]);
 
@@ -400,7 +538,10 @@ const VehicleRenderToggleList: FunctionComponent<TsTokensProps> = ({ accessToken
   }, [fleetMap.mapManager.getLayerManager().getGroupIds()]);
 
   const toggleAllDeviceVisibility = (visibility: boolean) => {
-    setIsDeviceListVisible(visibility);
+    setVisibleDevicesCounter(0); // reset counter to 0 every time toggle all visibility is triggered
+    setIsToggleVisibilityLoading(true); // set loading to true when toggling visibility of all devices/vehicles to avoid multiple clicks while the device list is still being updated which may cause performance issues. The loading spinner will be removed when the last device in the list is updated which is determined by the visibleDevicesCounter state.
+
+    setIsDeviceListVisible(visibility); // set the state of whether all devices are visible or not which is used to determine the checked status of the "show all" checkbox and to show the loading spinner when toggling visibility of all devices
     if (visibility) {
       tsDeviceList.forEach((device: TrackSolidDevice) => {
         setVehicleMarkerVisibility(device, true, false); // set all markers to visible without moving the screen view to the vehicle location as center
@@ -414,7 +555,8 @@ const VehicleRenderToggleList: FunctionComponent<TsTokensProps> = ({ accessToken
       tsDeviceList.forEach((device: TrackSolidDevice) => {
         setVehicleMarkerVisibility(device, false, false); // set all markers to invisible without moving the screen view to the vehicle location as center
       });
-      const newDeviceList = tsDeviceList.map((device) => ({ ...device, visible: false })); //set all devices to visible
+
+      const newDeviceList = tsDeviceList.map((device) => ({ ...device, visible: false })); //set all devices to invisible
       const sortedList = toggleAlphabeticalOrder(isDeviceListAlphabetical, newDeviceList);
       setTsDeviceList(sortedList);
       filterVehicleList(search, sortedList);
@@ -426,6 +568,8 @@ const VehicleRenderToggleList: FunctionComponent<TsTokensProps> = ({ accessToken
         .forEach((layer: BaseLayer) => {
           vehicleLayerGroup?.getLayers().remove(layer);
         });
+
+      setIsToggleVisibilityLoading(false);
     }
   };
 
@@ -451,70 +595,78 @@ const VehicleRenderToggleList: FunctionComponent<TsTokensProps> = ({ accessToken
 
       <AccordionContent className="flex flex-col gap-4 text-balance">
         <form className="mx-3 flex flex-col gap-1">
-          {!isLoading && !isEmpty(filteredVehicle) ? (
-            <>
-              <label className="primary-text-color absolute relative mt-2 flex w-full items-center justify-between border border-slate-400 text-sm">
-                <input
-                  type="text"
-                  placeholder="Search device name..."
-                  value={search}
-                  onChange={(e) => setSearch(e.target.value)}
-                  className="p-2 text-slate-500 outline-none"
-                />
-                <Search className="absolute right-2 w-5 text-slate-500" />
-              </label>
+          <label className="primary-text-color absolute relative mt-2 flex w-full items-center justify-between border border-slate-400 text-sm">
+            <input
+              type="text"
+              placeholder="Search device name..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="p-2 text-slate-500 outline-none"
+            />
+            <Search className="absolute right-2 w-5 text-slate-500" />
+          </label>
 
-              {/* main buttons */}
-              <div className="flex items-center justify-end gap-1">
-                <label className="cursor-pointer text-gray-800 hover:text-gray-500">
-                  <input
-                    id={`devicealphabeticalorder`}
-                    type="checkbox"
-                    className="peer hidden"
-                    onChange={(event) => {
-                      setIsDeviceListAlphabetical(event.target.checked);
-                    }}
-                    checked={isDeviceListAlphabetical}
-                  />
-                  {isDeviceListAlphabetical ? (
-                    <ArrowDownAzIcon className="mr-2 w-4 cursor-pointer text-gray-800 hover:text-gray-500" />
-                  ) : (
-                    <ArrowUpZaIcon className="mr-2 w-4 cursor-pointer text-gray-800 hover:text-gray-500" />
-                  )}
-                </label>
-                <label className="cursor-pointer text-gray-800 hover:text-gray-500">
-                  <input
-                    id={`deviceshowall`}
-                    type="checkbox"
-                    className="peer hidden"
-                    onChange={(event) => {
-                      toggleAllDeviceVisibility(event.target.checked);
-                    }}
-                    checked={isDeviceListVisible}
-                  />
-                  {isDeviceListVisible ? (
-                    <Eye className={`mr-2 w-4 cursor-pointer text-gray-800 hover:text-gray-500`} />
-                  ) : (
-                    <EyeClosed className={`mr-2 w-4 cursor-pointer text-gray-800 hover:text-gray-500`} />
-                  )}
-                </label>
-                <RefreshCcwIcon
-                  className="mr-2 w-4 cursor-pointer text-gray-800 hover:text-gray-500"
-                  onClick={() => {
-                    setSearch("");
+          {/* main buttons */}
+          <div className="flex items-center justify-between gap-1">
+            <div className="primary-text-color flex items-center justify-start gap-1 text-sm">
+              {filteredVehicleList.filter((device) => device.visible).length}/{filteredVehicleList.length}{" "}
+              Visible
+            </div>
+            <div className="flex items-center justify-end gap-1">
+              <label className="cursor-pointer text-gray-800 hover:text-gray-500">
+                <input
+                  id={`devicealphabeticalorder`}
+                  type="checkbox"
+                  className="peer hidden"
+                  onChange={(event) => {
+                    setIsDeviceListAlphabetical(event.target.checked);
                   }}
+                  checked={isDeviceListAlphabetical}
                 />
-              </div>
-            </>
-          ) : null}
+                {isDeviceListAlphabetical ? (
+                  <ArrowDownAzIcon className="mr-2 w-4 cursor-pointer text-gray-800 hover:text-gray-500" />
+                ) : (
+                  <ArrowUpZaIcon className="mr-2 w-4 cursor-pointer text-gray-800 hover:text-gray-500" />
+                )}
+              </label>
+              <label className="cursor-pointer text-gray-800 hover:text-gray-500">
+                {isToggleVisibilityLoading ? (
+                  <Spinner size={"xxs"} />
+                ) : (
+                  <>
+                    <input
+                      id={`deviceshowall`}
+                      type="checkbox"
+                      className="peer hidden"
+                      onChange={(event) => {
+                        toggleAllDeviceVisibility(event.target.checked);
+                      }}
+                      checked={isDeviceListVisible}
+                    />
+                    {isDeviceListVisible ? (
+                      <Eye className={`mr-2 w-4 cursor-pointer text-gray-800 hover:text-gray-500`} />
+                    ) : (
+                      <EyeClosed className={`mr-2 w-4 cursor-pointer text-gray-800 hover:text-gray-500`} />
+                    )}
+                  </>
+                )}
+              </label>
+              <RefreshCcwIcon
+                className="mr-2 w-4 cursor-pointer text-gray-800 hover:text-gray-500"
+                onClick={() => {
+                  setSearch("");
+                }}
+              />
+            </div>
+          </div>
 
           {isLoading ? <Spinner size={"md"} /> : null}
 
-          {!isLoading && !isEmpty(filteredVehicle) ? (
+          {!isLoading && !isEmpty(filteredVehicleList) ? (
             <>
               <ScrollArea className="h-[calc(100vh-250px)]">
                 <div className="flex flex-col gap-1">
-                  {filteredVehicle.map((device: TrackSolidDevice) => (
+                  {filteredVehicleList.map((device: TrackSolidDevice) => (
                     <React.Fragment key={device.imei}>
                       <div
                         className={`${device.activationTime ? "cursor-pointer" : "cursor-not-allowed opacity-50"} primary-text-color w-full items-center space-x-2 pt-1 pr-2 pb-2 transition-all ${selectedVehicleImei === device.imei ? "bg-blue-100 hover:bg-blue-300" : "bg-slate-100 hover:bg-slate-200"}`}
@@ -573,19 +725,25 @@ const VehicleRenderToggleList: FunctionComponent<TsTokensProps> = ({ accessToken
                             <LocateFixed className="mr-2 w-4 cursor-pointer text-gray-800 hover:text-gray-500" />
                           </label>
 
-                          <label className="cursor-pointer text-gray-800 hover:text-gray-500">
-                            <input
-                              disabled={device.activationTime ? false : true}
-                              id={`device-${device.imei}`}
-                              type="checkbox"
-                              className="peer hidden"
-                              onChange={(event) => {
-                                setVehicleMarkerVisibility(device, event.target.checked, false);
-                              }}
-                              checked={device.visible}
-                            />
-                            <EyeClosed className="mr-2 block w-4 peer-checked:hidden" />
-                            <Eye className="mr-2 hidden w-4 peer-checked:block" />
+                          <label className="flex cursor-pointer items-center justify-center text-gray-800 hover:text-gray-500">
+                            {isToggleVisibilityLoading ? (
+                              <Spinner size={"xxs"} className="mb-1" />
+                            ) : (
+                              <>
+                                <input
+                                  disabled={device.activationTime ? false : true}
+                                  id={`device-${device.imei}`}
+                                  type="checkbox"
+                                  className="peer hidden"
+                                  onChange={(event) => {
+                                    setVehicleMarkerVisibility(device, event.target.checked, false);
+                                  }}
+                                  checked={device.visible}
+                                />
+                                <EyeClosed className="mr-2 block w-4 peer-checked:hidden" />
+                                <Eye className="mr-2 hidden w-4 peer-checked:block" />
+                              </>
+                            )}
                           </label>
                         </div>
                       </div>

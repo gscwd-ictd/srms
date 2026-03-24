@@ -22,6 +22,9 @@ export type MapState = {
   valvesLayer: Array<ValveData>;
   setValvesLayer: (valvesLayer: Array<ValveData>) => void;
 
+  baseMap: string;
+  setBaseMap: (baseMap: string) => void;
+
   // setLayerVisibility: (className: string, visibility: boolean) => void;
 };
 
@@ -56,5 +59,8 @@ export const useMapStore = create<MapState>()(
     //     setLayerVisibility: (className: string, visibility: boolean) => set((state) =>
     // (  {  geoserverLayers: geoserverLayers.map(item) => className === Item.className  })
     //     ),
+
+    baseMap: "",
+    setBaseMap: (baseMap) => set({ baseMap }),
   })),
 );
