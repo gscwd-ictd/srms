@@ -4,7 +4,9 @@ import { createOpenAPIRoute } from "@srms/server/openapi/createOpenApiRoute";
 
 const tcms = createOpenAPIRoute()
   .openapi(routes.getConsumer, handlers.getConsumer)
+  .openapi(routes.getConsumers, handlers.getConsumers)
   .openapi(routes.getAllConsumerServiceRequest, handlers.getAllConsumerServiceRequest)
-  .openapi(routes.getAllConsumerLedger, handlers.getAllConsumerLedger);
+  .openapi(routes.getAllConsumerLedger, handlers.getAllConsumerLedger)
+  .openapi(routes.getConsumerLedgerLastEntry, handlers.getConsumerLedgerLastEntry);
 
 export default tcms;

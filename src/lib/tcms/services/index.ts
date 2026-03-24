@@ -1,1 +1,1 @@
-export * from "./Consumer";
+export * from "./ConsumerService";

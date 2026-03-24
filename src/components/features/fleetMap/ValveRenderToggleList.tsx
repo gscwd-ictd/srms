@@ -45,8 +45,8 @@ export const ValveRenderToggleList: FunctionComponent = () => {
     valveDetailsCardOpen,
     setValveDetailsCardOpen,
     setVehicleDetailsCardOpen,
-    setWaterMeterDetailsCardOpen,
-    setWaterMeterTableCardOpen,
+    setConsumerDetailsCardOpen,
+    setConsumersTableCardOpen,
   } = useCardStore();
 
   // Open modal for viewing valve details
@@ -126,8 +126,8 @@ export const ValveRenderToggleList: FunctionComponent = () => {
         const props = feature.getProperties() as MapValveData;
         setSelectedValve(props);
         if (props.diameter) {
-          setWaterMeterDetailsCardOpen(false); //close water meter details card if open
-          setWaterMeterTableCardOpen(false); //close water meter table card if open
+          setConsumerDetailsCardOpen(false); //close water meter details card if open
+          setConsumersTableCardOpen(false); //close water meter table card if open
           setVehicleDetailsCardOpen(false); //close vehicle details card if open
           //if valve diameter exists, open details card
           setValveDetailsCardOpen(true);

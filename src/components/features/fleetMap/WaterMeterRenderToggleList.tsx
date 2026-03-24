@@ -14,7 +14,7 @@ import { createMarkerStyles } from "./utils/createMarkerStyles";
 import { Spinner } from "@srms/components/ui-custom/Spinner";
 import WaterMeterCard from "./WaterMeterCard";
 import { useCardStore } from "@srms/components/stores/useCardStore";
-import WaterMeterDetailsCard from "./WaterMeterDetailsCard";
+import WaterMeterDetailsCard from "./ConsumerDetailsCard";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { WaterMeterData, WaterMeterFeatureData } from "@srms/lib/watermeters/types";
@@ -51,17 +51,17 @@ const WaterMeterRenderToggleList: FunctionComponent = ({}) => {
   const {
     layerToggleCardOpen,
     setLayerToggleCardOpen,
-    waterMeterTableCardOpen,
-    setWaterMeterTableCardOpen,
-    waterMeterDetailsCardOpen,
-    setWaterMeterDetailsCardOpen,
+    consumersTableCardOpen,
+    setConsumersTableCardOpen,
+    consumerDetailsCardOpen,
+    setConsumerDetailsCardOpen,
     setValveDetailsCardOpen,
     setVehicleDetailsCardOpen,
   } = useCardStore();
   const { setSelectedWaterMeter } = useWaterMeterStore();
   const toggleTableModal = () => {
     setLayerToggleCardOpen(!layerToggleCardOpen);
-    setWaterMeterTableCardOpen(!waterMeterTableCardOpen);
+    setConsumersTableCardOpen(!consumersTableCardOpen);
   };
 
   useEffect(() => {
@@ -128,7 +128,7 @@ const WaterMeterRenderToggleList: FunctionComponent = ({}) => {
         const feature = fleetMap.mapManager.getMap().forEachFeatureAtPixel(e.pixel, (feature) => {
           return feature;
         });
-        setWaterMeterDetailsCardOpen(false);
+        setConsumerDetailsCardOpen(false);
 
         if (!feature) {
           return;
@@ -168,7 +168,7 @@ const WaterMeterRenderToggleList: FunctionComponent = ({}) => {
           //if water meter account number exists, open details card
           setValveDetailsCardOpen(false); //close valve details card if open
           setVehicleDetailsCardOpen(false); //close vehicle details card if open
-          setWaterMeterDetailsCardOpen(true);
+          setConsumerDetailsCardOpen(true);
         }
       });
 
@@ -223,9 +223,9 @@ const WaterMeterRenderToggleList: FunctionComponent = ({}) => {
         )}
       </AccordionContent>
 
-      <WaterMeterCard open={waterMeterTableCardOpen} onOpenChange={setWaterMeterTableCardOpen} />
+      <WaterMeterCard open={consumersTableCardOpen} onOpenChange={setConsumersTableCardOpen} />
 
-      <WaterMeterDetailsCard open={waterMeterDetailsCardOpen} onOpenChange={setWaterMeterDetailsCardOpen} />
+      <WaterMeterDetailsCard open={consumerDetailsCardOpen} onOpenChange={setConsumerDetailsCardOpen} />
     </React.Fragment>
   );
 };

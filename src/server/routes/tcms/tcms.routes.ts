@@ -5,9 +5,14 @@ import { ErrorResponseSchema } from "@srms/server/schemas/helperSchemas";
 import {
   AccountParam,
   AccountYearParam,
+  AccountYearParam2,
+  TableFilter,
   SelectConsumer,
   SelectConsumerLedger,
+  SelectConsumerLedgerEntry,
+  SelectConsumers,
   SelectConsumerServiceRequests,
+  TablePaginationParamsSchema,
 } from "@srms/lib/tcms/schemas";
 import { OpenAPIResponses } from "@srms/server/constants/openApiResponses";
 
@@ -39,6 +44,64 @@ export const getConsumer = createRoute({
             name: "NotFoundError",
             status: 404,
             message: "Consumer not found",
+          },
+          schema: ErrorResponseSchema,
+        },
+      },
+      description: OpenAPIResponses.NOT_FOUND,
+    },
+
+    [HttpStatusCodes.INTERNAL_SERVER_ERROR]: {
+      content: {
+        "application/json": {
+          example: {
+            name: "ServerError",
+            status: 500,
+            message: "Something went wrong!",
+            stack: "...",
+          },
+          schema: ErrorResponseSchema,
+        },
+      },
+      description: OpenAPIResponses.INTERNAL_SERVER_ERROR,
+    },
+  },
+});
+
+export const getConsumers = createRoute({
+  tags: TAGS.CONSUMER,
+  description: "GET LIST OF CONSUMERS BASED ON FILTERS",
+  method: "post",
+  path: "/v1/consumers/{pageIndex}/{pageSize}",
+  operationId: "getConsumers",
+  request: {
+    params: TablePaginationParamsSchema,
+    body: {
+      content: {
+        "application/json": {
+          schema: TableFilter,
+        },
+      },
+    },
+  },
+
+  responses: {
+    [HttpStatusCodes.OK]: {
+      content: {
+        "application/json": {
+          schema: SelectConsumers,
+        },
+      },
+      description: OpenAPIResponses.OK,
+    },
+
+    [HttpStatusCodes.NOT_FOUND]: {
+      content: {
+        "application/json": {
+          example: {
+            name: "NotFoundError",
+            status: 404,
+            message: "Consumers not found",
           },
           schema: ErrorResponseSchema,
         },
@@ -167,6 +230,60 @@ export const getAllConsumerLedger = createRoute({
   },
 });
 
+export const getConsumerLedgerLastEntry = createRoute({
+  tags: TAGS.CONSUMER,
+  description: "GET CONSUMER'S LAST LEDGER ENTRY FOR A SPECIFIC YEAR",
+  method: "get",
+  path: "/v1/consumer/last-ledger-entry",
+  operationId: "getConsumerLedgerLastEntry",
+
+  request: {
+    query: AccountYearParam2,
+  },
+
+  responses: {
+    [HttpStatusCodes.OK]: {
+      content: {
+        "application/json": {
+          schema: SelectConsumerLedgerEntry,
+        },
+      },
+      description: OpenAPIResponses.OK,
+    },
+
+    [HttpStatusCodes.NOT_FOUND]: {
+      content: {
+        "application/json": {
+          example: {
+            name: "NotFoundError",
+            status: 404,
+            message: "Consumer ledger last entry not found",
+          },
+          schema: ErrorResponseSchema,
+        },
+      },
+      description: OpenAPIResponses.NOT_FOUND,
+    },
+
+    [HttpStatusCodes.INTERNAL_SERVER_ERROR]: {
+      content: {
+        "application/json": {
+          example: {
+            name: "ServerError",
+            status: 500,
+            message: "Something went wrong!",
+            stack: "...",
+          },
+          schema: ErrorResponseSchema,
+        },
+      },
+      description: OpenAPIResponses.INTERNAL_SERVER_ERROR,
+    },
+  },
+});
+
 export type GetConsumerRoute = typeof getConsumer;
+export type GetConsumersRoute = typeof getConsumers;
 export type GetAllConsumerServiceRequestRoute = typeof getAllConsumerServiceRequest;
 export type GetAllConsumerLedgerRoute = typeof getAllConsumerLedger;
+export type GetConsumerLedgerLastEntryRoute = typeof getConsumerLedgerLastEntry;

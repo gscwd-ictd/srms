@@ -12,7 +12,7 @@ type DataTablePaginationProps<T> = {
 export function DataTablePagination<T>({ table }: DataTablePaginationProps<T>) {
   return (
     <div className="flex items-center justify-between px-2">
-      {table.getFilteredSelectedRowModel().rows.length > 0 ? (
+      {/* {table.getFilteredSelectedRowModel().rows.length > 0 ? (
         <div className="text-muted-foreground flex-1 text-sm">
           {table.getFilteredSelectedRowModel().rows.length} of {table.getFilteredRowModel().rows.length}{" "}
           row(s) selected.
@@ -21,7 +21,17 @@ export function DataTablePagination<T>({ table }: DataTablePaginationProps<T>) {
         <p className="text-muted-foreground hidden flex-1 text-sm sm:hidden md:flex lg:flex">
           No rows selected.
         </p>
-      )}
+      )} */}
+
+      <div>
+        <Button
+          variant="default"
+          className="h-8 w-full bg-gray-500 text-white lg:flex"
+          onClick={() => table.resetColumnFilters()}
+        >
+          Clear All Filters
+        </Button>
+      </div>
 
       <div className="flex items-center space-x-6 lg:space-x-8">
         <div className="flex items-center space-x-2">
