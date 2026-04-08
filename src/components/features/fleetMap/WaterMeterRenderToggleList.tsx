@@ -17,8 +17,8 @@ import { useCardStore } from "@srms/components/stores/useCardStore";
 import WaterMeterDetailsCard from "./ConsumerDetailsCard";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
-import { WaterMeterData, WaterMeterFeatureData } from "@srms/lib/watermeters/types";
-import { useWaterMeterStore } from "@srms/components/stores/useWaterMeterStore";
+import { WaterMeterData } from "@srms/lib/watermeters/types";
+// import { useWaterMeterStore } from "@srms/components/stores/useWaterMeterStore";
 
 const featureManager = new FeatureManager();
 
@@ -58,10 +58,15 @@ const WaterMeterRenderToggleList: FunctionComponent = ({}) => {
     setValveDetailsCardOpen,
     setVehicleDetailsCardOpen,
   } = useCardStore();
-  const { setSelectedWaterMeter } = useWaterMeterStore();
+  // const { setSelectedWaterMeter } = useWaterMeterStore();
+
+  //opening water meter table
   const toggleTableModal = () => {
     setLayerToggleCardOpen(!layerToggleCardOpen);
-    setConsumersTableCardOpen(!consumersTableCardOpen);
+    setConsumersTableCardOpen(true);
+    setVehicleDetailsCardOpen(false); //close vehicle details card if open
+    setConsumerDetailsCardOpen(false); //close consumer details card if open
+    setValveDetailsCardOpen(false); //close valve details card if open
   };
 
   useEffect(() => {
@@ -124,58 +129,58 @@ const WaterMeterRenderToggleList: FunctionComponent = ({}) => {
       fleetMap.mapManager.getLayerManager().addLayer("water-meters", vectorLayer);
 
       // Open card modal for valve details
-      fleetMap.mapManager.getMap().on("click", (e) => {
-        const feature = fleetMap.mapManager.getMap().forEachFeatureAtPixel(e.pixel, (feature) => {
-          return feature;
-        });
-        setConsumerDetailsCardOpen(false);
+      // fleetMap.mapManager.getMap().on("click", (e) => {
+      //   const feature = fleetMap.mapManager.getMap().forEachFeatureAtPixel(e.pixel, (feature) => {
+      //     return feature;
+      //   });
+      //   // setConsumerDetailsCardOpen(false); //removed to avoid closing modal due to misclick or when clicking a vehicle marker
 
-        if (!feature) {
-          return;
-        }
+      //   if (!feature) {
+      //     return;
+      //   }
 
-        const props = feature.getProperties() as WaterMeterFeatureData;
+      //   const props = feature.getProperties() as WaterMeterFeatureData;
 
-        if (props.accountno === undefined) {
-          return;
-        }
+      //   if (props.accountno === undefined) {
+      //     return;
+      //   }
+      //   console.log(props);
+      //   setSelectedWaterMeter({
+      //     type: "Feature",
+      //     id: props.id,
+      //     geometry: {
+      //       type: "Point",
+      //       coordinates: props.geometry.flatCoordinates,
+      //     },
+      //     geometry_name: "",
+      //     properties: {
+      //       accountno: props.accountno,
+      //       address: props.address,
+      //       aveusage: props.aveusage,
+      //       billed: props.billed,
+      //       billedvol: props.billedvol,
+      //       bookcode: props.bookcode,
+      //       consumern: props.consumern,
+      //       consumert: props.consumert,
+      //       contactno: props.contactno,
+      //       datecon: props.datecon,
+      //       datediscon: props.datediscon,
+      //       m3perhr: props.m3perhr,
+      //       meterbrnd: props.meterbrnd,
+      //       meterno: props.meterno,
+      //       metersize: props.metersize,
+      //       status: props.status,
+      //       zonecode: props.zonecode,
+      //     },
+      //   });
 
-        setSelectedWaterMeter({
-          type: "Feature",
-          id: props.id,
-          geometry: {
-            type: "Point",
-            coordinates: props.geometry.flatCoordinates,
-          },
-          geometry_name: "",
-          properties: {
-            accountno: props.accountno,
-            address: props.address,
-            aveusage: props.aveusage,
-            billed: props.billed,
-            billedvol: props.billedvol,
-            bookcode: props.bookcode,
-            consumern: props.consumern,
-            consumert: props.consumert,
-            contactno: props.contactno,
-            datecon: props.datecon,
-            datediscon: props.datediscon,
-            m3perhr: props.m3perhr,
-            meterbrnd: props.meterbrnd,
-            meterno: props.meterno,
-            metersize: props.metersize,
-            status: props.status,
-            zonecode: props.zonecode,
-          },
-        });
-
-        if (props.accountno) {
-          //if water meter account number exists, open details card
-          setValveDetailsCardOpen(false); //close valve details card if open
-          setVehicleDetailsCardOpen(false); //close vehicle details card if open
-          setConsumerDetailsCardOpen(true);
-        }
-      });
+      //   if (props.accountno) {
+      //     //if water meter account number exists, open details card
+      //     setValveDetailsCardOpen(false); //close valve details card if open
+      //     setVehicleDetailsCardOpen(false); //close vehicle details card if open
+      //     setConsumerDetailsCardOpen(true);
+      //   }
+      // });
 
       return () => {
         fleetMap.mapManager.getLayerManager().removeLayer("water-meters");

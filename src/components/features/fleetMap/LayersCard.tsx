@@ -29,7 +29,7 @@ export const LayersCard: FunctionComponent<LayersCardProps> = ({ accessToken }) 
   const toggleModal = () => {
     setLayerToggleCardOpen(!layerToggleCardOpen);
     setInitialNavAnimation(false);
-    if (consumersTableCardOpen) {
+    if (consumersTableCardOpen && !layerToggleCardOpen) {
       setConsumersTableCardOpen(!consumersTableCardOpen);
     }
   };
@@ -112,7 +112,8 @@ export const LayersCard: FunctionComponent<LayersCardProps> = ({ accessToken }) 
                 : "nav-title-outro-animated"
           }`}
         >
-          OPERATIONS MONITORING & MANAGEMENT SYSTEM
+          SERVICE REQUEST <br />
+          MANAGEMENT SYSTEM
         </div>
       </motion.div>
     </React.Fragment>

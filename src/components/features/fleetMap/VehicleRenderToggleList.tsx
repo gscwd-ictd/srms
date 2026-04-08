@@ -10,14 +10,14 @@ import axios, { AxiosError } from "axios";
 import { Feature } from "ol";
 import VectorLayer from "ol/layer/Vector";
 import VectorSource from "ol/source/Vector";
-import { FunctionComponent, useEffect, useState } from "react";
+import { FunctionComponent, useEffect, useRef, useState } from "react";
 import CarMarker from "../../../../public/images/car_icon.svg";
 import CarMarkerHighlight from "../../../../public/images/car_icon_highlight.svg";
 import { Point } from "ol/geom";
 import { useFleetMap } from "./contexts/useFleetMapContext";
 import { FeatureManager } from "@srms/lib/mapstudio/featureManager";
 import { createIconStyles } from "./utils/createIconStyles";
-import { IconStyles } from "@srms/server/types";
+import { IconStyles, LabelStyles } from "@srms/server/types";
 import BaseLayer from "ol/layer/Base";
 import { isEmpty } from "@srms/utils/isEmpty";
 import React from "react";
@@ -37,6 +37,7 @@ import VehicleDetailsCard from "./VehicleDetailsCard";
 import { FaCarSide, FaShuttleVan, FaTruck } from "react-icons/fa";
 import { ScrollArea } from "@srms/components/ui/ScrollArea";
 import { useCardStore } from "@srms/components/stores/useCardStore";
+import { createLabelStyles } from "../adminMap/utils/createLabelStyles";
 
 interface TsTokensProps {
   accessToken: Token;
@@ -48,7 +49,8 @@ const VehicleRenderToggleList: FunctionComponent<TsTokensProps> = ({ accessToken
   const vehicleLayerGroup = fleetMap.mapManager.getLayerManager().getLayerGroup("vehicle-map-layer");
 
   const [isDeviceListFetched, setIsDeviceListFetched] = useState<boolean>(true);
-  const [isDeviceLocated, setIsDeviceLocated] = useState<boolean>(false); // state to determine whether the locate action is triggered. This is to determine whether to move the screen view to the vehicle location as center when the marker is toggled on.
+  const isDeviceLocated = useRef(false); // useRef to keep track of the latest value of isDeviceLocated in the asynchronous mutation functions without causing re-renders
+  // const [isDeviceLocated, setIsDeviceLocated] = useState<boolean>(false); // state to determine whether the locate action is triggered. This is to determine whether to move the screen view to the vehicle location as center when the marker is toggled on.
   const [isDeviceListAlphabetical, setIsDeviceListAlphabetical] = useState<boolean>(false); // state to determine whether the device list is sorted in alphabetical order. This is to determine the sorting order when the device list is initially fetched and when the search query is empty.
   const [isDeviceListVisible, setIsDeviceListVisible] = useState<boolean>(false); //state to determine whether all the devices in the device list are visible. This is to determine whether to show all the markers of the devices in the map when the "show all" action is triggered.
   const [isToggleVisibilityLoading, setIsToggleVisibilityLoading] = useState<boolean>(false); //state to determine whether the device list is loading. This is to show the loading spinner when the device list is being fetched and when the "show all" action is triggered.
@@ -58,15 +60,15 @@ const VehicleRenderToggleList: FunctionComponent<TsTokensProps> = ({ accessToken
 
   // const [previousVehicleFeature, setPreviousVehicleFeature] = useState<Feature>();
   const [selectedVehicleFeature, setSelectedVehicleFeature] = useState<Feature[]>([]);
-
+  const [tsDeviceLocations, setTsDeviceLocations] = useState<TrackSolidDeviceLocation[]>([]);
   const [search, setSearch] = useState(""); //search bar state
   const [filteredVehicleList, setFilteredVehicleList] = useState<TrackSolidDevice[]>([]); //main filtered vehicle list for search functionality
   const [selectedVehicleImei, setSelectedVehicleImei] = useState<string>("");
 
   const {
     setConsumersTableCardOpen,
-    setConsumerDetailsCardOpen,
-    setValveDetailsCardOpen,
+    // setConsumerDetailsCardOpen,
+    // setValveDetailsCardOpen,
     vehicleDetailsCardOpen,
     setVehicleDetailsCardOpen,
   } = useCardStore();
@@ -103,7 +105,7 @@ const VehicleRenderToggleList: FunctionComponent<TsTokensProps> = ({ accessToken
           headers: { "access-token": accessToken.value },
         },
       );
-
+      setTsDeviceLocations((prev) => [...prev, tsDevicesLocation.data[0]]); // add new device location to the existing list of device locations in state which is used to update the position of the marker when the location details of multiple devices are fetched through the multipleDeviceLocationMutation. This is important because when the location details of multiple devices are fetched, the position of the marker will be updated based on the location details in this state.
       return tsDevicesLocation.data[0];
     },
     // onMutate: (variables) => {
@@ -121,16 +123,42 @@ const VehicleRenderToggleList: FunctionComponent<TsTokensProps> = ({ accessToken
 
       const feature = featureManager.createFeature(new Point([data.lng, data.lat]), carProperties);
 
+      setSelectedVehicleImei(data.imei); //set selected vehicle imei to the vehicle that is toggled on. This is used to determine which vehicle is selected in the vehicle details card and to set the marker of the selected vehicle to the highlighted version.
       //automatically set marker to highlighted version
       const vehicleStyles = {
         src: CarMarkerHighlight.src!,
-        anchor: [0.5, 1],
+        anchor: [0.5, 0.5],
         scale: 0.3,
-        rotation: parseInt(data.direction),
+        rotation: parseInt(data?.direction ?? "0"),
       };
 
       const featureStyle = createIconStyles(vehicleStyles as IconStyles);
-      feature.setStyle(featureStyle.iconStyle);
+      // feature.setStyle(featureStyle.iconStyle);
+
+      const vehicleLabelStyle = {
+        font: "13px Calibri,sans-serif",
+        overflow: true,
+        fillColor: "#000",
+        strokeColor: "#fff",
+        width: 3,
+        offsetY: 30,
+        text: `${data?.deviceName ?? "---"}`,
+      };
+
+      const featureStyle2 = createLabelStyles(vehicleLabelStyle as LabelStyles);
+
+      const vehicleSpeedLabelStyle = {
+        font: "13px Calibri,sans-serif",
+        overflow: true,
+        fillColor: "#000",
+        strokeColor: "#fff",
+        width: 3,
+        offsetY: 45,
+        text: `${data.speed ?? "--"} km/h`,
+      };
+      const featureStyle3 = createLabelStyles(vehicleSpeedLabelStyle as LabelStyles);
+
+      feature.setStyle([featureStyle.iconStyle, featureStyle2.labelStyle, featureStyle3.labelStyle]);
 
       //add vehicle to selectedVehicleFeature state which is used to determine which vehicle marker should be highlighted.
       highlightSelectedVehicle(feature);
@@ -154,7 +182,6 @@ const VehicleRenderToggleList: FunctionComponent<TsTokensProps> = ({ accessToken
           return;
         } else {
           const props = clickedFeature.getProperties();
-          console.log(props);
           if (props.id && variables) {
             if (variables.imei === props.id) {
               toggleModal(variables);
@@ -167,13 +194,13 @@ const VehicleRenderToggleList: FunctionComponent<TsTokensProps> = ({ accessToken
       vehicleLayerGroup?.getLayers().push(vectorLayer);
 
       // If all filteredVehicleList are visible, set loading to false to remove the loading spinner when toggling visibility of all devices.
-      const count = filteredVehicleList.filter((item) => item.visible === true).length;
-      if (count >= filteredVehicleList.length - 1) {
+      const count = tsDeviceList.filter((item) => item.visible === true).length;
+      if (count >= tsDeviceList.length - 1) {
         setIsToggleVisibilityLoading(false);
       }
 
       // move the screen view to the vehicle location as center
-      if (isDeviceLocated) {
+      if (isDeviceLocated.current) {
         const map = fleetMap.mapManager.getMap();
         const view = map.getView();
 
@@ -202,7 +229,7 @@ const VehicleRenderToggleList: FunctionComponent<TsTokensProps> = ({ accessToken
           headers: { "access-token": accessToken.value },
         },
       );
-
+      setTsDeviceLocations(tsDevicesLocation.data);
       return tsDevicesLocation;
     },
     // onMutate: () => {
@@ -234,21 +261,49 @@ const VehicleRenderToggleList: FunctionComponent<TsTokensProps> = ({ accessToken
                   ) {
                     vehicleStyles = {
                       src: CarMarkerHighlight.src!,
-                      anchor: [0.5, 1],
+                      anchor: [0.5, 0.5],
                       scale: 0.3,
-                      rotation: parseInt(device.direction),
+                      rotation: parseInt(device.direction ?? "0"),
                     };
                   } else {
                     vehicleStyles = {
                       src: CarMarker.src!,
-                      anchor: [0.5, 1],
+                      anchor: [0.5, 0.5],
                       scale: 0.3,
-                      rotation: parseInt(device.direction),
+                      rotation: parseInt(device.direction ?? "0"),
                     };
                   }
 
                   const featureStyle = createIconStyles(vehicleStyles as IconStyles);
-                  feature.setStyle(featureStyle.iconStyle);
+                  // feature.setStyle(featureStyle.iconStyle);
+
+                  const vehicleLabelStyle = {
+                    font: "13px Calibri,sans-serif",
+                    overflow: true,
+                    fillColor: "#000",
+                    strokeColor: "#fff",
+                    width: 3,
+                    offsetY: 30,
+                    text: `${device.deviceName ?? "---"}`,
+                  };
+                  const featureStyle2 = createLabelStyles(vehicleLabelStyle as LabelStyles);
+
+                  const vehicleSpeedLabelStyle = {
+                    font: "13px Calibri,sans-serif",
+                    overflow: true,
+                    fillColor: "#000",
+                    strokeColor: "#fff",
+                    width: 3,
+                    offsetY: 45,
+                    text: `${device.speed ?? "--"} km/h`,
+                  };
+                  const featureStyle3 = createLabelStyles(vehicleSpeedLabelStyle as LabelStyles);
+
+                  feature.setStyle([
+                    featureStyle.iconStyle,
+                    featureStyle2.labelStyle,
+                    featureStyle3.labelStyle,
+                  ]);
 
                   currVehicleGeom.setCoordinates([device.lng, device.lat]);
                 }
@@ -279,8 +334,7 @@ const VehicleRenderToggleList: FunctionComponent<TsTokensProps> = ({ accessToken
     isLocate: boolean,
   ) => {
     updateStoreDeviceVisibility(deviceDetails.imei, isVisible);
-    setIsDeviceLocated(isLocate);
-
+    isDeviceLocated.current = isLocate;
     if (isVisible && !isLocate) {
       // call mutation function to add VectorLayer to LayerGroup('vehicle-map-layer')
       deviceLocationMutation.mutate(deviceDetails);
@@ -372,20 +426,15 @@ const VehicleRenderToggleList: FunctionComponent<TsTokensProps> = ({ accessToken
 
     setSelectedVehicleImei(device.imei);
     setConsumersTableCardOpen(false); //close water meter table card
-    setConsumerDetailsCardOpen(false); //close water meter details card if its open
-    setValveDetailsCardOpen(false); //close valve details card if its open
+    // setConsumerDetailsCardOpen(false); //close water meter details card if its open
+    // setValveDetailsCardOpen(false); //close valve details card if its open
 
-    if (vehicleDetailsCardOpen) {
-      setVehicleDetailsCardOpen(false);
+    setVehicleDetailsCardOpen(false); //close vehicle details card first
 
-      setTimeout(function () {
-        setVehicleDetailsCardOpen(true);
-        setSelectedDevice(device);
-      }, 500);
-    } else {
-      setVehicleDetailsCardOpen(true);
+    setTimeout(function () {
+      setVehicleDetailsCardOpen(true); //open again to fetch new data
       setSelectedDevice(device);
-    }
+    }, 500);
   };
 
   const toggleAlphabeticalOrder = (isAlphabetical: boolean, filteredVehicleList: TrackSolidDevice[]) => {
@@ -395,13 +444,11 @@ const VehicleRenderToggleList: FunctionComponent<TsTokensProps> = ({ accessToken
           a.deviceName.trimStart().localeCompare(b.deviceName.trimStart()),
         );
         return sortedList;
-        // setFilteredVehicleList(sortedList);
       } else {
         const sortedList = [...filteredVehicleList].sort((a, b) =>
           b.deviceName.trimStart().localeCompare(a.deviceName.trimStart()),
         );
         return sortedList;
-        // setFilteredVehicleList(sortedList);
       }
     }
     return [];
@@ -421,11 +468,37 @@ const VehicleRenderToggleList: FunctionComponent<TsTokensProps> = ({ accessToken
           source.forEach((feature: Feature) => {
             const normalStyle = createIconStyles({
               src: CarMarker.src!,
-              anchor: [0.5, 1],
+              anchor: [0.5, 0.5],
               scale: 0.3,
-              rotation: parseInt(feature?.getProperties().direction),
+              rotation: parseInt(feature?.getProperties().direction ?? "0"),
             });
             feature?.setStyle(normalStyle.iconStyle);
+
+            const device = getVehicleDetailsByImei(feature?.getProperties().id);
+
+            const vehicleLabelStyle = {
+              font: "13px Calibri,sans-serif",
+              overflow: true,
+              fillColor: "#000",
+              strokeColor: "#fff",
+              width: 3,
+              offsetY: 30,
+              text: `${device[0]?.deviceName ?? "AAAAAAAAAAA"}`,
+            };
+            const featureStyle2 = createLabelStyles(vehicleLabelStyle as LabelStyles);
+
+            const vehicleSpeedLabelStyle = {
+              font: "13px Calibri,sans-serif",
+              overflow: true,
+              fillColor: "#000",
+              strokeColor: "#fff",
+              width: 3,
+              offsetY: 45,
+              text: `${device[0]?.speed ?? "--"} km/h`,
+            };
+            const featureStyle3 = createLabelStyles(vehicleSpeedLabelStyle as LabelStyles);
+
+            feature.setStyle([normalStyle.iconStyle, featureStyle2.labelStyle, featureStyle3.labelStyle]);
           });
         }
       });
@@ -434,22 +507,77 @@ const VehicleRenderToggleList: FunctionComponent<TsTokensProps> = ({ accessToken
       //index 1 is the newly selected vehicle feature which will be set to the highlighted style
       const highlightStyle = createIconStyles({
         src: CarMarkerHighlight.src!,
-        anchor: [0.5, 1],
+        anchor: [0.5, 0.5],
         scale: 0.3,
-        rotation: parseInt(selectedVehicleFeature[1]?.getProperties().direction),
+        rotation: parseInt(selectedVehicleFeature[1]?.getProperties().direction ?? "0"),
       });
 
-      selectedVehicleFeature[1]?.setStyle(highlightStyle.iconStyle);
+      const device = getVehicleDetailsByImei(selectedVehicleFeature[1]?.getProperties().id);
+      const vehicleLabelStyle = {
+        font: "13px Calibri,sans-serif",
+        overflow: true,
+        fillColor: "#000",
+        strokeColor: "#fff",
+        width: 3,
+        offsetY: 30,
+        text: `${device[0]?.deviceName ?? "---"}`,
+      };
+      const featureStyle2 = createLabelStyles(vehicleLabelStyle as LabelStyles);
+
+      const vehicleSpeedLabelStyle = {
+        font: "13px Calibri,sans-serif",
+        overflow: true,
+        fillColor: "#000",
+        strokeColor: "#fff",
+        width: 3,
+        offsetY: 45,
+        text: `${device[0]?.speed ?? "--"} km/h`,
+      };
+      const featureStyle3 = createLabelStyles(vehicleSpeedLabelStyle as LabelStyles);
+      selectedVehicleFeature[1]?.setStyle([
+        highlightStyle.iconStyle,
+        featureStyle2.labelStyle,
+        featureStyle3.labelStyle,
+      ]);
     } else {
       //index 0 is the newly selected vehicle feature which will be set to the highlighted style
       const highlightStyle = createIconStyles({
         src: CarMarkerHighlight.src!,
-        anchor: [0.5, 1],
+        anchor: [0.5, 0.5],
         scale: 0.3,
-        rotation: parseInt(selectedVehicleFeature[0]?.getProperties().direction),
+        rotation: parseInt(selectedVehicleFeature[0]?.getProperties().direction ?? "0"),
       });
 
-      selectedVehicleFeature[0]?.setStyle(highlightStyle.iconStyle);
+      // selectedVehicleFeature[0]?.setStyle(highlightStyle.iconStyle);
+      const device = getVehicleDetailsByImei(selectedVehicleFeature[0]?.getProperties().id);
+
+      const vehicleLabelStyle = {
+        font: "13px Calibri,sans-serif",
+        overflow: true,
+        fillColor: "#000",
+        strokeColor: "#fff",
+        width: 3,
+        offsetY: 30,
+        text: `${device[0]?.deviceName ?? "---"}`,
+      };
+      const featureStyle2 = createLabelStyles(vehicleLabelStyle as LabelStyles);
+
+      const vehicleSpeedLabelStyle = {
+        font: "13px Calibri,sans-serif",
+        overflow: true,
+        fillColor: "#000",
+        strokeColor: "#fff",
+        width: 3,
+        offsetY: 45,
+        text: `${device[0]?.speed ?? "--"} km/h`,
+      };
+      const featureStyle3 = createLabelStyles(vehicleSpeedLabelStyle as LabelStyles);
+
+      selectedVehicleFeature[0]?.setStyle([
+        highlightStyle.iconStyle,
+        featureStyle2.labelStyle,
+        featureStyle3.labelStyle,
+      ]);
     }
   }, [selectedVehicleFeature]);
 
@@ -460,13 +588,12 @@ const VehicleRenderToggleList: FunctionComponent<TsTokensProps> = ({ accessToken
     });
   };
 
-  // useEffect(() => {
-  //   console.log(
-  //     "Selected Vehicle Feature: ",
-  //     selectedVehicleFeature[0]?.getProperties().id,
-  //     selectedVehicleFeature[1]?.getProperties().id,
-  //   );
-  // }, [selectedVehicleFeature]);
+  const getVehicleDetailsByImei = (imei: string) => {
+    const filtered = tsDeviceLocations?.filter(
+      (device: TrackSolidDeviceLocation) => typeof device.imei === "string" && imei === device.imei,
+    );
+    return filtered;
+  };
 
   // Toggle alphabetical order of the device list
   useEffect(() => {
@@ -516,6 +643,8 @@ const VehicleRenderToggleList: FunctionComponent<TsTokensProps> = ({ accessToken
   }, [fleetMap.mapManager.getLayerManager().getGroupIds()]);
 
   const toggleAllDeviceVisibility = (visibility: boolean) => {
+    isDeviceLocated.current = false; //reset locate state to false when toggling visibility of all devices because the screen view will not be moved to the vehicle location as center when toggling visibility of all devices. This is to avoid confusion to the user when they toggle on the visibility of all devices and the screen view is moved to a random vehicle location as center which may not be the vehicle they want to view.
+
     setIsToggleVisibilityLoading(true); // set loading to true when toggling visibility of all devices/vehicles to avoid multiple clicks while the device list is still being updated which may cause performance issues. The loading spinner will be removed when the last device in the list is updated which is determined by the visibleDevicesCounter state.
 
     setIsDeviceListVisible(visibility); // set the state of whether all devices are visible or not which is used to determine the checked status of the "show all" checkbox and to show the loading spinner when toggling visibility of all devices
@@ -547,6 +676,8 @@ const VehicleRenderToggleList: FunctionComponent<TsTokensProps> = ({ accessToken
         });
 
       setIsToggleVisibilityLoading(false);
+      setVehicleDetailsCardOpen(false); //close vehicle details card if its open when toggling off all devices to avoid mismatch of the vehicle details shown and the vehicle markers shown in the map. User can open the vehicle details card again if they want to view the details of any specific vehicle after toggling on all devices.
+      setSelectedVehicleImei(""); //reset selected vehicle imei to empty string to avoid mismatch of the selected vehicle and the vehicle markers shown in the map
     }
   };
 
@@ -641,7 +772,7 @@ const VehicleRenderToggleList: FunctionComponent<TsTokensProps> = ({ accessToken
 
           {!isLoading && !isEmpty(filteredVehicleList) ? (
             <>
-              <ScrollArea className="h-[calc(100vh-250px)]">
+              <ScrollArea className="h-[calc(100vh-400px)]">
                 <div className="flex flex-col gap-1">
                   {filteredVehicleList.map((device: TrackSolidDevice) => (
                     <React.Fragment key={device.imei}>
