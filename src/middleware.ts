@@ -20,19 +20,35 @@ export default async function middleware(req: NextRequest) {
 
   // Your other middleware logic here...
 
-  // Tracksolid login to set accessToken and refreshToken
+  // Tracksolid login to set tsAccessToken and tsRefreshToken
   const cookieStore = await cookies();
 
-  if (!cookieStore.has("accessToken")) {
+  // if (!cookieStore.has("accessToken")) {
+  //   try {
+  //     const response = await axios.post<TrackSolidAuth>(
+  //       `${process.env.NEXT_PUBLIC_APP_URL}/api/v1/tracksolid/access_token`,
+  //     );
+
+  //     cookieStore.set("tsAccessToken", response?.data?.result?.accessToken);
+  //     // cookieStore.set("refreshToken", response?.data?.result?.refreshToken);
+
+  //     return NextResponse.redirect(new URL("/srms", req.url));
+  //   } catch (error) {
+  //     console.log(error);
+  //     throw error;
+  //   }
+  // }
+
+  if (!cookieStore.has("tsAccessToken")) {
     try {
       const response = await axios.post<TrackSolidAuth>(
         `${process.env.NEXT_PUBLIC_APP_URL}/api/v1/tracksolid/access_token`,
       );
 
-      cookieStore.set("accessToken", response?.data?.result?.accessToken);
+      cookieStore.set("tsAccessToken", response?.data?.result?.accessToken);
       // cookieStore.set("refreshToken", response?.data?.result?.refreshToken);
 
-      return NextResponse.redirect(new URL("/fleet", req.url));
+      return NextResponse.redirect(new URL("/srms", req.url));
     } catch (error) {
       console.log(error);
       throw error;

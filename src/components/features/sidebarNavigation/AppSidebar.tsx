@@ -78,14 +78,14 @@ const data = {
      *  },
      */
     {
-      title: "Operations",
-      url: "/operations",
-      icon: Droplets,
+      title: "SRMS",
+      url: "/srms",
+      icon: Car,
     },
     {
-      title: "Fleet",
-      url: "/fleet",
-      icon: Car,
+      title: "GIS",
+      url: "/gis",
+      icon: Droplets,
     },
     {
       title: "Valves",

@@ -3,8 +3,8 @@
 import { useState, type FunctionComponent, type PropsWithChildren } from "react";
 import { MapManager } from "@srms/lib/mapstudio/mapManager";
 import { FeatureStyles } from "@srms/server/types";
-import { featureStylesDefault } from "@srms/server/constants/featureStylesDefault";
-import { FleetMapContext } from "../features/fleetMap/contexts/useFleetMapContext";
+import { FleetMapContext } from "../features/srmsMap/contexts/useFleetMapContext";
+import { featureStylesDefault } from "@srms/server/constants";
 
 const mapManager = new MapManager();
 

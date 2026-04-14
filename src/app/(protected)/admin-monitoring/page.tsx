@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 
 export default async function AdminMonitoringPage() {
   // const cookieStore = await cookies();
-  // const accessToken = cookieStore.get("accessToken") as Token;
+  // const accessToken = cookieStore.get("tsAccessToken") as Token;
 
   return (
     <AdminMonitMapProvider>

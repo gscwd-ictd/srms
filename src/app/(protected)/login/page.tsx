@@ -4,35 +4,59 @@ import Logo2BigSvg from "@srms/components/ui-custom/Svg/logo2Big/logo2BigSvg";
 import MapBackgroundSvg from "@srms/components/ui-custom/Svg/mapBackground/mapBackgroundSvg";
 import { Eye, EyeClosed } from "lucide-react";
 import React, { useState } from "react";
+import { useForm } from "react-hook-form";
+// import { useRouter } from "next/navigation";
+import { LogIn } from "@srms/components/types";
+import { toast } from "sonner";
+import { postAuth } from "@srms/app/helpers/auth-axios-helper";
 
 export default function LoginPage() {
-  const [email, setEmail] = useState("ricardovicentenarvaiza@gscwd.com");
-  const [password, setPassword] = useState("123456");
-  const [loading, setLoading] = useState(false);
   const [isShowPassword, setIsShowPassword] = useState(false);
 
-  async function handleSubmit(e: { preventDefault: () => void }) {
-    e.preventDefault();
-    setLoading(true);
+  // const router = useRouter();
 
-    const res = await fetch("/api/auth/login", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, password }),
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm<LogIn>({
+    defaultValues: {
+      email: "allynjosephcubero@gscwd.com", // remove on production
+      password: "password", // remove on production
+      appSecret: process.env.NEXT_PUBLIC_AUTH_APP_SECRET,
+    },
+  });
+
+  const successToast = (message: string) => {
+    toast.success("Success!", {
+      description: message,
+      position: "top-center",
     });
+  };
 
-    const data = await res.json();
+  const errorToast = (message: string) => {
+    toast.error("An Error Has Occurred", {
+      description: message,
+      position: "top-center",
+    });
+  };
 
-    if (data.token) {
-      console.log("Login successful, token:", data.token);
-      localStorage.setItem("token", data.token);
-      alert("Login successful");
-      setLoading(false);
+  const onSubmit = async (data: LogIn) => {
+    const { error, result } = await postAuth(`${process.env.NEXT_PUBLIC_AUTH_SERVER}/v1/auth`, data);
+
+    if (error) {
+      console.log("error result: ", result);
+      errorToast(result);
     } else {
-      alert("Login failed");
-      setLoading(false);
+      successToast("Credentials verified");
+
+      // const timer = setTimeout(() => {
+      //   router.push("/dashboard");
+      // }, 1000);
+
+      // return () => clearTimeout(timer);
     }
-  }
+  };
 
   return (
     <div className="font-inter relative min-h-screen w-full bg-white">
@@ -46,16 +70,6 @@ export default function LoginPage() {
           <aside className="hidden flex-col justify-center pr-6 pl-8 md:flex">
             <div className="mb-6">
               <div className="inline-flex items-center gap-3">
-                {/* <svg width="46" height="46" viewBox="0 0 24 24" fill="none" aria-hidden>
-                  <circle cx="12" cy="12" r="10" fill="#2b85ff" />
-                  <path
-                    d="M7 14c2-3 6-3 8 0"
-                    stroke="#fff"
-                    strokeWidth="1.2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg> */}
                 <Logo2BigSvg />
                 <div>
                   <h1 className="text-2xl font-semibold text-[#0b2340]">2BIG</h1>
@@ -77,22 +91,24 @@ export default function LoginPage() {
           </aside>
 
           {/* right: form */}
-          <section className="rounded-2xl border border-[#2b85ff]/8 bg-white/95 p-8 shadow-2xl backdrop-blur-md md:p-10 dark:bg-white/90">
+          <section className="border-primary-color/8 rounded-2xl border bg-white/95 p-8 shadow-2xl backdrop-blur-md md:p-10 dark:bg-white/90">
             <div className="mb-6 flex items-center justify-between">
               <h3 className="text-xl font-semibold text-[#0b2340]">Log In</h3>
             </div>
 
-            <form onSubmit={handleSubmit} className="space-y-4">
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
               <div>
                 <label className="mb-1 block text-sm font-medium text-[#0b2340]/80">Email</label>
                 <input
                   required
                   type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="w-full rounded-lg border border-[#2b85ff]/20 px-4 py-3 text-black focus:ring-2 focus:ring-[#2b85ff]/30 focus:outline-none"
+                  {...register("email", {
+                    required: "Email is required",
+                  })}
+                  className="border-primary-color/20 focus:ring-primary-color/30 w-full rounded-lg border px-4 py-3 text-black focus:ring-2 focus:outline-none"
                   placeholder="first&lastname@gscwd.com"
                 />
+                {errors.email && <p>{errors.email.message}</p>}
               </div>
 
               <div>
@@ -101,9 +117,10 @@ export default function LoginPage() {
                   <input
                     required
                     type={`${isShowPassword ? "text" : "password"}`}
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    className="w-full rounded-lg border border-[#2b85ff]/20 px-4 py-3 text-black focus:ring-2 focus:ring-[#2b85ff]/30 focus:outline-none"
+                    {...register("password", {
+                      required: "Password is required",
+                    })}
+                    className="border-primary-color/20 focus:ring-primary-color/30 w-full rounded-lg border px-4 py-3 text-black focus:ring-2 focus:outline-none"
                     placeholder="Enter your password"
                   ></input>
                   <label className="absolute inset-y-0 right-3 flex cursor-pointer items-center">
@@ -119,6 +136,7 @@ export default function LoginPage() {
                     <Eye className="primary-text-color mr-2 block w-5 cursor-pointer peer-checked:hidden" />
                     <EyeClosed className="primary-text-color mr-2 hidden w-5 cursor-pointer peer-checked:block" />
                   </label>
+                  {errors.password && <p>{errors.password.message}</p>}
                 </div>
               </div>
 
@@ -134,24 +152,12 @@ export default function LoginPage() {
 
               <button
                 type="submit"
-                disabled={loading}
+                disabled={isSubmitting}
                 className="mt-1 w-full rounded-lg bg-gradient-to-tr from-blue-600/80 via-blue-400/80 to-sky-400/80 py-3 font-semibold text-white transition-all duration-100 disabled:cursor-not-allowed disabled:opacity-60"
               >
-                {loading ? "Logging in..." : "Log in"}
+                {isSubmitting ? "Logging in..." : "Log in"}
               </button>
             </form>
-
-            {/* <p className="mt-6 text-xs text-[#0b2340]/60">
-              By signing in you agree to our{" "}
-              <a href="#" className="text-[#2b85ff]">
-                Terms
-              </a>{" "}
-              and{" "}
-              <a href="#" className="text-[#2b85ff]">
-                Privacy
-              </a>
-              .
-            </p> */}
           </section>
         </div>
       </main>

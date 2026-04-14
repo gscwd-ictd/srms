@@ -46,6 +46,8 @@ const EnvSchema = z.object({
   TRACKSOLID_USER: z.string(),
   TRACKSOLID_PASSWORD: z.string(),
   XILOG_ACCESS_TOKEN: z.string(),
+  NEXT_PUBLIC_AUTH_APP_SECRET: z.string(),
+  NEXT_PUBLIC_AUTH_SERVER: z.string(),
 });
 
 export type Env = z.infer<typeof EnvSchema>;

@@ -13,7 +13,7 @@ import {
   LabelStylesSchema,
   LineStringStylesSchema,
   MarkerStylesSchema,
-} from "@srms/lib/servicableareas/schemas";
+} from "@srms/lib/serviceableareas/schemas";
 
 export type PaginatedResult<T> = {
   data: T[];
