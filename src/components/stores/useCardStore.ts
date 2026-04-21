@@ -8,6 +8,9 @@ export type CardState = {
   vehicleDetailsCardOpen: boolean;
   setVehicleDetailsCardOpen: (vehicleDetailsCardOpen: boolean) => void;
 
+  vehicleDetailsToFetch: boolean;
+  setVehicleDetailsToFetch: (vehicleDetailsToFetch: boolean) => void;
+
   valveDetailsCardOpen: boolean;
   setValveDetailsCardOpen: (valveDetailsCardOpen: boolean) => void;
 
@@ -40,6 +43,9 @@ export const useCardStore = create<CardState>()(
 
     vehicleDetailsCardOpen: false,
     setVehicleDetailsCardOpen: (vehicleDetailsCardOpen) => set({ vehicleDetailsCardOpen }),
+
+    vehicleDetailsToFetch: false,
+    setVehicleDetailsToFetch: (vehicleDetailsToFetch) => set({ vehicleDetailsToFetch }),
 
     valveDetailsCardOpen: false,
     setValveDetailsCardOpen: (valveDetailsCardOpen) => set({ valveDetailsCardOpen }),

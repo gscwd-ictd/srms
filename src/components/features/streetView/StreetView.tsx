@@ -13,7 +13,9 @@ export default function StreetView({ lat, lng }: StreetViewProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [streetViewFound, setStreetViewFound] = useState<boolean>(false);
 
-  initGoogleMaps();
+  useEffect(() => {
+    initGoogleMaps();
+  }, []);
 
   useEffect(() => {
     let cancelled = false;

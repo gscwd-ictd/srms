@@ -12,8 +12,9 @@ import { createIconStyles } from "./utils/createIconStyles";
 import ValveOpen from "../../../../public/images/valve_open.svg";
 import ValveClose from "../../../../public/images/valve_close.svg";
 import ValveThrottle from "../../../../public/images/valve_throttle.svg";
-import ValveCardDetails from "./ValveCardDetails";
 import { MapValveData } from "@srms/lib/pms/types";
+import ValveDetailsCard from "./ValveDetailsCardDraggable";
+import { Pixel } from "ol/pixel";
 
 const featureManager = new FeatureManager();
 
@@ -90,13 +91,24 @@ export const ValveRenderFeatures: FunctionComponent = () => {
       setIsModalOpen(true);
     });
 
-    // const mapBaseTileLayers = valvesMap.mapManager.getMap().getAllLayers();
-    // console.log(mapBaseTileLayers);
+    // Change cursor to pointer when hovering over valve markers
+    const map = valvesMap.mapManager.getMap();
+    const pointerMoveHandler = (e: { pixel: Pixel }) => {
+      const hit = map.forEachFeatureAtPixel(e.pixel, (feature, layer) => {
+        const layerId = layer?.get("id");
+
+        return layerId === "valves";
+      });
+
+      map.getTargetElement().style.cursor = hit ? "pointer" : "";
+    };
+    map.on("pointermove", pointerMoveHandler);
 
     return () => {
       valvesMap.mapManager.getLayerManager().removeLayer("valves");
+      map.un("pointermove", pointerMoveHandler);
     };
   }, [valvesMap.mapManager, valvesMap.valves.features]);
 
-  return <ValveCardDetails open={isModalOpen} onOpenChange={setIsModalOpen} featureData={selectedValve} />;
+  return <ValveDetailsCard open={isModalOpen} onOpenChange={setIsModalOpen} featureData={selectedValve} />;
 };

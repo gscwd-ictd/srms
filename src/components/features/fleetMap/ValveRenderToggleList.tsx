@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, type FunctionComponent } from "react";
+import { useEffect, type FunctionComponent } from "react";
 import { FeatureManager } from "@srms/lib/mapstudio/featureManager";
 import { IconStyles } from "@srms/server/types";
 import { Point } from "ol/geom";
@@ -20,8 +20,9 @@ import React from "react";
 import { Spinner } from "@srms/components/ui-custom/Spinner";
 import { Hexagon } from "lucide-react";
 import { AccordionContent, AccordionTrigger } from "@srms/components/ui/Accordion";
-import ValveDetailsCard from "./ValveDetailsCard";
+// import ValveDetailsCard from "./ValveDetailsCard";
 import { useCardStore } from "@srms/components/stores/useCardStore";
+import { useValveStore } from "@srms/components/stores/useValveStore";
 
 const featureManager = new FeatureManager();
 
@@ -42,7 +43,6 @@ export const ValveRenderToggleList: FunctionComponent = () => {
   });
 
   const {
-    valveDetailsCardOpen,
     setValveDetailsCardOpen,
     setVehicleDetailsCardOpen,
     setConsumerDetailsCardOpen,
@@ -50,7 +50,7 @@ export const ValveRenderToggleList: FunctionComponent = () => {
   } = useCardStore();
 
   // Open modal for viewing valve details
-  const [selectedValve, setSelectedValve] = useState<MapValveData>();
+  const { setSelectedValve } = useValveStore();
 
   // Update openlayers. Visibility status of selected layer.
   const setLayerVisibility = (isChecked: boolean) => {
@@ -185,11 +185,11 @@ export const ValveRenderToggleList: FunctionComponent = () => {
           </ul>
         )}
       </AccordionContent>
-      <ValveDetailsCard
+      {/* <ValveDetailsCard
         open={valveDetailsCardOpen}
         onOpenChange={setValveDetailsCardOpen}
         featureData={selectedValve}
-      />
+      /> */}
     </React.Fragment>
   );
 };

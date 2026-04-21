@@ -14,14 +14,18 @@ import { cn } from "@srms/utils/shadcn";
 import { useCardStore } from "@srms/components/stores/useCardStore";
 import { ValveRenderToggleList } from "./ValveRenderToggleList";
 import { motion } from "framer-motion";
+import WaterMeterDetailsCard from "./ConsumerDetailsCardDraggable";
+import VehicleDetailsCard from "./VehicleDetailsCardDraggable";
+import ValveDetailsCard from "./ValveDetailsCardDraggable";
+import { useValveStore } from "@srms/components/stores/useValveStore";
 
 interface LayersCardProps {
   accessToken: Token;
 }
 
 export const LayersCard: FunctionComponent<LayersCardProps> = ({ accessToken }) => {
-  const { layerToggleCardOpen, setLayerToggleCardOpen, consumersTableCardOpen, setConsumersTableCardOpen } =
-    useCardStore();
+  // const { layerToggleCardOpen, setLayerToggleCardOpen, consumersTableCardOpen, setConsumersTableCardOpen } =
+  //   useCardStore();
 
   const [initialNavAnimation, setInitialNavAnimation] = useState<boolean>(true);
 
@@ -33,6 +37,21 @@ export const LayersCard: FunctionComponent<LayersCardProps> = ({ accessToken }) 
       setConsumersTableCardOpen(!consumersTableCardOpen);
     }
   };
+
+  const {
+    layerToggleCardOpen,
+    setLayerToggleCardOpen,
+    consumersTableCardOpen,
+    setConsumersTableCardOpen,
+    consumerDetailsCardOpen,
+    setConsumerDetailsCardOpen,
+    valveDetailsCardOpen,
+    setValveDetailsCardOpen,
+    vehicleDetailsCardOpen,
+    setVehicleDetailsCardOpen,
+  } = useCardStore();
+
+  const { selectedValve } = useValveStore();
 
   return (
     <React.Fragment>
@@ -67,7 +86,7 @@ export const LayersCard: FunctionComponent<LayersCardProps> = ({ accessToken }) 
           <div className="absolute -right-40 -mt-42 h-80 w-70 rounded-full bg-blue-300/10"></div>
           <div className="absolute -bottom-54 -left-20 h-80 w-80 rounded-full bg-blue-400/10"></div>
           <label className="primary-text-color absolute bottom-0 left-0 p-4 text-xs">
-            OMMS Version 1.0.2
+            OMMS Version {process.env.NEXT_PUBLIC_APP_VERSION ?? "1.0.0"}
           </label>
           <CardHeader className="flex p-0">
             <CardAction className="z-40 self-end">
@@ -116,6 +135,21 @@ export const LayersCard: FunctionComponent<LayersCardProps> = ({ accessToken }) 
           MANAGEMENT SYSTEM
         </div>
       </motion.div>
+
+      {/* Consumers Details Draggable Card */}
+      <WaterMeterDetailsCard open={consumerDetailsCardOpen} onOpenChange={setConsumerDetailsCardOpen} />
+
+      <VehicleDetailsCard
+        accessToken={accessToken}
+        open={vehicleDetailsCardOpen}
+        onOpenChange={setVehicleDetailsCardOpen}
+      />
+
+      <ValveDetailsCard
+        open={valveDetailsCardOpen}
+        onOpenChange={setValveDetailsCardOpen}
+        featureData={selectedValve}
+      />
     </React.Fragment>
   );
 };

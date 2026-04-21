@@ -33,11 +33,12 @@ import {
   ArrowDownAzIcon,
   ArrowUpZaIcon,
 } from "lucide-react";
-import VehicleDetailsCard from "./VehicleDetailsCard";
+// import VehicleDetailsCard from "./VehicleDetailsCard";
 import { FaCarSide, FaShuttleVan, FaTruck } from "react-icons/fa";
 import { ScrollArea } from "@srms/components/ui/ScrollArea";
 import { useCardStore } from "@srms/components/stores/useCardStore";
 import { createLabelStyles } from "../adminMap/utils/createLabelStyles";
+import { Pixel } from "ol/pixel";
 
 interface TsTokensProps {
   accessToken: Token;
@@ -69,8 +70,9 @@ const VehicleRenderToggleList: FunctionComponent<TsTokensProps> = ({ accessToken
     setConsumersTableCardOpen,
     // setConsumerDetailsCardOpen,
     // setValveDetailsCardOpen,
-    vehicleDetailsCardOpen,
+    // vehicleDetailsCardOpen,
     setVehicleDetailsCardOpen,
+    setVehicleDetailsToFetch,
   } = useCardStore();
 
   // Get vehicle list and add to zustand store
@@ -319,13 +321,40 @@ const VehicleRenderToggleList: FunctionComponent<TsTokensProps> = ({ accessToken
   });
 
   // Update openlayers. Visibility status of selected layer.
-  const setLayerGroupVisibility = (isChecked: boolean) => {
-    if (isChecked) {
-      fleetMap.mapManager.getLayerManager().getLayerGroup("vehicle-map-layer")?.setVisible(true);
-    } else {
-      fleetMap.mapManager.getLayerManager().getLayerGroup("vehicle-map-layer")?.setVisible(false);
-    }
-  };
+  // const setLayerGroupVisibility = (isChecked: boolean) => {
+  //   if (isChecked) {
+  //     fleetMap.mapManager.getLayerManager().getLayerGroup("vehicle-map-layer")?.setVisible(true);
+  //   } else {
+  //     fleetMap.mapManager.getLayerManager().getLayerGroup("vehicle-map-layer")?.setVisible(false);
+  //   }
+  // };
+
+  // Change cursor to pointer when hovering over vehicle markers and valve markers
+  useEffect(() => {
+    if (!fleetMap.mapManager) return;
+
+    const map = fleetMap.mapManager.getMap();
+
+    const pointerMoveHandler = (e: { pixel: Pixel }) => {
+      const hit = map.forEachFeatureAtPixel(e.pixel, (feature, layer) => {
+        const layerId = layer?.get("id");
+        const imei = layer?.get("imei");
+
+        return (
+          layerId === "valves" || // valve marker
+          !!imei // vehicle layers (since you set imei as property)
+        );
+      });
+
+      map.getTargetElement().style.cursor = hit ? "pointer" : "";
+    };
+
+    map.on("pointermove", pointerMoveHandler);
+
+    return () => {
+      map.un("pointermove", pointerMoveHandler);
+    };
+  }, [fleetMap.mapManager]);
 
   // Update openlayers. Visibility status of selected layer.
   const setVehicleMarkerVisibility = (
@@ -429,10 +458,11 @@ const VehicleRenderToggleList: FunctionComponent<TsTokensProps> = ({ accessToken
     // setConsumerDetailsCardOpen(false); //close water meter details card if its open
     // setValveDetailsCardOpen(false); //close valve details card if its open
 
-    setVehicleDetailsCardOpen(false); //close vehicle details card first
-
+    // setVehicleDetailsCardOpen(false); //close vehicle details card first
+    setVehicleDetailsToFetch(false); // set to false first to trigger vehicle details to fetch data again
     setTimeout(function () {
       setVehicleDetailsCardOpen(true); //open again to fetch new data
+      setVehicleDetailsToFetch(true); // trigger for vehicle details card to fetch new data
       setSelectedDevice(device);
     }, 500);
   };
@@ -684,7 +714,28 @@ const VehicleRenderToggleList: FunctionComponent<TsTokensProps> = ({ accessToken
   return (
     <React.Fragment>
       <div className="flex cursor-pointer items-center space-x-2 p-2">
-        <label>
+        {isToggleVisibilityLoading ? (
+          <Spinner size={"xs"} className="pr-2" />
+        ) : (
+          <label>
+            <input
+              id={`deviceshowall`}
+              type="checkbox"
+              className="peer hidden"
+              onChange={(event) => {
+                toggleAllDeviceVisibility(event.target.checked);
+              }}
+              checked={isDeviceListVisible}
+            />
+
+            {isDeviceListVisible ? (
+              <CarFront className={`primary-text-color mr-2 block w-5 cursor-pointer`} />
+            ) : (
+              <CarFront className={`primary-text-color mr-2 block w-5 cursor-pointer opacity-30`} />
+            )}
+          </label>
+        )}
+        {/* <label>
           <input
             type="checkbox"
             className="peer hidden"
@@ -695,7 +746,7 @@ const VehicleRenderToggleList: FunctionComponent<TsTokensProps> = ({ accessToken
           />
           <CarFront className="primary-text-color mr-2 block w-5 cursor-pointer opacity-30 peer-checked:hidden" />
           <CarFront className="primary-text-color mr-2 hidden w-5 cursor-pointer peer-checked:block" />
-        </label>
+        </label> */}
         <AccordionTrigger className="w-50 items-center">
           <p className="text-md primary-text-color font-bold">Vehicles</p>
         </AccordionTrigger>
@@ -737,28 +788,7 @@ const VehicleRenderToggleList: FunctionComponent<TsTokensProps> = ({ accessToken
                   <ArrowUpZaIcon className="mr-2 w-4 cursor-pointer text-gray-800 hover:text-gray-500" />
                 )}
               </label>
-              <label className="cursor-pointer text-gray-800 hover:text-gray-500">
-                {isToggleVisibilityLoading ? (
-                  <Spinner size={"xxs"} />
-                ) : (
-                  <>
-                    <input
-                      id={`deviceshowall`}
-                      type="checkbox"
-                      className="peer hidden"
-                      onChange={(event) => {
-                        toggleAllDeviceVisibility(event.target.checked);
-                      }}
-                      checked={isDeviceListVisible}
-                    />
-                    {isDeviceListVisible ? (
-                      <Eye className={`mr-2 w-4 cursor-pointer text-gray-800 hover:text-gray-500`} />
-                    ) : (
-                      <EyeClosed className={`mr-2 w-4 cursor-pointer text-gray-800 hover:text-gray-500`} />
-                    )}
-                  </>
-                )}
-              </label>
+
               <RefreshCcwIcon
                 className="mr-2 w-4 cursor-pointer text-gray-800 hover:text-gray-500"
                 onClick={() => {
@@ -866,11 +896,11 @@ const VehicleRenderToggleList: FunctionComponent<TsTokensProps> = ({ accessToken
           )}
         </form>
 
-        <VehicleDetailsCard
+        {/* <VehicleDetailsCard
           accessToken={accessToken}
           open={vehicleDetailsCardOpen}
           onOpenChange={setVehicleDetailsCardOpen}
-        />
+        /> */}
       </AccordionContent>
     </React.Fragment>
   );

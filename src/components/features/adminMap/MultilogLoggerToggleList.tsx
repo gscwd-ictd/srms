@@ -43,7 +43,7 @@ const MultilogLoggerToggleList: FunctionComponent = ({}) => {
           (channel: { measurement: { name: string } }) => channel.measurement.name === "Pressure",
         );
 
-        return entry.lastValue;
+        return entry?.lastValue ?? "0.0";
       } else {
         return "0.0";
       }
@@ -91,7 +91,7 @@ const MultilogLoggerToggleList: FunctionComponent = ({}) => {
       const vectorLayer = new VectorLayer();
 
       // adminMonitMap.loggers
-      multilogLoggers.forEach((logger: MultilogLogger) => {
+      multilogLoggers.forEach(async (logger: MultilogLogger) => {
         if (!isEmpty(logger.latitude) && !isEmpty(logger.longitude)) {
           const loggerProperties = {
             loggerid: logger.loggerid,
@@ -115,11 +115,7 @@ const MultilogLoggerToggleList: FunctionComponent = ({}) => {
           };
           const featureStyle = createIconStyles(loggerStyles as IconStyles);
 
-          const pressureData = latestPressureLogMutation(logger.serialNumber);
-
-          // const {pressureData} = latestPressureLogMutation(logger.serialNumber).then((data) => {
-          //   console.log(data);
-          // });
+          const pressureData = await latestPressureLogMutation(logger.serialNumber);
 
           const labelStyles = {
             font: "13px Calibri,sans-serif",
@@ -128,12 +124,24 @@ const MultilogLoggerToggleList: FunctionComponent = ({}) => {
             strokeColor: "#fff",
             width: 3,
             offsetY: 12,
-            // text: `${logger.serialNumber}`,
-            text: `${pressureData}`,
+            text: `${logger?.serialNumber ?? "No Serial"}`,
           };
+
           const featureStyle2 = createLabelStyles(labelStyles as LabelStyles);
 
-          feature.setStyle([featureStyle.iconStyle, featureStyle2.labelStyle]);
+          const labelStyles2 = {
+            font: "13px Calibri,sans-serif",
+            overflow: true,
+            fillColor: "#000",
+            strokeColor: "#fff",
+            width: 3,
+            offsetY: 30,
+            text: `${pressureData} PSI`,
+          };
+
+          const featureStyle3 = createLabelStyles(labelStyles2 as LabelStyles);
+
+          feature.setStyle([featureStyle.iconStyle, featureStyle2.labelStyle, featureStyle3.labelStyle]);
         }
       });
 

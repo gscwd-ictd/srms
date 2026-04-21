@@ -56,7 +56,9 @@ export const LayersCard: FunctionComponent = () => {
           <div className="absolute -right-14 -mt-44 h-70 w-70 rounded-full bg-blue-200/10"></div>
           <div className="absolute -right-40 -mt-42 h-80 w-70 rounded-full bg-blue-200/10"></div>
           <div className="absolute -bottom-54 -left-20 h-80 w-80 rounded-full bg-blue-400/10"></div>
-          <label className="absolute bottom-0 left-0 p-4 text-xs">OMMS Version 1.0.2</label>
+          <label className="primary-text-color absolute bottom-0 left-0 p-4 text-xs">
+            OMMS Version {process.env.NEXT_PUBLIC_APP_VERSION ?? "1.0.0"}
+          </label>
           <CardHeader className="flex p-0">
             <CardAction className="z-40 self-end">
               <Button variant="link" onClick={() => toggleModal()}>

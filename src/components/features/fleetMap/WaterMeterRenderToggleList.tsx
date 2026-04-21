@@ -14,10 +14,11 @@ import { createMarkerStyles } from "./utils/createMarkerStyles";
 import { Spinner } from "@srms/components/ui-custom/Spinner";
 import WaterMeterCard from "./WaterMeterCard";
 import { useCardStore } from "@srms/components/stores/useCardStore";
-import WaterMeterDetailsCard from "./ConsumerDetailsCard";
+// import WaterMeterDetailsCard from "./ConsumerDetailsCardDialog";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { WaterMeterData } from "@srms/lib/watermeters/types";
+
 // import { useWaterMeterStore } from "@srms/components/stores/useWaterMeterStore";
 
 const featureManager = new FeatureManager();
@@ -53,10 +54,10 @@ const WaterMeterRenderToggleList: FunctionComponent = ({}) => {
     setLayerToggleCardOpen,
     consumersTableCardOpen,
     setConsumersTableCardOpen,
-    consumerDetailsCardOpen,
-    setConsumerDetailsCardOpen,
+    // consumerDetailsCardOpen,
+    // setConsumerDetailsCardOpen,
     setValveDetailsCardOpen,
-    setVehicleDetailsCardOpen,
+    // setVehicleDetailsCardOpen,
   } = useCardStore();
   // const { setSelectedWaterMeter } = useWaterMeterStore();
 
@@ -64,8 +65,8 @@ const WaterMeterRenderToggleList: FunctionComponent = ({}) => {
   const toggleTableModal = () => {
     setLayerToggleCardOpen(!layerToggleCardOpen);
     setConsumersTableCardOpen(true);
-    setVehicleDetailsCardOpen(false); //close vehicle details card if open
-    setConsumerDetailsCardOpen(false); //close consumer details card if open
+    // setVehicleDetailsCardOpen(false); //close vehicle details card if open
+    // setConsumerDetailsCardOpen(false); //close consumer details card if open
     setValveDetailsCardOpen(false); //close valve details card if open
   };
 
@@ -234,8 +235,6 @@ const WaterMeterRenderToggleList: FunctionComponent = ({}) => {
       </AccordionContent>
 
       <WaterMeterCard open={consumersTableCardOpen} onOpenChange={setConsumersTableCardOpen} />
-
-      <WaterMeterDetailsCard open={consumerDetailsCardOpen} onOpenChange={setConsumerDetailsCardOpen} />
     </React.Fragment>
   );
 };

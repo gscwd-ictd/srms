@@ -6,15 +6,15 @@ import { Google, OSM } from "ol/source";
 export const BaseMapLayerGroup: LayerGroup = new LayerGroup({
   layers: [
     // Set to true to set as default base map layer
-    new TileLayer({
-      source: new OSM(),
-      visible: true,
-      preload: Infinity,
-      className: BaseLayerOptions.OSM,
-      properties: {
-        title: "OpenStreetMap",
-      },
-    }),
+    // new TileLayer({
+    //   source: new OSM(),
+    //   visible: true,
+    //   preload: Infinity,
+    //   className: BaseLayerOptions.OSM,
+    //   properties: {
+    //     title: "OpenStreetMap",
+    //   },
+    // }),
 
     new TileLayer({
       source: new OSM({

@@ -152,7 +152,7 @@ const ConsumerDetailsCard: FunctionComponent<ConsumerDetailsCardProps> = ({ open
     <>
       <Sheet open={open} onOpenChange={onOpenChange} modal={false}>
         <SheetContent
-          className="ui-color-base primary-text-color m-1.5 h-[98vh] w-127.5 gap-0 rounded-lg border-0 backdrop-blur"
+          className="ui-color-base primary-text-color m-1.5 h-[98vh] w-127.5 !transform-none gap-0 rounded-lg border-0 backdrop-blur"
           onInteractOutside={(e) => e.preventDefault()}
           side="right"
         >
@@ -160,7 +160,7 @@ const ConsumerDetailsCard: FunctionComponent<ConsumerDetailsCardProps> = ({ open
             <Spinner size={"lg"} />
           ) : (
             <>
-              <SheetHeader className="m-6 p-0">
+              <SheetHeader className="drag-handle m-6 cursor-move p-0">
                 <SheetTitle className="primary-text-color text-lg">
                   {consumerInformation.consumer_name || "--"}
                 </SheetTitle>
