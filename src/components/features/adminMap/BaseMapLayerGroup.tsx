@@ -1,7 +1,7 @@
 import { BaseLayerOptions } from "@srms/components/enums";
 import LayerGroup from "ol/layer/Group";
 import TileLayer from "ol/layer/Tile";
-import { Google, OSM } from "ol/source";
+import { Google, OSM, XYZ } from "ol/source";
 
 export const BaseMapLayerGroup: LayerGroup = new LayerGroup({
   layers: [
@@ -40,6 +40,18 @@ export const BaseMapLayerGroup: LayerGroup = new LayerGroup({
       className: BaseLayerOptions.GOOGLE_MAP_SATELLITE,
       properties: {
         title: "GM Satellite",
+      },
+    }),
+
+    new TileLayer({
+      source: new XYZ({
+        url: "https://tiles.stadiamaps.com/tiles/stamen_toner_labels/{z}/{x}/{y}.png",
+      }),
+      visible: false,
+      preload: Infinity,
+      className: BaseLayerOptions.GOOGLE_MAP_STREET_LABELS,
+      properties: {
+        title: "GM Street Labels",
       },
     }),
 

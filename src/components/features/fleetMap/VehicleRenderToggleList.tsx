@@ -715,7 +715,7 @@ const VehicleRenderToggleList: FunctionComponent<TsTokensProps> = ({ accessToken
     <React.Fragment>
       <div className="flex cursor-pointer items-center space-x-2 p-2">
         {isToggleVisibilityLoading ? (
-          <Spinner size={"xs"} className="pr-2" />
+          <Spinner size={"xs"} />
         ) : (
           <label>
             <input

@@ -7,7 +7,16 @@ import View from "ol/View";
 import { BaseMapLayerGroup } from "./BaseMapLayerGroup";
 import { useFleetMap } from "./contexts/useFleetMapContext";
 import { useMapStore } from "@srms/components/stores/useMapStore";
-// import { useSidebar } from "@srms/components/ui/Sidebar";
+import VectorSource from "ol/source/Vector";
+import VectorLayer from "ol/layer/Vector";
+import { attachGooglePlacesPOI } from "../../hooks/attachGooglePlacesPOI";
+
+export const poiSource = new VectorSource();
+
+export const poiLayer = new VectorLayer({
+  source: poiSource,
+  zIndex: 50,
+});
 
 export const FleetMap: FunctionComponent<PropsWithChildren> = ({ children }) => {
   // const { setOpen } = useSidebar();
@@ -33,7 +42,7 @@ export const FleetMap: FunctionComponent<PropsWithChildren> = ({ children }) => 
     if (!mapRef.current) return;
 
     fleetMap.mapManager.init({
-      layers: [BaseMapLayerGroup],
+      layers: [BaseMapLayerGroup, poiLayer],
       target: mapRef.current,
       view: new View({
         projection: viewport.projection,
@@ -44,6 +53,13 @@ export const FleetMap: FunctionComponent<PropsWithChildren> = ({ children }) => 
         minZoom: viewport.minZoom,
       }),
     });
+
+    const map = fleetMap.mapManager.getMap();
+    if (!map) return;
+
+    attachGooglePlacesPOI(map, poiSource);
+
+    console.log(fleetMap.mapManager.getMap().getLayers().getArray());
 
     return () => {
       fleetMap.mapManager.destroy();

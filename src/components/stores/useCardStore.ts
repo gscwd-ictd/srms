@@ -3,7 +3,7 @@ import { devtools } from "zustand/middleware";
 
 export type CardState = {
   layerToggleCardOpen: boolean;
-  setLayerToggleCardOpen: (layerToggleCardOpen: boolean) => void;
+  setLayerToggleCardOpen: (value: boolean | ((prev: boolean) => boolean)) => void;
 
   vehicleDetailsCardOpen: boolean;
   setVehicleDetailsCardOpen: (vehicleDetailsCardOpen: boolean) => void;
@@ -15,7 +15,7 @@ export type CardState = {
   setValveDetailsCardOpen: (valveDetailsCardOpen: boolean) => void;
 
   consumersTableCardOpen: boolean;
-  setConsumersTableCardOpen: (consumersTableCardOpen: boolean) => void;
+  setConsumersTableCardOpen: (value: boolean | ((prev: boolean) => boolean)) => void;
 
   consumerDetailsCardOpen: boolean;
   setConsumerDetailsCardOpen: (consumerDetailsCardOpen: boolean) => void;
@@ -39,7 +39,10 @@ export type CardState = {
 export const useCardStore = create<CardState>()(
   devtools((set) => ({
     layerToggleCardOpen: false,
-    setLayerToggleCardOpen: (layerToggleCardOpen) => set({ layerToggleCardOpen }),
+    setLayerToggleCardOpen: (value) =>
+      set((state) => ({
+        layerToggleCardOpen: typeof value === "function" ? value(state.layerToggleCardOpen) : value,
+      })),
 
     vehicleDetailsCardOpen: false,
     setVehicleDetailsCardOpen: (vehicleDetailsCardOpen) => set({ vehicleDetailsCardOpen }),
@@ -51,7 +54,10 @@ export const useCardStore = create<CardState>()(
     setValveDetailsCardOpen: (valveDetailsCardOpen) => set({ valveDetailsCardOpen }),
 
     consumersTableCardOpen: false,
-    setConsumersTableCardOpen: (consumersTableCardOpen) => set({ consumersTableCardOpen }),
+    setConsumersTableCardOpen: (value) =>
+      set((state) => ({
+        consumersTableCardOpen: typeof value === "function" ? value(state.consumersTableCardOpen) : value,
+      })),
 
     consumerDetailsCardOpen: false,
     setConsumerDetailsCardOpen: (consumerDetailsCardOpen) => set({ consumerDetailsCardOpen }),

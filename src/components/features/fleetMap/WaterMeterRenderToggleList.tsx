@@ -50,9 +50,8 @@ const WaterMeterRenderToggleList: FunctionComponent = ({}) => {
 
   // Open modal for viewing vehicle details
   const {
-    layerToggleCardOpen,
     setLayerToggleCardOpen,
-    consumersTableCardOpen,
+    consumersTableCardOpen, 
     setConsumersTableCardOpen,
     // consumerDetailsCardOpen,
     // setConsumerDetailsCardOpen,
@@ -63,7 +62,7 @@ const WaterMeterRenderToggleList: FunctionComponent = ({}) => {
 
   //opening water meter table
   const toggleTableModal = () => {
-    setLayerToggleCardOpen(!layerToggleCardOpen);
+    setLayerToggleCardOpen(false);
     setConsumersTableCardOpen(true);
     // setVehicleDetailsCardOpen(false); //close vehicle details card if open
     // setConsumerDetailsCardOpen(false); //close consumer details card if open
@@ -188,6 +187,19 @@ const WaterMeterRenderToggleList: FunctionComponent = ({}) => {
       };
     }
   }, [fleetMap.mapManager, waterMeters]);
+
+  //open and close nav when esc key is pressed
+  useEffect(() => {
+    const handleKey = (e: KeyboardEvent) => {
+      //if pressed space key and consumers table card is not open, open consumers table card
+      if (e.key === " " && !consumersTableCardOpen) {
+        toggleTableModal();
+      }
+    };
+
+    window.addEventListener("keydown", handleKey);
+    return () => window.removeEventListener("keydown", handleKey); //cleanup
+  }, []);
 
   return (
     <React.Fragment>

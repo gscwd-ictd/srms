@@ -67,14 +67,15 @@ import { BaseLayerOptions } from "@srms/components/enums";
 import { FunctionComponent, useEffect, useState } from "react";
 import { useValvesMap } from "./contexts/useValvesMapContext";
 import { BaseMapLayerGroup } from "./BaseMapLayerGroup";
-import { isEmpty } from "@srms/utils/isEmpty";
-import LayerGroup from "ol/layer/Group";
-import BaseLayer from "ol/layer/Base";
+// import { isEmpty } from "@srms/utils/isEmpty";
+// import LayerGroup from "ol/layer/Group";
+// import BaseLayer from "ol/layer/Base";
 import { Button } from "@srms/components/ui/Button";
 import { motion } from "framer-motion";
 import { cn } from "@srms/utils/shadcn";
 import { Map } from "lucide-react";
 import Image from "next/image";
+import TileLayer from "ol/layer/Tile";
 /* 
     Component for switching between Base Layers
  */
@@ -84,23 +85,53 @@ const BaseLayerPicker: FunctionComponent = ({}) => {
   const [baseMap, setBaseMap] = useState<string>();
 
   useEffect(() => {
-    if (!isEmpty(baseMap)) {
-      const mapBaseTileLayers = valvesMap.mapManager.getMap().getLayers().getArray();
+    // if (!isEmpty(baseMap)) {
+    //   const mapBaseTileLayers = valvesMap.mapManager.getMap().getLayers().getArray();
 
-      mapBaseTileLayers?.map((layer: BaseLayer) => {
-        if (layer instanceof LayerGroup) {
-          const groupLayers = layer.getLayers().getArray();
+    //   mapBaseTileLayers?.map((layer: BaseLayer) => {
+    //     if (layer instanceof LayerGroup) {
+    //       const groupLayers = layer.getLayers().getArray();
 
-          groupLayers.map((groupLayer: BaseLayer) => {
-            if (groupLayer.getClassName() === baseMap) {
-              groupLayer.setVisible(true);
-            } else {
-              groupLayer.setVisible(false);
-            }
-          });
-        }
-      });
+    //       groupLayers.map((groupLayer: BaseLayer) => {
+    //         if (groupLayer.getClassName() === baseMap) {
+    //           groupLayer.setVisible(true);
+    //         } else {
+    //           groupLayer.setVisible(false);
+    //         }
+    //       });
+    //     }
+    //   });
+    // }
+
+    if (!valvesMap?.mapManager || !baseMap) return;
+
+    // Just get the map
+    const map = valvesMap.mapManager.getMap();
+
+    // Ensure the basemap group is added once
+    if (!map.getLayers().getArray().includes(BaseMapLayerGroup)) {
+      map.addLayer(BaseMapLayerGroup);
     }
+
+    // Toggle visibility of basemap layers
+    BaseMapLayerGroup.getLayers().forEach((layer) => {
+      const tileLayer = layer as TileLayer; // assert it’s a TileLayer
+      const isActive = tileLayer.getClassName() === baseMap;
+      tileLayer.setVisible(isActive);
+      tileLayer.setZIndex(10); // optional
+
+      // Special handling for GOOGLE_MAP_SATELLITE to also show GOOGLE_MAP_STREET_LABELS
+      if (baseMap === BaseLayerOptions.GOOGLE_MAP_SATELLITE) {
+        BaseMapLayerGroup.getLayers().forEach((layer) => {
+          const tileLayer2 = layer as TileLayer; // assert it’s a TileLayer
+          const isActive =
+            tileLayer2.getClassName() === BaseLayerOptions.GOOGLE_MAP_STREET_LABELS ||
+            tileLayer2.getClassName() === BaseLayerOptions.GOOGLE_MAP_SATELLITE;
+          tileLayer2.setVisible(isActive); //set both satellite and labels to visible
+          tileLayer2.setZIndex(20); // optional
+        });
+      }
+    });
   }, [valvesMap.mapManager, baseMap]);
 
   const [layerToggleCardOpen, setLayerToggleCardOpen] = useState<boolean>(false);

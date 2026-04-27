@@ -31,7 +31,7 @@ export const BaseMapLayerGroup: LayerGroup = new LayerGroup({
 
     new TileLayer({
       source: new Google({
-        key: "AIzaSyBZV9OFOavXzB-kM8ASQX4ZjFBXN9TFEwI",
+        key: `${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}`,
         scale: "scaleFactor2x",
         highDpi: false,
         mapType: "satellite",
@@ -58,7 +58,7 @@ export const BaseMapLayerGroup: LayerGroup = new LayerGroup({
 
     new TileLayer({
       source: new Google({
-        key: "AIzaSyBZV9OFOavXzB-kM8ASQX4ZjFBXN9TFEwI",
+        key: `${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}`,
         scale: "scaleFactor2x",
         highDpi: true,
         mapType: "terrain",
@@ -74,7 +74,7 @@ export const BaseMapLayerGroup: LayerGroup = new LayerGroup({
 
     new TileLayer({
       source: new Google({
-        key: "AIzaSyBZV9OFOavXzB-kM8ASQX4ZjFBXN9TFEwI",
+        key: `${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}`,
         scale: "scaleFactor2x",
         highDpi: true,
         mapType: "roadmap",
