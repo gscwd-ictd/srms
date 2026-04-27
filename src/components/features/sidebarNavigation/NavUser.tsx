@@ -13,6 +13,7 @@ import {
   DropdownMenuTrigger,
 } from "@srms/components/ui/DropdownMenu";
 import { SidebarMenu, SidebarMenuButton, SidebarMenuItem, useSidebar } from "@srms/components/ui/Sidebar";
+import { logOut } from "@srms/components/helpers/auth-helper";
 
 export function NavUser({
   user,
@@ -86,7 +87,7 @@ export function NavUser({
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>
+            <DropdownMenuItem onSelect={async () => await logOut()}>
               <LogOut />
               Log out
             </DropdownMenuItem>

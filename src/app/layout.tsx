@@ -1,7 +1,7 @@
 import { type Metadata } from "next";
 import { type PropsWithChildren } from "react";
 import { Geist, Geist_Mono } from "next/font/google";
-import { ReactQueryProvider } from "@srms/components/providers/ReactQueryProvider";
+// import { ReactQueryProvider } from "@srms/components/providers/ReactQueryProvider";
 import { ThemeProvider } from "@srms/components/providers/ThemeProvider";
 // import { ReactScan } from "@srms/components/features/ReactScan";
 import "@srms/app/globals.css";
@@ -18,7 +18,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "SRMS",
+  title: "OMMS",
 };
 
 export default async function RootLayout({ children }: Readonly<PropsWithChildren>) {
@@ -26,13 +26,13 @@ export default async function RootLayout({ children }: Readonly<PropsWithChildre
     <html lang="en" suppressHydrationWarning>
       {/* <ReactScan /> */}
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-        <ReactQueryProvider>
-          <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
-            {/* <TokensProvider>{children}</TokensProvider> */}
+        {/* <ReactQueryProvider> */}
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
+          {/* <TokensProvider>{children}</TokensProvider> */}
 
-            <main className="h-screen w-screen overflow-x-hidden">{children}</main>
-          </ThemeProvider>
-        </ReactQueryProvider>
+          <main className="h-screen w-screen overflow-x-hidden">{children}</main>
+        </ThemeProvider>
+        {/* </ReactQueryProvider> */}
       </body>
     </html>
   );

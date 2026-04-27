@@ -32,5 +32,6 @@
     "TRACKSOLID",
     "UPVC",
     "XILOG"
-  ]
+  ],
+  "js/ts.tsdk.path": "node_modules\\typescript\\lib"
 }

@@ -1,6 +1,14 @@
 import { notFound, onError } from "@srms/server/middlewares";
 import { secureHeaders } from "hono/secure-headers";
-import { healthcheck, geoserver, trackSolid, pms, waterMeters, tcms } from "@srms/server/routes";
+import {
+  healthcheck,
+  geoserver,
+  trackSolid,
+  pms,
+  waterMeters,
+  tcms,
+  authentication,
+} from "@srms/server/routes";
 import { createOpenAPIRoute } from "./openapi/createOpenApiRoute";
 import { configureOpenApi } from "./openapi/configureOpenApi";
 import { crossOrigin } from "./middlewares/cors";
@@ -12,6 +20,7 @@ import { TrackSolidManager } from "@srms/lib/tracksolid/trackSolidManager";
 import { PmsManager } from "@srms/lib/pms/pmsManager";
 import { WaterMetersManager } from "@srms/lib/watermeters/waterMetersManager";
 import { TCMSManager } from "@srms/lib/tcms/tcmsManager";
+import { AuthManager } from "@srms/lib/authentication/authManager";
 
 function createApp() {
   const app = createOpenAPIRoute().basePath("/api");
@@ -25,7 +34,7 @@ function createApp() {
   app.use(crossOrigin);
 
   // IMPORTANT! Add each route to this array
-  const routes = [healthcheck, geoserver, trackSolid, pms, waterMeters, tcms] as const;
+  const routes = [healthcheck, geoserver, trackSolid, pms, waterMeters, tcms, authentication] as const;
   routes.forEach((route) => app.route("/", route));
   return app;
 }
@@ -53,3 +62,5 @@ export const pmsManager = PmsManager.getInstance();
 export const waterMetersManager = WaterMetersManager.getInstance();
 
 export const tcmsManager = TCMSManager.getInstance();
+
+export const authManager = AuthManager.getInstance();

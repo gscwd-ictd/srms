@@ -4,3 +4,8 @@ export type LogIn = {
   forgotPassword?: string;
   appSecret: string;
 };
+
+export type RefreshTokenBody = {
+  accessToken: string;
+  refreshToken: string;
+};

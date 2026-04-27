@@ -4,7 +4,7 @@ import axios from "axios";
 import { cookies } from "next/headers";
 
 const axiosApi = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_AUTH_SERVER,
+  baseURL: process.env.NEXT_PUBLIC_APP_URL,
 });
 
 axiosApi.interceptors.request.use(
@@ -18,16 +18,16 @@ axiosApi.interceptors.response.use(
 );
 
 // POST
-export const postAuth = async (url: string, data: object, config = {}) =>
+export const postTsAuth = async (url: string, data: object, config = {}) =>
   await axiosApi
     .post(url, { ...data }, { ...config })
     .then(async (response) => {
-      (await cookies()).set("accessToken", response.data.accessToken, {
+      (await cookies()).set("tsAccessToken", response?.data?.result?.accessToken, {
         httpOnly: true,
         path: "/",
       });
 
-      (await cookies()).set("refreshToken", response.data.refreshToken, {
+      (await cookies()).set("tsRefreshToken", response?.data?.result?.refreshToken, {
         httpOnly: true,
         path: "/",
       });

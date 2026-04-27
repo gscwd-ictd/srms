@@ -48,6 +48,8 @@ const EnvSchema = z.object({
   XILOG_ACCESS_TOKEN: z.string(),
   NEXT_PUBLIC_AUTH_APP_SECRET: z.string(),
   NEXT_PUBLIC_AUTH_SERVER: z.string(),
+  AUTH_JWT_SECRET: z.string(),
+  APP_NAME: z.string(),
 });
 
 export type Env = z.infer<typeof EnvSchema>;

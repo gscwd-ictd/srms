@@ -5,15 +5,15 @@ import MapBackgroundSvg from "@srms/components/ui-custom/Svg/mapBackground/mapBa
 import { Eye, EyeClosed } from "lucide-react";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
-// import { useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { LogIn } from "@srms/components/types";
 import { toast } from "sonner";
-import { postAuth } from "@srms/app/helpers/auth-axios-helper";
+import { postAuth } from "@srms/components/helpers/auth-helper";
 
 export default function LoginPage() {
   const [isShowPassword, setIsShowPassword] = useState(false);
 
-  // const router = useRouter();
+  const router = useRouter();
 
   const {
     register,
@@ -42,19 +42,18 @@ export default function LoginPage() {
   };
 
   const onSubmit = async (data: LogIn) => {
-    const { error, result } = await postAuth(`${process.env.NEXT_PUBLIC_AUTH_SERVER}/v1/auth`, data);
+    const { error, result } = await postAuth(data);
 
     if (error) {
-      console.log("error result: ", result);
       errorToast(result);
     } else {
       successToast("Credentials verified");
 
-      // const timer = setTimeout(() => {
-      //   router.push("/dashboard");
-      // }, 1000);
+      const timer = setTimeout(() => {
+        router.push("/dashboard");
+      }, 1000);
 
-      // return () => clearTimeout(timer);
+      return () => clearTimeout(timer);
     }
   };
 

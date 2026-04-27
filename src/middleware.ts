@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
-import { TrackSolidAuth } from "./lib/tracksolid/types";
-import axios from "axios";
-import { cookies } from "next/headers";
+import { RefreshTokenBody } from "./components/types";
+import { postAuthRefresh } from "./components/helpers/auth-helper";
+import { verifyAccessToken } from "./components/functions/verifyAccessToken";
 
 export default async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
@@ -19,43 +19,63 @@ export default async function middleware(req: NextRequest) {
   }
 
   // Your other middleware logic here...
+  const accessToken = req.cookies.get("accessToken")?.value;
+  const refreshToken = req.cookies.get("refreshToken")?.value;
 
-  // Tracksolid login to set tsAccessToken and tsRefreshToken
-  const cookieStore = await cookies();
+  if (accessToken) {
+    const decodedToken = await verifyAccessToken(accessToken);
 
-  // if (!cookieStore.has("accessToken")) {
-  //   try {
-  //     const response = await axios.post<TrackSolidAuth>(
-  //       `${process.env.NEXT_PUBLIC_APP_URL}/api/v1/tracksolid/access_token`,
-  //     );
-
-  //     cookieStore.set("tsAccessToken", response?.data?.result?.accessToken);
-  //     // cookieStore.set("refreshToken", response?.data?.result?.refreshToken);
-
-  //     return NextResponse.redirect(new URL("/srms", req.url));
-  //   } catch (error) {
-  //     console.log(error);
-  //     throw error;
-  //   }
-  // }
-
-  if (!cookieStore.has("tsAccessToken")) {
-    try {
-      const response = await axios.post<TrackSolidAuth>(
-        `${process.env.NEXT_PUBLIC_APP_URL}/api/v1/tracksolid/access_token`,
-      );
-
-      cookieStore.set("tsAccessToken", response?.data?.result?.accessToken);
-      // cookieStore.set("refreshToken", response?.data?.result?.refreshToken);
-
-      return NextResponse.redirect(new URL("/srms", req.url));
-    } catch (error) {
-      console.log(error);
-      throw error;
+    if (decodedToken) {
+      if (req.nextUrl.pathname.startsWith("/login")) {
+        return NextResponse.redirect(new URL("/dashboard", req.url));
+      } else {
+        return NextResponse.next();
+      }
     }
   }
 
-  return NextResponse.next();
+  if (refreshToken) {
+    const data: RefreshTokenBody = {
+      accessToken: accessToken!,
+      refreshToken: refreshToken!,
+    };
+
+    const { error, result } = await postAuthRefresh(data);
+
+    if (error) {
+      console.log("error result: ", result);
+    } else {
+      return NextResponse.next();
+    }
+  }
+
+  // Redirect to /login if no  access token and refresh token
+  if (!accessToken && !refreshToken && req.nextUrl.pathname !== "/login") {
+    return NextResponse.redirect(new URL("/login", req.url));
+  }
+
+  // Tracksolid login to set tsAccessToken and tsRefreshToken
+  // if (!cookieStore.has("tsAccessToken")) {
+  //   const { error, result } = await postTsAuth("/v1/auth", {});
+
+  //   if (error) {
+  //     console.log("error result: ", result);
+  //   } else {
+  //     console.log("TS access and refresh set");
+  //   }
+  // }
+
+  // try {
+  //   const response = await axios.post<TrackSolidAuth>(
+  //     `${process.env.NEXT_PUBLIC_APP_URL}/api/v1/tracksolid/access_token`,
+  //   );
+  //   cookieStore.set("tsAccessToken", response?.data?.result?.accessToken);
+  //   cookieStore.set("refreshToken", response?.data?.result?.refreshToken);
+
+  // } catch (error) {
+  //   console.log(error);
+  //   throw error;
+  // }
 }
 
 export const config = {
