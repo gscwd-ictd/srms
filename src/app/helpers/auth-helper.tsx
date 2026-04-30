@@ -35,7 +35,7 @@ export const postAuth = async (data: object, config = {}) =>
       (await cookies()).set("refreshToken", response.data.refreshToken, {
         httpOnly: true,
         path: "/",
-        maxAge: 300, // 5 minutes
+        maxAge: 300, // 24 hrs
         // expires: Date.now() + oneDay,
       });
 
@@ -54,14 +54,14 @@ export const postAuthRefresh = async (data: object, config = {}) =>
       (await cookies()).set("accessToken", response.data.accessToken, {
         httpOnly: true,
         path: "/",
-        maxAge: 3600, // 5 minutes
+        maxAge: 300, // 5 minutes
         // expires: Date.now() + oneDay,
       });
 
       (await cookies()).set("refreshToken", response.data.refreshToken, {
         httpOnly: true,
         path: "/",
-        maxAge: 3600, // 5 minutes
+        maxAge: 300, // 24 hrs
         // expires: Date.now() + oneDay,
       });
 

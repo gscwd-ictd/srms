@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { RefreshTokenBody } from "./components/types";
-import { postAuthRefresh } from "./components/helpers/auth-helper";
+// import { RefreshTokenBody } from "./components/types";
+// import { postAuthRefresh } from "./components/helpers/auth-helper";
 import { verifyAccessToken } from "./components/functions/verifyAccessToken";
 
 export default async function middleware(req: NextRequest) {
@@ -22,6 +22,11 @@ export default async function middleware(req: NextRequest) {
   const accessToken = req.cookies.get("accessToken")?.value;
   const refreshToken = req.cookies.get("refreshToken")?.value;
 
+  // Redirect to /login if no  access token and refresh token
+  if (!accessToken && !refreshToken && req.nextUrl.pathname !== "/login") {
+    return NextResponse.redirect(new URL("/login", req.url));
+  }
+
   if (accessToken) {
     const decodedToken = await verifyAccessToken(accessToken);
 
@@ -29,30 +34,29 @@ export default async function middleware(req: NextRequest) {
       if (req.nextUrl.pathname.startsWith("/login")) {
         return NextResponse.redirect(new URL("/dashboard", req.url));
       } else {
+        const requestHeaders = new Headers(req.headers);
+        requestHeaders.set("x-user", JSON.stringify(decodedToken));
+
         return NextResponse.next();
       }
     }
   }
 
-  if (refreshToken) {
-    const data: RefreshTokenBody = {
-      accessToken: accessToken!,
-      refreshToken: refreshToken!,
-    };
+  // PARK SA KAY UNAHON ANG AT
+  // if (refreshToken) {
+  //   const data: RefreshTokenBody = {
+  //     accessToken: accessToken!,
+  //     refreshToken: refreshToken!,
+  //   };
 
-    const { error, result } = await postAuthRefresh(data);
+  //   const { error, result } = await postAuthRefresh(data);
 
-    if (error) {
-      console.log("error result: ", result);
-    } else {
-      return NextResponse.next();
-    }
-  }
-
-  // Redirect to /login if no  access token and refresh token
-  if (!accessToken && !refreshToken && req.nextUrl.pathname !== "/login") {
-    return NextResponse.redirect(new URL("/login", req.url));
-  }
+  //   if (error) {
+  //     console.log("error result: ", result);
+  //   } else {
+  //     return NextResponse.next();
+  //   }
+  // }
 
   // Tracksolid login to set tsAccessToken and tsRefreshToken
   // if (!cookieStore.has("tsAccessToken")) {

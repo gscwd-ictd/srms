@@ -6,7 +6,7 @@ import { IconStyles } from "@srms/server/types";
 import { Point } from "ol/geom";
 import VectorSource from "ol/source/Vector";
 import VectorLayer from "ol/layer/Vector";
-import { useFleetMap } from "./contexts/useFleetMapContext";
+import { useGisMap } from "./contexts/useGisMapContext";
 import { ValveStatus } from "@srms/components/enums/valveTypes.enum";
 import { createIconStyles } from "./utils/createIconStyles";
 import ValveOpen from "../../../../public/images/valve_open.svg";
@@ -26,7 +26,7 @@ import { useCardStore } from "@srms/components/stores/useCardStore";
 const featureManager = new FeatureManager();
 
 export const ValveRenderToggleList: FunctionComponent = () => {
-  const fleetMap = useFleetMap();
+  const fleetMap = useGisMap();
 
   const { data: valves, isLoading } = useQuery({
     queryKey: ["get-all-valves"],

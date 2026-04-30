@@ -3,7 +3,7 @@
 import { useState, type FunctionComponent, type PropsWithChildren } from "react";
 import { MapManager } from "@srms/lib/mapstudio/mapManager";
 import { FeatureStyles } from "@srms/server/types";
-import { FleetMapContext } from "../features/srmsMap/contexts/useFleetMapContext";
+import { FleetMapContext } from "../features/gisMap/contexts/useGisMapContext";
 import { featureStylesDefault } from "@srms/server/constants";
 
 const mapManager = new MapManager();

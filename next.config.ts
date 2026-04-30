@@ -7,7 +7,7 @@ const nextConfig: NextConfig = {
   reactStrictMode: false, // Turn this off temporarily to test
   assetPrefix: "/docs",
   images: {
-    domains: ["172.20.110.84", "172.20.10.59"],
+    domains: ["172.20.110.84", "172.20.10.59", "172.20.110.60"],
   },
   async rewrites() {
     return [

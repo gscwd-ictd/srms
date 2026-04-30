@@ -5,7 +5,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import { ThemeProvider } from "@srms/components/providers/ThemeProvider";
 // import { ReactScan } from "@srms/components/features/ReactScan";
 import "@srms/app/globals.css";
-// import { TokensProvider } from "./context/tracksolid-provider";
+import { ReactQueryProvider } from "@srms/components/providers/ReactQueryProvider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -26,13 +26,13 @@ export default async function RootLayout({ children }: Readonly<PropsWithChildre
     <html lang="en" suppressHydrationWarning>
       {/* <ReactScan /> */}
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-        {/* <ReactQueryProvider> */}
-        <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
-          {/* <TokensProvider>{children}</TokensProvider> */}
+        <ReactQueryProvider>
+          <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
+            <main className="h-screen w-screen overflow-x-hidden">{children}</main>
 
-          <main className="h-screen w-screen overflow-x-hidden">{children}</main>
-        </ThemeProvider>
-        {/* </ReactQueryProvider> */}
+            {/* <TokensProvider>{children}</TokensProvider> */}
+          </ThemeProvider>
+        </ReactQueryProvider>
       </body>
     </html>
   );

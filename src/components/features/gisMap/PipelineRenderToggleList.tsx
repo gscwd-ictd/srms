@@ -5,7 +5,7 @@ import { FeatureManager } from "@srms/lib/mapstudio/featureManager";
 import { MultiLineString } from "ol/geom";
 import VectorSource from "ol/source/Vector";
 import VectorLayer from "ol/layer/Vector";
-import { useFleetMap } from "./contexts/useFleetMapContext";
+import { useGisMap } from "./contexts/useGisMapContext";
 import { PipeSize } from "@srms/components/enums/pipeSize.enum";
 import { createLineStringStyles } from "./utils/createLineStringStyles";
 import { isEmpty } from "@srms/utils/isEmpty";
@@ -19,7 +19,7 @@ import { Spinner } from "@srms/components/ui-custom/Spinner";
 const featureManager = new FeatureManager();
 
 const PipelineRenderToggleList: FunctionComponent = ({}) => {
-  const fleetMap = useFleetMap();
+  const fleetMap = useGisMap();
 
   const { data: pipelines, isLoading } = useQuery({
     queryKey: ["get-all-pipelines"],

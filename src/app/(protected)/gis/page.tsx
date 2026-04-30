@@ -1,6 +1,6 @@
-import BaseLayerPicker from "@srms/components/features/srmsMap/BaseLayerPicker";
-import { FleetMap } from "@srms/components/features/srmsMap/FleetMap";
-import { LayersCard } from "@srms/components/features/srmsMap/LayersCard";
+import BaseLayerPicker from "@srms/components/features/gisMap/BaseLayerPicker";
+import { FleetMap } from "@srms/components/features/gisMap/GisMap";
+import { LayersCard } from "@srms/components/features/gisMap/LayersCard";
 import { FleetMapProvider } from "@srms/components/providers/FleetMapProvider";
 import { Token } from "@srms/components/types";
 

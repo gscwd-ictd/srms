@@ -4,7 +4,7 @@ import { Alert, AlertTitle } from "@srms/components/ui/Alert";
 import { useCardStore } from "@srms/components/stores/useCardStore";
 import { useWaterMeterStore } from "@srms/components/stores/useWaterMeterStore";
 import { isEmpty } from "@srms/utils/isEmpty";
-import { useFleetMap } from "./contexts/useFleetMapContext";
+import { useGisMap } from "./contexts/useGisMapContext";
 import { Label } from "@srms/components/ui/Label";
 import { useMutation } from "@tanstack/react-query";
 import axios, { AxiosError } from "axios";
@@ -44,7 +44,7 @@ const ConsumerDetailsCard: FunctionComponent<ConsumerDetailsCardProps> = ({ open
   } = useCardStore();
   const { setConsumerInformation, consumerInformation, consumerInit } = useConsumerStore();
 
-  const fleetMap = useFleetMap();
+  const fleetMap = useGisMap();
 
   const { mutateAsync: getConsumerInformation } = useMutation({
     mutationKey: ["consumer-information"],

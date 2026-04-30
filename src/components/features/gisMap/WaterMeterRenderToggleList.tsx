@@ -5,7 +5,7 @@ import { FeatureManager } from "@srms/lib/mapstudio/featureManager";
 import { Point } from "ol/geom";
 import VectorSource from "ol/source/Vector";
 import VectorLayer from "ol/layer/Vector";
-import { useFleetMap } from "./contexts/useFleetMapContext";
+import { useFleetMap } from "./contexts/useGisMapContext";
 import { isEmpty } from "@srms/utils/isEmpty";
 import { AccordionContent, AccordionTrigger } from "@srms/components/ui/Accordion";
 import { Table, CircleGauge } from "lucide-react";

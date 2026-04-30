@@ -2,7 +2,7 @@
 
 import { BaseLayerOptions } from "@srms/components/enums";
 import { FunctionComponent, useEffect, useState } from "react";
-import { useFleetMap } from "./contexts/useFleetMapContext";
+import { useGisMap } from "./contexts/useGisMapContext";
 import { BaseMapLayerGroup } from "./BaseMapLayerGroup";
 import { isEmpty } from "@srms/utils/isEmpty";
 import LayerGroup from "ol/layer/Group";
@@ -17,7 +17,7 @@ import Image from "next/image";
  */
 
 const BaseLayerPicker: FunctionComponent = ({}) => {
-  const fleetMap = useFleetMap();
+  const fleetMap = useGisMap();
   const [baseMap, setBaseMap] = useState<string>();
 
   useEffect(() => {

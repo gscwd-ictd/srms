@@ -49,7 +49,7 @@ const EnvSchema = z.object({
   NEXT_PUBLIC_AUTH_APP_SECRET: z.string(),
   NEXT_PUBLIC_AUTH_SERVER: z.string(),
   AUTH_JWT_SECRET: z.string(),
-  APP_NAME: z.string(),
+  NEXT_PUBLIC_APP_NAME: z.string(),
 });
 
 export type Env = z.infer<typeof EnvSchema>;

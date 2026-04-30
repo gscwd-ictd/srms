@@ -5,11 +5,11 @@ import { type PropsWithChildren, type FunctionComponent, useRef, useEffect } fro
 import { useGeographic } from "ol/proj";
 import View from "ol/View";
 import { BaseMapLayerGroup } from "./BaseMapLayerGroup";
-import { useFleetMap } from "./contexts/useFleetMapContext";
+import { useGisMap } from "./contexts/useGisMapContext";
 import { useMapStore } from "@srms/components/stores/useMapStore";
 // import { useSidebar } from "@srms/components/ui/Sidebar";
 
-export const FleetMap: FunctionComponent<PropsWithChildren> = ({ children }) => {
+export const GisMap: FunctionComponent<PropsWithChildren> = ({ children }) => {
   // const { setOpen } = useSidebar();
 
   /**
@@ -20,7 +20,7 @@ export const FleetMap: FunctionComponent<PropsWithChildren> = ({ children }) => 
    */
   useGeographic();
 
-  const fleetMap = useFleetMap();
+  const gisMap = useGisMap();
 
   const { viewport } = useMapStore();
 
@@ -32,7 +32,7 @@ export const FleetMap: FunctionComponent<PropsWithChildren> = ({ children }) => 
 
     if (!mapRef.current) return;
 
-    fleetMap.mapManager.init({
+    gisMap.mapManager.init({
       layers: [BaseMapLayerGroup],
       target: mapRef.current,
       view: new View({
@@ -46,10 +46,10 @@ export const FleetMap: FunctionComponent<PropsWithChildren> = ({ children }) => 
     });
 
     return () => {
-      fleetMap.mapManager.destroy();
+      gisMap.mapManager.destroy();
       mapRef.current = null;
     };
-  }, [fleetMap.mapManager]);
+  }, [gisMap.mapManager]);
 
   return (
     <div ref={mapRef} className="relative z-20 h-full w-full">

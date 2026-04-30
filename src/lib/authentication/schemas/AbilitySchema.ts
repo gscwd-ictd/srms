@@ -19,6 +19,8 @@ export const ApplicationRoleSchema = z.array(
 export const RoleAbilitySchema = z.object({
   sub: z.string(),
   email: z.string(),
+  employeeName: z.string(),
+  avatar: z.string(),
   apps: ApplicationRoleSchema,
   exp: z.number(),
 });

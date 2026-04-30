@@ -14,4 +14,6 @@ export type RoleAbility = {
   email: string;
   apps: Array<ApplicationRole>;
   exp: number;
+  employeeName: string;
+  avatar: string;
 };
