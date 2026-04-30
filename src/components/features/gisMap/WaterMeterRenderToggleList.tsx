@@ -5,7 +5,7 @@ import { FeatureManager } from "@srms/lib/mapstudio/featureManager";
 import { Point } from "ol/geom";
 import VectorSource from "ol/source/Vector";
 import VectorLayer from "ol/layer/Vector";
-import { useFleetMap } from "./contexts/useGisMapContext";
+import { useGisMap } from "./contexts/useGisMapContext";
 import { isEmpty } from "@srms/utils/isEmpty";
 import { AccordionContent, AccordionTrigger } from "@srms/components/ui/Accordion";
 import { Table, CircleGauge } from "lucide-react";
@@ -22,7 +22,7 @@ import { WaterMeterData } from "@srms/lib/watermeters/types";
 const featureManager = new FeatureManager();
 
 const WaterMeterRenderToggleList: FunctionComponent = ({}) => {
-  const fleetMap = useFleetMap();
+  const fleetMap = useGisMap();
 
   const { data: waterMeters, isLoading } = useQuery({
     queryKey: ["get-all-water-meters"],

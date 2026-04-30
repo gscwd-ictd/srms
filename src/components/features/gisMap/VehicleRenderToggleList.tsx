@@ -13,7 +13,7 @@ import VectorSource from "ol/source/Vector";
 import { FunctionComponent, useEffect, useState } from "react";
 import CarMarker from "../../../../public/images/car_icon.svg";
 import { Point } from "ol/geom";
-import { useFleetMap } from "./contexts/useGisMapContext";
+import { useGisMap } from "./contexts/useGisMapContext";
 import { FeatureManager } from "@srms/lib/mapstudio/featureManager";
 import { createIconStyles } from "./utils/createIconStyles";
 import { IconStyles } from "@srms/server/types";
@@ -42,7 +42,7 @@ interface TsTokensProps {
 }
 
 const VehicleRenderToggleList: FunctionComponent<TsTokensProps> = ({ accessToken }) => {
-  const fleetMap = useFleetMap();
+  const fleetMap = useGisMap();
   const featureManager = new FeatureManager();
   const vehicleLayerGroup = fleetMap.mapManager.getLayerManager().getLayerGroup("vehicle-map-layer");
 

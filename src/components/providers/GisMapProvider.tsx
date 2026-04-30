@@ -3,12 +3,12 @@
 import { useState, type FunctionComponent, type PropsWithChildren } from "react";
 import { MapManager } from "@srms/lib/mapstudio/mapManager";
 import { FeatureStyles } from "@srms/server/types";
-import { FleetMapContext } from "../features/gisMap/contexts/useGisMapContext";
+import { GisMapContext } from "../features/gisMap/contexts/useGisMapContext";
 import { featureStylesDefault } from "@srms/server/constants";
 
 const mapManager = new MapManager();
 
-export const FleetMapProvider: FunctionComponent<PropsWithChildren> = ({ children }) => {
+export const GisMapProvider: FunctionComponent<PropsWithChildren> = ({ children }) => {
   const [properties, setProperties] = useState<FeatureStyles>(featureStylesDefault);
 
   // const { data: pipelines, isLoading: loadingPipelines } = useQuery<PipelinesGeoJSON>({
@@ -34,7 +34,7 @@ export const FleetMapProvider: FunctionComponent<PropsWithChildren> = ({ childre
   // });
 
   return (
-    <FleetMapContext.Provider
+    <GisMapContext.Provider
       value={{
         mapManager,
         properties,
@@ -42,6 +42,6 @@ export const FleetMapProvider: FunctionComponent<PropsWithChildren> = ({ childre
       }}
     >
       {children}
-    </FleetMapContext.Provider>
+    </GisMapContext.Provider>
   );
 };
