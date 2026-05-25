@@ -51,7 +51,7 @@ const WaterMeterRenderToggleList: FunctionComponent = ({}) => {
   // Open modal for viewing vehicle details
   const {
     setLayerToggleCardOpen,
-    consumersTableCardOpen, 
+    consumersTableCardOpen,
     setConsumersTableCardOpen,
     // consumerDetailsCardOpen,
     // setConsumerDetailsCardOpen,
@@ -107,7 +107,7 @@ const WaterMeterRenderToggleList: FunctionComponent = ({}) => {
           vectorSource.addFeature(feature);
 
           const wmStyles = {
-            radius: 5,
+            radius: 3,
             fillColor: "rgb(20, 88, 252, 1.0)",
             strokeColor: "rgb(1, 40, 133, 1.0)",
             strokeWidth: 1,
@@ -122,7 +122,7 @@ const WaterMeterRenderToggleList: FunctionComponent = ({}) => {
 
       vectorLayer.setVisible(false);
 
-      vectorLayer.setZIndex(995);
+      vectorLayer.setZIndex(990);
 
       vectorLayer.setProperties({ id: "water-meter" });
 

@@ -107,6 +107,7 @@ const VehicleRenderToggleList: FunctionComponent<TsTokensProps> = ({ accessToken
           headers: { "access-token": accessToken.value },
         },
       );
+      console.log("device location response", tsDevicesLocation.data);
       setTsDeviceLocations((prev) => [...prev, tsDevicesLocation.data[0]]); // add new device location to the existing list of device locations in state which is used to update the position of the marker when the location details of multiple devices are fetched through the multipleDeviceLocationMutation. This is important because when the location details of multiple devices are fetched, the position of the marker will be updated based on the location details in this state.
       return tsDevicesLocation.data[0];
     },

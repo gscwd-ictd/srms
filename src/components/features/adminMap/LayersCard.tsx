@@ -64,7 +64,7 @@ export const LayersCard: FunctionComponent = () => {
               ? "nav-intro-animated block backdrop-blur peer-checked:opacity-100"
               : initialNavAnimation
                 ? "-left-100 opacity-0"
-                : "nav-outro-animated peer-checked:opacity-100",
+                : "nav-outro-animated h-0 peer-checked:opacity-100",
           )}
         >
           <div className="absolute -right-14 -mt-44 h-70 w-70 rounded-full bg-blue-200/10"></div>

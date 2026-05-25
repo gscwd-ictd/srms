@@ -135,7 +135,7 @@ const PipelineRenderToggleList: FunctionComponent = ({}) => {
 
       vectorLayer.setVisible(false);
 
-      vectorLayer.setZIndex(990);
+      vectorLayer.setZIndex(900);
 
       vectorLayer.setProperties({ id: "pipelines" });
 

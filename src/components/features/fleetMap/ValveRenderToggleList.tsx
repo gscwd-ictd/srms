@@ -85,17 +85,17 @@ export const ValveRenderToggleList: FunctionComponent = () => {
 
         // Set icon depending of valve status
         if (valve.properties.status === ValveStatus.OPEN) {
-          const valveStyles = { src: ValveOpen.src!, anchor: [0.5, 0.5], scale: 0.8 };
+          const valveStyles = { src: ValveOpen.src!, anchor: [0.5, 0.5], scale: 0.6 };
 
           const featureStyle = createIconStyles(valveStyles as IconStyles);
           feature.setStyle(featureStyle.iconStyle);
         } else if (valve.properties.status === ValveStatus.CLOSE) {
-          const valveStyles = { src: ValveClose.src!, anchor: [0.5, 0.5], scale: 0.8 };
+          const valveStyles = { src: ValveClose.src!, anchor: [0.5, 0.5], scale: 0.6 };
 
           const featureStyle = createIconStyles(valveStyles as IconStyles);
           feature.setStyle(featureStyle.iconStyle);
         } else {
-          const valveStyles = { src: ValveThrottle.src!, anchor: [0.5, 0.5], scale: 0.8 };
+          const valveStyles = { src: ValveThrottle.src!, anchor: [0.5, 0.5], scale: 0.6 };
 
           const featureStyle = createIconStyles(valveStyles as IconStyles);
           feature.setStyle(featureStyle.iconStyle);
@@ -106,7 +106,7 @@ export const ValveRenderToggleList: FunctionComponent = () => {
 
       vectorLayer.setVisible(false);
 
-      vectorLayer.setZIndex(996);
+      vectorLayer.setZIndex(992);
 
       vectorLayer.setProperties({ id: "valves" });
 

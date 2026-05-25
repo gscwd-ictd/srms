@@ -19,6 +19,7 @@ import VehicleDetailsCard from "./VehicleDetailsCardDraggable";
 import ValveDetailsCard from "./ValveDetailsCardDraggable";
 import { useValveStore } from "@srms/components/stores/useValveStore";
 import { useRouter } from "next/navigation";
+import GooglePlacesRenderToggleList from "./GooglePlacesRenderToggleList";
 
 interface LayersCardProps {
   accessToken: Token;
@@ -92,7 +93,7 @@ export const LayersCard: FunctionComponent<LayersCardProps> = ({ accessToken }) 
               ? "nav-intro-animated block backdrop-blur peer-checked:opacity-100"
               : initialNavAnimation
                 ? "-left-100 opacity-0"
-                : "nav-outro-animated peer-checked:opacity-100",
+                : "nav-outro-animated h-0 peer-checked:opacity-100",
           )}
         >
           <div className="absolute -right-14 -mt-44 h-70 w-70 rounded-full bg-blue-300/10"></div>
@@ -129,7 +130,7 @@ export const LayersCard: FunctionComponent<LayersCardProps> = ({ accessToken }) 
             <CardContent className="mr-1 p-1 text-white">
               <Accordion type="single" collapsible className="w-full">
                 <AccordionItem value="item-1">
-                  {/* <VehicleRenderToggleList accessToken={accessToken} /> */}
+                  <VehicleRenderToggleList accessToken={accessToken} />
                 </AccordionItem>
                 <AccordionItem value="item-2">
                   <PipelineRenderToggleList />
@@ -139,6 +140,9 @@ export const LayersCard: FunctionComponent<LayersCardProps> = ({ accessToken }) 
                 </AccordionItem>
                 <AccordionItem value="item-4">
                   <ValveRenderToggleList />
+                </AccordionItem>
+                <AccordionItem value="item-5">
+                  <GooglePlacesRenderToggleList />
                 </AccordionItem>
               </Accordion>
             </CardContent>

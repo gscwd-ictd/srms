@@ -9,6 +9,10 @@ export type MapState = {
   viewport: ViewPort;
   setViewport: (viewport: MapState["viewport"]) => void;
 
+  //show or hide google places points of interest on the map
+  poiVisible: boolean;
+  setPoiVisible: (poiVisible: boolean) => void;
+
   // Reference to the OpenLayers Map instance
   mapRef: Map | null;
   setMapRef: (map: Map | null) => void;
@@ -41,6 +45,9 @@ export const useMapStore = create<MapState>()(
       // extent: [125.02823888167764, 6.115369299054277, 125.23760161189753, 6.213517901540954]
     },
     setViewport: (viewport) => set({ viewport }),
+
+    poiVisible: false,
+    setPoiVisible: (poiVisible) => set({ poiVisible }),
 
     // Map reference
     mapRef: null,

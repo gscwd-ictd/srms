@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 
-import { type PropsWithChildren, type FunctionComponent, useRef, useEffect } from "react";
+import { type PropsWithChildren, type FunctionComponent, useRef, useEffect, useState } from "react";
 import { useGeographic } from "ol/proj";
 import View from "ol/View";
 import { BaseMapLayerGroup } from "./BaseMapLayerGroup";
@@ -9,13 +9,14 @@ import { useFleetMap } from "./contexts/useFleetMapContext";
 import { useMapStore } from "@srms/components/stores/useMapStore";
 import VectorSource from "ol/source/Vector";
 import VectorLayer from "ol/layer/Vector";
-import { attachGooglePlacesPOI } from "../../hooks/attachGooglePlacesPOI";
+import { useGooglePlacesPOI } from "@srms/components/hooks/useGooglePlacesPoi";
+import Map from "ol/Map";
 
 export const poiSource = new VectorSource();
 
 export const poiLayer = new VectorLayer({
   source: poiSource,
-  zIndex: 50,
+  zIndex: 995,
 });
 
 export const FleetMap: FunctionComponent<PropsWithChildren> = ({ children }) => {
@@ -34,6 +35,12 @@ export const FleetMap: FunctionComponent<PropsWithChildren> = ({ children }) => 
   const { viewport } = useMapStore();
 
   const mapRef = useRef<HTMLDivElement>(null);
+
+  const { poiVisible } = useMapStore();
+
+  const [map, setMap] = useState<Map>({} as Map);
+
+  useGooglePlacesPOI(map ?? null, poiSource, poiVisible);
 
   useEffect(() => {
     // // By default in this page, sidebar is closed
@@ -55,17 +62,24 @@ export const FleetMap: FunctionComponent<PropsWithChildren> = ({ children }) => 
     });
 
     const map = fleetMap.mapManager.getMap();
+
     if (!map) return;
 
-    attachGooglePlacesPOI(map, poiSource);
-
-    console.log(fleetMap.mapManager.getMap().getLayers().getArray());
+    setMap(map);
 
     return () => {
       fleetMap.mapManager.destroy();
       mapRef.current = null;
     };
   }, [fleetMap.mapManager]);
+
+  useEffect(() => {
+    poiLayer.setVisible(poiVisible);
+
+    if (!poiVisible) {
+      poiSource.clear();
+    }
+  }, [poiVisible]);
 
   return (
     <div ref={mapRef} className="h-full w-full">
