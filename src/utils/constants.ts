@@ -24,6 +24,7 @@ export const TAGS = {
   PRESSURE_MANAGEMENT: ["Pressure Management"],
   WATER_METERS: ["Water Meters"],
   CONSUMER: ["Consumer"],
+  AUTHENTICATION: ["Authentication"],
 };
 
 export const fixtureUnitType = ["private", "public"] as const;

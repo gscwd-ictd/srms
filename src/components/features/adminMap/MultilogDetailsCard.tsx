@@ -21,7 +21,7 @@ import { Switch } from "@srms/components/ui/Switch";
 import StreetView from "../streetView/StreetView";
 import { usePositionStore } from "@srms/components/stores/usePositionStore";
 
-interface MultilogDetailsCardDrops {
+interface MultilogDetailsCardProps {
   open: boolean;
   featureData: MultilogLogger | undefined;
 }
@@ -37,7 +37,7 @@ type TransformedPressure = {
   FlowMeter: number;
 };
 
-const MultilogDetailsCard: FunctionComponent<MultilogDetailsCardDrops> = ({ open, featureData }) => {
+const MultilogDetailsCard: FunctionComponent<MultilogDetailsCardProps> = ({ open, featureData }) => {
   const [loadingLatestLog, setLoadingLatestLog] = useState<boolean>(false);
 
   const { latestMultilogPressureFlowLog, setLatestMultilogPressureFlowLog } = useLoggerStore();

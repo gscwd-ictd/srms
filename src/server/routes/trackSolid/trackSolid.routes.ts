@@ -68,8 +68,8 @@ export const getTsRefreshToken = createRoute({
   operationId: "getTsRefreshToken",
   request: {
     headers: z.object({
-      "access-token": z.string(),
-      "refresh-token": z.string(),
+      tsAccessToken: z.string(),
+      tsRefreshToken: z.string(),
     }),
   },
   responses: {

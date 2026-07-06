@@ -2,15 +2,12 @@ import { notFound, onError } from "@srms/server/middlewares";
 import { secureHeaders } from "hono/secure-headers";
 import {
   healthcheck,
-  applications,
-  plumbingFixtures,
-  fixtureUnits,
   geoserver,
-  serviceableAreas,
   trackSolid,
   pms,
   waterMeters,
   tcms,
+  authentication,
 } from "@srms/server/routes";
 import { createOpenAPIRoute } from "./openapi/createOpenApiRoute";
 import { configureOpenApi } from "./openapi/configureOpenApi";
@@ -18,12 +15,12 @@ import { crossOrigin } from "./middlewares/cors";
 import env from "@srms/utils/env";
 import multer from "multer";
 import { MinioManager } from "@srms/lib/minio";
-import { NSAManager } from "@srms/lib/nsa/nsaManager";
 import { GeoServerManager } from "@srms/lib/geoserver/geoServerManager";
 import { TrackSolidManager } from "@srms/lib/tracksolid/trackSolidManager";
 import { PmsManager } from "@srms/lib/pms/pmsManager";
 import { WaterMetersManager } from "@srms/lib/watermeters/waterMetersManager";
 import { TCMSManager } from "@srms/lib/tcms/tcmsManager";
+import { AuthManager } from "@srms/lib/authentication/authManager";
 
 function createApp() {
   const app = createOpenAPIRoute().basePath("/api");
@@ -37,18 +34,7 @@ function createApp() {
   app.use(crossOrigin);
 
   // IMPORTANT! Add each route to this array
-  const routes = [
-    healthcheck,
-    applications,
-    plumbingFixtures,
-    fixtureUnits,
-    geoserver,
-    trackSolid,
-    serviceableAreas,
-    pms,
-    waterMeters,
-    tcms,
-  ] as const;
+  const routes = [healthcheck, geoserver, trackSolid, pms, waterMeters, tcms, authentication] as const;
   routes.forEach((route) => app.route("/", route));
   return app;
 }
@@ -67,8 +53,6 @@ export const minioManager = MinioManager.getInstance({
 
 export const upload = multer({ storage: multer.memoryStorage() });
 
-export const nsaManager = NSAManager.getInstance();
-
 export const geoServerManager = GeoServerManager.getInstance();
 
 export const trackSolidManager = TrackSolidManager.getInstance();
@@ -78,3 +62,5 @@ export const pmsManager = PmsManager.getInstance();
 export const waterMetersManager = WaterMetersManager.getInstance();
 
 export const tcmsManager = TCMSManager.getInstance();
+
+export const authManager = AuthManager.getInstance();
