@@ -1,7 +1,7 @@
 import BaseLayerPicker from "@srms/components/features/gisMap/BaseLayerPicker";
-import { FleetMap } from "@srms/components/features/gisMap/GisMap";
+import { GisMap } from "@srms/components/features/gisMap/GisMap";
 import { LayersCard } from "@srms/components/features/gisMap/LayersCard";
-import { FleetMapProvider } from "@srms/components/providers/FleetMapProvider";
+import { GisMapProvider } from "@srms/components/providers/GisMapProvider";
 import { Token } from "@srms/components/types";
 
 import { Metadata } from "next";
@@ -16,12 +16,12 @@ export default async function FleetPage() {
   const accessToken = cookieStore.get("tsAccessToken") as Token;
 
   return (
-    <FleetMapProvider>
-      <FleetMap />
+    <GisMapProvider>
+      <GisMap />
 
       <BaseLayerPicker />
 
       <LayersCard accessToken={accessToken} />
-    </FleetMapProvider>
+    </GisMapProvider>
   );
 }

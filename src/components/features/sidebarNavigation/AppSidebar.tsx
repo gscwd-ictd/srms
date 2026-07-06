@@ -136,7 +136,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
               <SidebarMenuButton
                 tooltip="Notification"
                 isActive={pathname.startsWith("/notification")}
-                onClick={() => router.push("/noification")}
+                onClick={() => router.push("/notification")}
               >
                 <MessageSquareDot />
                 <span>Notification</span>

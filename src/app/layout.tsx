@@ -1,11 +1,11 @@
 import { type Metadata } from "next";
 import { type PropsWithChildren } from "react";
 import { Geist, Geist_Mono } from "next/font/google";
-// import { ReactQueryProvider } from "@srms/components/providers/ReactQueryProvider";
 import { ThemeProvider } from "@srms/components/providers/ThemeProvider";
 // import { ReactScan } from "@srms/components/features/ReactScan";
 import "@srms/app/globals.css";
 import { ReactQueryProvider } from "@srms/components/providers/ReactQueryProvider";
+import { Toaster } from "@srms/components/ui/Sonner";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -28,6 +28,7 @@ export default async function RootLayout({ children }: Readonly<PropsWithChildre
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <ReactQueryProvider>
           <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
+            <Toaster />
             <main className="h-screen w-screen overflow-x-hidden">{children}</main>
 
             {/* <TokensProvider>{children}</TokensProvider> */}

@@ -34,6 +34,18 @@ export class AuthService implements I_AuthService {
               slug: "fleetLayer",
               module_name: "View Fleet Layer",
             },
+            {
+              slug: "pipelineLayer",
+              module_name: "View Pipeline Layer",
+            },
+            {
+              slug: "waterMeterLayer",
+              module_name: "View Water Meter Layer",
+            },
+            {
+              slug: "valveLayer",
+              module_name: "View Valve Layer",
+            },
           ],
         },
         {

@@ -19,7 +19,7 @@ axiosApi.interceptors.response.use(
   (error) => Promise.reject(error),
 );
 
-// const oneDay = 24 * 60 * 60 * 1000;
+const oneWeek = 7 * 24 * 60 * 60 * 1000;
 
 export const postAuth = async (data: object, config = {}) =>
   await axiosApi
@@ -28,14 +28,14 @@ export const postAuth = async (data: object, config = {}) =>
       (await cookies()).set("accessToken", response.data.accessToken, {
         httpOnly: true,
         path: "/",
-        maxAge: 300, // 5 minutes
+        maxAge: oneWeek,
         // expires: Date.now() + oneDay,
       });
 
       (await cookies()).set("refreshToken", response.data.refreshToken, {
         httpOnly: true,
         path: "/",
-        maxAge: 300, // 24 hrs
+        maxAge: oneWeek,
         // expires: Date.now() + oneDay,
       });
 
@@ -54,15 +54,13 @@ export const postAuthRefresh = async (data: object, config = {}) =>
       (await cookies()).set("accessToken", response.data.accessToken, {
         httpOnly: true,
         path: "/",
-        maxAge: 300, // 5 minutes
-        // expires: Date.now() + oneDay,
+        maxAge: oneWeek,
       });
 
       (await cookies()).set("refreshToken", response.data.refreshToken, {
         httpOnly: true,
         path: "/",
-        maxAge: 300, // 24 hrs
-        // expires: Date.now() + oneDay,
+        maxAge: oneWeek,
       });
 
       return { error: false, result: response.data };
@@ -74,8 +72,13 @@ export const postAuthRefresh = async (data: object, config = {}) =>
     });
 
 export const logOut = async () => {
-  (await cookies()).delete("accessToken");
-  (await cookies()).delete("refreshToken");
+  const cookieStore = await cookies();
+  const allCookies = cookieStore.getAll();
+
+  // Delete the ff cookies: accessToken, refreshToken, tsAccessToken, tsRefreshToken
+  allCookies.forEach((cookie) => {
+    cookieStore.delete(cookie.name);
+  });
 
   revalidatePath("/"); // Clears cache for current page
   redirect("/login");

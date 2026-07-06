@@ -4,7 +4,7 @@ import { Accordion, AccordionItem } from "@srms/components/ui/Accordion";
 import { Button } from "@srms/components/ui/Button";
 import { ScrollArea } from "@srms/components/ui/ScrollArea";
 import { Layers, X } from "lucide-react";
-import React, { FunctionComponent, useState } from "react";
+import React, { FunctionComponent, useContext, useState } from "react";
 import VehicleRenderToggleList from "./VehicleRenderToggleList";
 import PipelineRenderToggleList from "./PipelineRenderToggleList";
 import WaterMeterRenderToggleList from "./WaterMeterRenderToggleList";
@@ -14,6 +14,7 @@ import { cn } from "@srms/utils/shadcn";
 import { useCardStore } from "@srms/components/stores/useCardStore";
 import { ValveRenderToggleList } from "./ValveRenderToggleList";
 import { motion } from "framer-motion";
+import { AbilityContext } from "@srms/app/(protected)/dashboard/contexts/AbilityContext";
 
 interface LayersCardProps {
   accessToken: Token;
@@ -24,6 +25,8 @@ export const LayersCard: FunctionComponent<LayersCardProps> = ({ accessToken }) 
     useCardStore();
 
   const [initialNavAnimation, setInitialNavAnimation] = useState<boolean>(true);
+
+  const ability = useContext(AbilityContext);
 
   // Open modal for layers card
   const toggleModal = () => {
@@ -80,18 +83,29 @@ export const LayersCard: FunctionComponent<LayersCardProps> = ({ accessToken }) 
           <ScrollArea className="mx-2 h-[78vh] overflow-y-hidden">
             <CardContent className="mr-1 p-1 text-white">
               <Accordion type="single" collapsible className="w-full">
-                <AccordionItem value="item-1">
-                  <VehicleRenderToggleList accessToken={accessToken} />
-                </AccordionItem>
-                <AccordionItem value="item-2">
-                  <PipelineRenderToggleList />
-                </AccordionItem>
-                <AccordionItem value="item-3">
-                  <WaterMeterRenderToggleList />
-                </AccordionItem>
-                <AccordionItem value="item-4">
-                  <ValveRenderToggleList />
-                </AccordionItem>
+                {ability?.can("access", "fleetLayer") && (
+                  <AccordionItem value="item-1">
+                    <VehicleRenderToggleList accessToken={accessToken} />
+                  </AccordionItem>
+                )}
+
+                {ability?.can("access", "pipelineLayer") && (
+                  <AccordionItem value="item-2">
+                    <PipelineRenderToggleList />
+                  </AccordionItem>
+                )}
+
+                {ability?.can("access", "waterMeterLayer") && (
+                  <AccordionItem value="item-3">
+                    <WaterMeterRenderToggleList />
+                  </AccordionItem>
+                )}
+
+                {ability?.can("access", "valveLayer") && (
+                  <AccordionItem value="item-4">
+                    <ValveRenderToggleList />
+                  </AccordionItem>
+                )}
                 {/* <AccordionItem value="item-5">
                   <WebSocketTest />
                 </AccordionItem>
