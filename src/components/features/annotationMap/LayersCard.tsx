@@ -14,6 +14,8 @@ import { AnnotationTypeOptions } from "@srms/components/enums/annotationTypeOpti
 import { Accordion, AccordionItem } from "@srms/components/ui/Accordion";
 import PolygonsRenderToggleList from "./PolygonToggleList";
 import AnnotationCard from "./AnnotationCardDraggable";
+import LineStringRenderToggleList from "./LineStringToggleList";
+import PointRenderToggleList from "./PointToggleList";
 
 export const LayersCard: FunctionComponent = () => {
   const router = useRouter();
@@ -146,6 +148,14 @@ export const LayersCard: FunctionComponent = () => {
               <Accordion type="single" collapsible className="w-full">
                 <AccordionItem value="item-1">
                   <PolygonsRenderToggleList />
+                </AccordionItem>
+
+                <AccordionItem value="item-2">
+                  <LineStringRenderToggleList />
+                </AccordionItem>
+
+                <AccordionItem value="item-3">
+                  <PointRenderToggleList />
                 </AccordionItem>
               </Accordion>
             </CardContent>

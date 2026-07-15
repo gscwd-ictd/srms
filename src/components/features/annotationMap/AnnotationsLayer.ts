@@ -1,6 +1,6 @@
+import { createAnnotationStyle } from "@srms/components/functions/annotationStyle";
 import VectorLayer from "ol/layer/Vector";
 import VectorSource from "ol/source/Vector";
-import { Fill, Stroke, Style } from "ol/style";
 
 export const polygonSource = new VectorSource();
 export const lineSource = new VectorSource();
@@ -9,54 +9,46 @@ export const circleSource = new VectorSource();
 
 export const polygonLayer = new VectorLayer({
   source: polygonSource,
-  style: new Style({
-    stroke: new Stroke({
-      color: "#2563eb",
-      width: 2,
-    }),
-    fill: new Fill({
-      color: "rgba(37, 99, 235, 0.2)",
-    }),
-  }),
+  style: (feature) => {
+    return createAnnotationStyle(
+      feature.getGeometry()?.getType() ?? "",
+      feature.get("borderColor") ?? "#2563eb",
+      feature.get("fillColor") ?? "#0f368a",
+    );
+  },
 });
 
 export const lineLayer = new VectorLayer({
   source: lineSource,
-  style: new Style({
-    stroke: new Stroke({
-      color: "#eb5d25",
-      width: 2,
-    }),
-    fill: new Fill({
-      color: "rgba(221, 62, 13, 0.2)",
-    }),
-  }),
+  style: (feature) => {
+    return createAnnotationStyle(
+      feature.getGeometry()?.getType(),
+      feature.get("borderColor") ?? "#eb3225",
+      feature.get("fillColor") ?? "#8a210f",
+    );
+  },
 });
 
 export const pointLayer = new VectorLayer({
   source: pointSource,
-  style: new Style({
-    stroke: new Stroke({
-      color: "#25eb25",
-      width: 2,
-    }),
-    fill: new Fill({
-      color: "rgba(37, 235, 86, 0.2)",
-    }),
-  }),
+  style: (feature) => {
+    return createAnnotationStyle(
+      feature.getGeometry()?.getType(),
+      feature.get("borderColor") ?? "#25eb25",
+      feature.get("fillColor") ?? "#25eb56",
+    );
+  },
 });
 
 export const circleLayer = new VectorLayer({
   source: circleSource,
-  style: new Style({
-    stroke: new Stroke({
-      color: "#eb3c25",
-      width: 2,
-    }),
-    fill: new Fill({
-      color: "rgba(235, 44, 37, 0.2)",
-    }),
-  }),
+  style: (feature) => {
+    return createAnnotationStyle(
+      feature.getGeometry()?.getType(),
+      feature.get("borderColor") ?? "#25eb25",
+      feature.get("fillColor") ?? "#25eb56",
+    );
+  },
 });
 
 export const annotationLayers = {

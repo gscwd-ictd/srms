@@ -62,7 +62,6 @@ const PolygonsRenderToggleList: FunctionComponent = ({}) => {
       <AccordionContent className="flex flex-col gap-4 text-balance">
         <ul className="primary-text-color mx-12">
           {polygonFeatures.map((feature, index) => {
-            console.log(feature);
             const name = feature.get("name");
 
             return (

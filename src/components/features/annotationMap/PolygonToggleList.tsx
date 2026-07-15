@@ -4,11 +4,13 @@ import React, { useEffect, useState, type FunctionComponent } from "react";
 import { AccordionContent, AccordionTrigger } from "@srms/components/ui/Accordion";
 import { annotationSources } from "./AnnotationsLayer";
 import { Hexagon } from "lucide-react";
-
+// import { useAnnotationStore } from "@srms/components/stores/useAnnotationStore";
 // const featureManager = new FeatureManager();
 
 const PolygonsRenderToggleList: FunctionComponent = ({}) => {
   const [polygonFeatures, setPolygonFeatures] = useState(annotationSources["Polygon"].getFeatures());
+
+  // const { selectedAnnotationId, annotations, updateAnnotation } = useAnnotationStore();
 
   // Update openlayers. Visibility status of selected layer.
   const setLayerVisibility = (isChecked: boolean) => {
@@ -62,8 +64,7 @@ const PolygonsRenderToggleList: FunctionComponent = ({}) => {
       <AccordionContent className="flex flex-col gap-4 text-balance">
         <ul className="primary-text-color mx-12">
           {polygonFeatures.map((feature, index) => {
-            console.log(feature);
-            const name = feature.get("name");
+            const name = feature.get("title") || "Untitled Polygon";
 
             return (
               <li key={index}>

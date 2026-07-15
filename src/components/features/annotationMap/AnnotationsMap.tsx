@@ -14,8 +14,9 @@ import { AnnotationTypeOptions } from "@srms/components/enums/annotationTypeOpti
 import Select from "ol/interaction/Select";
 import Modify from "ol/interaction/Modify";
 import { click } from "ol/events/condition";
-import { Style, Stroke, Fill, Circle as CircleStyle } from "ol/style";
+import { Style, Stroke, Fill } from "ol/style";
 import { getArea } from "ol/sphere";
+import CircleStyle from "ol/style/Circle";
 
 export const AnnotationsMap: FunctionComponent<PropsWithChildren> = ({ children }) => {
   // const { setOpen } = useSidebar();
@@ -38,6 +39,8 @@ export const AnnotationsMap: FunctionComponent<PropsWithChildren> = ({ children 
     setSelectedBorderColor,
     setSelectedFillColor,
     setAddAnnotationModalOpen,
+    addAnnotation,
+    setSelectedAnnotationId,
   } = useAnnotationStore();
 
   const { viewport } = useMapStore();
@@ -89,27 +92,42 @@ export const AnnotationsMap: FunctionComponent<PropsWithChildren> = ({ children 
 
     // SELECTION MODE
     if (selectedAnnotationType === AnnotationTypeOptions.NONE) {
-      const selectedStyle = new Style({
-        stroke: new Stroke({
-          color: "#00ffff",
-          width: 4,
-        }),
-        fill: new Fill({
-          color: "rgba(0,255,255,0.2)",
-        }),
-        image: new CircleStyle({
-          radius: 8,
-          fill: new Fill({
-            color: "#00ffff",
-          }),
-        }),
-      });
-
       const select = new Select({
         condition: click,
         layers: [polygonLayer, lineLayer, pointLayer, circleLayer],
         multi: false,
-        style: selectedStyle,
+        style: (feature) => {
+          const borderColor = feature.get("borderColor") ?? "#00ffff";
+          const fillColor = feature.get("fillColor") ?? "rgba(0,255,255,0.2)";
+
+          const geometryType = feature.getGeometry()?.getType();
+
+          if (geometryType === "Point") {
+            return new Style({
+              image: new CircleStyle({
+                radius: 8,
+                fill: new Fill({
+                  color: fillColor,
+                }),
+                stroke: new Stroke({
+                  color: borderColor,
+                  width: 3,
+                }),
+              }),
+            });
+          }
+
+          // temporarily change the polygon to a bigger border width
+          return new Style({
+            stroke: new Stroke({
+              color: borderColor,
+              width: 3,
+            }),
+            fill: new Fill({
+              color: `${fillColor}33`,
+            }),
+          });
+        },
       });
 
       selectRef.current = select;
@@ -124,7 +142,7 @@ export const AnnotationsMap: FunctionComponent<PropsWithChildren> = ({ children 
       select.on("select", (e) => {
         const features = e.selected;
 
-        if (!features.length) return;
+        if (!features) return;
 
         // prioritize smallest geometry
         const selectedFeature = features.sort((a, b) => {
@@ -145,10 +163,17 @@ export const AnnotationsMap: FunctionComponent<PropsWithChildren> = ({ children 
           return areaA - areaB;
         })[0];
 
-        console.log("Actually selected:", selectedFeature);
-
         select.getFeatures().clear();
-        select.getFeatures().push(selectedFeature!);
+        if (selectedFeature) {
+          select.getFeatures().push(selectedFeature);
+
+          // update modal details
+          setSelectedFeature(selectedFeature);
+          setSelectedAnnotationId(selectedFeature!.get("annotationId"));
+          setAddAnnotationModalOpen(true); //open modal
+        } else {
+          setAddAnnotationModalOpen(false); //close modal
+        }
       });
 
       return () => {
@@ -168,26 +193,30 @@ export const AnnotationsMap: FunctionComponent<PropsWithChildren> = ({ children 
         // console.log(annotationSources[selectedAnnotationType].getFeatures());
         const feature = event.feature;
 
-        feature.set("title", "Default Title");
+        const newId = `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+
+        //set features of annotation
+        feature.set("title", "Untitled");
         feature.set("description", "No description");
         feature.set("borderColor", selectedBorderColor);
         feature.set("fillColor", selectedFillColor);
+        feature.set("annotationId", newId);
 
-        feature.setStyle(
-          new Style({
-            stroke: new Stroke({
-              color: selectedBorderColor,
-              width: 2,
-            }),
-            fill: new Fill({
-              color: `${selectedFillColor}33`, // ~20% opacity
-            }),
-          }),
-        );
+        //create annotation object to store in state
+        const annotation = {
+          id: newId,
+          title: "Untitled",
+          description: "No description",
+          borderColor: selectedBorderColor,
+          fillColor: selectedFillColor,
+          feature,
+        };
+
+        addAnnotation(annotation);
+        setSelectedAnnotationId(newId);
 
         // Store feature for modal editing
         setSelectedFeature(feature);
-        console.log("Drawn feature:", feature);
 
         // Open modal only after drawing completes
         setAddAnnotationModalOpen(true);
@@ -197,7 +226,7 @@ export const AnnotationsMap: FunctionComponent<PropsWithChildren> = ({ children 
         map.removeInteraction(draw);
       };
     }
-  }, [selectedAnnotationType, selectedBorderColor, selectedFillColor]);
+  }, [selectedAnnotationType]);
 
   useEffect(() => {
     const polygonSource = annotationSources["Polygon"];
