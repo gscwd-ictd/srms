@@ -67,7 +67,7 @@ export class ConsumerRepository implements I_ConsumerRepository {
       ...(await query2).recordset[0],
     };
 
-    return finalResult;
+    return finalResult as unknown as Consumers;
   }
 
   async getAllConsumerService(accountNo: string, year?: string): Promise<ConsumerServiceRequests> {

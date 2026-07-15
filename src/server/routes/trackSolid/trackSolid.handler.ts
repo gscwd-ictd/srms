@@ -32,8 +32,8 @@ export const getTsAccessToken: AppRouteHandler<GetTsAccessTokenRoute> = async (c
 };
 
 export const getTsRefreshToken: AppRouteHandler<GetTsRefreshTokenRoute> = async (c) => {
-  const accessToken = c.req.header("access-token") as string;
-  const refreshToken = c.req.header("refresh-token") as string;
+  const accessToken = c.req.header("tsAccessToken") as string;
+  const refreshToken = c.req.header("tsRefreshToken") as string;
 
   const tsRefreshToken = (await trackSolidManager
     .getTrackSolidService()
