@@ -6,6 +6,7 @@ export type Annotation = {
   description: string;
   borderColor: string;
   fillColor: string;
+  iconName?: string;
   feature: Feature;
 };
 

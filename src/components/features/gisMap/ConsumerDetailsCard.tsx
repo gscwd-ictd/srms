@@ -46,7 +46,8 @@ const ConsumerDetailsCard: FunctionComponent<ConsumerDetailsCardProps> = ({ open
     setLayerToggleCardOpen,
   } = useCardStore();
   const { setConsumerInformation, consumerInformation, consumerInit } = useConsumerStore();
-
+  const [consumerIsLoading, setConsumerIsLoading] = useState<boolean>(false);
+  const [consumbersTableInitialized, setConsumbersTableInitialized] = useState<boolean>(false); // counter for making sure consumbers table doesn't pop up at initial load
   const fleetMap = useGisMap();
 
   const { mutateAsync: getConsumerInformation } = useMutation({

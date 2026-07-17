@@ -14,9 +14,10 @@ import { AnnotationTypeOptions } from "@srms/components/enums/annotationTypeOpti
 import Select from "ol/interaction/Select";
 import Modify from "ol/interaction/Modify";
 import { click } from "ol/events/condition";
-import { Style, Stroke, Fill } from "ol/style";
+import { Style, Stroke, Fill, Icon } from "ol/style";
 import { getArea } from "ol/sphere";
 import CircleStyle from "ol/style/Circle";
+import { annotationIconMap } from "@srms/utils/annotationIcons";
 
 export const AnnotationsMap: FunctionComponent<PropsWithChildren> = ({ children }) => {
   // const { setOpen } = useSidebar();
@@ -40,7 +41,9 @@ export const AnnotationsMap: FunctionComponent<PropsWithChildren> = ({ children 
     setSelectedFillColor,
     setAddAnnotationModalOpen,
     addAnnotation,
+    annotations,
     setSelectedAnnotationId,
+    removeAnnotation,
   } = useAnnotationStore();
 
   const { viewport } = useMapStore();
@@ -53,6 +56,10 @@ export const AnnotationsMap: FunctionComponent<PropsWithChildren> = ({ children 
     if (!selectedBorderColor) setSelectedBorderColor("#2563eb");
     if (!selectedFillColor) setSelectedFillColor("#0f368a");
   }, [selectedBorderColor, selectedFillColor]);
+
+  useEffect(() => {
+    console.log(annotations);
+  }, [annotations]);
 
   useEffect(() => {
     if (!mapRef.current) return;
@@ -97,34 +104,54 @@ export const AnnotationsMap: FunctionComponent<PropsWithChildren> = ({ children 
         layers: [polygonLayer, lineLayer, pointLayer, circleLayer],
         multi: false,
         style: (feature) => {
-          const borderColor = feature.get("borderColor") ?? "#00ffff";
-          const fillColor = feature.get("fillColor") ?? "rgba(0,255,255,0.2)";
+          const borderColor = feature.get("borderColor") ?? "#2563eb";
+          const fillColor = feature.get("fillColor") ?? "#0f368a";
 
           const geometryType = feature.getGeometry()?.getType();
 
+          const transparentFill = (color: string) => {
+            if (color.startsWith("rgba")) return color;
+
+            if (color.startsWith("#") && color.length === 7) {
+              return `${color}33`;
+            }
+
+            return color;
+          };
+
           if (geometryType === "Point") {
-            return new Style({
-              image: new CircleStyle({
-                radius: 8,
-                fill: new Fill({
-                  color: fillColor,
-                }),
-                stroke: new Stroke({
-                  color: borderColor,
-                  width: 3,
+            return [
+              new Style({
+                image: new CircleStyle({
+                  radius: 16, // slightly larger
+                  fill: new Fill({
+                    color: fillColor,
+                  }),
+                  stroke: new Stroke({
+                    color: "#FFD700", // yellow selection border
+                    width: 4,
+                  }),
                 }),
               }),
-            });
+              new Style({
+                image: new Icon({
+                  src: annotationIconMap[feature.get("iconName") ?? "default"],
+                  scale: 0.8,
+                  anchor: [0.5, 0.5],
+                  anchorXUnits: "fraction",
+                  anchorYUnits: "fraction",
+                }),
+              }),
+            ];
           }
 
-          // temporarily change the polygon to a bigger border width
           return new Style({
             stroke: new Stroke({
               color: borderColor,
               width: 3,
             }),
             fill: new Fill({
-              color: `${fillColor}33`,
+              color: transparentFill(fillColor),
             }),
           });
         },
@@ -167,10 +194,14 @@ export const AnnotationsMap: FunctionComponent<PropsWithChildren> = ({ children 
         if (selectedFeature) {
           select.getFeatures().push(selectedFeature);
 
-          // update modal details
           setSelectedFeature(selectedFeature);
-          setSelectedAnnotationId(selectedFeature!.get("annotationId"));
-          setAddAnnotationModalOpen(true); //open modal
+          setSelectedAnnotationId(selectedFeature.get("annotationId"));
+
+          setSelectedBorderColor(selectedFeature.get("borderColor") ?? "#2563eb");
+
+          setSelectedFillColor(selectedFeature.get("fillColor") ?? "#0f368a");
+
+          setAddAnnotationModalOpen(true);
         } else {
           setAddAnnotationModalOpen(false); //close modal
         }
@@ -270,12 +301,18 @@ export const AnnotationsMap: FunctionComponent<PropsWithChildren> = ({ children 
 
       if (!feature) return;
 
+      const annotationId = feature.get("annotationId");
+
       // Find which source contains the feature
       Object.values(annotationSources).forEach((source) => {
         if (source.hasFeature(feature)) {
           source.removeFeature(feature);
         }
       });
+
+      if (annotationId) {
+        removeAnnotation(annotationId);
+      }
 
       selectedFeatures.clear();
     };

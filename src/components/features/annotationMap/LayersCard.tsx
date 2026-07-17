@@ -2,7 +2,7 @@
 
 import { Button } from "@srms/components/ui/Button";
 import { ScrollArea } from "@srms/components/ui/ScrollArea";
-import { Hexagon, Layers, MousePointer2, PenLine, Pin, Plus, X } from "lucide-react";
+import { Download, Hexagon, Layers, MousePointer2, PenLine, Pin, X } from "lucide-react";
 import React, { FunctionComponent, useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardAction } from "@srms/components/ui/Card";
 import { cn } from "@srms/utils/shadcn";
@@ -16,11 +16,14 @@ import PolygonsRenderToggleList from "./PolygonToggleList";
 import AnnotationCard from "./AnnotationCardDraggable";
 import LineStringRenderToggleList from "./LineStringToggleList";
 import PointRenderToggleList from "./PointToggleList";
+import { useMapStore } from "@srms/components/stores/useMapStore";
+import { exportAnnotations } from "@srms/components/functions/exportAnnotation";
 
 export const LayersCard: FunctionComponent = () => {
   const router = useRouter();
   const [initialNavAnimation, setInitialNavAnimation] = useState<boolean>(true);
   const { selectedAnnotationType, setSelectedAnnotationType } = useAnnotationStore();
+  const { viewport } = useMapStore();
 
   // Open modal for layers card
   const toggleModal = () => {
@@ -123,9 +126,7 @@ export const LayersCard: FunctionComponent = () => {
                     >
                       {annotationType === AnnotationTypeOptions.POINT ? (
                         <Pin className="size-4 w-full object-cover text-blue-400 select-none" />
-                      ) : // ) : annotationType === AnnotationTypeOptions.CIRCLE ? (
-                      //   <Circle className="size-4 w-full object-cover text-blue-400 select-none" />
-                      annotationType === AnnotationTypeOptions.LINE_STRING ? (
+                      ) : annotationType === AnnotationTypeOptions.LINE_STRING ? (
                         <PenLine className="size-4 w-full object-cover text-blue-400 select-none" />
                       ) : annotationType === AnnotationTypeOptions.POLYGON ? (
                         <Hexagon className="size-4 w-full object-cover text-blue-400 select-none" />
@@ -135,13 +136,14 @@ export const LayersCard: FunctionComponent = () => {
                     </div>
                   </label>
                 ))}
+
                 <div
                   className={cn(
-                    "flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg border border-blue-400 shadow-xs transition-all peer-checked:border-blue-500 hover:border-blue-200 hover:shadow-lg",
+                    "flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg border border-blue-400 shadow-xs transition-all hover:border-blue-200 hover:shadow-lg",
                   )}
-                  onClick={() => setAddAnnotationModalOpen(true)}
+                  onClick={() => exportAnnotations(viewport.projection)}
                 >
-                  <Plus className="size-4 w-full object-cover text-blue-400 select-none" />
+                  <Download className="size-4 text-blue-400" />
                 </div>
               </div>
 

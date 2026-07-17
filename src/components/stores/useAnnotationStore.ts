@@ -3,7 +3,6 @@ import { devtools } from "zustand/middleware";
 import { AnnotationTypeOptions } from "../enums/annotationTypeOptions.enum";
 import Feature from "ol/Feature";
 import { Annotation, AnnotationUpdate } from "../types";
-import { createAnnotationStyle } from "../functions/annotationStyle";
 
 export type AnnotationState = {
   selectedAnnotationType: AnnotationTypeOptions;
@@ -84,14 +83,7 @@ export const useAnnotationStore = create<AnnotationState>()(
 
             if (updates.fillColor !== undefined) updated.feature.set("fillColor", updates.fillColor);
 
-            // Re-apply style
-            updated.feature.setStyle(
-              createAnnotationStyle(
-                updated.feature.getGeometry()?.getType() ?? "",
-                updated.borderColor,
-                updated.fillColor,
-              ),
-            );
+            if (updates.iconName !== undefined) updated.feature.set("iconName", updates.iconName);
 
             updated.feature.changed();
           }

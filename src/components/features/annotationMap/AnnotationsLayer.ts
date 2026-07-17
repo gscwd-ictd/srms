@@ -36,6 +36,7 @@ export const pointLayer = new VectorLayer({
       feature.getGeometry()?.getType(),
       feature.get("borderColor") ?? "#25eb25",
       feature.get("fillColor") ?? "#25eb56",
+      feature.get("iconName") ?? "default",
     );
   },
 });

@@ -1,13 +1,29 @@
 import { Fill, Icon, Stroke, Style } from "ol/style";
 import CircleStyle from "ol/style/Circle";
 import Pin from "../../../public/images/pin.svg";
+import { annotationIconMap } from "@srms/utils/annotationIcons";
+
+function transparentFill(color: string) {
+  if (color.startsWith("rgba")) {
+    return color;
+  }
+
+  if (color.startsWith("#") && color.length === 7) {
+    return `${color}33`;
+  }
+
+  return color;
+}
 
 export function createAnnotationStyle(
   geometryType: string | undefined,
   borderColor: string,
   fillColor: string,
+  iconName: string = "default",
 ) {
   if (geometryType === "Point") {
+    const iconSrc = annotationIconMap[iconName] ?? Pin.src;
+
     return [
       new Style({
         image: new CircleStyle({
@@ -23,7 +39,7 @@ export function createAnnotationStyle(
       }),
       new Style({
         image: new Icon({
-          src: Pin.src!,
+          src: iconSrc,
           scale: 0.8,
           anchor: [0.5, 0.5],
           anchorXUnits: "fraction",
@@ -39,7 +55,7 @@ export function createAnnotationStyle(
       width: 2,
     }),
     fill: new Fill({
-      color: `${fillColor}33`, // add transparency to fill color
+      color: transparentFill(fillColor),
     }),
   });
 }

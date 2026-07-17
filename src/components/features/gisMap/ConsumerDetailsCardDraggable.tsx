@@ -4,7 +4,6 @@ import { Alert, AlertTitle } from "@srms/components/ui/Alert";
 import { useCardStore } from "@srms/components/stores/useCardStore";
 import { useWaterMeterStore } from "@srms/components/stores/useWaterMeterStore";
 import { isEmpty } from "@srms/utils/isEmpty";
-import { useFleetMap } from "./contexts/useFleetMapContext";
 import { Label } from "@srms/components/ui/Label";
 import { useMutation } from "@tanstack/react-query";
 import axios, { AxiosError } from "axios";
@@ -35,6 +34,7 @@ import {
   DraggableModalHeader,
   DraggableModalTitle,
 } from "@srms/components/ui/DraggableModal";
+import { useGisMap } from "./contexts/useGisMapContext";
 // import Draggable from "react-draggable";
 
 interface ConsumerDetailsCardProps {
@@ -60,7 +60,7 @@ const ConsumerDetailsCard: FunctionComponent<ConsumerDetailsCardProps> = ({ open
   const { setConsumerInformation, consumerInformation, consumerInit } = useConsumerStore();
   const [consumerIsLoading, setConsumerIsLoading] = useState<boolean>(false);
   const [consumbersTableInitialized, setConsumbersTableInitialized] = useState<boolean>(false); // counter for making sure consumbers table doesn't pop up at initial load
-  const fleetMap = useFleetMap();
+  const fleetMap = useGisMap();
 
   const { mutateAsync: getConsumerInformation } = useMutation({
     mutationKey: ["consumer-information"],

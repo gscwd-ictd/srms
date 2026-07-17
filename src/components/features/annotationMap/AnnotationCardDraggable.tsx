@@ -12,30 +12,21 @@ import {
 import { Input } from "@srms/components/ui/Input";
 import { Textarea } from "@srms/components/ui/Textarea";
 import { useAnnotationStore } from "@srms/components/stores/useAnnotationStore";
-import { createAnnotationStyle } from "@srms/components/functions/annotationStyle";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@srms/components/ui/Select";
+import { annotationIcons } from "@srms/utils/annotationIcons";
 
 interface AddAnnotationCardProps {
   open: boolean;
   onOpenChange?(open: boolean): void;
 }
-
 const AnnotationCard: FunctionComponent<AddAnnotationCardProps> = ({ open, onOpenChange }) => {
   const {
-    // selectedFeature,
-    // selectedBorderColor,
     setSelectedBorderColor,
-    // selectedFillColor,
     setSelectedFillColor,
-
     selectedAnnotationId,
     annotations,
     updateAnnotation,
   } = useAnnotationStore();
-
-  // const [title, setTitle] = useState("");
-  // const [description, setDescription] = useState("");
-  // const [borderColor, setBorderColor] = useState("#000000");
-  // const [fillColor, setFillColor] = useState("#000000");
 
   const selectedAnnotation = annotations.find((a) => a.id === selectedAnnotationId);
 
@@ -85,21 +76,9 @@ const AnnotationCard: FunctionComponent<AddAnnotationCardProps> = ({ open, onOpe
                       className="w-full border-gray-300 text-left"
                       value={selectedAnnotation?.description ?? ""}
                       onChange={(e) => {
-                        const color = e.target.value;
-
                         updateAnnotation(selectedAnnotation.id, {
-                          fillColor: color,
+                          description: e.target.value,
                         });
-
-                        selectedAnnotation.feature.set("fillColor", color);
-
-                        const geometryType = selectedAnnotation.feature.getGeometry()?.getType();
-
-                        selectedAnnotation.feature.setStyle(
-                          createAnnotationStyle(geometryType, selectedAnnotation.borderColor, color),
-                        );
-
-                        setSelectedFillColor(color);
                       }}
                     />
                   </div>
@@ -112,7 +91,11 @@ const AnnotationCard: FunctionComponent<AddAnnotationCardProps> = ({ open, onOpe
                 <div className="grid gap-2">
                   <div className="flex gap-10">
                     <div className="flex flex-col text-sm">
-                      <Label>Border Color</Label>
+                      <Label>
+                        {selectedAnnotation?.feature?.getGeometry()?.getType() === "LineString"
+                          ? "Color"
+                          : "Border Color"}
+                      </Label>
 
                       <div className="flex items-center justify-start gap-2">
                         <input
@@ -125,14 +108,6 @@ const AnnotationCard: FunctionComponent<AddAnnotationCardProps> = ({ open, onOpe
                               borderColor: color,
                             });
 
-                            selectedAnnotation.feature.set("borderColor", color);
-
-                            const geometryType = selectedAnnotation.feature.getGeometry()?.getType();
-
-                            selectedAnnotation.feature.setStyle(
-                              createAnnotationStyle(geometryType, color, selectedAnnotation.fillColor),
-                            );
-
                             setSelectedBorderColor(color);
                           }}
                         />
@@ -142,23 +117,60 @@ const AnnotationCard: FunctionComponent<AddAnnotationCardProps> = ({ open, onOpe
                     </div>
 
                     <div className="flex flex-col text-sm">
-                      <Label>Fill Color</Label>
+                      {selectedAnnotation?.feature?.getGeometry()?.getType() === "LineString" ? (
+                        <></>
+                      ) : (
+                        <>
+                          <Label>Fill Color</Label>
 
-                      <div className="flex items-center justify-start gap-2">
-                        <input
-                          type="color"
-                          value={selectedAnnotation?.fillColor ?? "#000000"}
-                          onChange={(e) => {
-                            updateAnnotation(selectedAnnotation.id, {
-                              fillColor: e.target.value,
-                            });
-                            setSelectedFillColor(e.target.value);
-                          }}
-                        />
+                          <div className="flex items-center justify-start gap-2">
+                            <input
+                              type="color"
+                              value={selectedAnnotation.fillColor}
+                              onChange={(e) => {
+                                const color = e.target.value;
 
-                        <p className="w-18">{selectedAnnotation?.fillColor}</p>
-                      </div>
+                                updateAnnotation(selectedAnnotation.id, {
+                                  fillColor: color,
+                                });
+
+                                setSelectedFillColor(color);
+                              }}
+                            />
+
+                            <p className="w-18">{selectedAnnotation?.fillColor}</p>
+                          </div>
+                        </>
+                      )}
                     </div>
+                  </div>
+                  <div>
+                    {selectedAnnotation?.feature?.getGeometry()?.getType() === "Point" && (
+                      <div className="mt-4 flex flex-col gap-2">
+                        <Label>Marker Icon</Label>
+
+                        <Select
+                          value={selectedAnnotation.iconName ?? "default"}
+                          onValueChange={(value) => {
+                            updateAnnotation(selectedAnnotation.id, {
+                              iconName: value,
+                            });
+                          }}
+                        >
+                          <SelectTrigger className="w-full">
+                            <SelectValue placeholder="Select an icon" />
+                          </SelectTrigger>
+
+                          <SelectContent>
+                            {annotationIcons.map((icon) => (
+                              <SelectItem key={icon.value} value={icon.value}>
+                                {icon.label}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>

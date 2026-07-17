@@ -16,9 +16,10 @@ import { ValveRenderToggleList } from "./ValveRenderToggleList";
 import { motion } from "framer-motion";
 import { AbilityContext } from "@srms/app/(protected)/dashboard/contexts/AbilityContext";
 import { useValveStore } from "@srms/components/stores/useValveStore";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import VehicleDetailsCard from "./VehicleDetailsCardDraggable";
 import ValveDetailsCard from "./ValveDetailsCardDraggable";
+import ConsumerDetailsCard from "./ConsumerDetailsCardDraggable";
 
 interface LayersCardProps {
   accessToken: Token;
@@ -132,7 +133,7 @@ export const LayersCard: FunctionComponent<LayersCardProps> = ({ accessToken }) 
               <Accordion type="single" collapsible className="w-full">
                 {ability?.can("access", "fleetLayer") && (
                   <AccordionItem value="item-1">
-                    <VehicleRenderToggleList accessToken={accessToken} />
+                    {/* <VehicleRenderToggleList accessToken={accessToken} /> */}
                   </AccordionItem>
                 )}
 
@@ -184,7 +185,7 @@ export const LayersCard: FunctionComponent<LayersCardProps> = ({ accessToken }) 
       </motion.div>
 
       {/* Consumers Details Draggable Card */}
-      <WaterMeterDetailsCard open={consumerDetailsCardOpen} onOpenChange={setConsumerDetailsCardOpen} />
+      <ConsumerDetailsCard open={consumerDetailsCardOpen} onOpenChange={setConsumerDetailsCardOpen} />
 
       <VehicleDetailsCard
         accessToken={accessToken}
