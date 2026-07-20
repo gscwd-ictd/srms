@@ -20,6 +20,7 @@ import { useRouter } from "next/navigation";
 import VehicleDetailsCard from "./VehicleDetailsCardDraggable";
 import ValveDetailsCard from "./ValveDetailsCardDraggable";
 import ConsumerDetailsCard from "./ConsumerDetailsCardDraggable";
+import GooglePlacesRenderToggleList from "./GooglePlacesRenderToggleList";
 
 interface LayersCardProps {
   accessToken: Token;
@@ -154,6 +155,13 @@ export const LayersCard: FunctionComponent<LayersCardProps> = ({ accessToken }) 
                     <ValveRenderToggleList />
                   </AccordionItem>
                 )}
+
+                {ability?.can("access", "googleNearbyPlacesLayer") && (
+                  <AccordionItem value="item-5">
+                    <GooglePlacesRenderToggleList />
+                  </AccordionItem>
+                )}
+
                 {/* <AccordionItem value="item-5">
                   <WebSocketTest />
                 </AccordionItem> */}

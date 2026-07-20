@@ -49,7 +49,7 @@ export const GisMap: FunctionComponent<PropsWithChildren> = ({ children }) => {
     if (!mapRef.current) return;
 
     gisMap.mapManager.init({
-      layers: [BaseMapLayerGroup],
+      layers: [BaseMapLayerGroup, poiLayer],
       target: mapRef.current,
       view: new View({
         projection: viewport.projection,

@@ -122,7 +122,10 @@ export const LayersCard: FunctionComponent = () => {
                             : "h-8 w-8 border border-blue-400 shadow-xs transition-all hover:border-blue-200 hover:shadow-lg", // normal
                         "overflow-hidden rounded-lg transition-all peer-checked:border-blue-500",
                       )}
-                      onClick={() => setSelectedAnnotationType(annotationType)}
+                      onClick={() => {
+                        setSelectedAnnotationType(annotationType);
+                        setAddAnnotationModalOpen(false);
+                      }}
                     >
                       {annotationType === AnnotationTypeOptions.POINT ? (
                         <Pin className="size-4 w-full object-cover text-blue-400 select-none" />

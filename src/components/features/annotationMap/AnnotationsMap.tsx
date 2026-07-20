@@ -18,6 +18,7 @@ import { Style, Stroke, Fill, Icon } from "ol/style";
 import { getArea } from "ol/sphere";
 import CircleStyle from "ol/style/Circle";
 import { annotationIconMap } from "@srms/utils/annotationIcons";
+import Feature from "ol/Feature";
 
 export const AnnotationsMap: FunctionComponent<PropsWithChildren> = ({ children }) => {
   // const { setOpen } = useSidebar();
@@ -159,6 +160,35 @@ export const AnnotationsMap: FunctionComponent<PropsWithChildren> = ({ children 
 
       selectRef.current = select;
 
+      const applySelection = (feature: Feature) => {
+        const selected = select.getFeatures();
+
+        selected.clear();
+        selected.push(feature);
+
+        setSelectedFeature(feature);
+
+        setSelectedAnnotationId(feature.get("annotationId"));
+
+        setSelectedBorderColor(feature.get("borderColor") ?? "#2563eb");
+
+        setSelectedFillColor(feature.get("fillColor") ?? "#0f368a");
+
+        setAddAnnotationModalOpen(true);
+
+        // const geometry = feature.getGeometry();
+
+        // if (geometry) {
+        //   //zoom on feature selected
+        //   map.getView().fit(geometry.getExtent(), {
+        //     duration: 300,
+        //     maxZoom: 18,
+        //     padding: [80, 80, 80, 80],
+        //   });
+        // }
+      };
+
+      annotationsMap.registerSelectAnnotation?.(applySelection);
       const modify = new Modify({
         features: select.getFeatures(),
       });
@@ -192,22 +222,14 @@ export const AnnotationsMap: FunctionComponent<PropsWithChildren> = ({ children 
 
         select.getFeatures().clear();
         if (selectedFeature) {
-          select.getFeatures().push(selectedFeature);
-
-          setSelectedFeature(selectedFeature);
-          setSelectedAnnotationId(selectedFeature.get("annotationId"));
-
-          setSelectedBorderColor(selectedFeature.get("borderColor") ?? "#2563eb");
-
-          setSelectedFillColor(selectedFeature.get("fillColor") ?? "#0f368a");
-
-          setAddAnnotationModalOpen(true);
+          applySelection(selectedFeature);
         } else {
           setAddAnnotationModalOpen(false); //close modal
         }
       });
 
       return () => {
+        annotationsMap.registerSelectAnnotation?.(() => {});
         map.removeInteraction(select);
         map.removeInteraction(modify);
       };

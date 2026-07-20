@@ -51,8 +51,8 @@ const WaterMeterRenderToggleList: FunctionComponent = ({}) => {
     setLayerToggleCardOpen,
     consumersTableCardOpen,
     setConsumersTableCardOpen,
-    consumerDetailsCardOpen,
-    setConsumerDetailsCardOpen,
+    // consumerDetailsCardOpen,
+    // setConsumerDetailsCardOpen,
     setValveDetailsCardOpen,
   } = useCardStore();
 

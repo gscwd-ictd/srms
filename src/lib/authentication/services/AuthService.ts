@@ -46,6 +46,10 @@ export class AuthService implements I_AuthService {
               slug: "valveLayer",
               module_name: "View Valve Layer",
             },
+            {
+              slug: "googleNearbyPlacesLayer",
+              module_name: "View Google Nearby Places Layer",
+            },
           ],
         },
         {

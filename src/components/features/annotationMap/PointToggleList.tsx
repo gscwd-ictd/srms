@@ -4,13 +4,14 @@ import React, { useEffect, useState, type FunctionComponent } from "react";
 import { AccordionContent, AccordionTrigger } from "@srms/components/ui/Accordion";
 import { annotationSources } from "./AnnotationsLayer";
 import { Hexagon } from "lucide-react";
-// import { useAnnotationStore } from "@srms/components/stores/useAnnotationStore";
-// const featureManager = new FeatureManager();
+import { useAnnotationsMap } from "./contexts/useAnnotationsMapContext";
+import { useAnnotationStore } from "@srms/components/stores/useAnnotationStore";
+import { AnnotationTypeOptions } from "@srms/components/enums/annotationTypeOptions.enum";
 
 const PointRenderToggleList: FunctionComponent = ({}) => {
   const [pointFeatures, setPointFeatures] = useState(annotationSources["Point"].getFeatures());
-
-  // const { selectedAnnotationId, annotations, updateAnnotation } = useAnnotationStore();
+  const annotationsMap = useAnnotationsMap();
+  const { setSelectedAnnotationType } = useAnnotationStore();
 
   // Update openlayers. Visibility status of selected layer.
   const setLayerVisibility = (isChecked: boolean) => {
@@ -68,7 +69,17 @@ const PointRenderToggleList: FunctionComponent = ({}) => {
 
             return (
               <li key={index}>
-                <div className="flex h-6">
+                <div
+                  className="flex h-6 cursor-pointer"
+                  onClick={() => {
+                    setSelectedAnnotationType(AnnotationTypeOptions.NONE);
+
+                    // wait until the Select interaction has been recreated
+                    setTimeout(() => {
+                      annotationsMap.selectAnnotation(feature);
+                    }, 0);
+                  }}
+                >
                   {index + 1} - {name}
                 </div>
               </li>
