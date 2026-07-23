@@ -2,7 +2,7 @@
 
 import { Button } from "@srms/components/ui/Button";
 import { ScrollArea } from "@srms/components/ui/ScrollArea";
-import { Download, Hexagon, Layers, MousePointer2, PenLine, Pin, X } from "lucide-react";
+import { Download, Hexagon, Layers, MousePointer2, PenLine, Pin, Save, X } from "lucide-react";
 import React, { FunctionComponent, useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardAction } from "@srms/components/ui/Card";
 import { cn } from "@srms/utils/shadcn";
@@ -107,7 +107,7 @@ export const LayersCard: FunctionComponent = () => {
 
           <ScrollArea className="mx-2 h-[65vh] overflow-y-hidden">
             <CardContent className="jusitfy-between mr-1 flex flex-col items-center gap-3 p-1 text-white">
-              <div className="jusitfy-between mr-1 flex w-full items-center gap-3 p-1 text-white">
+              <div className="mr-1 flex w-full items-center justify-between gap-1 p-1 text-white">
                 {Object.values(AnnotationTypeOptions).map((annotationType) => (
                   <label key={annotationType} className="cursor-pointer" htmlFor="field-osm">
                     {/* Square with image */}
@@ -147,6 +147,15 @@ export const LayersCard: FunctionComponent = () => {
                   onClick={() => exportAnnotations(viewport.projection)}
                 >
                   <Download className="size-4 text-blue-400" />
+                </div>
+
+                <div
+                  className={cn(
+                    "flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg border border-blue-400 shadow-xs transition-all hover:border-blue-200 hover:shadow-lg",
+                  )}
+                  // onClick={() => exportAnnotations(viewport.projection)}
+                >
+                  <Save className="size-4 text-blue-400" />
                 </div>
               </div>
 

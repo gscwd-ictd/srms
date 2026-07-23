@@ -3,23 +3,20 @@
 import React, { useEffect, useState, type FunctionComponent } from "react";
 import { AccordionContent, AccordionTrigger } from "@srms/components/ui/Accordion";
 import { annotationSources } from "./AnnotationsLayer";
-import { Hexagon } from "lucide-react";
+import { Pin } from "lucide-react";
 import { useAnnotationsMap } from "./contexts/useAnnotationsMapContext";
 import { useAnnotationStore } from "@srms/components/stores/useAnnotationStore";
 import { AnnotationTypeOptions } from "@srms/components/enums/annotationTypeOptions.enum";
+import { pointLayer } from "./AnnotationsLayer";
 
 const PointRenderToggleList: FunctionComponent = ({}) => {
   const [pointFeatures, setPointFeatures] = useState(annotationSources["Point"].getFeatures());
   const annotationsMap = useAnnotationsMap();
-  const { setSelectedAnnotationType } = useAnnotationStore();
+  const { selectedFeature, setSelectedAnnotationType } = useAnnotationStore();
 
   // Update openlayers. Visibility status of selected layer.
   const setLayerVisibility = (isChecked: boolean) => {
-    if (isChecked) {
-      // annotationsMap.mapManager.getLayerManager().getLayer("polygons")?.setVisible(true);
-    } else {
-      // annotationsMap.mapManager.getLayerManager().getLayer("polygons")?.setVisible(false);
-    }
+    pointLayer.setVisible(isChecked);
   };
 
   useEffect(() => {
@@ -48,13 +45,11 @@ const PointRenderToggleList: FunctionComponent = ({}) => {
             <input
               type="checkbox"
               className="peer hidden"
-              onChange={(event) => {
-                setLayerVisibility(event.target.checked);
-              }}
-              defaultChecked={false}
+              onChange={(e) => setLayerVisibility(e.target.checked)}
+              defaultChecked={true}
             />
-            <Hexagon className="primary-text-color mr-2 block w-5 cursor-pointer opacity-30 peer-checked:hidden" />
-            <Hexagon className="primary-text-color mr-2 hidden w-5 cursor-pointer peer-checked:block" />
+            <Pin className="primary-text-color mr-2 block w-5 cursor-pointer opacity-30 peer-checked:hidden" />
+            <Pin className="primary-text-color mr-2 hidden w-5 cursor-pointer peer-checked:block" />
           </label>
           <AccordionTrigger className="w-50 items-center">
             <p className="text-md primary-text-color font-bold">Points</p>
@@ -66,11 +61,12 @@ const PointRenderToggleList: FunctionComponent = ({}) => {
         <ul className="primary-text-color mx-12">
           {pointFeatures.map((feature, index) => {
             const name = feature.get("title") || "Untitled Point";
+            const isSelected = selectedFeature?.get("annotationId") === feature.get("annotationId");
 
             return (
               <li key={index}>
                 <div
-                  className="flex h-6 cursor-pointer"
+                  className={`flex h-6 cursor-pointer ${isSelected ? "font-bold text-blue-600" : ""}`}
                   onClick={() => {
                     setSelectedAnnotationType(AnnotationTypeOptions.NONE);
 
@@ -80,7 +76,7 @@ const PointRenderToggleList: FunctionComponent = ({}) => {
                     }, 0);
                   }}
                 >
-                  {index + 1} - {name}
+                  {index + 1}: {name}
                 </div>
               </li>
             );

@@ -1,6 +1,6 @@
 import { Fill, Icon, Stroke, Style } from "ol/style";
 import CircleStyle from "ol/style/Circle";
-import Pin from "../../../public/images/pin.svg";
+import Pin from "../../../public/images/svg-icons/pin.svg";
 import { annotationIconMap } from "@srms/utils/annotationIcons";
 
 function transparentFill(color: string) {

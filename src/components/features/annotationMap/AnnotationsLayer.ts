@@ -13,7 +13,7 @@ export const polygonLayer = new VectorLayer({
     return createAnnotationStyle(
       feature.getGeometry()?.getType() ?? "",
       feature.get("borderColor") ?? "#2563eb",
-      feature.get("fillColor") ?? "#0f368a",
+      feature.get("fillColor") ?? "#1e62f6",
     );
   },
 });

@@ -55,7 +55,7 @@ export const AnnotationsMap: FunctionComponent<PropsWithChildren> = ({ children 
 
   useEffect(() => {
     if (!selectedBorderColor) setSelectedBorderColor("#2563eb");
-    if (!selectedFillColor) setSelectedFillColor("#0f368a");
+    if (!selectedFillColor) setSelectedFillColor("#1e54c8");
   }, [selectedBorderColor, selectedFillColor]);
 
   useEffect(() => {
@@ -106,7 +106,7 @@ export const AnnotationsMap: FunctionComponent<PropsWithChildren> = ({ children 
         multi: false,
         style: (feature) => {
           const borderColor = feature.get("borderColor") ?? "#2563eb";
-          const fillColor = feature.get("fillColor") ?? "#0f368a";
+          const fillColor = feature.get("fillColor") ?? "#1e62f6";
 
           const geometryType = feature.getGeometry()?.getType();
 
@@ -172,7 +172,7 @@ export const AnnotationsMap: FunctionComponent<PropsWithChildren> = ({ children 
 
         setSelectedBorderColor(feature.get("borderColor") ?? "#2563eb");
 
-        setSelectedFillColor(feature.get("fillColor") ?? "#0f368a");
+        setSelectedFillColor(feature.get("fillColor") ?? "#1e62f6");
 
         setAddAnnotationModalOpen(true);
 
@@ -245,7 +245,7 @@ export const AnnotationsMap: FunctionComponent<PropsWithChildren> = ({ children 
       draw.on("drawend", (event) => {
         // console.log(annotationSources[selectedAnnotationType].getFeatures());
         const feature = event.feature;
-
+        const dateCreated = new Date() as unknown as string;
         const newId = `${Date.now()}-${Math.random().toString(36).slice(2)}`;
 
         //set features of annotation
@@ -254,6 +254,7 @@ export const AnnotationsMap: FunctionComponent<PropsWithChildren> = ({ children 
         feature.set("borderColor", selectedBorderColor);
         feature.set("fillColor", selectedFillColor);
         feature.set("annotationId", newId);
+        feature.set("dateCreated", dateCreated);
 
         //create annotation object to store in state
         const annotation = {
@@ -263,6 +264,7 @@ export const AnnotationsMap: FunctionComponent<PropsWithChildren> = ({ children 
           borderColor: selectedBorderColor,
           fillColor: selectedFillColor,
           feature,
+          dateCreated,
         };
 
         addAnnotation(annotation);

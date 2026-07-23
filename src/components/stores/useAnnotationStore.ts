@@ -45,7 +45,7 @@ export const useAnnotationStore = create<AnnotationState>()(
     selectedBorderColor: "#2563eb",
     setSelectedBorderColor: (selectedBorderColor: string) => set({ selectedBorderColor }),
 
-    selectedFillColor: "#0f368a",
+    selectedFillColor: "#1e62f6",
     setSelectedFillColor: (selectedFillColor: string) => set({ selectedFillColor }),
 
     selectedFeature: null,

@@ -4,21 +4,19 @@ import React, { useEffect, useState, type FunctionComponent } from "react";
 import { AccordionContent, AccordionTrigger } from "@srms/components/ui/Accordion";
 import { annotationSources } from "./AnnotationsLayer";
 import { Hexagon } from "lucide-react";
-// import { useAnnotationStore } from "@srms/components/stores/useAnnotationStore";
-// const featureManager = new FeatureManager();
+import { useAnnotationStore } from "@srms/components/stores/useAnnotationStore";
+import { useAnnotationsMap } from "./contexts/useAnnotationsMapContext";
+import { AnnotationTypeOptions } from "@srms/components/enums/annotationTypeOptions.enum";
+import { polygonLayer } from "./AnnotationsLayer";
 
 const PolygonsRenderToggleList: FunctionComponent = ({}) => {
   const [polygonFeatures, setPolygonFeatures] = useState(annotationSources["Polygon"].getFeatures());
-
-  // const { selectedAnnotationId, annotations, updateAnnotation } = useAnnotationStore();
+  const annotationsMap = useAnnotationsMap();
+  const { selectedFeature, setSelectedAnnotationType } = useAnnotationStore();
 
   // Update openlayers. Visibility status of selected layer.
   const setLayerVisibility = (isChecked: boolean) => {
-    if (isChecked) {
-      // annotationsMap.mapManager.getLayerManager().getLayer("polygons")?.setVisible(true);
-    } else {
-      // annotationsMap.mapManager.getLayerManager().getLayer("polygons")?.setVisible(false);
-    }
+    polygonLayer.setVisible(isChecked);
   };
 
   useEffect(() => {
@@ -27,7 +25,7 @@ const PolygonsRenderToggleList: FunctionComponent = ({}) => {
     const updateFeatures = () => {
       setPolygonFeatures([...polygonSource.getFeatures()]);
     };
-
+    console.log(annotationsMap.mapManager.getLayerManager().getLayer("polygons"));
     polygonSource.on("addfeature", updateFeatures);
     polygonSource.on("removefeature", updateFeatures);
 
@@ -47,10 +45,8 @@ const PolygonsRenderToggleList: FunctionComponent = ({}) => {
             <input
               type="checkbox"
               className="peer hidden"
-              onChange={(event) => {
-                setLayerVisibility(event.target.checked);
-              }}
-              defaultChecked={false}
+              onChange={(e) => setLayerVisibility(e.target.checked)}
+              defaultChecked={true}
             />
             <Hexagon className="primary-text-color mr-2 block w-5 cursor-pointer opacity-30 peer-checked:hidden" />
             <Hexagon className="primary-text-color mr-2 hidden w-5 cursor-pointer peer-checked:block" />
@@ -65,11 +61,21 @@ const PolygonsRenderToggleList: FunctionComponent = ({}) => {
         <ul className="primary-text-color mx-12">
           {polygonFeatures.map((feature, index) => {
             const name = feature.get("title") || "Untitled Polygon";
-
+            const isSelected = selectedFeature?.get("annotationId") === feature.get("annotationId");
             return (
               <li key={index}>
-                <div className="flex h-6">
-                  {index + 1} - {name}
+                <div
+                  className={`flex h-6 cursor-pointer ${isSelected ? "font-bold text-blue-600" : ""}`}
+                  onClick={() => {
+                    setSelectedAnnotationType(AnnotationTypeOptions.NONE);
+
+                    // wait until the Select interaction has been recreated
+                    setTimeout(() => {
+                      annotationsMap.selectAnnotation(feature);
+                    }, 0);
+                  }}
+                >
+                  {index + 1}: {name}
                 </div>
               </li>
             );

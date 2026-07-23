@@ -3,20 +3,19 @@
 import React, { useEffect, useState, type FunctionComponent } from "react";
 import { AccordionContent, AccordionTrigger } from "@srms/components/ui/Accordion";
 import { annotationSources } from "./AnnotationsLayer";
-import { Hexagon } from "lucide-react";
-
-// const featureManager = new FeatureManager();
+import { PenLine } from "lucide-react";
+import { useAnnotationStore } from "@srms/components/stores/useAnnotationStore";
+import { useAnnotationsMap } from "./contexts/useAnnotationsMapContext";
+import { AnnotationTypeOptions } from "@srms/components/enums/annotationTypeOptions.enum";
+import { lineLayer } from "./AnnotationsLayer";
 
 const LineStringRenderToggleList: FunctionComponent = ({}) => {
   const [lineStringFeatures, setLineStringFeatures] = useState(annotationSources["LineString"].getFeatures());
-
+  const annotationsMap = useAnnotationsMap();
+  const { selectedFeature, setSelectedAnnotationType } = useAnnotationStore();
   // Update openlayers. Visibility status of selected layer.
   const setLayerVisibility = (isChecked: boolean) => {
-    if (isChecked) {
-      // annotationsMap.mapManager.getLayerManager().getLayer("line-strings")?.setVisible(true);
-    } else {
-      // annotationsMap.mapManager.getLayerManager().getLayer("line-strings")?.setVisible(false);
-    }
+    lineLayer.setVisible(isChecked);
   };
 
   useEffect(() => {
@@ -45,13 +44,11 @@ const LineStringRenderToggleList: FunctionComponent = ({}) => {
             <input
               type="checkbox"
               className="peer hidden"
-              onChange={(event) => {
-                setLayerVisibility(event.target.checked);
-              }}
-              defaultChecked={false}
+              onChange={(e) => setLayerVisibility(e.target.checked)}
+              defaultChecked={true}
             />
-            <Hexagon className="primary-text-color mr-2 block w-5 cursor-pointer opacity-30 peer-checked:hidden" />
-            <Hexagon className="primary-text-color mr-2 hidden w-5 cursor-pointer peer-checked:block" />
+            <PenLine className="primary-text-color mr-2 block w-5 cursor-pointer opacity-30 peer-checked:hidden" />
+            <PenLine className="primary-text-color mr-2 hidden w-5 cursor-pointer peer-checked:block" />
           </label>
           <AccordionTrigger className="w-50 items-center">
             <p className="text-md primary-text-color font-bold">Line Strings</p>
@@ -63,11 +60,21 @@ const LineStringRenderToggleList: FunctionComponent = ({}) => {
         <ul className="primary-text-color mx-12">
           {lineStringFeatures.map((feature, index) => {
             const name = feature.get("title") || "Untitled Line String";
-
+            const isSelected = selectedFeature?.get("annotationId") === feature.get("annotationId");
             return (
               <li key={index}>
-                <div className="flex h-6">
-                  {index + 1} - {name}
+                <div
+                  className={`flex h-6 cursor-pointer ${isSelected ? "font-bold text-blue-600" : ""}`}
+                  onClick={() => {
+                    setSelectedAnnotationType(AnnotationTypeOptions.NONE);
+
+                    // wait until the Select interaction has been recreated
+                    setTimeout(() => {
+                      annotationsMap.selectAnnotation(feature);
+                    }, 0);
+                  }}
+                >
+                  {index + 1}: {name}
                 </div>
               </li>
             );
