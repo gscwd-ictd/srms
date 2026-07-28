@@ -11,6 +11,25 @@ import VectorSource from "ol/source/Vector";
 import VectorLayer from "ol/layer/Vector";
 import { useGooglePlacesPOI } from "@srms/components/hooks/useGooglePlacesPoi";
 import Map from "ol/Map";
+import Draw from "ol/interaction/Draw";
+import { Style, Stroke, Fill } from "ol/style";
+import Point from "ol/geom/Point";
+
+export const selectionSource = new VectorSource();
+
+export const selectionLayer = new VectorLayer({
+  source: selectionSource,
+  zIndex: 9999,
+  style: new Style({
+    stroke: new Stroke({
+      color: "#2196F3",
+      width: 2,
+    }),
+    fill: new Fill({
+      color: "rgba(33,150,243,0.15)",
+    }),
+  }),
+});
 
 export const poiSource = new VectorSource();
 
@@ -32,7 +51,7 @@ export const GisMap: FunctionComponent<PropsWithChildren> = ({ children }) => {
 
   const gisMap = useGisMap();
 
-  const { viewport } = useMapStore();
+  const { viewport, polygonSelectionMode, setHighlightedAccountNumbers } = useMapStore();
 
   const mapRef = useRef<HTMLDivElement>(null);
 
@@ -42,6 +61,14 @@ export const GisMap: FunctionComponent<PropsWithChildren> = ({ children }) => {
 
   useGooglePlacesPOI(map ?? null, poiSource, poiVisible);
 
+  // const layer = gisMap.mapManager.getLayerManager().getLayer("water-meters") as VectorLayer<VectorSource>;
+
+  // const source = layer.getSource();
+
+  // const features = source?.getFeatures();
+
+  const drawRef = useRef<Draw | null>(null);
+
   useEffect(() => {
     // // By default in this page, sidebar is closed
     // setOpen(false);
@@ -49,7 +76,7 @@ export const GisMap: FunctionComponent<PropsWithChildren> = ({ children }) => {
     if (!mapRef.current) return;
 
     gisMap.mapManager.init({
-      layers: [BaseMapLayerGroup, poiLayer],
+      layers: [BaseMapLayerGroup, poiLayer, selectionLayer],
       target: mapRef.current,
       view: new View({
         projection: viewport.projection,
@@ -67,11 +94,65 @@ export const GisMap: FunctionComponent<PropsWithChildren> = ({ children }) => {
 
     setMap(map);
 
+    //allow drawing on map
+    const draw = new Draw({
+      source: selectionSource,
+      type: "Polygon",
+    });
+
+    draw.on("drawstart", () => {
+      selectionSource.clear();
+    });
+
+    draw.on("drawend", (e) => {
+      const polygon = e.feature.getGeometry();
+
+      const waterMeterLayer = gisMap.mapManager
+        .getLayerManager()
+        .getLayer("water-meters") as VectorLayer<VectorSource>;
+
+      const waterMeterFeatures = waterMeterLayer.getSource()?.getFeatures() ?? [];
+
+      const accountNumbers: string[] = [];
+
+      waterMeterFeatures.forEach((feature) => {
+        const point = feature.getGeometry() as Point;
+
+        if (polygon?.intersectsCoordinate(point.getCoordinates())) {
+          accountNumbers.push(feature.get("accountno"));
+        }
+      });
+      console.log(accountNumbers);
+      setHighlightedAccountNumbers(accountNumbers);
+    });
+
+    drawRef.current = draw;
+
+    // Only add immediately if enabled
+    if (polygonSelectionMode) {
+      map.addInteraction(draw);
+    }
+
     return () => {
       gisMap.mapManager.destroy();
       mapRef.current = null;
     };
   }, [gisMap.mapManager]);
+
+  useEffect(() => {
+    const map = gisMap.mapManager.getMap();
+    const draw = drawRef.current;
+
+    if (!map || !draw) return;
+
+    if (polygonSelectionMode) {
+      map.addInteraction(draw);
+    } else {
+      map.removeInteraction(draw);
+      selectionSource.clear(); // optional
+      setHighlightedAccountNumbers([]); //empty selected water meters
+    }
+  }, [polygonSelectionMode]);
 
   useEffect(() => {
     poiLayer.setVisible(poiVisible);

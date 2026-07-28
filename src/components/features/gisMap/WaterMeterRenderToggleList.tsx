@@ -22,7 +22,7 @@ import { WaterMeterData } from "@srms/lib/watermeters/types";
 const featureManager = new FeatureManager();
 
 const WaterMeterRenderToggleList: FunctionComponent = ({}) => {
-  const fleetMap = useGisMap();
+  const gisMap = useGisMap();
 
   const { data: waterMeters, isLoading } = useQuery({
     queryKey: ["get-all-water-meters"],
@@ -40,9 +40,9 @@ const WaterMeterRenderToggleList: FunctionComponent = ({}) => {
   // Update openlayers. Visibility status of selected layer.
   const setLayerVisibility = (isChecked: boolean) => {
     if (isChecked) {
-      fleetMap.mapManager.getLayerManager().getLayer("water-meters")?.setVisible(true);
+      gisMap.mapManager.getLayerManager().getLayer("water-meters")?.setVisible(true);
     } else {
-      fleetMap.mapManager.getLayerManager().getLayer("water-meters")?.setVisible(false);
+      gisMap.mapManager.getLayerManager().getLayer("water-meters")?.setVisible(false);
     }
   };
 
@@ -65,7 +65,7 @@ const WaterMeterRenderToggleList: FunctionComponent = ({}) => {
   };
 
   useEffect(() => {
-    if (!fleetMap.mapManager) return;
+    if (!gisMap.mapManager) return;
 
     if (!isEmpty(waterMeters)) {
       const vectorSource = new VectorSource();
@@ -121,11 +121,11 @@ const WaterMeterRenderToggleList: FunctionComponent = ({}) => {
 
       vectorLayer.setProperties({ id: "water-meter" });
 
-      fleetMap.mapManager.getLayerManager().addLayer("water-meters", vectorLayer);
+      gisMap.mapManager.getLayerManager().addLayer("water-meters", vectorLayer);
 
       // Open card modal for water meter details
-      // fleetMap.mapManager.getMap().on("click", (e) => {
-      //   const feature = fleetMap.mapManager.getMap().forEachFeatureAtPixel(e.pixel, (feature) => {
+      // gisMap.mapManager.getMap().on("click", (e) => {
+      //   const feature = gisMap.mapManager.getMap().forEachFeatureAtPixel(e.pixel, (feature) => {
       //     return feature;
       //   });
       //   setConsumerDetailsCardOpen(false);
@@ -173,10 +173,10 @@ const WaterMeterRenderToggleList: FunctionComponent = ({}) => {
       // });
 
       return () => {
-        fleetMap.mapManager.getLayerManager().removeLayer("water-meters");
+        gisMap.mapManager.getLayerManager().removeLayer("water-meters");
       };
     }
-  }, [fleetMap.mapManager, waterMeters]);
+  }, [gisMap.mapManager, waterMeters]);
 
   //open and close nav when esc key is pressed
   useEffect(() => {

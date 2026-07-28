@@ -1,6 +1,6 @@
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "@srms/components/ui/Sheet";
 import { FunctionComponent } from "react";
-import WaterMeterTable from "./ConsumersTable";
+import ConsumersTable from "./ConsumersTable";
 // import { ScrollArea } from "@srms/components/ui/ScrollArea";
 
 interface WaterMeterCardProps {
@@ -12,7 +12,7 @@ const WaterMeterCard: FunctionComponent<WaterMeterCardProps> = ({ open, onOpenCh
   return (
     <Sheet open={open} onOpenChange={onOpenChange} modal={false}>
       <SheetContent
-        className="h-[400px] w-full gap-0 border border-stone-300 bg-white/90 text-black backdrop-blur"
+        className="h-[440px] w-full gap-0 border border-stone-300 bg-white/90 text-black backdrop-blur"
         side="bottom"
         enableCloseButton={false}
         onInteractOutside={(e) => e.preventDefault()}
@@ -22,7 +22,7 @@ const WaterMeterCard: FunctionComponent<WaterMeterCardProps> = ({ open, onOpenCh
           <SheetDescription></SheetDescription>
         </SheetHeader>
 
-        <WaterMeterTable open={open} />
+        <ConsumersTable open={open} />
       </SheetContent>
     </Sheet>
   );

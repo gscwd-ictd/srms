@@ -29,6 +29,12 @@ export type MapState = {
   baseMap: string;
   setBaseMap: (baseMap: string) => void;
 
+  highlightedAccountNumbers: Array<string>;
+  setHighlightedAccountNumbers: (highlightedAccountNumbers: Array<string>) => void;
+
+  polygonSelectionMode: boolean;
+  setPolygonSelectionMode: (value: boolean) => void;
+
   // setLayerVisibility: (className: string, visibility: boolean) => void;
 };
 
@@ -69,5 +75,12 @@ export const useMapStore = create<MapState>()(
 
     baseMap: "",
     setBaseMap: (baseMap) => set({ baseMap }),
+
+    highlightedAccountNumbers: [],
+    setHighlightedAccountNumbers: (highlightedAccountNumbers: Array<string>) =>
+      set({ highlightedAccountNumbers: highlightedAccountNumbers }),
+
+    polygonSelectionMode: false,
+    setPolygonSelectionMode: (value: boolean) => set({ polygonSelectionMode: value }),
   })),
 );
