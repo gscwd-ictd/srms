@@ -8,7 +8,7 @@ import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { LogIn } from "@srms/components/types";
 import { toast } from "sonner";
-import { postAuth } from "@srms/app/helpers/auth-helper";
+import { postAuth } from "@srms/app/helpers/authHelper";
 
 export default function LoginPage() {
   const [isShowPassword, setIsShowPassword] = useState(false);

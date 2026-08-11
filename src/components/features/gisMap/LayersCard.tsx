@@ -16,11 +16,8 @@ import { ValveRenderToggleList } from "./ValveRenderToggleList";
 import { motion } from "framer-motion";
 import { AbilityContext } from "@srms/app/(protected)/dashboard/contexts/AbilityContext";
 
-interface LayersCardProps {
-  accessToken: Token;
-}
-
-export const LayersCard: FunctionComponent<LayersCardProps> = ({ accessToken }) => {
+// export const LayersCard: FunctionComponent<LayersCardProps> = ({ accessToken }) => {
+export const LayersCard: FunctionComponent = () => {
   const { layerToggleCardOpen, setLayerToggleCardOpen, consumersTableCardOpen, setConsumersTableCardOpen } =
     useCardStore();
 
@@ -85,7 +82,8 @@ export const LayersCard: FunctionComponent<LayersCardProps> = ({ accessToken }) 
               <Accordion type="single" collapsible className="w-full">
                 {ability?.can("access", "fleetLayer") && (
                   <AccordionItem value="item-1">
-                    <VehicleRenderToggleList accessToken={accessToken} />
+                    <VehicleRenderToggleList />
+                    {/* <VehicleRenderToggleList accessToken={accessToken} /> */}
                   </AccordionItem>
                 )}
 

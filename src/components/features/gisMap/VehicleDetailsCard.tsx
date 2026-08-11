@@ -12,18 +12,22 @@ import dayjs from "dayjs";
 import { SignalHigh, SignalLow, SignalMedium, SignalZero } from "lucide-react";
 import { FunctionComponent, useEffect } from "react";
 import { isEmpty } from "@srms/utils/isEmpty";
+import { tracksolidApi } from "@srms/lib/tracksolid/tracksolidHelper";
+import { useTracksolid } from "./contexts/useTracksolid";
 
 interface VehicleDetailsCardProps {
-  accessToken: Token;
   open: boolean;
   onOpenChange?(open: boolean): void;
 }
 
-const VehicleDetailsCard: FunctionComponent<VehicleDetailsCardProps> = ({
-  accessToken,
-  open,
-  onOpenChange,
-}) => {
+const VehicleDetailsCard: FunctionComponent<VehicleDetailsCardProps> = ({ open, onOpenChange }) => {
+  const {
+    accessToken: tsAccessToken,
+    isLoading: isLoadingTs,
+    isTracksolidReady,
+    hasFleetAbility,
+  } = useTracksolid();
+
   // zustand initialization
   const { selectedDevice, tsDeviceDetails, setTsDeviceDetails, tsDeviceLocation, setTsDeviceLocation } =
     useTsDeviceStore();
@@ -31,20 +35,30 @@ const VehicleDetailsCard: FunctionComponent<VehicleDetailsCardProps> = ({
   const { data: deviceDetails, fetchStatus: fStatusDeviceDetails } = useQuery({
     queryKey: ["device-details"],
     refetchOnReconnect: false,
-    enabled: !!open,
+    enabled: hasFleetAbility && isTracksolidReady && !!tsAccessToken,
     retry: 5,
     queryFn: async () => {
-      const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_APP_URL}/api/v1/tracksolid/device-detail`,
+      const response = await tracksolidApi.post(
+        `/v1/tracksolid/device-detail`,
         {
           imeis: selectedDevice.imei,
           beginTime: dayjs().startOf("day").format("YYYY-MM-DD HH:mm:ss"),
           endTime: dayjs().subtract(30, "minutes").format("YYYY-MM-DD HH:mm:ss"),
         },
-        {
-          headers: { "access-token": accessToken.value },
-        },
+        { headers: { "access-token": tsAccessToken } },
       );
+
+      // const response = await tracksolidApi.post(
+      //   `${process.env.NEXT_PUBLIC_APP_URL}/api/v1/tracksolid/device-detail`,
+      //   {
+      //     imeis: selectedDevice.imei,
+      //     beginTime: dayjs().startOf("day").format("YYYY-MM-DD HH:mm:ss"),
+      //     endTime: dayjs().subtract(30, "minutes").format("YYYY-MM-DD HH:mm:ss"),
+      //   },
+      //   {
+      //     headers: { "access-token": accessToken.value },
+      //   },
+      // );
 
       return response.data;
     },
@@ -53,18 +67,28 @@ const VehicleDetailsCard: FunctionComponent<VehicleDetailsCardProps> = ({
 
   const { data: deviceLocation, fetchStatus: fStatusDeviceLocation } = useQuery({
     queryKey: ["device-location"],
-    enabled: !!open,
+    enabled: hasFleetAbility && isTracksolidReady && !!tsAccessToken,
     retry: 5,
     queryFn: async () => {
-      const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_APP_URL}/api/v1/tracksolid/devices-location`,
+      const response = await tracksolidApi.post(
+        `/v1/tracksolid/devices-location`,
         {
           imeis: selectedDevice.imei,
         },
         {
-          headers: { "access-token": accessToken.value },
+          headers: { "access-token": tsAccessToken },
         },
       );
+
+      // const response = await axios.post(
+      //   `${process.env.NEXT_PUBLIC_APP_URL}/api/v1/tracksolid/devices-location`,
+      //   {
+      //     imeis: selectedDevice.imei,
+      //   },
+      //   {
+      //     headers: { "access-token": accessToken.value },
+      //   },
+      // );
 
       return response.data[0];
     },

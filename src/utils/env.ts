@@ -40,6 +40,7 @@ const EnvSchema = z.object({
   NEXT_PUBLIC_BING_KEY: z.string(),
   NEXT_PUBLIC_GEOAPIFY_KEY: z.string(),
   NEXT_PUBLIC_INTERVAL_SECONDS: z.string(),
+  NEXT_PUBLIC_GOOGLE_MAPS_API_KEY: z.string(),
   TRACKSOLID_URL: z.string(),
   TRACKSOLID_APP_KEY: z.string(),
   TRACKSOLID_APP_SECRET: z.string(),
