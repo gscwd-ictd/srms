@@ -32,6 +32,18 @@ export const getConsumers: AppRouteHandler<GetConsumersRoute> = async (c) => {
   return c.json(consumers, 200);
 };
 
+export const getConsumersByAccountNo: AppRouteHandler<GetConsumersRoute> = async (c) => {
+  const pageIndex = c.req.param("pageIndex");
+  const pageSize = c.req.param("pageSize");
+  const body = c.req.valid("json");
+
+  const consumers = (await tcmsManager
+    .getConsumerService()
+    .getConsumersByAccountNo(pageIndex, pageSize, body)) as ConsumersSchema;
+
+  return c.json(consumers, 200);
+};
+
 export const getAllConsumerServiceRequest: AppRouteHandler<GetAllConsumerServiceRequestRoute> = async (c) => {
   const { accountNo, year } = c.req.valid("query");
 

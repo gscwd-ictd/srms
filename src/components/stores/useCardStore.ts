@@ -17,6 +17,9 @@ export type CardState = {
   consumersTableCardOpen: boolean;
   setConsumersTableCardOpen: (value: boolean | ((prev: boolean) => boolean)) => void;
 
+  consumersTableCardAreaOfInterestOpen: boolean;
+  setConsumersTableCardAreaOfInterestOpen: (value: boolean | ((prev: boolean) => boolean)) => void;
+
   consumerDetailsCardOpen: boolean;
   setConsumerDetailsCardOpen: (consumerDetailsCardOpen: boolean) => void;
 
@@ -34,6 +37,9 @@ export type CardState = {
 
   serviceRequestCardOpen: boolean;
   setServiceRequestCardOpen: (serviceRequestCardOpen: boolean) => void;
+
+  streetViewModalOpen: boolean;
+  setStreetViewModalOpen: (streetViewModalOpen: boolean) => void;
 };
 
 export const useCardStore = create<CardState>()(
@@ -59,6 +65,13 @@ export const useCardStore = create<CardState>()(
         consumersTableCardOpen: typeof value === "function" ? value(state.consumersTableCardOpen) : value,
       })),
 
+    consumersTableCardAreaOfInterestOpen: false,
+    setConsumersTableCardAreaOfInterestOpen: (value) =>
+      set((state) => ({
+        consumersTableCardAreaOfInterestOpen:
+          typeof value === "function" ? value(state.consumersTableCardAreaOfInterestOpen) : value,
+      })),
+
     consumerDetailsCardOpen: false,
     setConsumerDetailsCardOpen: (consumerDetailsCardOpen) => set({ consumerDetailsCardOpen }),
 
@@ -76,5 +89,8 @@ export const useCardStore = create<CardState>()(
 
     serviceRequestCardOpen: false,
     setServiceRequestCardOpen: (serviceRequestCardOpen) => set({ serviceRequestCardOpen }),
+
+    streetViewModalOpen: false,
+    setStreetViewModalOpen: (streetViewModalOpen) => set({ streetViewModalOpen }),
   })),
 );

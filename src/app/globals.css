@@ -378,7 +378,40 @@
   transition: all 0.5s ease-in-out;
 }
 
+.ui-color-button-danger {
+  background-color: rgb(236, 61, 61);
+  /* background: #b5eaf8; */
+  /* background: linear-gradient(180deg, #b5eaf8 0%, #368fe0 100%); */
+  transition: all 0.5s ease-in-out;
+}
+
+.ui-color-button-danger:hover {
+  background-color: rgba(236, 61, 61, 0.8);
+  /* background: linear-gradient(180deg, rgba(156, 223, 243, 0.8) 0%, rgba(73, 136, 196, 0.8) 100%); */
+  transition: all 0.5s ease-in-out;
+}
+
 /* text color in nav and side modals */
 .primary-text-color {
   color: #1b1b1b;
+}
+
+/* crosshair icon shake */
+@keyframes crosshair-shake {
+  0%,
+  100% {
+    translate: 0 0;
+  }
+
+  25% {
+    translate: -4px 0;
+  }
+
+  75% {
+    translate: 4px 0;
+  }
+}
+
+.crosshair-shake {
+  animation: crosshair-shake 0.4s ease-in-out;
 }

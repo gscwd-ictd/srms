@@ -35,6 +35,7 @@ import {
   DraggableModalTitle,
 } from "@srms/components/ui/DraggableModal";
 import { useGisMap } from "./contexts/useGisMapContext";
+import { useMapStore } from "@srms/components/stores/useMapStore";
 // import Draggable from "react-draggable";
 
 interface ConsumerDetailsCardProps {
@@ -46,8 +47,10 @@ const featureManager = new FeatureManager();
 const ConsumerDetailsCard: FunctionComponent<ConsumerDetailsCardProps> = ({ open, onOpenChange }) => {
   // zustand initialization
   const { selectedWaterMeter } = useWaterMeterStore();
+  const { polygonSelectionMode } = useMapStore();
   const {
     setConsumersTableCardOpen,
+    setConsumersTableCardAreaOfInterestOpen,
     // consumersTableCardOpen,
     ledgerCardOpen,
     setLedgerCardOpen,
@@ -145,7 +148,14 @@ const ConsumerDetailsCard: FunctionComponent<ConsumerDetailsCardProps> = ({ open
       if (!isEmpty(selectedWaterMeter)) {
         fleetMap.mapManager.getLayerManager().removeLayer(`water-meter-${selectedWaterMeter.id}`);
       }
-      setConsumersTableCardOpen(true);
+
+      //if water meter selection is thru area of interest, open the area of interest consumer table instead of the regular consumer table
+      if (polygonSelectionMode) {
+        setConsumersTableCardAreaOfInterestOpen(true);
+      } else {
+        setConsumersTableCardOpen(true);
+      }
+
       setLayerToggleCardOpen(false); //close layer nav if its open to give way to consumer table card
     } else {
       // get consumer information

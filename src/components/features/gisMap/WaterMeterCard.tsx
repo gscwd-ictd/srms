@@ -12,7 +12,7 @@ const WaterMeterCard: FunctionComponent<WaterMeterCardProps> = ({ open, onOpenCh
   return (
     <Sheet open={open} onOpenChange={onOpenChange} modal={false}>
       <SheetContent
-        className="h-[440px] w-full gap-0 border border-stone-300 bg-white/90 text-black backdrop-blur"
+        className="h-[390px] w-full gap-0 border border-stone-300 bg-white/90 text-black backdrop-blur"
         side="bottom"
         enableCloseButton={false}
         onInteractOutside={(e) => e.preventDefault()}

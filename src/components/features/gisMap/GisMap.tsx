@@ -14,6 +14,12 @@ import Map from "ol/Map";
 import Draw from "ol/interaction/Draw";
 import { Style, Stroke, Fill } from "ol/style";
 import Point from "ol/geom/Point";
+import { useCardStore } from "@srms/components/stores/useCardStore";
+import CircleStyle from "ol/style/Circle";
+import { useTableStore } from "@srms/components/stores/useTableStore";
+import { usePositionStore } from "@srms/components/stores/usePositionStore";
+import { initGoogleMaps } from "../streetView/InitializeMap";
+import { unByKey } from "ol/Observable";
 
 export const selectionSource = new VectorSource();
 
@@ -22,11 +28,11 @@ export const selectionLayer = new VectorLayer({
   zIndex: 9999,
   style: new Style({
     stroke: new Stroke({
-      color: "#2196F3",
+      color: "#f32121",
       width: 2,
     }),
     fill: new Fill({
-      color: "rgba(33,150,243,0.15)",
+      color: "rgba(243, 58, 33, 0.15)",
     }),
   }),
 });
@@ -51,11 +57,21 @@ export const GisMap: FunctionComponent<PropsWithChildren> = ({ children }) => {
 
   const gisMap = useGisMap();
 
-  const { viewport, polygonSelectionMode, setHighlightedAccountNumbers } = useMapStore();
+  const { viewport, polygonSelectionMode, setHighlightedAccountNumbers, poiVisible } = useMapStore();
+
+  const { setColumnFiltersState } = useTableStore();
+
+  const { setLat, setLng, setIsStreetViewPossible } = usePositionStore();
+
+  const {
+    consumersTableCardAreaOfInterestOpen,
+    setConsumersTableCardAreaOfInterestOpen,
+    setLayerToggleCardOpen,
+    setConsumersTableCardOpen,
+    setStreetViewModalOpen,
+  } = useCardStore();
 
   const mapRef = useRef<HTMLDivElement>(null);
-
-  const { poiVisible } = useMapStore();
 
   const [map, setMap] = useState<Map>({} as Map);
 
@@ -94,10 +110,76 @@ export const GisMap: FunctionComponent<PropsWithChildren> = ({ children }) => {
 
     setMap(map);
 
+    //check for streetview click handler
+    const streetViewListener = map.on("singleclick", async (event) => {
+      const { streetViewSelectionMode } = useMapStore.getState();
+
+      console.log("Current Street View mode:", streetViewSelectionMode);
+
+      if (!streetViewSelectionMode) return;
+
+      const [lng, lat] = event.coordinate as [number, number];
+
+      setLat(lat);
+      setLng(lng);
+
+      try {
+        const { StreetViewService, StreetViewStatus } = await initGoogleMaps();
+
+        const streetViewService = new StreetViewService();
+
+        streetViewService.getPanorama(
+          {
+            location: { lat, lng },
+            radius: 50,
+          },
+          (data, svStatus) => {
+            if (svStatus === StreetViewStatus.OK && data) {
+              console.log("✅ Street View available");
+
+              setIsStreetViewPossible(true);
+              setStreetViewModalOpen(true);
+            } else {
+              console.log("❌ No Street View available");
+
+              setIsStreetViewPossible(false);
+              setStreetViewModalOpen(false);
+            }
+          },
+        );
+      } catch (error) {
+        console.error("Failed to load Google Maps:", error);
+
+        setIsStreetViewPossible(false);
+        setStreetViewModalOpen(false);
+      }
+    });
+
+    // map.on("singleclick", handleMapClick);
+
     //allow drawing on map
     const draw = new Draw({
       source: selectionSource,
       type: "Polygon",
+      style: new Style({
+        stroke: new Stroke({
+          color: "#f32121",
+          width: 2,
+        }),
+        fill: new Fill({
+          color: "rgba(243, 58, 33, 0.15)",
+        }),
+        image: new CircleStyle({
+          radius: 5,
+          fill: new Fill({
+            color: "#f32121",
+          }),
+          stroke: new Stroke({
+            color: "#ffffff",
+            width: 2,
+          }),
+        }),
+      }),
     });
 
     draw.on("drawstart", () => {
@@ -124,6 +206,13 @@ export const GisMap: FunctionComponent<PropsWithChildren> = ({ children }) => {
       });
       console.log(accountNumbers);
       setHighlightedAccountNumbers(accountNumbers);
+
+      if (!consumersTableCardAreaOfInterestOpen) {
+        setLayerToggleCardOpen(false); //close nav
+        setConsumersTableCardOpen(false); // close original ConsumerTable
+        setColumnFiltersState([]); //empty column filters for consumer tables
+        setConsumersTableCardAreaOfInterestOpen(true);
+      }
     });
 
     drawRef.current = draw;
@@ -134,6 +223,8 @@ export const GisMap: FunctionComponent<PropsWithChildren> = ({ children }) => {
     }
 
     return () => {
+      unByKey(streetViewListener);
+
       gisMap.mapManager.destroy();
       mapRef.current = null;
     };

@@ -13,9 +13,6 @@ import { useConsumerStore } from "@srms/components/stores/useConsumerStore";
 import { DateFormatter } from "@srms/utils/dateFormatter";
 import { useWaterMeterStore } from "@srms/components/stores/useWaterMeterStore";
 import { useCardStore } from "@srms/components/stores/useCardStore";
-import ConsumerTableToolbar from "./ConsumerTableToolbar";
-import { useMapStore } from "@srms/components/stores/useMapStore";
-
 interface WaterMeterTableProps {
   open: boolean;
 }
@@ -24,9 +21,7 @@ interface WaterMeterTableProps {
 
 const ConsumersTable: FunctionComponent<WaterMeterTableProps> = ({ open }) => {
   const { paginationState, columnFiltersState, tableLoadingState, setTableLoadingState } = useTableStore();
-  const { highlightedAccountNumbers } = useMapStore();
   const { setSelectedWaterMeter } = useWaterMeterStore();
-
   const { consumers, setConsumers, setConsumerTcms } = useConsumerStore();
 
   const {
@@ -45,21 +40,6 @@ const ConsumersTable: FunctionComponent<WaterMeterTableProps> = ({ open }) => {
         columnFiltersState,
       );
       return response.data;
-
-      // let filters = [...columnFiltersState];
-      // if (highlightedAccountNumbers.length > 0) {
-      //   filters = highlightedAccountNumbers.map((accountNo) => ({
-      //     id: "account_no",
-      //     value: accountNo,
-      //   }));
-      // }
-      // const response = await axios.post(
-      //   `${process.env.NEXT_PUBLIC_APP_URL}/api/v1/consumers/${paginationState?.pageIndex}/${paginationState?.pageSize}`,
-      //   filters,
-      // );
-      // console.log("filters", filters);
-      // console.log("column filter", columnFiltersState);
-      // return response.data;
     },
     onMutate: () => {
       setTableLoadingState(true);
@@ -170,11 +150,10 @@ const ConsumersTable: FunctionComponent<WaterMeterTableProps> = ({ open }) => {
     if (open) {
       consumersMutation.mutate();
     }
-  }, [open, columnFiltersState, paginationState, highlightedAccountNumbers]);
+  }, [open, columnFiltersState, paginationState]);
 
   return (
     <React.Fragment>
-      <ConsumerTableToolbar />
       <DataTable
         columns={columns}
         data={consumers.consumers || []}

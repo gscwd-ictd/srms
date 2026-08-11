@@ -5,7 +5,7 @@ import { Button } from "@srms/components/ui/Button";
 import { ScrollArea } from "@srms/components/ui/ScrollArea";
 import { Layers, X } from "lucide-react";
 import React, { FunctionComponent, useContext, useEffect, useState } from "react";
-import VehicleRenderToggleList from "./VehicleRenderToggleList";
+// import VehicleRenderToggleList from "./VehicleRenderToggleList";
 import PipelineRenderToggleList from "./PipelineRenderToggleList";
 import WaterMeterRenderToggleList from "./WaterMeterRenderToggleList";
 import { Token } from "@srms/components/types";
@@ -21,6 +21,8 @@ import VehicleDetailsCard from "./VehicleDetailsCardDraggable";
 import ValveDetailsCard from "./ValveDetailsCardDraggable";
 import ConsumerDetailsCard from "./ConsumerDetailsCardDraggable";
 import GooglePlacesRenderToggleList from "./GooglePlacesRenderToggleList";
+import StreetViewMapCard from "./StreetViewMapCard";
+import VehicleRenderToggleList from "./VehicleRenderToggleList";
 
 interface LayersCardProps {
   accessToken: Token;
@@ -54,6 +56,8 @@ export const LayersCard: FunctionComponent<LayersCardProps> = ({ accessToken }) 
     setValveDetailsCardOpen,
     vehicleDetailsCardOpen,
     setVehicleDetailsCardOpen,
+    streetViewModalOpen,
+    setStreetViewModalOpen,
   } = useCardStore();
 
   const { selectedValve } = useValveStore();
@@ -134,7 +138,7 @@ export const LayersCard: FunctionComponent<LayersCardProps> = ({ accessToken }) 
               <Accordion type="single" collapsible className="w-full">
                 {ability?.can("access", "fleetLayer") && (
                   <AccordionItem value="item-1">
-                    {/* <VehicleRenderToggleList accessToken={accessToken} /> */}
+                    <VehicleRenderToggleList accessToken={accessToken} />
                   </AccordionItem>
                 )}
 
@@ -206,6 +210,8 @@ export const LayersCard: FunctionComponent<LayersCardProps> = ({ accessToken }) 
         onOpenChange={setValveDetailsCardOpen}
         featureData={selectedValve}
       />
+
+      <StreetViewMapCard open={streetViewModalOpen} onOpenChange={setStreetViewModalOpen} />
     </React.Fragment>
   );
 };

@@ -20,6 +20,14 @@ export class ConsumerService implements I_ConsumerService {
     return await this.repository.getConsumers(pageIndex, pageSize, filters);
   }
 
+  async getConsumersByAccountNo(
+    pageIndex: string,
+    pageSize: string,
+    filters: TableFilter,
+  ): Promise<Consumers> {
+    return await this.repository.getConsumersByAccountNo(pageIndex, pageSize, filters);
+  }
+
   async getAllConsumerService(accountNo: string, year?: string): Promise<ConsumerServiceRequests> {
     return await this.repository.getAllConsumerService(accountNo, year);
   }

@@ -35,6 +35,12 @@ export type MapState = {
   polygonSelectionMode: boolean;
   setPolygonSelectionMode: (value: boolean) => void;
 
+  streetViewSelectionMode: boolean;
+  setStreetViewSelectionMode: (value: boolean) => void;
+
+  waterMetersIsLoading: boolean;
+  setWaterMetersIsLoading: (value: boolean) => void;
+
   // setLayerVisibility: (className: string, visibility: boolean) => void;
 };
 
@@ -82,5 +88,11 @@ export const useMapStore = create<MapState>()(
 
     polygonSelectionMode: false,
     setPolygonSelectionMode: (value: boolean) => set({ polygonSelectionMode: value }),
+
+    streetViewSelectionMode: false,
+    setStreetViewSelectionMode: (value: boolean) => set({ streetViewSelectionMode: value }),
+
+    waterMetersIsLoading: false,
+    setWaterMetersIsLoading: (value: boolean) => set({ waterMetersIsLoading: value }),
   })),
 );
