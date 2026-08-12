@@ -83,7 +83,6 @@ export const LayersCard: FunctionComponent = () => {
                 {ability?.can("access", "fleetLayer") && (
                   <AccordionItem value="item-1">
                     <VehicleRenderToggleList />
-                    {/* <VehicleRenderToggleList accessToken={accessToken} /> */}
                   </AccordionItem>
                 )}
 

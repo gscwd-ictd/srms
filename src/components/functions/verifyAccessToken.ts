@@ -9,8 +9,6 @@ export const verifyAccessToken = async (accessToken: string) => {
       algorithms: ["HS256"],
     });
 
-    // console.log("original payload: ", payload.payload);
-
     const roles: RoleAbility = {
       sub: "allynjosephcubero@gscwd.com",
       email: "allynjosephcubero@gscwd.com",

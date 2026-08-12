@@ -30,6 +30,7 @@ const EnvSchema = z.object({
   WATER_METERS_LAYER_NAME: z.string(),
   PUMPING_STATION_LAYER_NAME: z.string(),
   RESERVOIR_LAYER_NAME: z.string(),
+  HYDRANT_LAYER_NAME: z.string(),
   MINIO_ENDPOINT: z.string(),
   MINIO_PORT: z.coerce.number(),
   MINIO_ACCESS_KEY: z.string(),

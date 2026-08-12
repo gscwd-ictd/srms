@@ -2,8 +2,8 @@ import { cookies } from "next/headers";
 import { UserRolesDoesNotExistError } from "../error/AuthError/UserRolesDoesNotExistError";
 import { I_AuthService } from "../interfaces";
 import { RoleAbility } from "../types";
-// import { verifyAccessToken } from "@srms/components/functions/verifyAccessToken";
 import { isEmpty } from "@srms/utils/isEmpty";
+// import { verifyAccessToken } from "@srms/components/functions/verifyAccessToken";
 
 export class AuthService implements I_AuthService {
   async getUserRoles(): Promise<RoleAbility | Error | null> {
@@ -19,7 +19,7 @@ export class AuthService implements I_AuthService {
       apps: [
         {
           name: "2Big",
-          isSuperuserAdmin: false,
+          isSuperuserAdmin: true,
           // roles: [],
           roles: [
             {

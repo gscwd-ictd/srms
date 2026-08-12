@@ -1,11 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-// import { RefreshTokenBody } from "./components/types";
-// import { postAuthRefresh } from "./components/helpers/auth-helper";
+import { RoleAbility } from "./lib/authentication/types";
 import { verifyAccessToken } from "./components/functions/verifyAccessToken";
-// import { getUserRoles } from "./app/helpers/roles-helper";
-import { ApplicationRole, RoleAbility, RoleDetail } from "./lib/authentication/types";
-import { isEmpty } from "./utils/isEmpty";
-// import { postTsAuth } from "./app/helpers/tracksolid-auth-helper";
 
 export default async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
@@ -25,37 +20,6 @@ export default async function middleware(req: NextRequest) {
   // Your other middleware logic here...
   const accessToken = req.cookies.get("accessToken")?.value;
   const refreshToken = req.cookies.get("refreshToken")?.value;
-
-  // Redirect to /login if no  access token and refresh token
-  // if (!accessToken && !refreshToken && req.nextUrl.pathname !== "/login") {
-  //   return NextResponse.redirect(new URL("/login", req.url));
-  // }
-
-  // if (accessToken) {
-  //   const decodedToken = (await verifyAccessToken(accessToken)) as RoleAbility;
-
-  //   if (decodedToken) {
-  //     if (req.nextUrl.pathname.startsWith("/login")) {
-  //       return NextResponse.redirect(new URL("/dashboard", req.url));
-  //     } else { 
-  //       const applicationRole = decodedToken.apps.filter(
-  //         (app: ApplicationRole) => app.name === process.env.NEXT_PUBLIC_APP_NAME,
-  //       );
-
-  //       const appRoles = applicationRole[0] || ({} as ApplicationRole);
-
-  //       // console.log("appRoles: ", appRoles);
-
-  //       if (appRoles.isSuperuserAdmin || !isEmpty(appRoles.roles)) {
-  //         appRoles.roles.map((permission: RoleDetail) => {
-  //           if (permission.slug === "fleetLayer") {
-  //             return NextResponse.next();
-  //           }
-  //         });
-  //       }
-  //     }
-  //   }
-  // }
 
   // No tokens → Login
   if (!accessToken && !refreshToken) {
@@ -82,9 +46,7 @@ export default async function middleware(req: NextRequest) {
     return NextResponse.redirect(new URL("/dashboard", req.url));
   }
 
-  const appRole = decodedToken.apps.find(
-    app => app.name === process.env.NEXT_PUBLIC_APP_NAME
-  );
+  const appRole = decodedToken.apps.find((app) => app.name === process.env.NEXT_PUBLIC_APP_NAME);
 
   if (!appRole) {
     return NextResponse.redirect(new URL("/login", req.url));
@@ -96,116 +58,14 @@ export default async function middleware(req: NextRequest) {
   }
 
   // Check permission
-  const hasFleetLayerPermission = appRole.roles?.some(
-    role => role.slug === "fleetLayer"
-  );
+  const hasFleetLayerPermission = appRole.roles?.some((role) => role.slug === "fleetLayer");
 
   if (hasFleetLayerPermission) {
     return NextResponse.next();
   }
 
-  // if (hasFleetLayerPermission) {
-  //   const response = await fetch(
-  //     `${process.env.NEXT_PUBLIC_APP_URL}/api/v1/tracksolid/access_token`,
-  //     {
-  //       method: "POST",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //         Authorization: `Bearer ${accessToken}`,
-  //       },
-  //       body: JSON.stringify({
-  //         // Include any additional payload your API requires
-  //       }),
-  //     });
-
-  //   if (!response.ok) {
-
-  //     return NextResponse.redirect(new URL("/login", req.url));
-  //   }
-
-  //   const { tsAccessToken, tsRefreshToken } = await response.json();
-
-  //   const nextResponse = NextResponse.next();
-
-  //   nextResponse.cookies.set("tsAccessToken", tsAccessToken, {
-  //     httpOnly: true,
-  //     // secure: process.env.NODE_ENV === "production",
-  //     sameSite: "lax",
-  //     path: "/",
-  //   });
-
-  //   nextResponse.cookies.set("tsRefreshToken", tsRefreshToken, {
-  //     httpOnly: true,
-  //     // secure: process.env.NODE_ENV === "production",
-  //     sameSite: "lax",
-  //     path: "/",
-  //   });
-
-  //   return nextResponse;
-  // }
-
   return NextResponse.redirect(new URL("/login", req.url));
-
 }
-// try {
-// const response = await getUserRoles();
-// return NextResponse.next();
-// console.log("user roles: waw");
-
-//  const applicationRole = response.apps.filter(
-//       (app: ApplicationRole) => app.name === process.env.NEXT_PUBLIC_APP_NAME,
-//     );
-
-//     const appRoles = applicationRole[0] || ({} as ApplicationRole);
-
-//   cookieStore.set("tsAccessToken", response?.data?.result?.accessToken);
-// cookieStore.set("refreshToken", response?.data?.result?.refreshToken);
-//   } catch (error) {
-//     console.log("error", error);
-//     throw error;
-//   }
-// }
-
-// const tsAccessToken = req.cookies.get("tsAccessToken")?.value;
-// const tsRefreshToken = req.cookies.get("tsRefreshToken")?.value;
-
-// PARK SA KAY UNAHON ANG AT
-// if (refreshToken) {
-//   const data: RefreshTokenBody = {
-//     accessToken: accessToken!,
-//     refreshToken: refreshToken!,
-//   };
-
-//   const { error, result } = await postAuthRefresh(data);
-
-//   if (error) {
-//     console.log("error result: ", result);
-//   } else {
-//     return NextResponse.next();
-//   }
-// }
-
-// Tracksolid login to set tsAccessToken and tsRefreshToken
-// if (!cookieStore.has("tsAccessToken")) {
-//   const { error, result } = await postTsAuth("/v1/auth", {});
-
-//   if (error) {
-//     console.log("error result: ", result);
-//   } else {
-//     console.log("TS access and refresh set");
-//   }
-// }
-
-// try {
-//   const response = await axios.post<TrackSolidAuth>(
-//     `${process.env.NEXT_PUBLIC_APP_URL}/api/v1/tracksolid/access_token`,
-//   );
-//
-
-// } catch (error) {
-//   console.log(error);
-//   throw error;
-// }
 
 export const config = {
   matcher: [

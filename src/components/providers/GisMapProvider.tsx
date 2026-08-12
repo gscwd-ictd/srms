@@ -42,13 +42,9 @@ export const GisMapProvider: FunctionComponent<Props> = ({ children, initialAcce
     retry: false,
 
     queryFn: async () => {
-      console.log("TrackSolid: initializing access token...");
-
       const response = await tracksolidApi.post("/v1/tracksolid/access_token", {});
 
       const token = response.data.result.accessToken as string;
-
-      console.log("TrackSolid: access token initialized");
 
       return token;
     },
@@ -57,35 +53,39 @@ export const GisMapProvider: FunctionComponent<Props> = ({ children, initialAcce
   const isTracksolidReady = hasFleetAbility && !!accessToken;
 
   const loadingToast = (message: string) => {
-    toast.success("TrackSolid", {
+    toast.info("Loading", {
+      description: message,
+      position: "top-center",
+    });
+  };
+
+  const successToast = (message: string) => {
+    toast.success("Success", {
       description: message,
       position: "top-center",
     });
   };
 
   const errorToast = (message: string) => {
-    toast.error("TrackSolid Error", {
+    toast.error("Error", {
       description: message,
       position: "top-center",
     });
   };
 
   useEffect(() => {
-    // console.log("hasFleetAbility: ", hasFleetAbility);
-    // console.log("initialAccessToken: ", !initialAccessToken);
-
     if (isLoading) {
-      loadingToast("initializing access token...");
+      loadingToast("Initializing access token...");
     }
 
     if (accessToken) {
-      console.log("token: " + accessToken);
+      successToast("Tracksolid handshake success");
     }
 
     if (isError) {
-      errorToast("error message: " + error);
+      errorToast("Error message: " + error);
     }
-  }, [isLoading, accessToken, isError, error]);
+  }, [isLoading, accessToken, isError]);
 
   return (
     <TracksolidContext.Provider
