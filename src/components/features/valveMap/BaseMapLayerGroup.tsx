@@ -1,20 +1,20 @@
 import { BaseLayerOptions } from "@srms/components/enums";
 import LayerGroup from "ol/layer/Group";
 import TileLayer from "ol/layer/Tile";
-import { Google, OSM } from "ol/source";
+import { Google, OSM, XYZ } from "ol/source";
 
 export const BaseMapLayerGroup: LayerGroup = new LayerGroup({
   layers: [
     // Set to true to set as default base map layer
-    new TileLayer({
-      source: new OSM(),
-      visible: true,
-      preload: Infinity,
-      className: BaseLayerOptions.OSM,
-      properties: {
-        title: "OpenStreetMap",
-      },
-    }),
+    // new TileLayer({
+    //   source: new OSM(),
+    //   visible: true,
+    //   preload: Infinity,
+    //   className: BaseLayerOptions.OSM,
+    //   properties: {
+    //     title: "OpenStreetMap",
+    //   },
+    // }),
 
     new TileLayer({
       source: new OSM({
@@ -30,7 +30,7 @@ export const BaseMapLayerGroup: LayerGroup = new LayerGroup({
 
     new TileLayer({
       source: new Google({
-        key: "AIzaSyBZV9OFOavXzB-kM8ASQX4ZjFBXN9TFEwI",
+        key: `${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}`,
         scale: "scaleFactor2x",
         highDpi: true,
         mapType: "satellite",
@@ -44,8 +44,20 @@ export const BaseMapLayerGroup: LayerGroup = new LayerGroup({
     }),
 
     new TileLayer({
+      source: new XYZ({
+        url: "https://tiles.stadiamaps.com/tiles/stamen_toner_labels/{z}/{x}/{y}.png",
+      }),
+      visible: false,
+      preload: Infinity,
+      className: BaseLayerOptions.GOOGLE_MAP_STREET_LABELS,
+      properties: {
+        title: "GM Street Labels",
+      },
+    }),
+
+    new TileLayer({
       source: new Google({
-        key: "AIzaSyBZV9OFOavXzB-kM8ASQX4ZjFBXN9TFEwI",
+        key: `${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}`,
         scale: "scaleFactor2x",
         highDpi: true,
         mapType: "terrain",
@@ -61,7 +73,7 @@ export const BaseMapLayerGroup: LayerGroup = new LayerGroup({
 
     new TileLayer({
       source: new Google({
-        key: "AIzaSyBZV9OFOavXzB-kM8ASQX4ZjFBXN9TFEwI",
+        key: `${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}`,
         scale: "scaleFactor2x",
         highDpi: true,
         mapType: "roadmap",

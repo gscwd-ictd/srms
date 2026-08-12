@@ -19,6 +19,7 @@ import { Point } from "ol/geom";
 import XilogDetailsCard from "./XilogDetailsCard";
 import { useCardStore } from "@srms/components/stores/useCardStore";
 import { createLabelStyles } from "./utils/createLabelStyles";
+import { Pixel } from "ol/pixel";
 
 const featureManager = new FeatureManager();
 
@@ -94,11 +95,22 @@ const XilogLoggerToggleList: FunctionComponent = ({}) => {
             strokeColor: "#fff",
             width: 3,
             offsetY: 12,
-            text: `${logger.serial}`,
+            text: `${logger?.serial ?? "No Serial"}`,
           };
           const featureStyle2 = createLabelStyles(labelStyles as LabelStyles);
 
-          feature.setStyle([featureStyle.iconStyle, featureStyle2.labelStyle]);
+          const labelStyles2 = {
+            font: "13px Calibri,sans-serif",
+            overflow: true,
+            fillColor: "#000",
+            strokeColor: "#fff",
+            width: 3,
+            offsetY: 30,
+            text: ``,
+          };
+          const featureStyle3 = createLabelStyles(labelStyles2 as LabelStyles);
+
+          feature.setStyle([featureStyle.iconStyle, featureStyle2.labelStyle, featureStyle3.labelStyle]);
         }
       });
 
@@ -133,8 +145,26 @@ const XilogLoggerToggleList: FunctionComponent = ({}) => {
         setSelectedLogger(props);
       });
 
+      // Change cursor to pointer when hovering over logger features including multilogs and pumping stations
+      const map = adminMonitMap.mapManager.getMap();
+      const pointerMoveHandler = (e: { pixel: Pixel }) => {
+        const hit = map.forEachFeatureAtPixel(e.pixel, (feature, layer) => {
+          const layerId = layer?.get("id");
+
+          return (
+            layerId === "xilog-loggers" || layerId === "multilog-loggers" || layerId === "pumping-stations"
+          );
+        });
+
+        map.getTargetElement().style.cursor = hit ? "pointer" : "";
+      };
+      map.on("pointermove", pointerMoveHandler);
+
+      adminMonitMap.mapManager.getLayerManager().getLayer("xilog-loggers")?.setVisible(true);
+
       return () => {
         adminMonitMap.mapManager.getLayerManager().removeLayer("xilog-loggers");
+        map.un("pointermove", pointerMoveHandler);
       };
     }
   }, [adminMonitMap.mapManager, xilogLoggers]);

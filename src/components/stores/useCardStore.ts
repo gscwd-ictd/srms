@@ -3,16 +3,22 @@ import { devtools } from "zustand/middleware";
 
 export type CardState = {
   layerToggleCardOpen: boolean;
-  setLayerToggleCardOpen: (layerToggleCardOpen: boolean) => void;
+  setLayerToggleCardOpen: (value: boolean | ((prev: boolean) => boolean)) => void;
 
   vehicleDetailsCardOpen: boolean;
   setVehicleDetailsCardOpen: (vehicleDetailsCardOpen: boolean) => void;
+
+  vehicleDetailsToFetch: boolean;
+  setVehicleDetailsToFetch: (vehicleDetailsToFetch: boolean) => void;
 
   valveDetailsCardOpen: boolean;
   setValveDetailsCardOpen: (valveDetailsCardOpen: boolean) => void;
 
   consumersTableCardOpen: boolean;
-  setConsumersTableCardOpen: (consumersTableCardOpen: boolean) => void;
+  setConsumersTableCardOpen: (value: boolean | ((prev: boolean) => boolean)) => void;
+
+  consumersTableCardAreaOfInterestOpen: boolean;
+  setConsumersTableCardAreaOfInterestOpen: (value: boolean | ((prev: boolean) => boolean)) => void;
 
   consumerDetailsCardOpen: boolean;
   setConsumerDetailsCardOpen: (consumerDetailsCardOpen: boolean) => void;
@@ -31,21 +37,40 @@ export type CardState = {
 
   serviceRequestCardOpen: boolean;
   setServiceRequestCardOpen: (serviceRequestCardOpen: boolean) => void;
+
+  streetViewModalOpen: boolean;
+  setStreetViewModalOpen: (streetViewModalOpen: boolean) => void;
 };
 
 export const useCardStore = create<CardState>()(
   devtools((set) => ({
     layerToggleCardOpen: false,
-    setLayerToggleCardOpen: (layerToggleCardOpen) => set({ layerToggleCardOpen }),
+    setLayerToggleCardOpen: (value) =>
+      set((state) => ({
+        layerToggleCardOpen: typeof value === "function" ? value(state.layerToggleCardOpen) : value,
+      })),
 
     vehicleDetailsCardOpen: false,
     setVehicleDetailsCardOpen: (vehicleDetailsCardOpen) => set({ vehicleDetailsCardOpen }),
+
+    vehicleDetailsToFetch: false,
+    setVehicleDetailsToFetch: (vehicleDetailsToFetch) => set({ vehicleDetailsToFetch }),
 
     valveDetailsCardOpen: false,
     setValveDetailsCardOpen: (valveDetailsCardOpen) => set({ valveDetailsCardOpen }),
 
     consumersTableCardOpen: false,
-    setConsumersTableCardOpen: (consumersTableCardOpen) => set({ consumersTableCardOpen }),
+    setConsumersTableCardOpen: (value) =>
+      set((state) => ({
+        consumersTableCardOpen: typeof value === "function" ? value(state.consumersTableCardOpen) : value,
+      })),
+
+    consumersTableCardAreaOfInterestOpen: false,
+    setConsumersTableCardAreaOfInterestOpen: (value) =>
+      set((state) => ({
+        consumersTableCardAreaOfInterestOpen:
+          typeof value === "function" ? value(state.consumersTableCardAreaOfInterestOpen) : value,
+      })),
 
     consumerDetailsCardOpen: false,
     setConsumerDetailsCardOpen: (consumerDetailsCardOpen) => set({ consumerDetailsCardOpen }),
@@ -64,5 +89,8 @@ export const useCardStore = create<CardState>()(
 
     serviceRequestCardOpen: false,
     setServiceRequestCardOpen: (serviceRequestCardOpen) => set({ serviceRequestCardOpen }),
+
+    streetViewModalOpen: false,
+    setStreetViewModalOpen: (streetViewModalOpen) => set({ streetViewModalOpen }),
   })),
 );

@@ -93,7 +93,7 @@ export const PumpingStationToggleList: FunctionComponent = ({}) => {
             const labelStyles = {
               font: "13px Calibri,sans-serif",
               overflow: true,
-              fillColor: "#000",
+              fillColor: `${pumpStation.properties.status === "OPERATIONAL" ? "#000" : "#c00000"}`,
               strokeColor: "#fff",
               width: 3,
               offsetY: 12,
@@ -102,6 +102,7 @@ export const PumpingStationToggleList: FunctionComponent = ({}) => {
             const featureStyle2 = createLabelStyles(labelStyles as LabelStyles);
 
             feature.setStyle([featureStyle.iconStyle, featureStyle2.labelStyle]);
+            // console.log(pumpStation);
           } catch (e) {
             console.error("Error adding pump station feature: ", e);
           }
@@ -142,6 +143,8 @@ export const PumpingStationToggleList: FunctionComponent = ({}) => {
       }
     }
 
+    adminMonitMap.mapManager.getLayerManager().getLayer("pumping-stations")?.setVisible(true);
+
     return () => {
       adminMonitMap.mapManager.getLayerManager().removeLayer("pumping-stations");
     };
@@ -152,6 +155,7 @@ export const PumpingStationToggleList: FunctionComponent = ({}) => {
     if (isChecked) {
       adminMonitMap.mapManager.getLayerManager().getLayer("pumping-stations")?.setVisible(true);
     } else {
+      console.log("Hiding pumping station layer");
       adminMonitMap.mapManager.getLayerManager().getLayer("pumping-stations")?.setVisible(false);
     }
   };

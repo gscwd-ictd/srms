@@ -13,7 +13,6 @@ import { useConsumerStore } from "@srms/components/stores/useConsumerStore";
 import { DateFormatter } from "@srms/utils/dateFormatter";
 import { useWaterMeterStore } from "@srms/components/stores/useWaterMeterStore";
 import { useCardStore } from "@srms/components/stores/useCardStore";
-
 interface WaterMeterTableProps {
   open: boolean;
 }
@@ -22,9 +21,7 @@ interface WaterMeterTableProps {
 
 const ConsumersTable: FunctionComponent<WaterMeterTableProps> = ({ open }) => {
   const { paginationState, columnFiltersState, tableLoadingState, setTableLoadingState } = useTableStore();
-
   const { setSelectedWaterMeter } = useWaterMeterStore();
-
   const { consumers, setConsumers, setConsumerTcms } = useConsumerStore();
 
   const {
@@ -42,7 +39,6 @@ const ConsumersTable: FunctionComponent<WaterMeterTableProps> = ({ open }) => {
         `${process.env.NEXT_PUBLIC_APP_URL}/api/v1/consumers/${paginationState?.pageIndex}/${paginationState?.pageSize}`,
         columnFiltersState,
       );
-
       return response.data;
     },
     onMutate: () => {

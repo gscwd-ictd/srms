@@ -7,6 +7,9 @@ export type PositionState = {
 
   lng: number;
   setLng: (lng: number) => void;
+
+  isStreetViewPossible: boolean;
+  setIsStreetViewPossible: (isStreetViewPossible: boolean) => void;
 };
 
 export const usePositionStore = create<PositionState>()(
@@ -16,5 +19,8 @@ export const usePositionStore = create<PositionState>()(
 
     lng: 125.18468847048185,
     setLng: (lng) => set({ lng }),
+
+    isStreetViewPossible: false,
+    setIsStreetViewPossible: (isStreetViewPossible) => set({ isStreetViewPossible }),
   })),
 );

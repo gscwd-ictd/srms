@@ -1,8 +1,10 @@
 import { useConsumerStore } from "@srms/components/stores/useConsumerStore";
 import { useWaterMeterStore } from "@srms/components/stores/useWaterMeterStore";
 import { Spinner } from "@srms/components/ui-custom/Spinner";
+import { Button } from "@srms/components/ui/Button";
 import {
   Dialog,
+  DialogClose,
   DialogContent,
   DialogDescription,
   DialogFooter,
@@ -85,7 +87,7 @@ const ConsumerServiceRequestCard: FunctionComponent<ConsumerServiceRequestCardPr
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-9/12">
+      <DialogContent className="ui-color-base primary-text-color z-80 sm:max-w-9/12">
         <DialogHeader>
           <DialogTitle>Customer Service Requests</DialogTitle>
           <DialogDescription>
@@ -161,6 +163,11 @@ const ConsumerServiceRequestCard: FunctionComponent<ConsumerServiceRequestCardPr
           {/* <DialogClose asChild>
             <Button variant="outline">Close</Button>
           </DialogClose> */}
+          <DialogFooter>
+            <DialogClose asChild>
+              <Button variant="default">Close</Button>
+            </DialogClose>
+          </DialogFooter>
         </DialogFooter>
       </DialogContent>
     </Dialog>

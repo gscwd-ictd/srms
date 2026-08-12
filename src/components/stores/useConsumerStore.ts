@@ -19,6 +19,9 @@ export type ConsumerState = {
   consumers: Consumers;
   setConsumers: (consumers: Consumers) => void;
 
+  filteredConsumers: Consumers;
+  setFilteredConsumers: (filteredConsumers: Consumers) => void;
+
   consumerLedger: ConsumerLedger;
   setConsumerLedger: (consumerLedger: ConsumerLedger) => void;
 
@@ -39,6 +42,9 @@ export const useConsumerStore = create<ConsumerState>()(
 
     consumers: {} as Consumers,
     setConsumers: (consumers: Consumers) => set({ consumers }),
+
+    filteredConsumers: {} as Consumers,
+    setFilteredConsumers: (filteredConsumers: Consumers) => set({ filteredConsumers }),
 
     consumerLedger: [] as ConsumerLedger,
     setConsumerLedger: (consumerLedger: ConsumerLedger) => set({ consumerLedger }),

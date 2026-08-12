@@ -1,6 +1,8 @@
 import BaseLayerPicker from "@srms/components/features/gisMap/BaseLayerPicker";
+
 import { GisMap } from "@srms/components/features/gisMap/GisMap";
 import { LayersCard } from "@srms/components/features/gisMap/LayersCard";
+import MapToolbar from "@srms/components/features/gisMap/MapToolbar";
 import { GisMapProvider } from "@srms/components/providers/GisMapProvider";
 // import { Token } from "@srms/components/types";
 import { Metadata } from "next";
@@ -18,7 +20,10 @@ export default async function GisPage() {
     <GisMapProvider initialAccessToken={accessToken}>
       <GisMap />
       <BaseLayerPicker />
+
       <LayersCard />
+
+      <MapToolbar />
     </GisMapProvider>
   );
 }

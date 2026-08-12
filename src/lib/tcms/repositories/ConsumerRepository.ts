@@ -70,6 +70,91 @@ export class ConsumerRepository implements I_ConsumerRepository {
     return finalResult as unknown as Consumers;
   }
 
+  //get all consumers within range of polygon to be stored in zustand store for client side pagination
+  async getConsumersByAccountNo(
+    pageIndex: string, //not used
+    pageSize: string, //not used
+    filters: TableFilter,
+  ): Promise<Consumers> {
+    // const startIndex = parseInt(pageIndex) === 0 ? 0 : parseInt(pageIndex) * parseInt(pageSize);
+
+    const dbQueryStatement = sql`SELECT account_no, meter_no, consumer_name, address, date_connected, status, description 
+      FROM ViewConsumer_Info_omms `;
+
+    // Group filters by column
+    const groupedFilters = filters.reduce<Record<string, string[]>>((acc, filter) => {
+      if (!acc[filter.id]) {
+        acc[filter.id] = [];
+      }
+
+      acc[filter.id]?.push(filter.value);
+
+      return acc;
+    }, {});
+
+    // Build WHERE clause
+    if (!isEmpty(filters)) {
+      dbQueryStatement.append(sql`WHERE `);
+
+      const entries = Object.entries(groupedFilters);
+
+      entries.forEach(([column, values], index) => {
+        if (index > 0) {
+          dbQueryStatement.append(sql` AND `);
+        }
+
+        dbQueryStatement.append(
+          sql`${sql.raw(column)} IN (${sql.join(
+            values.map((value) => sql`${value}`),
+            sql`, `,
+          )})`,
+        );
+      });
+    }
+
+    // Add the index and limit per fetch to paginate
+    dbQueryStatement.append(sql`ORDER BY account_no`);
+    // dbQueryStatement.append(
+    //   sql`ORDER BY account_no ASC OFFSET ${startIndex} ROWS FETCH NEXT ${parseInt(pageSize)} ROWS ONLY`,
+    // );
+
+    const query = db.execute(dbQueryStatement);
+
+    // Get total number of page by page size
+    // const dbQueryTotalPages = sql`SELECT CEILING(CAST(COUNT(*) AS float) / ${parseInt(pageSize)} ) AS totalPages FROM ViewConsumer_Info_omms`;
+    const dbQueryTotalPages = sql`
+      SELECT COUNT(*) AS totalPages
+      FROM ViewConsumer_Info_omms
+    `;
+
+    if (!isEmpty(filters)) {
+      dbQueryTotalPages.append(sql`WHERE `);
+
+      const entries = Object.entries(groupedFilters);
+
+      entries.forEach(([column, values], index) => {
+        if (index > 0) {
+          dbQueryTotalPages.append(sql` AND `);
+        }
+
+        dbQueryTotalPages.append(
+          sql`${sql.raw(column)} IN (${sql.join(
+            values.map((value) => sql`${value}`),
+            sql`, `,
+          )})`,
+        );
+      });
+    }
+    const query2 = db.execute(dbQueryTotalPages);
+
+    const finalResult = {
+      consumers: (await query).recordset,
+      ...(await query2).recordset[0],
+    };
+
+    return finalResult as unknown as Consumers;
+  }
+
   async getAllConsumerService(accountNo: string, year?: string): Promise<ConsumerServiceRequests> {
     let query;
 

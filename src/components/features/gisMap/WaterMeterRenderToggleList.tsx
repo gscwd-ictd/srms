@@ -14,15 +14,18 @@ import { createMarkerStyles } from "./utils/createMarkerStyles";
 import { Spinner } from "@srms/components/ui-custom/Spinner";
 import WaterMeterCard from "./WaterMeterCard";
 import { useCardStore } from "@srms/components/stores/useCardStore";
-import WaterMeterDetailsCard from "./ConsumerDetailsCard";
+// import WaterMeterDetailsCard from "./ConsumerDetailsCardDialog";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { WaterMeterData } from "@srms/lib/watermeters/types";
+import { useMapStore } from "@srms/components/stores/useMapStore";
+import WaterMeterCardAreaOfInterest from "./WaterMeterCardAreaOfInterest";
+import { useTableStore } from "@srms/components/stores/useTableStore";
 
 const featureManager = new FeatureManager();
 
 const WaterMeterRenderToggleList: FunctionComponent = ({}) => {
-  const fleetMap = useGisMap();
+  const gisMap = useGisMap();
 
   const { data: waterMeters, isLoading } = useQuery({
     queryKey: ["get-all-water-meters"],
@@ -40,28 +43,40 @@ const WaterMeterRenderToggleList: FunctionComponent = ({}) => {
   // Update openlayers. Visibility status of selected layer.
   const setLayerVisibility = (isChecked: boolean) => {
     if (isChecked) {
-      fleetMap.mapManager.getLayerManager().getLayer("water-meters")?.setVisible(true);
+      gisMap.mapManager.getLayerManager().getLayer("water-meters")?.setVisible(true);
     } else {
-      fleetMap.mapManager.getLayerManager().getLayer("water-meters")?.setVisible(false);
+      gisMap.mapManager.getLayerManager().getLayer("water-meters")?.setVisible(false);
     }
   };
 
   // Open modal for viewing vehicle details
   const {
-    layerToggleCardOpen,
     setLayerToggleCardOpen,
     consumersTableCardOpen,
     setConsumersTableCardOpen,
-    consumerDetailsCardOpen,
-    setConsumerDetailsCardOpen,
+    // consumerDetailsCardOpen,
+    // setConsumerDetailsCardOpen,
+    setValveDetailsCardOpen,
+    consumersTableCardAreaOfInterestOpen,
+    setConsumersTableCardAreaOfInterestOpen,
   } = useCardStore();
+
+  const { setWaterMetersIsLoading, setPolygonSelectionMode } = useMapStore(); //set water meters loading state to be used by MapToolbar
+  const { setColumnFiltersState } = useTableStore();
+
   const toggleTableModal = () => {
-    setLayerToggleCardOpen(!layerToggleCardOpen);
-    setConsumersTableCardOpen(!consumersTableCardOpen);
+    setLayerToggleCardOpen(false);
+    setConsumersTableCardOpen(true);
+    // setVehicleDetailsCardOpen(false); //close vehicle details card if open
+    // setConsumerDetailsCardOpen(false); //close consumer details card if open
+    setValveDetailsCardOpen(false); //close valve details card if open
+    setConsumersTableCardAreaOfInterestOpen(false); // hide custom ConsumbersTableCard (Area of Interest)
+    setPolygonSelectionMode(false); //turn off Area of Interest mode
+    setColumnFiltersState([]); //empty column filters for consumer table
   };
 
   useEffect(() => {
-    if (!fleetMap.mapManager) return;
+    if (!gisMap.mapManager) return;
 
     if (!isEmpty(waterMeters)) {
       const vectorSource = new VectorSource();
@@ -98,7 +113,7 @@ const WaterMeterRenderToggleList: FunctionComponent = ({}) => {
           vectorSource.addFeature(feature);
 
           const wmStyles = {
-            radius: 5,
+            radius: 3,
             fillColor: "rgb(20, 88, 252, 1.0)",
             strokeColor: "rgb(1, 40, 133, 1.0)",
             strokeWidth: 1,
@@ -113,15 +128,15 @@ const WaterMeterRenderToggleList: FunctionComponent = ({}) => {
 
       vectorLayer.setVisible(false);
 
-      vectorLayer.setZIndex(995);
+      vectorLayer.setZIndex(990);
 
       vectorLayer.setProperties({ id: "water-meter" });
 
-      fleetMap.mapManager.getLayerManager().addLayer("water-meters", vectorLayer);
+      gisMap.mapManager.getLayerManager().addLayer("water-meters", vectorLayer);
 
       // Open card modal for water meter details
-      // fleetMap.mapManager.getMap().on("click", (e) => {
-      //   const feature = fleetMap.mapManager.getMap().forEachFeatureAtPixel(e.pixel, (feature) => {
+      // gisMap.mapManager.getMap().on("click", (e) => {
+      //   const feature = gisMap.mapManager.getMap().forEachFeatureAtPixel(e.pixel, (feature) => {
       //     return feature;
       //   });
       //   setConsumerDetailsCardOpen(false);
@@ -169,10 +184,27 @@ const WaterMeterRenderToggleList: FunctionComponent = ({}) => {
       // });
 
       return () => {
-        fleetMap.mapManager.getLayerManager().removeLayer("water-meters");
+        gisMap.mapManager.getLayerManager().removeLayer("water-meters");
       };
     }
-  }, [fleetMap.mapManager, waterMeters]);
+  }, [gisMap.mapManager, waterMeters]);
+
+  //open and close nav when esc key is pressed
+  useEffect(() => {
+    const handleKey = (e: KeyboardEvent) => {
+      //if pressed space key and consumers table card is not open, open consumers table card
+      if (e.key === " " && !consumersTableCardOpen) {
+        toggleTableModal();
+      }
+    };
+
+    window.addEventListener("keydown", handleKey);
+    return () => window.removeEventListener("keydown", handleKey); //cleanup
+  }, []);
+
+  useEffect(() => {
+    setWaterMetersIsLoading(isLoading);
+  }, [isLoading]);
 
   return (
     <React.Fragment>
@@ -181,18 +213,25 @@ const WaterMeterRenderToggleList: FunctionComponent = ({}) => {
           <Spinner size={"sm"} className="mt-4" />
         </div> */}
         <div className="flex cursor-pointer items-center space-x-2 p-2">
-          <label>
-            <input
-              type="checkbox"
-              className="peer hidden"
-              onChange={(event) => {
-                setLayerVisibility(event.target.checked);
-              }}
-              defaultChecked={false}
-            />
-            <CircleGauge className="primary-text-color mr-2 block w-5 cursor-pointer opacity-30 peer-checked:hidden" />
-            <CircleGauge className="primary-text-color mr-2 hidden w-5 cursor-pointer peer-checked:block" />
-          </label>
+          {isLoading ? (
+            <div className="spinner">
+              <Spinner size={"xs"} className="" />
+            </div>
+          ) : (
+            <label>
+              <input
+                type="checkbox"
+                className="peer hidden"
+                onChange={(event) => {
+                  setLayerVisibility(event.target.checked);
+                }}
+                defaultChecked={false}
+              />
+              <CircleGauge className="primary-text-color mr-2 block w-5 cursor-pointer opacity-30 peer-checked:hidden" />
+              <CircleGauge className="primary-text-color mr-2 hidden w-5 cursor-pointer peer-checked:block" />
+            </label>
+          )}
+
           <AccordionTrigger className={`w-50 items-center`}>
             <p className="text-md primary-text-color mr-2 font-bold">Water Meters</p>
             <div>
@@ -221,7 +260,10 @@ const WaterMeterRenderToggleList: FunctionComponent = ({}) => {
 
       <WaterMeterCard open={consumersTableCardOpen} onOpenChange={setConsumersTableCardOpen} />
 
-      <WaterMeterDetailsCard open={consumerDetailsCardOpen} onOpenChange={setConsumerDetailsCardOpen} />
+      <WaterMeterCardAreaOfInterest
+        open={consumersTableCardAreaOfInterestOpen}
+        onOpenChange={setConsumersTableCardAreaOfInterestOpen}
+      />
     </React.Fragment>
   );
 };

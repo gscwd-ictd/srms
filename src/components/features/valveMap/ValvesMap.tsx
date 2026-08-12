@@ -7,6 +7,7 @@ import View from "ol/View";
 import { useValvesMap } from "./contexts/useValvesMapContext";
 import { BaseMapLayerGroup } from "./BaseMapLayerGroup";
 import { useSidebar } from "@srms/components/ui/Sidebar";
+import { useMapStore } from "@srms/components/stores/useMapStore";
 
 export const ValvesMap: FunctionComponent<PropsWithChildren> = ({ children }) => {
   const { setOpen } = useSidebar();
@@ -20,6 +21,8 @@ export const ValvesMap: FunctionComponent<PropsWithChildren> = ({ children }) =>
 
   const valvesMap = useValvesMap();
 
+  const { viewport } = useMapStore();
+
   const mapRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -31,12 +34,12 @@ export const ValvesMap: FunctionComponent<PropsWithChildren> = ({ children }) =>
       layers: [BaseMapLayerGroup],
       target: mapRef.current,
       view: new View({
-        projection: "EPSG:4326",
-        center: [125.17189194375173, 6.113035811082611],
-        zoom: 16,
-        maxZoom: 25,
-        minZoom: 12,
-        showFullExtent: true,
+        projection: viewport.projection,
+        center: viewport.center,
+        zoom: viewport.zoom,
+        extent: viewport.extent,
+        maxZoom: viewport.maxZoom,
+        minZoom: viewport.minZoom,
       }),
     });
 

@@ -126,6 +126,64 @@ export const getConsumers = createRoute({
   },
 });
 
+export const getConsumersByAccountNo = createRoute({
+  tags: TAGS.CONSUMER,
+  description: "GET LIST OF CONSUMERS BASED ON SELECTED METERS (ACCOUNT NO.) FROM THE MAP",
+  method: "post",
+  path: "/v1/consumers/account-no/{pageIndex}/{pageSize}",
+  operationId: "getConsumersByAccountNo",
+  request: {
+    params: TablePaginationParamsSchema,
+    body: {
+      content: {
+        "application/json": {
+          schema: TableFilter,
+        },
+      },
+    },
+  },
+
+  responses: {
+    [HttpStatusCodes.OK]: {
+      content: {
+        "application/json": {
+          schema: SelectConsumers,
+        },
+      },
+      description: OpenAPIResponses.OK,
+    },
+
+    [HttpStatusCodes.NOT_FOUND]: {
+      content: {
+        "application/json": {
+          example: {
+            name: "NotFoundError",
+            status: 404,
+            message: "Consumers not found",
+          },
+          schema: ErrorResponseSchema,
+        },
+      },
+      description: OpenAPIResponses.NOT_FOUND,
+    },
+
+    [HttpStatusCodes.INTERNAL_SERVER_ERROR]: {
+      content: {
+        "application/json": {
+          example: {
+            name: "ServerError",
+            status: 500,
+            message: "Something went wrong!",
+            stack: "...",
+          },
+          schema: ErrorResponseSchema,
+        },
+      },
+      description: OpenAPIResponses.INTERNAL_SERVER_ERROR,
+    },
+  },
+});
+
 export const getAllConsumerServiceRequest = createRoute({
   tags: TAGS.CONSUMER,
   description: "GET ALL THE CONSUMER'S SERVICE REQUEST FOR SPECIFIC YEAR",
@@ -284,6 +342,7 @@ export const getConsumerLedgerLastEntry = createRoute({
 
 export type GetConsumerRoute = typeof getConsumer;
 export type GetConsumersRoute = typeof getConsumers;
+export type GetConsumersByAccountNoRoute = typeof getConsumersByAccountNo;
 export type GetAllConsumerServiceRequestRoute = typeof getAllConsumerServiceRequest;
 export type GetAllConsumerLedgerRoute = typeof getAllConsumerLedger;
 export type GetConsumerLedgerLastEntryRoute = typeof getConsumerLedgerLastEntry;

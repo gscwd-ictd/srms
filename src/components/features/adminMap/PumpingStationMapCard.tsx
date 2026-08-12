@@ -181,10 +181,6 @@ const PumpingStationMapCard: FunctionComponent<PumpingStationMapCardProps> = ({ 
     console.log("Layer Toggle Card Open changed:", layerToggleCardOpen);
   }, [layerToggleCardOpen]);
 
-  useEffect(() => {
-    console.log("Pumping Station prop changed:", ps);
-  }, [ps]);
-
   return (
     <>
       <Sheet
@@ -204,64 +200,67 @@ const PumpingStationMapCard: FunctionComponent<PumpingStationMapCardProps> = ({ 
           <SheetHeader className="m-5 p-0">
             <SheetTitle className="text-black">
               <div className="flex flex-row">
-                <div className="w-[12%]">{psName.replace(/ps/i, "Pumping Station ").toUpperCase()}</div>
+                <div className="w-[12%]">{ps.ps_name.toUpperCase()}</div>
                 <div className="flex items-center space-x-2 px-4">
                   <Switch
                     id="data-mode"
                     checked={realTime}
                     onCheckedChange={handleConnect}
-                    className="data-[state=checked]:bg-green-500 data-[state=unchecked]:bg-red-500"
+                    className="data-[state=checked]:bg-blue-400 data-[state=unchecked]:bg-slate-300"
                   />
 
                   <Label htmlFor="data-mode">{!realTime ? "Mock Data Mode" : "Real-time Data Mode"}</Label>
                 </div>
-                <div className="flex items-center space-x-2 px-4">
+              </div>
+            </SheetTitle>
+            <SheetDescription className="flex flex-row gap-4 text-stone-600">
+              <label className="w-[30%]">{ps.location.toUpperCase()}</label>
+              <span className="flex w-[65%] items-center justify-between">
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <Button
+                      variant="default"
+                      className={cn(
+                        "w-[280px] justify-start text-left font-normal text-black",
+                        !date && "text-muted-foreground",
+                      )}
+                    >
+                      <CalendarIcon className="mr-2 h-4 w-4" />
+                      {date?.from ? (
+                        date.to ? (
+                          <>
+                            {format(date.from, "LLL dd, y")} - {format(date.to, "LLL dd, y")}
+                          </>
+                        ) : (
+                          format(date.from, "LLL dd, y")
+                        )
+                      ) : (
+                        <span>Pick a date range</span>
+                      )}
+                    </Button>
+                  </PopoverTrigger>
+
+                  <PopoverContent className="w-auto p-0" align="start">
+                    <Calendar
+                      mode="range"
+                      defaultMonth={date?.from}
+                      selected={date}
+                      onSelect={setDate}
+                      numberOfMonths={2}
+                    />
+                  </PopoverContent>
+                </Popover>
+                <span className="flex items-center space-x-2 px-4">
                   <Switch
                     id="data-mode"
                     checked={isStreetView}
                     onCheckedChange={handleStreetView}
-                    className="data-[state=checked]:bg-lime-400 data-[state=unchecked]:bg-slate-300"
+                    className="data-[state=checked]:bg-blue-300 data-[state=unchecked]:bg-slate-300"
                   />
 
                   <Label htmlFor="data-mode">{!isStreetView ? "Street View" : "Street View"}</Label>
-                </div>
-              </div>
-            </SheetTitle>
-            <SheetDescription className="flex flex-row gap-4 text-stone-600">
-              <label className="w-[30%]">{psName.replace(/ps/i, "Pumping Station ").toUpperCase()}</label>
-              <Popover>
-                <PopoverTrigger asChild>
-                  <Button
-                    variant="default"
-                    className={cn(
-                      "w-[280px] justify-start text-left font-normal text-black",
-                      !date && "text-muted-foreground",
-                    )}
-                  >
-                    <CalendarIcon className="mr-2 h-4 w-4" />
-                    {date?.from ? (
-                      date.to ? (
-                        <>
-                          {format(date.from, "LLL dd, y")} - {format(date.to, "LLL dd, y")}
-                        </>
-                      ) : (
-                        format(date.from, "LLL dd, y")
-                      )
-                    ) : (
-                      <span>Pick a date range</span>
-                    )}
-                  </Button>
-                </PopoverTrigger>
-                <PopoverContent className="w-auto p-0" align="start">
-                  <Calendar
-                    mode="range"
-                    defaultMonth={date?.from}
-                    selected={date}
-                    onSelect={setDate}
-                    numberOfMonths={2}
-                  />
-                </PopoverContent>
-              </Popover>
+                </span>
+              </span>
             </SheetDescription>
           </SheetHeader>
 
