@@ -21,7 +21,7 @@ export default async function GisPage() {
       <GisMap />
       <BaseLayerPicker />
 
-      <LayersCard accessToken={accessToken} />
+      <LayersCard />
 
       <MapToolbar />
     </GisMapProvider>

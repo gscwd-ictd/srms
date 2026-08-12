@@ -2,16 +2,13 @@ import { Label } from "@radix-ui/react-label";
 import { ScrollArea } from "@srms/components/ui/ScrollArea";
 import { AccStatus, GPSSignal } from "@srms/components/enums";
 import { useTsDeviceStore } from "@srms/components/stores/useTsDeviceStore";
-import { Token } from "@srms/components/types";
 import { Spinner } from "@srms/components/ui-custom/Spinner";
 import { TrackSolidDeviceDetail, TrackSolidDeviceLocation } from "@srms/lib/tracksolid/types";
 import { useQuery } from "@tanstack/react-query";
-import axios from "axios";
 import dayjs from "dayjs";
 import { SignalHigh, SignalLow, SignalMedium, SignalZero } from "lucide-react";
 import { FunctionComponent, useEffect } from "react";
 import { isEmpty } from "@srms/utils/isEmpty";
-// import { useCardStore } from "@srms/components/stores/useCardStore";
 import {
   DraggableModal,
   DraggableModalBody,
@@ -20,44 +17,53 @@ import {
   DraggableModalHeader,
   DraggableModalTitle,
 } from "@srms/components/ui/DraggableModal";
-import { useCardStore } from "@srms/components/stores/useCardStore";
+import { useTracksolid } from "./contexts/useTracksolid";
+import { tracksolidApi } from "@srms/lib/tracksolid/tracksolidHelper";
 
 interface VehicleDetailsCardProps {
-  accessToken: Token;
   open: boolean;
   onOpenChange?(open: boolean): void;
 }
 
-const VehicleDetailsCard: FunctionComponent<VehicleDetailsCardProps> = ({
-  accessToken,
-  open,
-  onOpenChange,
-}) => {
+const VehicleDetailsCardDraggable: FunctionComponent<VehicleDetailsCardProps> = ({ open, onOpenChange }) => {
+  const {
+    accessToken: tsAccessToken,
+    isLoading: isLoadingTs,
+    isTracksolidReady,
+    hasFleetAbility,
+  } = useTracksolid();
+
   // zustand initialization
   const { selectedDevice, tsDeviceDetails, setTsDeviceDetails, tsDeviceLocation, setTsDeviceLocation } =
     useTsDeviceStore();
 
-  const { vehicleDetailsToFetch } = useCardStore();
-
-  // const { layerToggleCardOpen } = useCardStore();
-
   const { data: deviceDetails, fetchStatus: fStatusDeviceDetails } = useQuery({
     queryKey: ["device-details"],
     refetchOnReconnect: false,
-    enabled: !!vehicleDetailsToFetch,
+    enabled: hasFleetAbility && isTracksolidReady && !!tsAccessToken,
     retry: 5,
     queryFn: async () => {
-      const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_APP_URL}/api/v1/tracksolid/device-detail`,
+      const response = await tracksolidApi.post(
+        `/v1/tracksolid/device-detail`,
         {
           imeis: selectedDevice.imei,
           beginTime: dayjs().startOf("day").format("YYYY-MM-DD HH:mm:ss"),
           endTime: dayjs().subtract(30, "minutes").format("YYYY-MM-DD HH:mm:ss"),
         },
-        {
-          headers: { "access-token": accessToken.value },
-        },
+        { headers: { "access-token": tsAccessToken } },
       );
+
+      // const response = await tracksolidApi.post(
+      //   `${process.env.NEXT_PUBLIC_APP_URL}/api/v1/tracksolid/device-detail`,
+      //   {
+      //     imeis: selectedDevice.imei,
+      //     beginTime: dayjs().startOf("day").format("YYYY-MM-DD HH:mm:ss"),
+      //     endTime: dayjs().subtract(30, "minutes").format("YYYY-MM-DD HH:mm:ss"),
+      //   },
+      //   {
+      //     headers: { "access-token": accessToken.value },
+      //   },
+      // );
 
       return response.data;
     },
@@ -66,18 +72,28 @@ const VehicleDetailsCard: FunctionComponent<VehicleDetailsCardProps> = ({
 
   const { data: deviceLocation, fetchStatus: fStatusDeviceLocation } = useQuery({
     queryKey: ["device-location"],
-    enabled: !!vehicleDetailsToFetch,
+    enabled: hasFleetAbility && isTracksolidReady && !!tsAccessToken,
     retry: 5,
     queryFn: async () => {
-      const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_APP_URL}/api/v1/tracksolid/devices-location`,
+      const response = await tracksolidApi.post(
+        `/v1/tracksolid/devices-location`,
         {
           imeis: selectedDevice.imei,
         },
         {
-          headers: { "access-token": accessToken.value },
+          headers: { "access-token": tsAccessToken },
         },
       );
+
+      // const response = await axios.post(
+      //   `${process.env.NEXT_PUBLIC_APP_URL}/api/v1/tracksolid/devices-location`,
+      //   {
+      //     imeis: selectedDevice.imei,
+      //   },
+      //   {
+      //     headers: { "access-token": accessToken.value },
+      //   },
+      // );
 
       return response.data[0];
     },
@@ -139,6 +155,21 @@ const VehicleDetailsCard: FunctionComponent<VehicleDetailsCardProps> = ({
       setTsDeviceDetails({} as TrackSolidDeviceDetail);
       setTsDeviceLocation({} as TrackSolidDeviceLocation);
     }
+  }, [open, deviceDetails, deviceLocation, setTsDeviceDetails, setTsDeviceLocation]);
+
+  useEffect(() => {
+    if (open) {
+      if (!isEmpty(deviceDetails)) {
+        setTsDeviceDetails(deviceDetails);
+      }
+
+      if (!isEmpty(deviceLocation)) {
+        setTsDeviceLocation(deviceLocation);
+      }
+    } else {
+      setTsDeviceDetails({} as TrackSolidDeviceDetail);
+      setTsDeviceLocation({} as TrackSolidDeviceLocation);
+    }
   }, [open, selectedDevice, deviceDetails, deviceLocation, setTsDeviceDetails, setTsDeviceLocation]);
 
   return (
@@ -160,7 +191,7 @@ const VehicleDetailsCard: FunctionComponent<VehicleDetailsCardProps> = ({
                 <>
                   {!isEmpty(tsDeviceDetails) && !isEmpty(tsDeviceLocation) ? (
                     <>
-                      <div className="mx-4 mb-2 rounded-md border-1 border-indigo-400 p-3 shadow">
+                      <div className="m-4 mb-2 rounded-md border-1 border-indigo-400 p-3 shadow">
                         <div className="flex space-x-1.5">
                           <p className="w-[50%]">
                             <span className="font-bold">{checkAccStatus()}</span>{" "}
@@ -328,14 +359,9 @@ const VehicleDetailsCard: FunctionComponent<VehicleDetailsCardProps> = ({
             </DraggableModalBody>
           </>
         )}
-        {/* <DraggableModalFooter>
-            <Button variant="default" onClick={() => onOpenChange?.(false)}>
-              Close
-            </Button>
-          </DraggableModalFooter> */}
       </DraggableModalContent>
     </DraggableModal>
   );
 };
 
-export default VehicleDetailsCard;
+export default VehicleDetailsCardDraggable;

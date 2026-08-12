@@ -434,7 +434,7 @@ const VehicleRenderToggleList: FunctionComponent = () => {
     filterVehicleList(search, tsDeviceList);
   }, [search]);
 
-  const [filteredVehicle, setFilteredVehicle] = useState<TrackSolidDevice[]>([]); //main filtered vehicle list for search functionality
+  // const [filteredVehicle, setFilteredVehicle] = useState<TrackSolidDevice[]>([]); //main filtered vehicle list for search functionality
 
   // const successToast = (message: string) => {
   //   toast.success("Success!", {
@@ -898,11 +898,7 @@ const VehicleRenderToggleList: FunctionComponent = () => {
 
           {isLoadingTs || isLoading ? <Spinner size="md" /> : null}
 
-          {!isLoadingTs &&
-          !isLoading &&
-          isTracksolidReady &&
-          !isEmpty(filteredVehicleList) &&
-          !isEmpty(filteredVehicle) ? (
+          {!isLoadingTs && !isLoading && isTracksolidReady && !isEmpty(filteredVehicleList) ? (
             <>
               <ScrollArea className="h-[calc(100vh-400px)]">
                 <div className="flex flex-col gap-1">
@@ -997,13 +993,6 @@ const VehicleRenderToggleList: FunctionComponent = () => {
             <p className="primary-text-color p-2 text-center">No devices available</p>
           )}
         </form>
-
-        {/* <VehicleDetailsCard
-          accessToken={accessToken}
-          open={vehicleDetailsCardOpen}
-          onOpenChange={setVehicleDetailsCardOpen}
-        /> */}
-        {/* <VehicleDetailsCard open={vehicleDetailsCardOpen} onOpenChange={setVehicleDetailsCardOpen} /> */}
       </AccordionContent>
     </React.Fragment>
   );

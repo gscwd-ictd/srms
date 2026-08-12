@@ -1,3 +1,4 @@
+//NON DRAGGABLE MODAL
 import { Label } from "@radix-ui/react-label";
 import { ScrollArea } from "@srms/components/ui/ScrollArea";
 import { AccStatus, GPSSignal } from "@srms/components/enums";

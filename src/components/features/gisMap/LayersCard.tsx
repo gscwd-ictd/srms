@@ -8,7 +8,6 @@ import React, { FunctionComponent, useContext, useEffect, useState } from "react
 // import VehicleRenderToggleList from "./VehicleRenderToggleList";
 import PipelineRenderToggleList from "./PipelineRenderToggleList";
 import WaterMeterRenderToggleList from "./WaterMeterRenderToggleList";
-import { Token } from "@srms/components/types";
 import { Card, CardContent, CardHeader, CardAction } from "@srms/components/ui/Card";
 import { cn } from "@srms/utils/shadcn";
 import { useCardStore } from "@srms/components/stores/useCardStore";
@@ -17,18 +16,14 @@ import { motion } from "framer-motion";
 import { AbilityContext } from "@srms/app/(protected)/dashboard/contexts/AbilityContext";
 import { useValveStore } from "@srms/components/stores/useValveStore";
 import { useRouter } from "next/navigation";
-import VehicleDetailsCard from "./VehicleDetailsCard";
 import ValveDetailsCard from "./ValveDetailsCardDraggable";
 import ConsumerDetailsCard from "./ConsumerDetailsCardDraggable";
 import GooglePlacesRenderToggleList from "./GooglePlacesRenderToggleList";
 import StreetViewMapCard from "./StreetViewMapCard";
 import VehicleRenderToggleList from "./VehicleRenderToggleList";
+import VehicleDetailsCardDraggable from "./VehicleDetailsCardDraggable";
 
-interface LayersCardProps {
-  accessToken: Token;
-}
-
-export const LayersCard: FunctionComponent<LayersCardProps> = ({}) => {
+export const LayersCard: FunctionComponent = () => {
   // const { layerToggleCardOpen, setLayerToggleCardOpen, consumersTableCardOpen, setConsumersTableCardOpen } =
   //   useCardStore();
   const router = useRouter();
@@ -201,7 +196,7 @@ export const LayersCard: FunctionComponent<LayersCardProps> = ({}) => {
       {/* Consumers Details Draggable Card */}
       <ConsumerDetailsCard open={consumerDetailsCardOpen} onOpenChange={setConsumerDetailsCardOpen} />
 
-      <VehicleDetailsCard open={vehicleDetailsCardOpen} onOpenChange={setVehicleDetailsCardOpen} />
+      <VehicleDetailsCardDraggable open={vehicleDetailsCardOpen} onOpenChange={setVehicleDetailsCardOpen} />
 
       <ValveDetailsCard
         open={valveDetailsCardOpen}
