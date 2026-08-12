@@ -11,6 +11,7 @@ import {
   SelectImeisSchema,
   SelectDevicesMileageSchema,
   SelectMileageSchema,
+  ErrorRefreshTokenSchema,
 } from "@srms/lib/tracksolid/schemas";
 
 export const getTsAccessToken = createRoute({
@@ -66,12 +67,12 @@ export const getTsRefreshToken = createRoute({
   method: "post",
   path: "/v1/tracksolid/refresh_token",
   operationId: "getTsRefreshToken",
-  request: {
-    headers: z.object({
-      tsAccessToken: z.string(),
-      tsRefreshToken: z.string(),
-    }),
-  },
+  // request: {
+  //   headers: z.object({
+  //     tsAccessToken: z.string(),
+  //     tsRefreshToken: z.string(),
+  //   }),
+  // },
   responses: {
     [HttpStatusCodes.OK]: {
       content: {
@@ -80,6 +81,19 @@ export const getTsRefreshToken = createRoute({
         },
       },
       description: "",
+    },
+
+    [HttpStatusCodes.UNAUTHORIZED]: {
+      content: {
+        "application/json": {
+          schema: ErrorRefreshTokenSchema,
+          example: {
+            error: true,
+            message: "Missing Tracksolid authentication cookies.",
+          },
+        },
+      },
+      description: "Authentication cookies are missing or invalid",
     },
 
     [HttpStatusCodes.NOT_FOUND]: {

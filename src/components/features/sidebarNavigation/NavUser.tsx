@@ -13,7 +13,7 @@ import {
   DropdownMenuTrigger,
 } from "@srms/components/ui/DropdownMenu";
 import { SidebarMenu, SidebarMenuButton, SidebarMenuItem, useSidebar } from "@srms/components/ui/Sidebar";
-import { logOut } from "@srms/app/helpers/auth-helper";
+import { logOut } from "@srms/app/helpers/authHelper";
 import { FunctionComponent } from "react";
 import { RoleAbility } from "@srms/lib/authentication/types";
 interface NavUserProps {

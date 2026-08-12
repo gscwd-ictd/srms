@@ -27,3 +27,8 @@ export const SelectRefreshTokenSchema = z.object({
   }),
   data: z.string(),
 });
+
+export const ErrorRefreshTokenSchema = z.object({
+  error: z.boolean(),
+  message: z.string(),
+});

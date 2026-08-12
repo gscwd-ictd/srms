@@ -16,7 +16,9 @@ import {
   SelectDevicesSchema,
   SelectDevicesLocationSchema,
   SelectDevicesMileageSchema,
+  ErrorRefreshTokenSchema,
 } from "@srms/lib/tracksolid/schemas";
+import { setCookie, getCookie } from "hono/cookie";
 
 type AccessToken = z.infer<typeof SelectAccessTokenSchema>;
 type RefreshToken = z.infer<typeof SelectRefreshTokenSchema>;
@@ -28,16 +30,64 @@ type DevicesMileage = z.infer<typeof SelectDevicesMileageSchema>;
 export const getTsAccessToken: AppRouteHandler<GetTsAccessTokenRoute> = async (c) => {
   const tsAccessToken = (await trackSolidManager.getTrackSolidService().getTsAccessToken()) as AccessToken;
 
+  setCookie(c, "tsAccessToken", tsAccessToken.result.accessToken, {
+    httpOnly: true,
+    sameSite: "lax",
+    path: "/",
+    maxAge: 60 * 60 * 2, // 7200 seconds
+  });
+
+  setCookie(c, "tsRefreshToken", tsAccessToken.result.refreshToken, {
+    httpOnly: true,
+    sameSite: "lax",
+    path: "/",
+    maxAge: 60 * 60 * 24 * 30, // 30 days
+  });
+
   return c.json(tsAccessToken, 200);
 };
 
 export const getTsRefreshToken: AppRouteHandler<GetTsRefreshTokenRoute> = async (c) => {
-  const accessToken = c.req.header("tsAccessToken") as string;
-  const refreshToken = c.req.header("tsRefreshToken") as string;
+  // const accessToken = c.req.header("tsAccessToken") as string;
+  // const refreshToken = c.req.header("tsRefreshToken") as string;
 
+  const accessToken = getCookie(c, "tsAccessToken") as string;
+  const refreshToken = getCookie(c, "tsRefreshToken") as string;
+
+  if (!accessToken || !refreshToken) {
+    return c.json(
+      {
+        error: true,
+        message: "Missing Tracksolid authentication cookies.",
+      },
+      401,
+    );
+  }
   const tsRefreshToken = (await trackSolidManager
     .getTrackSolidService()
     .getTsRefreshToken(accessToken, refreshToken)) as RefreshToken;
+
+  if (!tsRefreshToken?.result?.accessToken) {
+    return c.json(
+      {
+        error: true,
+        message: "Unable to refresh TrackSolid token.",
+      },
+      401,
+    );
+  }
+
+  setCookie(c, "tsAccessToken", tsRefreshToken.result.accessToken, {
+    httpOnly: true,
+    path: "/",
+    maxAge: 60 * 60 * 2,
+  });
+
+  setCookie(c, "tsRefreshToken", tsRefreshToken.result.refreshToken, {
+    httpOnly: true,
+    path: "/",
+    maxAge: 60 * 60 * 24 * 30,
+  });
 
   return c.json(tsRefreshToken, 200);
 };

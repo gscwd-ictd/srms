@@ -5,24 +5,25 @@ import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
-const axiosApi = axios.create({
+const axiosAuthApi = axios.create({
   baseURL: process.env.NEXT_PUBLIC_AUTH_SERVER,
 });
 
-axiosApi.interceptors.request.use(
+axiosAuthApi.interceptors.request.use(
   (response) => response,
   (error) => Promise.reject(error),
 );
 
-axiosApi.interceptors.response.use(
+axiosAuthApi.interceptors.response.use(
   (response) => response,
   (error) => Promise.reject(error),
 );
 
 const oneWeek = 7 * 24 * 60 * 60 * 1000;
+// const oneWeek = 1000;
 
 export const postAuth = async (data: object, config = {}) =>
-  await axiosApi
+  await axiosAuthApi
     .post("/v1/auth", { ...data }, { ...config })
     .then(async (response) => {
       (await cookies()).set("accessToken", response.data.accessToken, {
@@ -48,7 +49,7 @@ export const postAuth = async (data: object, config = {}) =>
     });
 
 export const postAuthRefresh = async (data: object, config = {}) =>
-  await axiosApi
+  await axiosAuthApi
     .post("/v1/auth/refresh", { ...data }, { ...config })
     .then(async (response) => {
       (await cookies()).set("accessToken", response.data.accessToken, {

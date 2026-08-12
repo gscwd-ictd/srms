@@ -2,11 +2,10 @@
 "use client";
 
 import { useTsDeviceStore } from "@srms/components/stores/useTsDeviceStore";
-import { Token } from "@srms/components/types";
 import { Spinner } from "@srms/components/ui-custom/Spinner";
 import { TrackSolidDevice, TrackSolidDeviceLocation } from "@srms/lib/tracksolid/types";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import axios, { AxiosError } from "axios";
+import { AxiosError } from "axios";
 import { Feature } from "ol";
 import VectorLayer from "ol/layer/Vector";
 import VectorSource from "ol/source/Vector";
@@ -39,15 +38,21 @@ import { ScrollArea } from "@srms/components/ui/ScrollArea";
 import { useCardStore } from "@srms/components/stores/useCardStore";
 import { createLabelStyles } from "../adminMap/utils/createLabelStyles";
 import { Pixel } from "ol/pixel";
+import { useTracksolid } from "./contexts/useTracksolid";
+import { tracksolidApi } from "@srms/lib/tracksolid/tracksolidHelper";
 
-interface TsTokensProps {
-  accessToken: Token;
-}
+const VehicleRenderToggleList: FunctionComponent = () => {
+  const {
+    accessToken: tsAccessToken,
+    isLoading: isLoadingTs,
+    isTracksolidReady,
+    hasFleetAbility,
+  } = useTracksolid();
 
-const VehicleRenderToggleList: FunctionComponent<TsTokensProps> = ({ accessToken }) => {
   const fleetMap = useGisMap();
   const featureManager = new FeatureManager();
   const vehicleLayerGroup = fleetMap.mapManager.getLayerManager().getLayerGroup("vehicle-map-layer");
+  const tracksolidDisabled = !hasFleetAbility || !isTracksolidReady || isLoadingTs;
 
   const [isDeviceListFetched, setIsDeviceListFetched] = useState<boolean>(true);
   const isDeviceLocated = useRef(false); // useRef to keep track of the latest value of isDeviceLocated in the asynchronous mutation functions without causing re-renders
@@ -55,6 +60,15 @@ const VehicleRenderToggleList: FunctionComponent<TsTokensProps> = ({ accessToken
   const [isDeviceListAlphabetical, setIsDeviceListAlphabetical] = useState<boolean>(false); // state to determine whether the device list is sorted in alphabetical order. This is to determine the sorting order when the device list is initially fetched and when the search query is empty.
   const [isDeviceListVisible, setIsDeviceListVisible] = useState<boolean>(false); //state to determine whether all the devices in the device list are visible. This is to determine whether to show all the markers of the devices in the map when the "show all" action is triggered.
   const [isToggleVisibilityLoading, setIsToggleVisibilityLoading] = useState<boolean>(false); //state to determine whether the device list is loading. This is to show the loading spinner when the device list is being fetched and when the "show all" action is triggered.
+
+  // state to determine whether the locate action is triggered. This is to determine whether to move the screen view to the vehicle location as center when the marker is toggled on.
+  // const [isDeviceLocated, setIsDeviceLLocated] = useState<boolean>(false);
+
+  // state to determine whether the device list is sorted in alphabetical order. This is to determine the sorting order when the device list is initially fetched and when the search query is empty.
+  // const [isDeviceListAlphabetical, setIsDeviceListAlphabetical] = useState<boolean>(false);
+
+  // state to determine whether all the devices in the device list are visible. This is to determine whether to show all the markers of the devices in the map when the "show all" action is triggered.
+  // const [isDeviceListVisible, setIsDeviceListVisible] = useState<boolean>(false);
 
   // zustand initialization
   const { tsDeviceList, setTsDeviceList, setSelectedDevice } = useTsDeviceStore();
@@ -79,17 +93,15 @@ const VehicleRenderToggleList: FunctionComponent<TsTokensProps> = ({ accessToken
   const { data: deviceList, isLoading } = useQuery({
     queryKey: ["vehicle-devices"],
     refetchOnReconnect: false,
-    enabled: !!isDeviceListFetched,
+    enabled: hasFleetAbility && isTracksolidReady && !!tsAccessToken && isDeviceListFetched,
     queryFn: async () => {
-      const { data } = await axios.post(
-        `${process.env.NEXT_PUBLIC_APP_URL}/api/v1/tracksolid/devices`,
+      const response = await tracksolidApi.post(
+        `/v1/tracksolid/devices`,
         {},
-        {
-          headers: { "access-token": accessToken.value },
-        },
+        { headers: { "access-token": tsAccessToken } },
       );
 
-      return data;
+      return response.data;
     },
     throwOnError: true,
   });
@@ -98,22 +110,24 @@ const VehicleRenderToggleList: FunctionComponent<TsTokensProps> = ({ accessToken
   const deviceLocationMutation = useMutation({
     mutationKey: ["device-location"],
     mutationFn: async (deviceDetails: TrackSolidDevice) => {
-      const tsDevicesLocation = await axios.post(
-        `${process.env.NEXT_PUBLIC_APP_URL}/api/v1/tracksolid/devices-location`,
+      if (!isTracksolidReady || !tsAccessToken) {
+        throw new Error("TrackSolid session is not ready.");
+      }
+
+      const response = await tracksolidApi.post(
+        `/v1/tracksolid/devices-location`,
+        { imeis: deviceDetails.imei },
         {
-          imeis: deviceDetails.imei,
-        },
-        {
-          headers: { "access-token": accessToken.value },
+          headers: { "access-token": tsAccessToken },
         },
       );
-      console.log("device location response", tsDevicesLocation.data);
-      setTsDeviceLocations((prev) => [...prev, tsDevicesLocation.data[0]]); // add new device location to the existing list of device locations in state which is used to update the position of the marker when the location details of multiple devices are fetched through the multipleDeviceLocationMutation. This is important because when the location details of multiple devices are fetched, the position of the marker will be updated based on the location details in this state.
-      return tsDevicesLocation.data[0];
+      console.log("device location response", response.data);
+      setTsDeviceLocations((prev) => [...prev, response.data[0]]); // add new device location to the existing list of device locations in state which is used to update the position of the marker when the location details of multiple devices are fetched through the multipleDeviceLocationMutation. This is important because when the location details of multiple devices are fetched, the position of the marker will be updated based on the location details in this state.
+      return response.data[0];
     },
-    // onMutate: (variables) => {
-    //   console.log(`Fetching location of device attached to vehicle: ${variables?.deviceName}`);
-    // },
+    onMutate: (variables) => {
+      console.log(`Fetching location of device attached to vehicle: ${variables?.deviceName}`);
+    },
     onSuccess: async (data, variables) => {
       const vectorLayer = new VectorLayer();
 
@@ -223,21 +237,23 @@ const VehicleRenderToggleList: FunctionComponent<TsTokensProps> = ({ accessToken
   const multipleDeviceLocationMutation = useMutation({
     mutationKey: ["devices-location"],
     mutationFn: async (devices: string) => {
-      const tsDevicesLocation = await axios.post(
-        `${process.env.NEXT_PUBLIC_APP_URL}/api/v1/tracksolid/devices-location`,
+      if (!isTracksolidReady || !tsAccessToken) {
+        throw new Error("TrackSolid session is not ready.");
+      }
+
+      const response = await tracksolidApi.post(
+        `/v1/tracksolid/devices-location`,
+        { imeis: devices },
         {
-          imeis: devices,
-        },
-        {
-          headers: { "access-token": accessToken.value },
+          headers: { "access-token": tsAccessToken },
         },
       );
-      setTsDeviceLocations(tsDevicesLocation.data);
-      return tsDevicesLocation;
+      setTsDeviceLocations(response.data);
+      return response;
     },
-    // onMutate: () => {
-    //   console.log(`Fetching location details of devices`);
-    // },
+    onMutate: () => {
+      console.log(`Fetching location details of devices`);
+    },
     onSuccess: async (data) => {
       // Iterate through the layer group of vehicles
       vehicleLayerGroup?.getLayers().forEach((layer: BaseLayer) => {
@@ -365,6 +381,11 @@ const VehicleRenderToggleList: FunctionComponent<TsTokensProps> = ({ accessToken
   ) => {
     updateStoreDeviceVisibility(deviceDetails.imei, isVisible);
     isDeviceLocated.current = isLocate;
+
+    if (!isTracksolidReady) {
+      return;
+    }
+
     if (isVisible && !isLocate) {
       // call mutation function to add VectorLayer to LayerGroup('vehicle-map-layer')
       deviceLocationMutation.mutate(deviceDetails);
@@ -412,6 +433,22 @@ const VehicleRenderToggleList: FunctionComponent<TsTokensProps> = ({ accessToken
   useEffect(() => {
     filterVehicleList(search, tsDeviceList);
   }, [search]);
+
+  const [filteredVehicle, setFilteredVehicle] = useState<TrackSolidDevice[]>([]); //main filtered vehicle list for search functionality
+
+  // const successToast = (message: string) => {
+  //   toast.success("Success!", {
+  //     description: message,
+  //     position: "top-center",
+  //   });
+  // };
+
+  // const errorToast = (message: string) => {
+  //   toast.error("An Error Has Occurred", {
+  //     description: message,
+  //     position: "top-center",
+  //   });
+  // };
 
   const filterVehicleList = (search: string, deviceList: TrackSolidDevice[]) => {
     if (isEmpty(search)) {
@@ -486,6 +523,40 @@ const VehicleRenderToggleList: FunctionComponent<TsTokensProps> = ({ accessToken
   };
 
   //update highlighted vehicle marker whenever selectedVehicleFeature changes which is triggered when a new vehicle is selected.
+  // const toggleAllDeviceVisibility = (visibility: boolean) => {
+  //   setIsDeviceListVisible(visibility);
+  //   if (visibility) {
+  //     tsDeviceList.forEach((device: TrackSolidDevice) => {
+  //       setVehicleMarkerVisibility(device, true, false); // set all markers to visible without moving the screen view to the vehicle location as center
+  //     });
+
+  //     const newDeviceList = tsDeviceList.map((device) => ({ ...device, visible: true })); //set all devices to visible
+  //     const sortedList = toggleAlphabeticalOrder(isDeviceListAlphabetical, newDeviceList);
+  //     setTsDeviceList(sortedList);
+  //     filterVehicleList(search, sortedList);
+  //   } else {
+  //     tsDeviceList.forEach((device: TrackSolidDevice) => {
+  //       setVehicleMarkerVisibility(device, false, false); // set all markers to invisible without moving the screen view to the vehicle location as center
+  //     });
+  //     const newDeviceList = tsDeviceList.map((device) => ({ ...device, visible: false })); //set all devices to visible
+  //     const sortedList = toggleAlphabeticalOrder(isDeviceListAlphabetical, newDeviceList);
+  //     setTsDeviceList(sortedList);
+  //     filterVehicleList(search, sortedList);
+
+  //     //forcibly remove all vector layer from the vehicle layer group
+  //     vehicleLayerGroup
+  //       ?.getLayers()
+  //       .getArray()
+  //       .forEach((layer: BaseLayer) => {
+  //         vehicleLayerGroup?.getLayers().remove(layer);
+  //       });
+  //   }
+  // };
+
+  useEffect(() => {
+    filterVehicleList(search, tsDeviceList);
+  }, [search]);
+
   useEffect(() => {
     //reset all markers to normal vehicle style first
     vehicleLayerGroup
@@ -712,6 +783,15 @@ const VehicleRenderToggleList: FunctionComponent<TsTokensProps> = ({ accessToken
     }
   };
 
+  useEffect(() => {
+    console.log(
+      "hasFleetAbility: " + hasFleetAbility,
+      "isTracksolidReady: " + isTracksolidReady,
+      "tsAccessToken: " + tsAccessToken,
+      "isDeviceListFetched: " + isDeviceListFetched,
+    );
+  }, [hasFleetAbility, isTracksolidReady, tsAccessToken, isDeviceListFetched]);
+
   return (
     <React.Fragment>
       <div className="flex cursor-pointer items-center space-x-2 p-2">
@@ -789,7 +869,23 @@ const VehicleRenderToggleList: FunctionComponent<TsTokensProps> = ({ accessToken
                   <ArrowUpZaIcon className="mr-2 w-4 cursor-pointer text-gray-800 hover:text-gray-500" />
                 )}
               </label>
-
+              <label className="cursor-pointer text-gray-800 hover:text-gray-500">
+                <input
+                  disabled={tracksolidDisabled}
+                  id={`deviceshowall`}
+                  type="checkbox"
+                  className="peer hidden"
+                  onChange={(event) => {
+                    toggleAllDeviceVisibility(event.target.checked);
+                  }}
+                  checked={isDeviceListVisible}
+                />
+                {isDeviceListVisible ? (
+                  <Eye className={`mr-2 w-4 cursor-pointer text-gray-800 hover:text-gray-500`} />
+                ) : (
+                  <EyeClosed className={`mr-2 w-4 cursor-pointer text-gray-800 hover:text-gray-500`} />
+                )}
+              </label>
               <RefreshCcwIcon
                 className="mr-2 w-4 cursor-pointer text-gray-800 hover:text-gray-500"
                 onClick={() => {
@@ -798,10 +894,15 @@ const VehicleRenderToggleList: FunctionComponent<TsTokensProps> = ({ accessToken
               />
             </div>
           </div>
+          {/* main buttons */}
 
-          {isLoading ? <Spinner size={"md"} /> : null}
+          {isLoadingTs || isLoading ? <Spinner size="md" /> : null}
 
-          {!isLoading && !isEmpty(filteredVehicleList) ? (
+          {!isLoadingTs &&
+          !isLoading &&
+          isTracksolidReady &&
+          !isEmpty(filteredVehicleList) &&
+          !isEmpty(filteredVehicle) ? (
             <>
               <ScrollArea className="h-[calc(100vh-400px)]">
                 <div className="flex flex-col gap-1">
@@ -852,7 +953,7 @@ const VehicleRenderToggleList: FunctionComponent<TsTokensProps> = ({ accessToken
                         <div className="flex w-full items-end justify-end gap-2">
                           <label className="cursor-pointer text-gray-800 hover:text-gray-500">
                             <input
-                              disabled={device.activationTime ? false : true}
+                              disabled={tracksolidDisabled || !device.activationTime}
                               id={`devicelocate-${device.imei}`}
                               type="checkbox"
                               className="peer hidden"
@@ -870,7 +971,7 @@ const VehicleRenderToggleList: FunctionComponent<TsTokensProps> = ({ accessToken
                             ) : (
                               <>
                                 <input
-                                  disabled={device.activationTime ? false : true}
+                                  disabled={tracksolidDisabled || !device.activationTime}
                                   id={`device-${device.imei}`}
                                   type="checkbox"
                                   className="peer hidden"
@@ -902,6 +1003,7 @@ const VehicleRenderToggleList: FunctionComponent<TsTokensProps> = ({ accessToken
           open={vehicleDetailsCardOpen}
           onOpenChange={setVehicleDetailsCardOpen}
         /> */}
+        {/* <VehicleDetailsCard open={vehicleDetailsCardOpen} onOpenChange={setVehicleDetailsCardOpen} /> */}
       </AccordionContent>
     </React.Fragment>
   );

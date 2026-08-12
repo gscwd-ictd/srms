@@ -17,7 +17,7 @@ import { motion } from "framer-motion";
 import { AbilityContext } from "@srms/app/(protected)/dashboard/contexts/AbilityContext";
 import { useValveStore } from "@srms/components/stores/useValveStore";
 import { useRouter } from "next/navigation";
-import VehicleDetailsCard from "./VehicleDetailsCardDraggable";
+import VehicleDetailsCard from "./VehicleDetailsCard";
 import ValveDetailsCard from "./ValveDetailsCardDraggable";
 import ConsumerDetailsCard from "./ConsumerDetailsCardDraggable";
 import GooglePlacesRenderToggleList from "./GooglePlacesRenderToggleList";
@@ -28,10 +28,11 @@ interface LayersCardProps {
   accessToken: Token;
 }
 
-export const LayersCard: FunctionComponent<LayersCardProps> = ({ accessToken }) => {
+export const LayersCard: FunctionComponent<LayersCardProps> = ({}) => {
   // const { layerToggleCardOpen, setLayerToggleCardOpen, consumersTableCardOpen, setConsumersTableCardOpen } =
   //   useCardStore();
   const router = useRouter();
+
   const [initialNavAnimation, setInitialNavAnimation] = useState<boolean>(true);
 
   const ability = useContext(AbilityContext);
@@ -138,7 +139,8 @@ export const LayersCard: FunctionComponent<LayersCardProps> = ({ accessToken }) 
               <Accordion type="single" collapsible className="w-full">
                 {ability?.can("access", "fleetLayer") && (
                   <AccordionItem value="item-1">
-                    <VehicleRenderToggleList accessToken={accessToken} />
+                    <VehicleRenderToggleList />
+                    {/* <VehicleRenderToggleList accessToken={accessToken} /> */}
                   </AccordionItem>
                 )}
 
@@ -199,11 +201,7 @@ export const LayersCard: FunctionComponent<LayersCardProps> = ({ accessToken }) 
       {/* Consumers Details Draggable Card */}
       <ConsumerDetailsCard open={consumerDetailsCardOpen} onOpenChange={setConsumerDetailsCardOpen} />
 
-      <VehicleDetailsCard
-        accessToken={accessToken}
-        open={vehicleDetailsCardOpen}
-        onOpenChange={setVehicleDetailsCardOpen}
-      />
+      <VehicleDetailsCard open={vehicleDetailsCardOpen} onOpenChange={setVehicleDetailsCardOpen} />
 
       <ValveDetailsCard
         open={valveDetailsCardOpen}

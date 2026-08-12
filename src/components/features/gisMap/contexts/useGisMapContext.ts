@@ -2,13 +2,13 @@ import { MapManager } from "@srms/lib/mapstudio/mapManager";
 import { createContext, useContext } from "react";
 import { FeatureStyles } from "@srms/server/types";
 
-export type GisMapState = {
+export type GisMapContextType = {
   mapManager: MapManager;
   properties: FeatureStyles;
   setProperties?: (styles: FeatureStyles) => void;
 };
 
-export const GisMapContext = createContext<GisMapState | undefined>(undefined);
+export const GisMapContext = createContext<GisMapContextType | undefined>(undefined);
 
 export const useGisMap = () => {
   const GisMap = useContext(GisMapContext);
