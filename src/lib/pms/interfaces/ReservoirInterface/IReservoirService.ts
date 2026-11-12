@@ -1,5 +1,5 @@
-import { ReservoirGEOJSON } from "../../types";
+import { ReservoirGeoJSON } from "../../types";
 
 export interface I_ReservoirService {
-  getReservoirsGeoJson(): Promise<ReservoirGEOJSON>;
+  getReservoirsGeoJson(): Promise<ReservoirGeoJSON>;
 }

@@ -16,7 +16,6 @@ import {
   SelectDevicesSchema,
   SelectDevicesLocationSchema,
   SelectDevicesMileageSchema,
-  ErrorRefreshTokenSchema,
 } from "@srms/lib/tracksolid/schemas";
 import { setCookie, getCookie } from "hono/cookie";
 
@@ -48,11 +47,11 @@ export const getTsAccessToken: AppRouteHandler<GetTsAccessTokenRoute> = async (c
 };
 
 export const getTsRefreshToken: AppRouteHandler<GetTsRefreshTokenRoute> = async (c) => {
-  // const accessToken = c.req.header("tsAccessToken") as string;
-  // const refreshToken = c.req.header("tsRefreshToken") as string;
+  const accessToken = c.req.header("tsAccessToken") as string;
+  const refreshToken = c.req.header("tsRefreshToken") as string;
 
-  const accessToken = getCookie(c, "tsAccessToken") as string;
-  const refreshToken = getCookie(c, "tsRefreshToken") as string;
+  // const accessToken = getCookie(c, "tsAccessToken") as string;
+  // const refreshToken = getCookie(c, "tsRefreshToken") as string;
 
   if (!accessToken || !refreshToken) {
     return c.json(

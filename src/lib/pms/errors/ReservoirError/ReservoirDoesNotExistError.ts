@@ -1,4 +1,4 @@
-import { ReservoirError } from "./PumpingStationError";
+import { ReservoirError } from "./ReservoirError";
 
 export class ReservoirDoesNotExistError extends ReservoirError {
   constructor(description: string) {

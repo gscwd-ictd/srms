@@ -1,14 +1,6 @@
 import { notFound, onError } from "@srms/server/middlewares";
 import { secureHeaders } from "hono/secure-headers";
-import {
-  healthcheck,
-  geoserver,
-  trackSolid,
-  pms,
-  waterMeters,
-  tcms,
-  authentication,
-} from "@srms/server/routes";
+import { geoserver, trackSolid, pms, waterMeters, tcms, authentication } from "@srms/server/routes";
 import { createOpenAPIRoute } from "./openapi/createOpenApiRoute";
 import { configureOpenApi } from "./openapi/configureOpenApi";
 import { crossOrigin } from "./middlewares/cors";
@@ -34,7 +26,7 @@ function createApp() {
   app.use(crossOrigin);
 
   // IMPORTANT! Add each route to this array
-  const routes = [healthcheck, geoserver, trackSolid, pms, waterMeters, tcms, authentication] as const;
+  const routes = [geoserver, trackSolid, pms, waterMeters, tcms, authentication] as const;
   routes.forEach((route) => app.route("/", route));
   return app;
 }

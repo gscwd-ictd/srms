@@ -1,7 +1,7 @@
 import { Coordinate } from "ol/coordinate";
 import { LineString } from "ol/geom";
 
-export type ReservoirGEOJSON = {
+export type ReservoirGeoJSON = {
   type: string;
   totalFeatures: number;
   features: Array<ReservoirData>;

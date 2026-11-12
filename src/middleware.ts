@@ -46,7 +46,7 @@ export default async function middleware(req: NextRequest) {
     return NextResponse.redirect(new URL("/dashboard", req.url));
   }
 
-  const appRole = decodedToken.apps.find((app) => app.name === process.env.NEXT_PUBLIC_APP_NAME);
+  const appRole = decodedToken.apps?.find((app) => app.name === process.env.NEXT_PUBLIC_APP_NAME);
 
   if (!appRole) {
     return NextResponse.redirect(new URL("/login", req.url));

@@ -1,7 +1,7 @@
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
-import { isEmpty } from "lodash";
+import { isEmpty } from "./isEmpty";
 
 export const getDateTimeGMT0 = (date?: string) => {
   dayjs.extend(utc);

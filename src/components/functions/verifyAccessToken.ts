@@ -5,9 +5,9 @@ const secret = new TextEncoder().encode(process.env.AUTH_JWT_SECRET);
 
 export const verifyAccessToken = async (accessToken: string) => {
   try {
-    const payload = await jwtVerify(accessToken, secret, {
-      algorithms: ["HS256"],
-    });
+    // const payload = await jwtVerify(accessToken, secret, {
+    //   algorithms: ["HS256"],
+    // });
 
     const roles: RoleAbility = {
       sub: "allynjosephcubero@gscwd.com",

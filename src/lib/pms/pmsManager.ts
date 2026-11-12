@@ -1,4 +1,12 @@
-import { PipelinesService, ValvesService, LoggersService, PumpingStationsService, ReservoirService } from "./services";
+import {
+  PipelinesService,
+  ValvesService,
+  LoggersService,
+  PumpingStationsService,
+  ReservoirService,
+  HydrantService,
+  BarangayService,
+} from "./services";
 
 export class PmsManager {
   private static instance: PmsManager;
@@ -13,12 +21,18 @@ export class PmsManager {
 
   private reservoirService: ReservoirService;
 
+  private hydrantService: HydrantService;
+
+  private barangayService: BarangayService;
+
   private constructor() {
     this.valvesService = new ValvesService();
     this.pipelinesService = new PipelinesService();
     this.loggersService = new LoggersService();
     this.pumpingStationsService = new PumpingStationsService();
     this.reservoirService = new ReservoirService();
+    this.hydrantService = new HydrantService();
+    this.barangayService = new BarangayService();
   }
 
   public static getInstance(): PmsManager {
@@ -46,5 +60,13 @@ export class PmsManager {
 
   public getReservoirService(): ReservoirService {
     return this.reservoirService;
+  }
+
+  public getHydarntService(): HydrantService {
+    return this.hydrantService;
+  }
+
+  public getBarangayService(): BarangayService {
+    return this.barangayService;
   }
 }

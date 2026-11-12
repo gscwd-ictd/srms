@@ -11,6 +11,8 @@ const pms = createOpenAPIRoute()
   .openapi(routes.getMultilogLoggersList, handlers.getMultilogLoggersList)
   .openapi(routes.getMultilogChannelLatestEntry, handlers.getMultilogChannelLatestEntry)
   .openapi(routes.getReservoirsGeoJson, handlers.getReservoirsGeoJson)
-  .openapi(routes.getPumpingStationsGeoJson, handlers.getPumpingStationsGeoJson);
+  .openapi(routes.getPumpingStationsGeoJson, handlers.getPumpingStationsGeoJson)
+  .openapi(routes.getHydrantsGeoJson, handlers.getHydrantsGeoJson)
+  .openapi(routes.getBarangaysGeoJson, handlers.getBarangaysGeoJson);
 
 export default pms;

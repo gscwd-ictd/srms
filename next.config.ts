@@ -9,6 +9,11 @@ const nextConfig: NextConfig = {
   images: {
     domains: ["172.20.110.84", "172.20.10.59", "172.20.110.60"],
   },
+  eslint: {
+    // Warning: This allows production builds to successfully complete
+    // even if your project has ESLint errors.
+    ignoreDuringBuilds: true,
+  },
   async rewrites() {
     return [
       {

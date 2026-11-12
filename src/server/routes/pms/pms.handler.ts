@@ -18,9 +18,11 @@ import {
   SelectLoggersListData,
   SelectLoggerChannelEntry,
   SelectMultilogLoggers,
+  SelectReservoirsGeoJSONSchema,
+  SelectPumpingStationsGeoJSONSchema,
+  SelectHydrantGeoJSONSchema,
+  SelectBarangayGeoJSONSchema,
 } from "@srms/lib/pms/schemas";
-import { SelectReservoirsGeoJSONSchema } from "@srms/lib/pms/schemas/ReservoirSchema";
-import { SelectPumpingStationsGeoJSONSchema } from "@srms/lib/pms/schemas/PumpingStationsSchema";
 
 type ValvesSchema = z.infer<typeof SelectValvesGeoJSONSchema>;
 type PipelinesSchema = z.infer<typeof SelectPipelinesGeoJSONSchema>;
@@ -29,6 +31,8 @@ type LoggerChannelEntrySchema = z.infer<typeof SelectLoggerChannelEntry>;
 type MultilogLoggerListSchema = z.infer<typeof SelectMultilogLoggers>;
 type ReservoirSchema = z.infer<typeof SelectReservoirsGeoJSONSchema>;
 type PumpingStationSchema = z.infer<typeof SelectPumpingStationsGeoJSONSchema>;
+type HydrantSchema = z.infer<typeof SelectHydrantGeoJSONSchema>;
+type BarangaySchema = z.infer<typeof SelectBarangayGeoJSONSchema>;
 
 export const getValvesGeoJson: AppRouteHandler<GetValvesGeoJsonRoute> = async (c) => {
   const valvesGeoJson = (await pmsManager.getValvesService().getValvesGeoJson()) as ValvesSchema;
@@ -90,13 +94,29 @@ export const getMultilogChannelLatestEntry: AppRouteHandler<GetMultilogChannelLa
 };
 
 export const getReservoirsGeoJson: AppRouteHandler<GetReservoirsGeoJsonRoute> = async (c) => {
-  const reservoirsGeoJson = (await pmsManager.getReservoirService().getReservoirsGeoJson()) as ReservoirSchema;
+  const reservoirsGeoJson = (await pmsManager
+    .getReservoirService()
+    .getReservoirsGeoJson()) as ReservoirSchema;
 
   return c.json(reservoirsGeoJson, 200);
 };
 
 export const getPumpingStationsGeoJson: AppRouteHandler<GetPumpingStationsGeoJsonRoute> = async (c) => {
-  const pumpingStationsGeoJson = (await pmsManager.getPumpingStationsService().getPumpingStationsGeoJson()) as PumpingStationSchema;
+  const pumpingStationsGeoJson = (await pmsManager
+    .getPumpingStationsService()
+    .getPumpingStationsGeoJson()) as PumpingStationSchema;
 
   return c.json(pumpingStationsGeoJson, 200);
+};
+
+export const getHydrantsGeoJson: AppRouteHandler<GetReservoirsGeoJsonRoute> = async (c) => {
+  const reservoirsGeoJson = (await pmsManager.getHydarntService().getHydrantGeoJson()) as HydrantSchema;
+
+  return c.json(reservoirsGeoJson, 200);
+};
+
+export const getBarangaysGeoJson: AppRouteHandler<GetReservoirsGeoJsonRoute> = async (c) => {
+  const reservoirsGeoJson = (await pmsManager.getBarangayService().getBarangayGeoJson()) as BarangaySchema;
+
+  return c.json(reservoirsGeoJson, 200);
 };

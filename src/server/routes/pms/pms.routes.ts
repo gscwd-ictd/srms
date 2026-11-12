@@ -11,10 +11,12 @@ import {
   SelectMultilogLoggers,
   SelectPipelinesGeoJSONSchema,
   SelectValvesGeoJSONSchema,
+  SelectReservoirsGeoJSONSchema,
+  SelectPumpingStationsGeoJSONSchema,
+  SelectBarangayGeoJSONSchema,
+  SelectHydrantGeoJSONSchema,
 } from "@srms/lib/pms/schemas";
 import { OpenAPIResponses } from "@srms/server/constants/openApiResponses";
-import { SelectReservoirsGeoJSONSchema } from "@srms/lib/pms/schemas/ReservoirSchema";
-import { SelectPumpingStationsGeoJSONSchema } from "@srms/lib/pms/schemas/PumpingStationsSchema";
 
 export const getValvesGeoJson = createRoute({
   tags: TAGS.PRESSURE_MANAGEMENT,
@@ -434,7 +436,99 @@ export const getPumpingStationsGeoJson = createRoute({
           example: {
             name: "NotFoundError",
             status: 404,
-            message: "Reservoirs not found",
+            message: "Pumping stations not found",
+          },
+          schema: ErrorResponseSchema,
+        },
+      },
+      description: OpenAPIResponses.NOT_FOUND,
+    },
+    [HttpStatusCodes.INTERNAL_SERVER_ERROR]: {
+      content: {
+        "application/json": {
+          example: {
+            name: "ServerError",
+            status: 500,
+            message: "Something went wrong!",
+            stack: "...",
+          },
+          schema: ErrorResponseSchema,
+        },
+      },
+      description: OpenAPIResponses.INTERNAL_SERVER_ERROR,
+    },
+  },
+});
+
+export const getHydrantsGeoJson = createRoute({
+  tags: TAGS.PRESSURE_MANAGEMENT,
+  description: "Get hydrants data",
+  method: "get",
+  path: "/v1/layers/hydrants",
+  operationId: "getHydrantsGeoJson",
+
+  responses: {
+    [HttpStatusCodes.OK]: {
+      content: {
+        "application/json": {
+          schema: SelectHydrantGeoJSONSchema,
+        },
+      },
+      description: OpenAPIResponses.OK,
+    },
+    [HttpStatusCodes.NOT_FOUND]: {
+      content: {
+        "application/json": {
+          example: {
+            name: "NotFoundError",
+            status: 404,
+            message: "Hydrants not found",
+          },
+          schema: ErrorResponseSchema,
+        },
+      },
+      description: OpenAPIResponses.NOT_FOUND,
+    },
+    [HttpStatusCodes.INTERNAL_SERVER_ERROR]: {
+      content: {
+        "application/json": {
+          example: {
+            name: "ServerError",
+            status: 500,
+            message: "Something went wrong!",
+            stack: "...",
+          },
+          schema: ErrorResponseSchema,
+        },
+      },
+      description: OpenAPIResponses.INTERNAL_SERVER_ERROR,
+    },
+  },
+});
+
+export const getBarangaysGeoJson = createRoute({
+  tags: TAGS.PRESSURE_MANAGEMENT,
+  description: "Get barangays data",
+  method: "get",
+  path: "/v1/layers/barangays",
+  operationId: "getBarangaysGeoJson",
+
+  responses: {
+    [HttpStatusCodes.OK]: {
+      content: {
+        "application/json": {
+          schema: SelectBarangayGeoJSONSchema,
+        },
+      },
+      description: OpenAPIResponses.OK,
+    },
+    [HttpStatusCodes.NOT_FOUND]: {
+      content: {
+        "application/json": {
+          example: {
+            name: "NotFoundError",
+            status: 404,
+            message: "Barangays not found",
           },
           schema: ErrorResponseSchema,
         },
@@ -467,3 +561,5 @@ export type GetMultilogLoggersListRoute = typeof getMultilogLoggersList;
 export type GetMultilogChannelLatestEntryRoute = typeof getMultilogChannelLatestEntry;
 export type GetReservoirsGeoJsonRoute = typeof getReservoirsGeoJson;
 export type GetPumpingStationsGeoJsonRoute = typeof getPumpingStationsGeoJson;
+export type GetHydrantsGeoJsonRoute = typeof getHydrantsGeoJson;
+export type GetBarangaysGeoJsonRoute = typeof getBarangaysGeoJson;

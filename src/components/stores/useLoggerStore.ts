@@ -1,6 +1,4 @@
 import { LoggerChannelEntry, MultilogLogger } from "@srms/lib/pms/types";
-
-import { PumpData } from "@srms/lib/pumpstation/pumpStationType";
 import { create } from "zustand";
 import { devtools } from "zustand/middleware";
 

@@ -67,12 +67,12 @@ export const getTsRefreshToken = createRoute({
   method: "post",
   path: "/v1/tracksolid/refresh_token",
   operationId: "getTsRefreshToken",
-  // request: {
-  //   headers: z.object({
-  //     tsAccessToken: z.string(),
-  //     tsRefreshToken: z.string(),
-  //   }),
-  // },
+  request: {
+    headers: z.object({
+      tsAccessToken: z.string(),
+      tsRefreshToken: z.string(),
+    }),
+  },
   responses: {
     [HttpStatusCodes.OK]: {
       content: {

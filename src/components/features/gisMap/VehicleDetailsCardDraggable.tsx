@@ -40,7 +40,7 @@ const VehicleDetailsCardDraggable: FunctionComponent<VehicleDetailsCardProps> = 
   const { data: deviceDetails, fetchStatus: fStatusDeviceDetails } = useQuery({
     queryKey: ["device-details"],
     refetchOnReconnect: false,
-    enabled: hasFleetAbility && isTracksolidReady && !!tsAccessToken,
+    enabled: hasFleetAbility && isTracksolidReady && !!tsAccessToken && open,
     retry: 5,
     queryFn: async () => {
       const response = await tracksolidApi.post(
@@ -72,7 +72,7 @@ const VehicleDetailsCardDraggable: FunctionComponent<VehicleDetailsCardProps> = 
 
   const { data: deviceLocation, fetchStatus: fStatusDeviceLocation } = useQuery({
     queryKey: ["device-location"],
-    enabled: hasFleetAbility && isTracksolidReady && !!tsAccessToken,
+    enabled: hasFleetAbility && isTracksolidReady && !!tsAccessToken && open,
     retry: 5,
     queryFn: async () => {
       const response = await tracksolidApi.post(
