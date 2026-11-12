@@ -4,11 +4,10 @@ import { LayerManager } from "./layerManager";
 import { InteractionManager } from "./interactionManager";
 import { ControlManager } from "./controlManager";
 import { Coordinate } from "ol/coordinate";
-import { MapBrowserEvent, View } from "ol";
+import { View } from "ol";
 import { Extent } from "ol/extent";
 import TileLayer from "ol/layer/Tile";
 import { OSM } from "ol/source";
-import { MapEvents } from "./utils/mapEvents";
 import { FitOptions } from "ol/View";
 
 export class MapManager {
@@ -35,7 +34,7 @@ export class MapManager {
 
       controls: [],
 
-      layers: [
+      layers: options.layers || [
         new TileLayer({
           source: new OSM(),
         }),
@@ -133,17 +132,17 @@ export class MapManager {
   }
 
   // (event: MapBrowserEvent<any>) => unknown
-  public addMapEvent(
-    eventType: (typeof MapEvents)[number],
-    callback: (event: MapBrowserEvent<UIEvent>) => void,
-  ): void {
-    if (!this.map) {
-      throw new Error("Map not initialized. Call init() first.");
-    }
+  // public addMapEvent(
+  //   eventType: (typeof MapEvents)[number],
+  //   callback: (event: MapBrowserEvent<UIEvent>) => void,
+  // ): void {
+  //   if (!this.map) {
+  //     throw new Error("Map not initialized. Call init() first.");
+  //   }
 
-    //@ts-expect-error type mismatch only
-    this.map.on([eventType], callback);
-  }
+  //   //@ts-expect-error type mismatch only
+  //   this.map.on([eventType], callback);
+  // }
 
   public destroy(): void {
     if (this.map) {

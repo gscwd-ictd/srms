@@ -1,4 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
+import { RoleAbility } from "./lib/authentication/types";
+import { verifyAccessToken } from "./components/functions/verifyAccessToken";
 
 export default async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
@@ -16,8 +18,53 @@ export default async function middleware(req: NextRequest) {
   }
 
   // Your other middleware logic here...
+  const accessToken = req.cookies.get("accessToken")?.value;
+  const refreshToken = req.cookies.get("refreshToken")?.value;
 
-  return NextResponse.next();
+  // No tokens → Login
+  if (!accessToken && !refreshToken) {
+    if (pathname !== "/login") {
+      return NextResponse.redirect(new URL("/login", req.url));
+    }
+
+    return NextResponse.next();
+  }
+
+  if (!accessToken) {
+    // Let refresh-token logic handle this later
+    return NextResponse.next();
+  }
+
+  const decodedToken = (await verifyAccessToken(accessToken)) as RoleAbility | null;
+
+  if (!decodedToken) {
+    return NextResponse.redirect(new URL("/login", req.url));
+  }
+
+  // Already logged in
+  if (pathname === "/login") {
+    return NextResponse.redirect(new URL("/dashboard", req.url));
+  }
+
+  const appRole = decodedToken.apps?.find((app) => app.name === process.env.NEXT_PUBLIC_APP_NAME);
+
+  if (!appRole) {
+    return NextResponse.redirect(new URL("/login", req.url));
+  }
+
+  // Superuser bypass
+  if (appRole.isSuperuserAdmin) {
+    return NextResponse.next();
+  }
+
+  // Check permission
+  const hasFleetLayerPermission = appRole.roles?.some((role) => role.slug === "fleetLayer");
+
+  if (hasFleetLayerPermission) {
+    return NextResponse.next();
+  }
+
+  return NextResponse.redirect(new URL("/login", req.url));
 }
 
 export const config = {

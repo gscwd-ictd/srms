@@ -5,7 +5,7 @@ import type { AppBindings } from "@srms/server/types/appTypes";
 import { jsonError } from "../helpers/jsonError";
 
 export const notFound: NotFoundHandler<AppBindings> = (c) => {
-  c.var.logger.error(`${NOT_FOUND_MESSAGE} - ${c.req.path}`);
+  //c.var.logger.error(`${NOT_FOUND_MESSAGE} - ${c.req.path}`);
 
   return jsonError(
     c,

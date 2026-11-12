@@ -1,6 +1,6 @@
 {
-  "id": "d2ebf453-796d-455b-a8c5-759bf3046ee5",
-  "prevId": "4d3a4d7b-638b-418d-adb9-ce81f3c3099d",
+  "id": "8c81d3e9-b622-4d6d-8f91-4325411f0fb5",
+  "prevId": "1d36f7d9-0c22-41de-84be-f504754539d0",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -20,14 +20,14 @@
           "primaryKey": false,
           "notNull": true
         },
-        "lot_no": {
-          "name": "lot_no",
+        "lot_number": {
+          "name": "lot_number",
           "type": "varchar",
           "primaryKey": false,
           "notNull": false
         },
-        "block_no": {
-          "name": "block_no",
+        "block_number": {
+          "name": "block_number",
           "type": "varchar",
           "primaryKey": false,
           "notNull": false
@@ -38,17 +38,17 @@
           "primaryKey": false,
           "notNull": false
         },
-        "prk_vill_subd": {
-          "name": "prk_vill_subd",
+        "purok_village_subdivision": {
+          "name": "purok_village_subdivision",
           "type": "varchar",
           "primaryKey": false,
           "notNull": false
         },
-        "barangay_id_fk": {
-          "name": "barangay_id_fk",
-          "type": "varchar",
+        "barangay": {
+          "name": "barangay",
+          "type": "text",
           "primaryKey": false,
-          "notNull": true
+          "notNull": false
         },
         "city": {
           "name": "city",
@@ -73,14 +73,14 @@
         },
         "created_at": {
           "name": "created_at",
-          "type": "timestamp",
+          "type": "timestamp with time zone",
           "primaryKey": false,
           "notNull": true,
           "default": "now()"
         },
         "updated_at": {
           "name": "updated_at",
-          "type": "timestamp",
+          "type": "timestamp with time zone",
           "primaryKey": false,
           "notNull": false,
           "default": "now()"
@@ -98,20 +98,7 @@
           "columnsTo": [
             "id"
           ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        },
-        "applicant_address_barangay_id_fk_serviceable_areas_id_fk": {
-          "name": "applicant_address_barangay_id_fk_serviceable_areas_id_fk",
-          "tableFrom": "applicant_address",
-          "tableTo": "serviceable_areas",
-          "columnsFrom": [
-            "barangay_id_fk"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
+          "onDelete": "cascade",
           "onUpdate": "no action"
         }
       },
@@ -121,53 +108,8 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "public.serviceable_areas": {
-      "name": "serviceable_areas",
-      "schema": "",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "varchar",
-          "primaryKey": true,
-          "notNull": true
-        },
-        "barangay_name": {
-          "name": "barangay_name",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "boundaries": {
-          "name": "boundaries",
-          "type": "geometry(Polygon, 4326)",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "created_at": {
-          "name": "created_at",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
-        },
-        "updated_at": {
-          "name": "updated_at",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": false,
-          "default": "now()"
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {},
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
-    },
-    "public.applicant_docs": {
-      "name": "applicant_docs",
+    "public.applicant_documents": {
+      "name": "applicant_documents",
       "schema": "",
       "columns": {
         "id": {
@@ -182,46 +124,35 @@
           "primaryKey": false,
           "notNull": true
         },
-        "proof_of_lot_ownership": {
-          "name": "proof_of_lot_ownership",
+        "type": {
+          "name": "type",
+          "type": "document_type",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "document_paths": {
+          "name": "document_paths",
           "type": "jsonb",
           "primaryKey": false,
           "notNull": true
         },
-        "proof_of_billing": {
-          "name": "proof_of_billing",
-          "type": "jsonb",
+        "test-column": {
+          "name": "test-column",
+          "type": "varchar",
           "primaryKey": false,
-          "notNull": true
-        },
-        "barangay_certificate": {
-          "name": "barangay_certificate",
-          "type": "jsonb",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "valid_id": {
-          "name": "valid_id",
-          "type": "jsonb",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "selfie_with_valid_id": {
-          "name": "selfie_with_valid_id",
-          "type": "jsonb",
-          "primaryKey": false,
-          "notNull": true
+          "notNull": false
         },
         "created_at": {
           "name": "created_at",
-          "type": "timestamp",
+          "type": "timestamp with time zone",
           "primaryKey": false,
           "notNull": true,
           "default": "now()"
         },
         "updated_at": {
           "name": "updated_at",
-          "type": "timestamp",
+          "type": "timestamp with time zone",
           "primaryKey": false,
           "notNull": false,
           "default": "now()"
@@ -229,9 +160,9 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "applicant_docs_applicant_id_fk_applicants_id_fk": {
-          "name": "applicant_docs_applicant_id_fk_applicants_id_fk",
-          "tableFrom": "applicant_docs",
+        "applicant_documents_applicant_id_fk_applicants_id_fk": {
+          "name": "applicant_documents_applicant_id_fk_applicants_id_fk",
+          "tableFrom": "applicant_documents",
           "tableTo": "applicants",
           "columnsFrom": [
             "applicant_id_fk"
@@ -239,12 +170,100 @@
           "columnsTo": [
             "id"
           ],
-          "onDelete": "no action",
+          "onDelete": "cascade",
           "onUpdate": "no action"
         }
       },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.applicant_plumbing_fixtures": {
+      "name": "applicant_plumbing_fixtures",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "varchar",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "applicant_id_fk": {
+          "name": "applicant_id_fk",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "plumbing_fixture_id_fk": {
+          "name": "plumbing_fixture_id_fk",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "quantity": {
+          "name": "quantity",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "applicant_plumbing_fixtures_applicant_id_fk_applicants_id_fk": {
+          "name": "applicant_plumbing_fixtures_applicant_id_fk_applicants_id_fk",
+          "tableFrom": "applicant_plumbing_fixtures",
+          "tableTo": "applicants",
+          "columnsFrom": [
+            "applicant_id_fk"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "applicant_plumbing_fixtures_plumbing_fixture_id_fk_plumbing_fixtures_id_fk": {
+          "name": "applicant_plumbing_fixtures_plumbing_fixture_id_fk_plumbing_fixtures_id_fk",
+          "tableFrom": "applicant_plumbing_fixtures",
+          "tableTo": "plumbing_fixtures",
+          "columnsFrom": [
+            "plumbing_fixture_id_fk"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "applicant_plumbing_fixtures_applicant_id_fk_plumbing_fixture_id_fk_unique": {
+          "name": "applicant_plumbing_fixtures_applicant_id_fk_plumbing_fixture_id_fk_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "applicant_id_fk",
+            "plumbing_fixture_id_fk"
+          ]
+        }
+      },
       "policies": {},
       "checkConstraints": {},
       "isRLSEnabled": false
@@ -265,15 +284,15 @@
           "primaryKey": false,
           "notNull": true
         },
-        "no_of_persons_in_household": {
-          "name": "no_of_persons_in_household",
+        "number_of_persons": {
+          "name": "number_of_persons",
           "type": "integer",
           "primaryKey": false,
           "notNull": true,
           "default": 0
         },
-        "no_of_houses_in_lot": {
-          "name": "no_of_houses_in_lot",
+        "number_of_houses": {
+          "name": "number_of_houses",
           "type": "integer",
           "primaryKey": false,
           "notNull": true,
@@ -281,14 +300,14 @@
         },
         "created_at": {
           "name": "created_at",
-          "type": "timestamp",
+          "type": "timestamp with time zone",
           "primaryKey": false,
           "notNull": true,
           "default": "now()"
         },
         "updated_at": {
           "name": "updated_at",
-          "type": "timestamp",
+          "type": "timestamp with time zone",
           "primaryKey": false,
           "notNull": false,
           "default": "now()"
@@ -306,7 +325,7 @@
           "columnsTo": [
             "id"
           ],
-          "onDelete": "no action",
+          "onDelete": "cascade",
           "onUpdate": "no action"
         }
       },
@@ -375,8 +394,8 @@
           "primaryKey": false,
           "notNull": true
         },
-        "mobile_no": {
-          "name": "mobile_no",
+        "mobile_number": {
+          "name": "mobile_number",
           "type": "varchar",
           "primaryKey": false,
           "notNull": true
@@ -389,14 +408,14 @@
         },
         "created_at": {
           "name": "created_at",
-          "type": "timestamp",
+          "type": "timestamp with time zone",
           "primaryKey": false,
           "notNull": true,
           "default": "now()"
         },
         "updated_at": {
           "name": "updated_at",
-          "type": "timestamp",
+          "type": "timestamp with time zone",
           "primaryKey": false,
           "notNull": false,
           "default": "now()"
@@ -414,7 +433,7 @@
           "columnsTo": [
             "id"
           ],
-          "onDelete": "no action",
+          "onDelete": "cascade",
           "onUpdate": "no action"
         }
       },
@@ -445,7 +464,7 @@
           "name": "landmark",
           "type": "text",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
         "nearest_neighbor": {
           "name": "nearest_neighbor",
@@ -469,6 +488,201 @@
         },
         "created_at": {
           "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.fixtures_unit": {
+      "name": "fixtures_unit",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "varchar",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "plumbing_fixtures_id_fk": {
+          "name": "plumbing_fixtures_id_fk",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "public_value": {
+          "name": "public_value",
+          "type": "numeric(6, 3)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "private_value": {
+          "name": "private_value",
+          "type": "numeric(6, 3)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "year": {
+          "name": "year",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "fixtures_unit_plumbing_fixtures_id_fk_plumbing_fixtures_id_fk": {
+          "name": "fixtures_unit_plumbing_fixtures_id_fk_plumbing_fixtures_id_fk",
+          "tableFrom": "fixtures_unit",
+          "tableTo": "plumbing_fixtures",
+          "columnsFrom": [
+            "plumbing_fixtures_id_fk"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.plumbing_fixtures": {
+      "name": "plumbing_fixtures",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "varchar",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "description": {
+          "name": "description",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "category": {
+          "name": "category",
+          "type": "fixture_category_enum",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "file_path": {
+          "name": "file_path",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "plumbing_fixtures_name_unique": {
+          "name": "plumbing_fixtures_name_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "name"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.serviceable_areas": {
+      "name": "serviceable_areas",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "varchar",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "barangay": {
+          "name": "barangay",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "boundaries": {
+          "name": "boundaries",
+          "type": "geometry(MultiPolygon, 4326)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "details": {
+          "name": "details",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "feature_styles": {
+          "name": "feature_styles",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'{\"fillColor\":\"rgb(197, 202, 233, 0.4)\",\"strokeColor\":\"rgb(79, 70, 229, 1.0)\",\"strokeWidth\":[3],\"outlineStyle\":\"solid\",\"freehand\":false,\"enableSnapping\":true,\"snapTolerance\":[7],\"snapToEdge\":true,\"snapToVertex\":true}'::jsonb"
+        },
+        "created_at": {
+          "name": "created_at",
           "type": "timestamp",
           "primaryKey": false,
           "notNull": true,
@@ -485,13 +699,32 @@
       "indexes": {},
       "foreignKeys": {},
       "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
+      "uniqueConstraints": {
+        "serviceable_areas_barangay_unique": {
+          "name": "serviceable_areas_barangay_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "barangay"
+          ]
+        }
+      },
       "policies": {},
       "checkConstraints": {},
       "isRLSEnabled": false
     }
   },
   "enums": {
+    "public.document_type": {
+      "name": "document_type",
+      "schema": "public",
+      "values": [
+        "proof of lot ownership",
+        "proof of billing",
+        "barangay certificate",
+        "valid id",
+        "selfie id"
+      ]
+    },
     "public.gender": {
       "name": "gender",
       "schema": "public",
@@ -516,6 +749,15 @@
         "New",
         "Additional",
         "Transfer"
+      ]
+    },
+    "public.fixture_category_enum": {
+      "name": "fixture_category_enum",
+      "schema": "public",
+      "values": [
+        "General",
+        "Sinks",
+        "Urinals"
       ]
     }
   },

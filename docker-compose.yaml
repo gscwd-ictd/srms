@@ -1,0 +1,21 @@
+services:
+  db:
+    image: postgis/postgis:15-3.4
+    container_name: srms-test
+    restart: always
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASS}
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_MULTIPLE_EXTENSIONS: postgis,postgis_topology
+    ports:
+      - "${DB_PORT}:5432"
+    volumes:
+      - ./data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER} -d ${DB_NAME}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+volumes:
+  data:

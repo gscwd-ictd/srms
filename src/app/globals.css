@@ -14,6 +14,7 @@
 @theme {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-primary-color: #2b85ff;
 }
 
 /*
@@ -33,6 +34,7 @@
     border-color: var(--color-gray-200, currentColor);
   }
 }
+
 /*
   ---break---
 */
@@ -155,6 +157,7 @@
   /*
   ---break---
 */
+
   @keyframes accordion-down {
     from {
       height: 0;
@@ -218,4 +221,197 @@
 .custom-pointers .react-colorful__alpha-pointer {
   width: 22px;
   height: 22px;
+}
+
+/* Framer Motion Nav Animation */
+@keyframes navIntro {
+  from {
+    opacity: 0;
+    /* transform: translateY(-50px); */
+    /* height: 72px;
+    width: 72px; */
+    margin-top: 0px;
+    margin-left: 0px;
+  }
+  to {
+    opacity: 1;
+    /* transform: translateY(0); */
+    margin-top: 60px;
+    margin-left: 0px;
+  }
+}
+
+@keyframes navOutro {
+  from {
+    opacity: 1;
+    /* transform: translateY(0px); */
+    margin-top: 60px;
+    margin-left: 0px;
+  }
+  to {
+    opacity: 0;
+    /* transform: translateY(-50px); */
+    /* height: 72px;
+    width: 72px; */
+    margin-top: 0px;
+    margin-left: 0px;
+  }
+}
+
+.nav-intro-animated {
+  animation: navIntro 0.2s ease-out forwards;
+}
+
+.nav-outro-animated {
+  animation: navOutro 0.2s ease-out forwards;
+}
+
+/* Framer Motion Nav Title Animation */
+@keyframes navTitleIntro {
+  from {
+    opacity: 1;
+    transform: translateY(-100px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes navTitleOutro {
+  from {
+    opacity: 1;
+    transform: translateY(0px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(-100px);
+  }
+}
+.nav-title-intro-animated {
+  animation: navTitleIntro 0.2s ease-out forwards;
+}
+
+.nav-title-outro-animated {
+  animation: navTitleOutro 0.2s ease-out forwards;
+}
+
+/* framer motion for tilemap nav */
+@keyframes tileMapIntro {
+  from {
+    width: 0px;
+  }
+  to {
+    width: 300px;
+  }
+}
+
+@keyframes tileMapOutro {
+  from {
+    width: 300px;
+  }
+  to {
+    width: 0px;
+  }
+}
+
+.tilemap-intro-animated {
+  animation: tileMapIntro 0.2s ease-out forwards;
+}
+
+.tilemap-outro-animated {
+  animation: tileMapOutro 0.2s ease-out forwards;
+}
+
+/* framer motion for baseMapLayer nav */
+@keyframes baseMapLayerIntro {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes baseMapLayerOutro {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+.basemap-intro-animated {
+  animation: baseMapLayerIntro 0.2s ease-out forwards;
+}
+
+.basemap-outro-animated {
+  animation: baseMapLayerOutro 0.2s ease-out forwards;
+}
+
+/* nav color scheme */
+.ui-color-base {
+  background-color: rgb(251, 253, 255);
+  /* background: #bde8f5;
+  background: linear-gradient(180deg, #b5eaf8 0%, #368fe0 100%); */
+  transition: all 0.2s ease-in-out;
+}
+
+.ui-color-button {
+  background-color: rgb(61, 152, 236);
+  /* background: #b5eaf8; */
+  /* background: linear-gradient(180deg, #b5eaf8 0%, #368fe0 100%); */
+  transition: all 0.5s ease-in-out;
+}
+
+.ui-color-button:hover {
+  background-color: rgba(61, 152, 236, 0.8);
+  /* background: linear-gradient(180deg, rgba(156, 223, 243, 0.8) 0%, rgba(73, 136, 196, 0.8) 100%); */
+  transition: all 0.5s ease-in-out;
+}
+
+.ui-color-button-no-hover {
+  background-color: rgb(61, 152, 236);
+  /* background: #b5eaf8; */
+  /* background: linear-gradient(180deg, #b5eaf8 0%, #368fe0 100%); */
+  transition: all 0.5s ease-in-out;
+}
+
+.ui-color-button-danger {
+  background-color: rgb(236, 61, 61);
+  /* background: #b5eaf8; */
+  /* background: linear-gradient(180deg, #b5eaf8 0%, #368fe0 100%); */
+  transition: all 0.5s ease-in-out;
+}
+
+.ui-color-button-danger:hover {
+  background-color: rgba(236, 61, 61, 0.8);
+  /* background: linear-gradient(180deg, rgba(156, 223, 243, 0.8) 0%, rgba(73, 136, 196, 0.8) 100%); */
+  transition: all 0.5s ease-in-out;
+}
+
+/* text color in nav and side modals */
+.primary-text-color {
+  color: #1b1b1b;
+}
+
+/* crosshair icon shake */
+@keyframes crosshair-shake {
+  0%,
+  100% {
+    translate: 0 0;
+  }
+
+  25% {
+    translate: -4px 0;
+  }
+
+  75% {
+    translate: 4px 0;
+  }
+}
+
+.crosshair-shake {
+  animation: crosshair-shake 0.4s ease-in-out;
 }

@@ -1,3 +1,4 @@
+import { AppSidebar } from "@srms/components/features/sidebarNavigation/AppSidebar";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -5,5 +6,9 @@ export const metadata: Metadata = {
 };
 
 export default function DashboardPage() {
-  return <>Dashboard</>;
+  return (
+    <>
+      <AppSidebar />
+    </>
+  );
 }
