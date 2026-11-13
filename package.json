@@ -132,5 +132,13 @@
     "turbo": "^2.4.4",
     "typescript": "^5",
     "vitest": "^3.0.8"
+  },
+  "overrides": {
+    "drizzle-orm": {
+      "mssql": "$mssql"
+    },
+    "drizzle-zod": {
+      "drizzle-orm": "$drizzle-orm"
+    }
   }
 }
