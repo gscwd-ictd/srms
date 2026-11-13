@@ -42,19 +42,25 @@ export default function LoginPage() {
   };
 
   const onSubmit = async (data: LogIn) => {
-    const { error, result } = await postAuth(data);
+    // const { error, result } = await postAuth(data);
 
-    if (error) {
-      errorToast(result);
-    } else {
-      successToast("Credentials verified");
+    // if (error) {
+    //   errorToast(result);
+    // } else {
+    //   successToast("Credentials verified");
 
-      const timer = setTimeout(() => {
-        router.push("/dashboard");
-      }, 1000);
+    //   const timer = setTimeout(() => {
+    //     router.push("/dashboard");
+    //   }, 1000);
 
-      return () => clearTimeout(timer);
-    }
+    //   return () => clearTimeout(timer);
+    // }
+
+    const timer = setTimeout(() => {
+      router.push("/dashboard");
+    }, 1000);
+
+    return () => clearTimeout(timer);
   };
 
   return (
